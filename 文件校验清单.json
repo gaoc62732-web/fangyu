@@ -1,0 +1,85 @@
+{
+  "version": "2026-09-25-fun-achievements-clean",
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 45,
+      "sha256": "a3edc07135e30d6f318fd354798b58f21b53c8d5ec2358943916c6f32699616e"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1576,
+      "sha256": "d4a40d3090d71401025a5d2a416cd5f238763c15ece4b767163dc14b55632e51"
+    },
+    {
+      "path": "先打开这里.html",
+      "bytes": 8167,
+      "sha256": "d408c12ceedd257fb78e11ab079937ab5088f5ef60f358a7d369d7a2d3465554"
+    },
+    {
+      "path": "功能与检查说明.html",
+      "bytes": 4778,
+      "sha256": "86e5f5a57a1686f3c474f3bf966775a7cb973ffa67839ec0932c2f8937b1214b"
+    },
+    {
+      "path": "地图/方舆旅游手册地图_空白审核版.html",
+      "bytes": 27648919,
+      "sha256": "fd3f1c62ab601e298def3922f6e91dacdf575e55dddcd14a681b2986530195ae"
+    },
+    {
+      "path": "审核反馈模板.txt",
+      "bytes": 340,
+      "sha256": "d30e48197e0983075161c25ae3488142afccc630d5508f3ed85a3f8ff415cd00"
+    },
+    {
+      "path": "导入测试/100个车站_仅供功能测试.txt",
+      "bytes": 3865,
+      "sha256": "6759f6c5038b699d5e211fa3ac9ba690e7e811f2e2fd762616c0feb131fc2d61"
+    },
+    {
+      "path": "工具/merge_site_to_excel.py",
+      "bytes": 4367,
+      "sha256": "e8d24e149aa91e63babae7cdee46ad3d5086ac5d338e53f3a8e9fa6dfc2343c9"
+    },
+    {
+      "path": "工具/sitemap.json",
+      "bytes": 1289061,
+      "sha256": "12a7486800cfa06b150455d09dae007d467ac27fdb9036d7696dff992eea589b"
+    },
+    {
+      "path": "工具/xlsx-LICENSE.txt",
+      "bytes": 11355,
+      "sha256": "4d2a38ac35cda06a555c84074a819d413339cd3691b822cae50f8f322fe01f64"
+    },
+    {
+      "path": "工具/xlsx.full.min.js",
+      "bytes": 881727,
+      "sha256": "c9506197caf809a075b6dee1da0d36fb19da7158ffe8a88e7b0c96c5d8623c99"
+    },
+    {
+      "path": "工具/方舆Excel导入助手_兼容版.html",
+      "bytes": 1323366,
+      "sha256": "e190898786e8a8431d1948075c513035afc0be869d005ad382c33fa025d0a080"
+    },
+    {
+      "path": "手册兼容测试说明.md",
+      "bytes": 2184,
+      "sha256": "3d8cd4a3c851e0d76f09b0ecddd28abc7d5d1b843a6c13898889a1379534c6ba"
+    },
+    {
+      "path": "打开说明.txt",
+      "bytes": 788,
+      "sha256": "a8262fe0f0bd80d08d253604a61c7b8e16da8ab753b3984c05197488227f2dc3"
+    },
+    {
+      "path": "数据/2025赛迪百强县区_成就目标.json",
+      "bytes": 21717,
+      "sha256": "8a3221fb607233613285a4065725e9c72a51f040f14f7f203fe19189ff3f4a0c"
+    },
+    {
+      "path": "趣味成就说明.md",
+      "bytes": 3168,
+      "sha256": "7eb2a2e43f07d8a286d249cf14d7ef98dcfb1fb95b6a1a2ecb56e96c5fee4dbd"
+    }
+  ]
+}
