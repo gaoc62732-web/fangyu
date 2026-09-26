@@ -1,5 +1,5 @@
 {
-  "version": "0.2.4",
+  "version": "0.2.5",
   "files": [
     {
       "path": ".gitignore",
@@ -8,18 +8,18 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 4024,
-      "sha256": "2e7c5f643aa5f43d1ac5b2cec2cc6c89a736c67c1e7b5357e96d0a2c44a44d00"
+      "bytes": 4341,
+      "sha256": "060e138ee416ddc73064ef80144c86ae05ff3022b6fb9ff0891bc50ea1b7428b"
     },
     {
       "path": "README.md",
-      "bytes": 3132,
-      "sha256": "b456cb10f933947ee4b06fc53825b1914afe96ecff5a833501541c5ee060017b"
+      "bytes": 3221,
+      "sha256": "00ebb5887bc5cb0be178e83ef23c8ab714b16f44214b33647dae84ed82b81924"
     },
     {
       "path": "VERSION",
       "bytes": 6,
-      "sha256": "1725bfa6524c5265e7c171cf06568417d39b947fff49c242f03859479c82334b"
+      "sha256": "e959f750e92dbb7614ae28ac96f0a37272caed81d8bbb758791af7bfbb6106a0"
     },
     {
       "path": "先打开这里.html",
@@ -33,8 +33,8 @@
     },
     {
       "path": "地图/方舆旅游手册地图_空白审核版.html",
-      "bytes": 27716744,
-      "sha256": "afb9ef751c5ed5cafe22d3ccf879c702e9d68a10666a947f702b4424f5581d2d"
+      "bytes": 27719834,
+      "sha256": "d897a3223d69b52964c7ad5b1a1aec77745e54cd8d490b6e937183290cec566d"
     },
     {
       "path": "审核反馈模板.txt",
