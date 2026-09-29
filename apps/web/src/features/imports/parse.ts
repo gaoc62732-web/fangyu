@@ -85,6 +85,7 @@ export async function parseNamesFile(
 export async function stageGeographicFiles(
   session: HandbookSession,
   files: File[],
+  signal?: AbortSignal,
 ): Promise<GeographicStage> {
   if (files.length > 200) throw Error('一次最多选择 200 个文件。');
   if (files.reduce((total, file) => total + file.size, 0) > 200 * MB)
@@ -97,6 +98,8 @@ export async function stageGeographicFiles(
   };
   let vertexCount = 0;
   for (const file of files) {
+    signal?.throwIfAborted();
+    await new Promise((resolve) => setTimeout(resolve, 0));
     const name = file.name.toLowerCase();
     if (name.endsWith('.kml')) {
       limit(file, 10);
@@ -206,12 +209,15 @@ export async function photoPlan(
   spatial: CountySpatialIndex,
   files: File[],
   onProgress: (message: string) => void,
+  signal?: AbortSignal,
 ): Promise<ImportPlan> {
   if (files.length > 2000) throw Error('一次最多选择 2000 张照片。');
   const revision = session.revision;
   const rows = new Map<string, ImportRow>();
   const notes: string[] = [];
   for (const [index, file] of files.entries()) {
+    signal?.throwIfAborted();
+    await new Promise((resolve) => setTimeout(resolve, 0));
     try {
       limit(file, 80);
       const gps = photoMetadata(await file.arrayBuffer(), file.name);

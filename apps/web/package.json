@@ -4,17 +4,19 @@
   "version": "0.6.0-dev",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node ../../scripts/prepare-web.mjs && vite",
+    "build": "node ../../scripts/prepare-web.mjs && vite build",
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@fangyu/catalog": "workspace:*",
     "@fangyu/contracts": "workspace:*",
     "@fangyu/data-access": "workspace:*",
     "@fangyu/domain": "workspace:*",
     "@fangyu/import-export": "workspace:*",
     "@fangyu/map-renderer": "workspace:*",
-    "@fangyu/catalog": "workspace:*",
+    "@tanstack/vue-virtual": "^3.13.39",
+    "maplibre-gl": "6.11.2",
     "pinia": "^2.2.6",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5"

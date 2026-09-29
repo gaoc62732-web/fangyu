@@ -1,18 +1,23 @@
 import { computed, markRaw, ref, shallowRef } from 'vue';
 import { defineStore } from 'pinia';
-import { CatalogIndex, loadCatalog, loadGeometry } from '@fangyu/catalog';
+import { CatalogIndex, loadGeometry } from '@fangyu/catalog';
 import { HandbookSession, PALETTES, darkColors, type MapColors } from '@fangyu/domain';
-import type { ArchiveDocument, GeometryFeature, Scope } from '@fangyu/contracts';
+import type { ArchiveDocument, Catalog, GeometryFeature, Scope } from '@fangyu/contracts';
 import type { HandbookStorage } from '@fangyu/data-access';
+import { loadWebCatalog } from './catalog-loader.js';
 import { createAppDataAccess } from './data-access.js';
+import { CatalogWorker } from '../features/catalog/client.js';
 
 export const useAppStore = defineStore('app', () => {
   const session = shallowRef<HandbookSession>();
+  const worker = shallowRef<CatalogWorker>();
+  const bootstrap = shallowRef<Pick<Catalog, 'version' | 'regions' | 'categories'>>();
   const revision = ref(0);
   const loading = ref(true);
   const loadError = ref('');
   const error = ref('');
   const saveStatus = ref('');
+  const notice = ref('');
   const selectedRegionId = ref('');
   const category = ref('');
   const archives = ref<ArchiveDocument[]>([]);
@@ -29,10 +34,20 @@ export const useAppStore = defineStore('app', () => {
     loading.value = true;
     loadError.value = '';
     try {
-      const catalog = await loadCatalog(baseUrl);
+      void fetch(baseUrl + 'bootstrap.json')
+        .then((response) => {
+          if (!response.ok) return;
+          return response.json().then((data) => {
+            bootstrap.value = data;
+          });
+        })
+        .catch(() => {});
+      const catalog = await loadWebCatalog(baseUrl);
       storage = createAppDataAccess();
       const saved = await storage.read();
       session.value = markRaw(new HandbookSession(new CatalogIndex(catalog), saved));
+      worker.value?.destroy();
+      worker.value = markRaw(new CatalogWorker(catalog, session.value.snapshot()));
       savedRevision = saved?.revision || 0;
       saveFailure = undefined;
       revision.value++;
@@ -87,6 +102,9 @@ export const useAppStore = defineStore('app', () => {
   function commit(update: (current: HandbookSession) => void): boolean {
     try {
       session.value!.transaction(() => update(session.value!));
+      void worker.value?.request('sync', session.value!.snapshot()).catch((cause) => {
+        error.value = String(cause);
+      });
       revision.value++;
       void persist();
       return true;
@@ -98,8 +116,49 @@ export const useAppStore = defineStore('app', () => {
 
   function undo() {
     session.value!.undo();
+    void worker.value?.request('sync', session.value!.snapshot()).catch((cause) => {
+      error.value = String(cause);
+    });
     revision.value++;
     void persist();
+    notice.value = '已撤销上一次记录操作';
+  }
+
+  async function flush() {
+    await saveQueue;
+    if (saveFailure) throw saveFailure;
+  }
+  async function retrySave() {
+    await saveQueue;
+    saveFailure = undefined;
+    error.value = '';
+    await persist();
+    // The same expected revision is retained: a conflict never overwrites newer records.
+    await flush();
+  }
+
+  function recordEntry(id: string, visited: boolean, regionId?: string, subitemId?: string) {
+    const before = session.value!.snapshot().regions;
+    const ok = commit((current) =>
+      subitemId
+        ? current.markSubitem(id, subitemId, visited, regionId)
+        : current.markEntry(id, visited, regionId),
+    );
+    if (ok) {
+      const after = session.value!.snapshot().regions;
+      const names = Object.keys(after)
+        .filter((key) => before[key] !== after[key])
+        .map((key) => session.value!.index.regions.get(key)?.name)
+        .filter(Boolean);
+      notice.value =
+        (visited ? '已记录到访' : '已取消项目标记，地区记录保留') +
+        (names.length
+          ? ' · 补记 ' +
+            names.slice(0, 4).join('、') +
+            (names.length > 4 ? ' 等 ' + names.length + ' 个地区' : '')
+          : '');
+    }
+    return ok;
   }
 
   async function saveArchive(name: string, snapshot = session.value!.snapshot()) {
@@ -160,17 +219,23 @@ export const useAppStore = defineStore('app', () => {
 
   return {
     session,
+    worker,
+    bootstrap,
     revision,
     loading,
     loadError,
     error,
     saveStatus,
+    notice,
     selectedRegionId,
     category,
     archives,
     dark,
     load,
     commit,
+    flush,
+    retrySave,
+    recordEntry,
     undo,
     saveArchive,
     restore,

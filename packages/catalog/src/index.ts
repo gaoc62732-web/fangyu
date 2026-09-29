@@ -66,7 +66,7 @@ export async function loadCatalog(baseUrl: string): Promise<Catalog> {
 }
 
 export async function loadGeometry(baseUrl: string, scope: Scope): Promise<GeometryFeature[]> {
-  const response = await fetch(baseUrl + scope + '.geo.json');
+  const response = await fetch(baseUrl + 'geometry/' + scope + '.geo.json');
   if (!response.ok) throw Error('无法加载地图：' + response.status);
   return response.json() as Promise<GeometryFeature[]>;
 }

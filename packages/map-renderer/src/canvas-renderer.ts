@@ -1,5 +1,6 @@
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import type { MapScene, RenderFeature } from './types.js';
+import { projectionGeometry } from './projection-geometry.js';
 
 type Bounds = [number, number, number, number];
 type Shape = RenderFeature & { path: Path2D; bounds: Bounds };
@@ -98,12 +99,21 @@ export class CanvasMapRenderer {
       { ...options, passive: false },
     );
     this.observer = new ResizeObserver(() => {
-      this.width = host.clientWidth || 800;
-      this.height = host.clientHeight || 560;
+      if (!host.clientWidth || !host.clientHeight) return;
+      const first = this.width === 1,
+        oldWidth = this.width,
+        oldHeight = this.height;
+      this.width = host.clientWidth;
+      this.height = host.clientHeight;
       const ratio = devicePixelRatio || 1;
       this.canvas.width = Math.round(this.width * ratio);
       this.canvas.height = Math.round(this.height * ratio);
-      this.fit();
+      if (first) this.fit();
+      else {
+        this.x += (this.width - oldWidth) / 2;
+        this.y += (this.height - oldHeight) / 2;
+        this.draw();
+      }
     });
     this.observer.observe(host);
   }
@@ -126,7 +136,11 @@ export class CanvasMapRenderer {
       const bounds: Bounds = [Infinity, Infinity, -Infinity, -Infinity];
       let shape: Path2D;
       if (scene.world) {
-        const f = { type: 'Feature' as const, geometry: feature.geometry, properties: {} };
+        const f = {
+          type: 'Feature' as const,
+          geometry: projectionGeometry(feature.geometry),
+          properties: {},
+        };
         shape = new Path2D(path(f) || '');
         const b = path.bounds(f);
         bounds.splice(0, 4, b[0][0], b[0][1], b[1][0], b[1][1]);
@@ -174,9 +188,9 @@ export class CanvasMapRenderer {
       [Infinity, Infinity, -Infinity, -Infinity],
     );
     if (!Number.isFinite(b[0])) return;
-    this.scale = Math.min(
-      (this.width - 36) / (b[2] - b[0] || 1),
-      (this.height - 36) / (b[3] - b[1] || 1),
+    this.scale = Math.max(
+      0.0001,
+      Math.min((this.width - 36) / (b[2] - b[0] || 1), (this.height - 36) / (b[3] - b[1] || 1)),
     );
     this.x = this.width / 2 - ((b[0] + b[2]) / 2) * this.scale;
     this.y = this.height / 2 - ((b[1] + b[3]) / 2) * this.scale;
@@ -188,6 +202,13 @@ export class CanvasMapRenderer {
     this.x = x - (x - this.x) * scaleRatio;
     this.y = y - (y - this.y) * scaleRatio;
     this.scale = next;
+    this.draw();
+  }
+  locate(coords: [number, number]) {
+    const [x, y] = this.project(coords);
+    this.scale = Math.max(this.scale, 500);
+    this.x = this.width / 2 - x * this.scale;
+    this.y = this.height / 2 - y * this.scale;
     this.draw();
   }
   private hit(x: number, y: number) {
