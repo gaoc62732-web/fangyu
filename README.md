@@ -1,6 +1,8 @@
 # 方舆旅游手册
 
-方舆用于记录地区到访、景点与交通项目、旅行成就和卯分。当前为 **0.6.0-dev 架构重构版**，使用 Vue 3 + TypeScript 前端、NestJS 后端、PostgreSQL/PostGIS 数据库，统一由 pnpm workspace 管理。
+方舆用于记录地区到访、景点与交通项目、旅行成就和卯分。当前为 **0.6.7-dev 架构重构版**，使用 Vue 3 + TypeScript 前端、NestJS 后端、PostgreSQL/PostGIS 数据库，统一由 pnpm workspace 管理。
+
+本轮地图、列表、成就与点卯界面的更新详见 [v0.6.7-dev 修订说明](docs/revision-notes-v0.6.7-dev-2026-09-30.md)。
 
 本轮已经迁移现有功能的源码与目录数据。2026-09-29 的最小检查通过了类型检查、目录引用检查、前后端生产构建及前端本地演示模式的关键操作，发现 5 项待处理的功能差异；详见 [检查报告](docs/minimal-verification-2026-09-29.md)。**数据库与服务端联调、完整功能回归仍未完成，不能视为已验证的上线版本**。详细设计见 [重构方案](REFACTOR_PLAN.md)，第一轮实现边界见 [迁移记录](docs/first-round-migration.md)。
 

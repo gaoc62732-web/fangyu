@@ -1,7 +1,7 @@
 {
   "name": "fangyu",
   "private": true,
-  "version": "0.6.0-dev",
+  "version": "0.6.7-dev",
   "packageManager": "pnpm@10.15.0",
   "engines": {
     "node": ">=22.12.0"

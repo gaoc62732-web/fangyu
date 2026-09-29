@@ -6,7 +6,7 @@ import { useAppStore } from '../app/store.js';
 const props = withDefaults(
   defineProps<{
     rows: EntryView[];
-    selectedRegionId?: string;
+    selectedRegionId?: string | undefined;
     pageSize?: number;
   }>(),
   { pageSize: 50 },
@@ -16,8 +16,12 @@ const emit = defineEmits<{ locate: [entry: EntryView] }>();
 const store = useAppStore();
 const page = ref(0);
 const editing = ref('');
+const editingIds = ref<string[]>([]);
 const name = ref('');
 const note = ref('');
+type GroupedEntry = EntryView & { groupEntryIds?: string[]; regionPaths?: string[] };
+const groupIds = (entry: EntryView) => (entry as GroupedEntry).groupEntryIds || [entry.id];
+const regionPaths = (entry: EntryView) => (entry as GroupedEntry).regionPaths || [];
 const visible = computed(() =>
   props.rows.slice(page.value * props.pageSize, (page.value + 1) * props.pageSize),
 );
@@ -32,7 +36,9 @@ watch(
 
 function mark(entry: EntryView, event: Event) {
   const visited = (event.target as HTMLInputElement).checked;
-  store.commit((session) => session.markEntry(entry.id, visited, props.selectedRegionId));
+  store.commit((session) => {
+    for (const id of groupIds(entry)) session.markEntry(id, visited, props.selectedRegionId);
+  });
 }
 
 function markSubitem(entry: EntryView, subitemId: string, event: Event) {
@@ -44,13 +50,17 @@ function markSubitem(entry: EntryView, subitemId: string, event: Event) {
 
 function edit(entry: EntryView) {
   editing.value = entry.id;
+  editingIds.value = groupIds(entry);
   name.value = entry.name;
   note.value = entry.note;
 }
 
 function save() {
-  if (store.commit((session) => session.editEntry(editing.value, name.value, note.value))) {
+  if (store.commit((session) => {
+    for (const id of editingIds.value) session.editEntry(id, name.value, note.value);
+  })) {
     editing.value = '';
+    editingIds.value = [];
   }
 }
 
@@ -78,11 +88,19 @@ function removePersonalEntry(entry: EntryView) {
           type="checkbox"
           :checked="entry.checked"
           :indeterminate="entry.partial"
+          :title="groupIds(entry).length > 1 ? '同时更新这个项目在全部所属政区的记录' : ''"
           @change="mark(entry, $event)"
         />
         <span>{{ entry.name }}</span>
       </label>
-      <small>{{ entry.path }} {{ entry.code }} {{ entry.lines?.join(' / ') }}</small>
+      <template v-if="regionPaths(entry).length">
+        <small>涉及 {{ regionPaths(entry).length }} 个政区 · {{ regionPaths(entry).slice(0, 3).join('；') }}</small>
+        <details v-if="regionPaths(entry).length > 3">
+          <summary>查看全部所属政区</summary>
+          <small class="entry-region-paths">{{ regionPaths(entry).join('；') }}</small>
+        </details>
+      </template>
+      <small v-else>{{ entry.path }} {{ entry.code }} {{ entry.lines?.join(' / ') }}</small>
       <p
         v-if="entry.note"
         class="note"

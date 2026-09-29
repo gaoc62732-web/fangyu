@@ -5,6 +5,7 @@ import { HandbookSession, PALETTES, darkColors, type MapColors } from '@fangyu/d
 import type { ArchiveDocument, GeometryFeature, Scope } from '@fangyu/contracts';
 import type { HandbookStorage } from '@fangyu/data-access';
 import { createAppDataAccess } from './data-access.js';
+import { appMode } from './mode.js';
 
 export const useAppStore = defineStore('app', () => {
   const session = shallowRef<HandbookSession>();
@@ -31,13 +32,23 @@ export const useAppStore = defineStore('app', () => {
     try {
       const catalog = await loadCatalog(baseUrl);
       storage = createAppDataAccess();
-      const saved = await storage.read();
-      session.value = markRaw(new HandbookSession(new CatalogIndex(catalog), saved));
+      const index = new CatalogIndex(catalog);
+      let saved = await storage.read();
+      let localImport = false;
+      if (!saved && appMode() === 'demo' && location.hostname === '127.0.0.1') {
+        const response = await fetch(baseUrl + 'local-records.json', { cache: 'no-store' });
+        if (response.ok) {
+          saved = new HandbookSession(index).validate(await response.json());
+          await storage.write(saved, 0);
+          localImport = true;
+        }
+      }
+      session.value = markRaw(new HandbookSession(index, saved));
       savedRevision = saved?.revision || 0;
       saveFailure = undefined;
       revision.value++;
       archives.value = await storage.archives();
-      saveStatus.value = '记录已载入';
+      saveStatus.value = localImport ? '已载入本机旧版迁移记录' : '记录已载入';
     } catch (cause) {
       loadError.value = String(cause);
     } finally {

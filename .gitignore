@@ -14,6 +14,7 @@ coverage/
 apps/*/generated/
 data/generated/
 data/tmp/
+.local-records/
 *.local
 .env
 .env.*

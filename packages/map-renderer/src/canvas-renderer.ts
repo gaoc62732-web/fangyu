@@ -3,6 +3,7 @@ import type { MapScene, RenderFeature } from './types.js';
 
 type Bounds = [number, number, number, number];
 type Shape = RenderFeature & { path: Path2D; bounds: Bounds };
+export type MapHover = { id: string; name: string; point: boolean; x: number; y: number };
 const mercator = ([x, y]: number[]): [number, number] => [
   x!,
   (-Math.log(Math.tan(Math.PI / 4 + (Math.max(-80, Math.min(80, y!)) * Math.PI) / 360)) * 180) /
@@ -24,6 +25,7 @@ export class CanvasMapRenderer {
   private width = 1;
   private height = 1;
   private scale = 1;
+  private fullScale = 1;
   private x = 0;
   private y = 0;
   private drag: { x: number; y: number; startX: number; startY: number } | undefined;
@@ -32,7 +34,7 @@ export class CanvasMapRenderer {
   constructor(
     host: HTMLElement,
     private select: (id: string, point: boolean) => void,
-    private hover: (name: string) => void = () => {},
+    private hover: (item: MapHover | undefined) => void = () => {},
   ) {
     this.canvas = document.createElement('canvas');
     this.canvas.setAttribute('aria-label', '可拖动和缩放的旅行地图；也可通过旁边的列表选择地点');
@@ -59,12 +61,16 @@ export class CanvasMapRenderer {
       'pointermove',
       (event) => {
         if (this.drag) {
+          this.hover(undefined);
           this.x += event.offsetX - this.drag.x;
           this.y += event.offsetY - this.drag.y;
           this.drag.x = event.offsetX;
           this.drag.y = event.offsetY;
           this.draw();
-        } else this.hover(this.hit(event.offsetX, event.offsetY)?.name || '');
+        } else {
+          const hit = this.hit(event.offsetX, event.offsetY);
+          this.hover(hit ? { ...hit, x: event.offsetX, y: event.offsetY } : undefined);
+        }
       },
       options,
     );
@@ -86,14 +92,17 @@ export class CanvasMapRenderer {
       'pointercancel',
       () => {
         this.drag = undefined;
+        this.hover(undefined);
       },
       options,
     );
+    this.canvas.addEventListener('pointerleave', () => this.hover(undefined), options);
     this.canvas.addEventListener(
       'wheel',
       (event) => {
         event.preventDefault();
-        this.zoom(Math.exp(-event.deltaY * 0.001), event.offsetX, event.offsetY);
+        const delta = Math.max(-120, Math.min(120, event.deltaY));
+        this.zoom(Math.exp(-delta * 0.0009), event.offsetX, event.offsetY);
       },
       { ...options, passive: false },
     );
@@ -161,7 +170,7 @@ export class CanvasMapRenderer {
     if (reset || !previous.features.length) this.fit();
     else this.draw();
   }
-  fit(ids?: string[]) {
+  fit(ids?: string[], selectionScale = 1) {
     const selected = ids?.length ? this.shapes.filter((f) => ids.includes(f.id)) : this.shapes;
     if (!selected.length) return;
     const b = selected.reduce<Bounds>(
@@ -174,16 +183,18 @@ export class CanvasMapRenderer {
       [Infinity, Infinity, -Infinity, -Infinity],
     );
     if (!Number.isFinite(b[0])) return;
-    this.scale = Math.min(
-      (this.width - 36) / (b[2] - b[0] || 1),
-      (this.height - 36) / (b[3] - b[1] || 1),
+    const targetScale = Math.min(
+      Math.max(1, this.width - 36) / (b[2] - b[0] || 1),
+      Math.max(1, this.height - 36) / (b[3] - b[1] || 1),
     );
+    if (!ids?.length) this.fullScale = targetScale;
+    this.scale = Math.min(targetScale, this.fullScale * (this.scene.world ? 20 : 36)) * selectionScale;
     this.x = this.width / 2 - ((b[0] + b[2]) / 2) * this.scale;
     this.y = this.height / 2 - ((b[1] + b[3]) / 2) * this.scale;
     this.draw();
   }
   zoom(factor: number, x = this.width / 2, y = this.height / 2) {
-    const next = Math.max(0.3, Math.min(50000, this.scale * factor));
+    const next = Math.max(this.fullScale * 0.75, Math.min(this.fullScale * (this.scene.world ? 20 : 36), this.scale * factor));
     const scaleRatio = next / this.scale;
     this.x = x - (x - this.x) * scaleRatio;
     this.y = y - (y - this.y) * scaleRatio;
@@ -223,11 +234,18 @@ export class CanvasMapRenderer {
     ctx.fillRect(0, 0, this.width, this.height);
     ctx.translate(this.x, this.y);
     ctx.scale(this.scale, this.scale);
+    const boundaryWidth =
+      this.scene.detailLevel === 'province' ? 1.4 : this.scene.detailLevel === 'city' ? 0.9 : 0.5;
+    const boundaryColor = this.scene.dark
+      ? '#91b0bb'
+      : this.scene.detailLevel === 'county'
+        ? '#8ca49d'
+        : '#57726b';
     for (const f of this.shapes) {
       ctx.fillStyle = f.fill;
       ctx.fill(f.path, 'evenodd');
-      ctx.strokeStyle = f.selected ? '#cf762b' : this.scene.dark ? '#75888b' : '#9fafac';
-      ctx.lineWidth = (f.selected ? 2 : 0.5) / this.scale;
+      ctx.strokeStyle = f.selected ? '#cf762b' : boundaryColor;
+      ctx.lineWidth = (f.selected ? 2 : boundaryWidth) / this.scale;
       ctx.stroke(f.path);
     }
     for (const point of this.scene.points) {

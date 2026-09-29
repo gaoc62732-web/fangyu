@@ -1,7 +1,7 @@
 {
   "name": "@fangyu/web",
   "private": true,
-  "version": "0.6.0-dev",
+  "version": "0.6.7-dev",
   "type": "module",
   "scripts": {
     "dev": "vite",

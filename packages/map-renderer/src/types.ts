@@ -19,4 +19,5 @@ export interface MapScene {
   points: RenderPoint[];
   world?: boolean;
   dark?: boolean;
+  detailLevel?: 'province' | 'city' | 'county' | undefined;
 }
