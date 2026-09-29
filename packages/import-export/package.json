@@ -1,0 +1,22 @@
+{
+  "name": "@fangyu/import-export",
+  "private": true,
+  "version": "0.6.0-dev",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@fangyu/contracts": "workspace:*",
+    "@fangyu/domain": "workspace:*",
+    "fflate": "^0.8.2",
+    "exceljs": "^4.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

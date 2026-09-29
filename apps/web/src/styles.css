@@ -1,0 +1,392 @@
+:root {
+  color: #243a37;
+  background: #f5f7f3;
+  font:
+    14px/1.6 system-ui,
+    'Microsoft YaHei',
+    sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 24px;
+  background: rgb(255 255 255 / 94%);
+  border-bottom: 1px solid #dce4df;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #fff;
+  background: #21735d;
+  font-weight: 700;
+}
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+h1 {
+  margin-bottom: 2px;
+  font-size: 19px;
+}
+.brand small,
+.page-heading p,
+.inspector p {
+  color: #6a7c77;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+nav a {
+  color: #365447;
+  padding: 7px 11px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+nav a.router-link-active {
+  color: #fff;
+  background: #21735d;
+}
+.page-shell {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.page-heading {
+  margin-bottom: 18px;
+}
+.map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(280px, 1fr);
+  gap: 18px;
+}
+.map-card,
+.inspector,
+.card {
+  min-height: 480px;
+  background: #fff;
+  border: 1px solid #dce4df;
+  border-radius: 8px;
+  box-shadow: 0 8px 28px rgb(36 58 55 / 7%);
+}
+.map-card {
+  overflow: hidden;
+}
+.map-surface {
+  height: 560px;
+}
+.inspector {
+  padding: 20px;
+  min-height: auto;
+}
+.inspector select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #dce4df;
+  border-radius: 8px;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 16px;
+}
+.toolbar input,
+.toolbar select,
+button,
+textarea {
+  border: 1px solid #cbd8d2;
+  border-radius: 6px;
+  background: #fff;
+  padding: 7px 9px;
+  color: #243a37;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.map-card .toolbar,
+.map-card .legend,
+.map-card .note {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
+}
+.legend i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #8b9b95;
+  margin-right: 4px;
+  vertical-align: -1px;
+}
+.entries {
+  display: grid;
+  gap: 6px;
+}
+.entry {
+  padding: 8px 0;
+  border-bottom: 1px solid #e6ece8;
+}
+.entry small {
+  display: block;
+  color: #6a7c77;
+  margin-left: 23px;
+}
+.entry a,
+.text-button {
+  margin-left: 23px;
+  color: #21735d;
+  background: none;
+  border: 0;
+  padding: 2px 0;
+}
+.cell-block {
+  border-top: 1px solid #e6ece8;
+  padding: 8px 0;
+}
+textarea {
+  width: 100%;
+  min-height: 100px;
+}
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 10px 0;
+}
+.chip-list button {
+  font-size: 12px;
+}
+.search-results {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.search-results button {
+  text-align: left;
+}
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.achievement {
+  background: #fff;
+  border: 1px solid #dce4df;
+  border-left: 4px solid #aebdb7;
+  padding: 12px;
+  min-height: 120px;
+}
+.achievement.lit {
+  border-left-color: #c27932;
+  background: #fffaf2;
+}
+.achievement h3 {
+  margin-bottom: 3px;
+}
+.achievement p {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.achievement small {
+  color: #6a7c77;
+}
+.score-table {
+  min-height: auto;
+  padding: 12px;
+  overflow: auto;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid #e6ece8;
+}
+.loading,
+.error-panel {
+  padding: 60px 20px;
+  text-align: center;
+}
+.error-panel {
+  color: #8b332e;
+  background: #fff5f3;
+  border: 1px solid #e4c1ba;
+}
+.site-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  color: #6a7c77;
+  padding: 14px;
+}
+@media (max-width: 760px) {
+  .site-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .map-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  min-height: auto;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+.inspector {
+  max-height: 850px;
+  overflow: auto;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.stat-grid strong {
+  font-size: 30px;
+}
+.stat-grid p {
+  margin-bottom: 0;
+}
+fieldset {
+  min-width: 0;
+}
+fieldset:disabled {
+  opacity: 0.65;
+}
+label input:not([type='checkbox']):not([type='color']),
+label textarea {
+  margin: 6px;
+}
+.subitem,
+.selection-row {
+  display: block;
+  padding: 7px;
+}
+.archive-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+}
+.table-scroll {
+  overflow: auto;
+}
+td small {
+  display: block;
+  max-width: 250px;
+  overflow-wrap: anywhere;
+}
+.login-form {
+  max-width: 380px;
+  margin: 20px auto;
+}
+.login-form label {
+  display: block;
+}
+.prose {
+  max-width: 1000px;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+progress {
+  width: 100%;
+  accent-color: #21735d;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid #c27932;
+  outline-offset: 3px;
+}
+[data-theme='dark'] {
+  background: #14242a;
+  color: #d7e4de;
+  color-scheme: dark;
+}
+[data-theme='dark'] .site-header,
+[data-theme='dark'] .card,
+[data-theme='dark'] .map-card,
+[data-theme='dark'] .inspector,
+[data-theme='dark'] .achievement,
+[data-theme='dark'] button,
+[data-theme='dark'] input,
+[data-theme='dark'] select,
+[data-theme='dark'] textarea {
+  background: #20343b;
+  color: #d7e4de;
+  border-color: #45616a;
+}
+[data-theme='dark'] .achievement.lit {
+  background: #3b392c;
+}
+[data-theme='dark'] nav a,
+[data-theme='dark'] a {
+  color: #a8d8c6;
+}
+[data-theme='dark'] .note,
+[data-theme='dark'] small {
+  color: #a0b6ae;
+}
+@media (max-width: 760px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+  .map-surface {
+    height: 420px;
+  }
+  .inspector {
+    max-height: none;
+  }
+  .page-shell {
+    padding: 12px;
+  }
+}

@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: fangyu
+      POSTGRES_USER: fangyu
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fangyu}
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - fangyu-postgres:/var/lib/postgresql/data
+volumes:
+  fangyu-postgres:

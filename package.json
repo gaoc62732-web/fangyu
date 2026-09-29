@@ -1,0 +1,35 @@
+{
+  "name": "fangyu",
+  "private": true,
+  "version": "0.6.0-dev",
+  "packageManager": "pnpm@10.15.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev:web": "pnpm --filter @fangyu/web dev",
+    "dev:api": "pnpm --filter @fangyu/api dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "install:deps": "node scripts/install.mjs",
+    "format": "prettier --write apps packages scripts tools infra docs *.json *.yaml *.md",
+    "format:check": "prettier --check apps packages scripts tools infra docs *.json *.yaml *.md",
+    "db:migrate": "pnpm --filter @fangyu/api migrate",
+    "create-user": "pnpm --filter @fangyu/api create-user",
+    "catalog:stats": "node tools/data/catalog-stats.mjs",
+    "catalog:check": "node scripts/verify-catalog.mjs"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "@types/node": "^22.18.0",
+    "@types/geojson": "^7946.0.16",
+    "@types/d3-geo": "^3.1.0",
+    "pnpm": "10.15.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

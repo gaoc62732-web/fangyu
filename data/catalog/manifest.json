@@ -1,0 +1,12 @@
+{
+  "version": "2026-09-28.1",
+  "regions": 3563,
+  "entries": 31912,
+  "files": [
+    "catalog.json",
+    "china.geo.json",
+    "world.geo.json",
+    "japan.geo.json",
+    "korea.geo.json"
+  ]
+}

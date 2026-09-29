@@ -1,0 +1,28 @@
+{
+  "name": "@fangyu/web",
+  "private": true,
+  "version": "0.6.0-dev",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@fangyu/contracts": "workspace:*",
+    "@fangyu/data-access": "workspace:*",
+    "@fangyu/domain": "workspace:*",
+    "@fangyu/import-export": "workspace:*",
+    "@fangyu/map-renderer": "workspace:*",
+    "@fangyu/catalog": "workspace:*",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.0",
+    "vue-tsc": "^2.1.10"
+  }
+}
