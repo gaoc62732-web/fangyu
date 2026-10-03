@@ -1,11 +1,11 @@
 {
   "name": "@fangyu/web",
   "private": true,
-  "version": "0.6.7-dev",
+  "version": "0.7.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node ../../scripts/prepare-web.mjs && vite",
+    "build": "node ../../scripts/prepare-web.mjs && vite build",
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
@@ -17,7 +17,9 @@
     "@fangyu/catalog": "workspace:*",
     "pinia": "^2.2.6",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "@tanstack/vue-virtual": "^3.13.39",
+    "maplibre-gl": "6.11.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.4",

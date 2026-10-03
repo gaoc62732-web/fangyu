@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { nextTick } from 'vue';
 import { VISIT_LABELS, type MapLevel, type Scope } from '@fangyu/contracts';
-import { CanvasMapRenderer, type MapHover, type MapScene } from '@fangyu/map-renderer';
 import type { EntryView } from '@fangyu/domain';
-import { useAppStore } from '../app/store.js';
-import { download } from '../features/exports/download.js';
-
+import { useTiledMap } from '../features/maps/use-tiled-map.js';
+import BasemapSettings from './BasemapSettings.vue';
+import VisitedMapLayers from './VisitedMapLayers.vue';
+import { mapAttributions } from '../features/maps/data-attribution.js';
 const props = withDefaults(
   defineProps<{
     scope: Scope;
@@ -13,156 +13,54 @@ const props = withDefaults(
     level?: MapLevel;
     category?: string;
     points?: EntryView[];
+    focus?: [number, number] | null;
   }>(),
-  { selected: '', level: 'county', category: '' },
+  { selected: '', level: 'county', category: '', focus: null },
 );
 const emit = defineEmits<{
   select: [id: string];
   point: [id: string];
   level: [value: Exclude<MapLevel, 'country'>];
+  overview: [];
 }>();
-const store = useAppStore();
-const host = ref<HTMLElement>();
-const hovered = ref<MapHover>();
-const mapError = ref('');
-const showPoints = ref(true);
-const taiwanSelected = computed(() =>
-  props.scope === 'china' &&
-  store.session?.index.ancestors(props.selected)[0]?.code === '710000',
-);
-let renderer: CanvasMapRenderer | undefined;
-const entryById = computed(() => new Map(store.rows.map((entry) => [entry.id, entry])));
-const hoverInfo = computed(() => {
-  const hit = hovered.value;
-  if (!hit) return undefined;
-  if (hit.point) {
-    const entry = entryById.value.get(hit.id);
-    if (!entry) return { title: hit.name, detail: '内容项目', state: '' };
-    const category = store.session!.index.catalog.categories.find((item) => item.id === entry.categoryId);
-    return { title: entry.name, detail: `${category?.name || '内容项目'} · ${entry.path}`, state: entry.visited ? '已标记' : '未标记' };
+const {
+  store,
+  host,
+  mapHost,
+  hoverInfo,
+  hoverStyle,
+  showPoints,
+  mapError,
+  loading,
+  fallback,
+  provider,
+  providerFailed,
+  missingBoundary,
+  mapZoom,
+  mapCenter,
+  visiblePointCount,
+  visitedResult,
+  visitedLayers,
+  selectedVisitedMarkers,
+  selectVisitedMarker,
+  closeVisitedSelection,
+  initialize,
+  useFallback,
+  zoom,
+  fitRegion,
+  fitSelection,
+  fitFranceView,
+  exportPng,
+} = useTiledMap(props, (id, point) => (point ? emit('point', id) : emit('select', id)));
+async function overview(group?: 'metropolitan' | 'overseas') {
+  if (props.scope === 'france') {
+    emit('overview');
+    await nextTick();
   }
-  const region = store.session!.index.regions.get(hit.id);
-  return {
-    title: hit.name,
-    detail: region
-      ? props.scope === 'world'
-        ? region.aliases[0] || ''
-        : store.session!.index.paths.get(region.id) || ''
-      : '',
-    state: region ? VISIT_LABELS[store.session!.visitState(region.id)] : '',
-  };
-});
-const hoverStyle = computed(() => ({
-  left: `${Math.max(8, Math.min((host.value?.clientWidth || 800) - 270, (hovered.value?.x || 0) + 16))}px`,
-  top: `${Math.max(8, Math.min((host.value?.clientHeight || 560) - 100, (hovered.value?.y || 0) + 16))}px`,
-}));
-
-const scene = computed<MapScene>(() => {
-  void store.revision;
-  const session = store.session!;
-  const markedRegions = new Set<string>();
-  if (props.category && props.scope === 'china') {
-    for (const entry of store.rows) {
-      if (entry.categoryId !== props.category || !entry.visited) continue;
-      for (const owner of entry.regionIds) {
-        for (const ancestor of session.index.ancestors(owner)) markedRegions.add(ancestor.id);
-      }
-    }
-  }
-  const features = (store.geometry[props.scope] || [])
-    .filter(
-      (feature) =>
-        props.scope !== 'china' || feature.level === props.level || feature.level === 'border',
-    )
-    .sort((left, right) => Number(left.level === 'border') - Number(right.level === 'border'))
-    .map((feature) => {
-      const region = feature.regionId ? session.index.regions.get(feature.regionId) : undefined;
-      let fill = region ? store.colors[session.visitState(region.id)] : store.colors.unmapped;
-      if (feature.level === 'border') fill = 'transparent';
-      if (region && props.category && props.scope === 'china') {
-        const visited = markedRegions.has(region.id);
-        fill = store.colors[visited ? 'arrived' : 'unvisited'];
-      }
-      return {
-        id: feature.regionId || feature.id,
-        name: region?.name || '未映射边界',
-        geometry: feature.geometry,
-        fill,
-        interactive: Boolean(region),
-        selected: Boolean(
-          region && props.selected && session.index.belongsTo(region.id, props.selected),
-        ),
-      };
-    });
-  const points = showPoints.value && props.scope === 'china' && !taiwanSelected.value
-    ? (props.points || [])
-        .filter((entry) => entry.coordinates)
-        .map((entry) => ({
-          id: entry.id,
-          name: entry.name,
-          coords: entry.coordinates!,
-          marked: entry.visited,
-        }))
-    : [];
-  return {
-    features,
-    points,
-    world: props.scope === 'world',
-    dark: store.dark,
-    detailLevel: props.scope === 'china' && props.level !== 'country' ? props.level : undefined,
-  };
-});
-
-async function load() {
-  mapError.value = '';
-  try {
-    await store.ensureGeometry(props.scope);
-    renderer?.setScene(scene.value, true);
-    fitSelection();
-  } catch (cause) {
-    mapError.value = String(cause);
-  }
+  if (group) fitFranceView(group);
+  else fitRegion();
 }
-
-function fitSelection() {
-  const ids = props.selected
-    ? scene.value.features.filter((feature) => feature.selected).map((feature) => feature.id)
-    : undefined;
-  const selectedRegion = store.session!.index.regions.get(props.selected);
-  renderer?.fit(ids, props.scope === 'china' && selectedRegion?.level === 2 ? 0.82 : 1);
-}
-
-async function exportPng() {
-  if (!renderer) return;
-  try {
-    const legend = Object.entries(VISIT_LABELS).map(([state, label]) => ({
-      label,
-      color: store.colors[state as keyof typeof VISIT_LABELS],
-    }));
-    download(await renderer.png('方舆旅行地图', legend), '方舆地图.png');
-  } catch (cause) {
-    mapError.value = String(cause);
-  }
-}
-
-onMounted(() => {
-  if (host.value) {
-    renderer = new CanvasMapRenderer(
-      host.value,
-      (id, point) => (point ? emit('point', id) : emit('select', id)),
-      (item) => {
-        hovered.value = item;
-      },
-    );
-    void load();
-  }
-});
-watch(scene, (value) => renderer?.setScene(value));
-watch(() => props.scope, load);
-watch(() => [props.selected, props.level], fitSelection);
-onBeforeUnmount(() => renderer?.destroy());
 </script>
-
 <template>
   <section class="map-card">
     <div
@@ -190,29 +88,67 @@ onBeforeUnmount(() => renderer?.destroy());
     <div class="toolbar">
       <button
         aria-label="放大"
-        @click="renderer?.zoom(1.2)"
+        @click="zoom(1.2)"
       >
         ＋
       </button>
       <button
         aria-label="缩小"
-        @click="renderer?.zoom(1 / 1.2)"
+        @click="zoom(1 / 1.2)"
       >
         －
       </button>
-      <button @click="renderer?.fit()">全图</button>
+      <button @click="overview()">全图</button>
+      <template v-if="scope === 'france'">
+        <button
+          :disabled="loading || missingBoundary"
+          @click="overview('metropolitan')"
+        >
+          法国本土
+        </button>
+        <button
+          :disabled="loading || missingBoundary"
+          title="显示当前目录已收录的全部海外地区"
+          @click="overview('overseas')"
+        >
+          全部海外地区
+        </button>
+      </template>
       <button @click="fitSelection">选中范围</button>
       <button @click="exportPng">导出 PNG</button>
-      <label v-if="scope === 'china' && !taiwanSelected"
+      <label
         ><input
           v-model="showPoints"
           type="checkbox"
         />显示点位</label
       >
     </div>
-    <p class="map-boundary-notice" role="note">
+    <VisitedMapLayers
+      :result="visitedResult"
+      :layers="visitedLayers"
+      :selected="selectedVisitedMarkers"
+      @choose="selectVisitedMarker"
+      @close="closeVisitedSelection"
+    />
+    <p
+      v-if="showPoints && !category && !selected && !focus"
+      class="note"
+    >
+      {{
+        fallback
+          ? '全图优先显示已到访点位；选择类别或地区可查看其余地点。'
+          : '全图优先显示已到访点位；放大地图或选择类别、地区可查看其余地点。'
+      }}
+    </p>
+    <p
+      class="map-boundary-notice"
+      role="note"
+    >
       <strong>地图边界说明</strong>
       边界与行政区划图形仅供旅行记录参考，不代表权威或现行的地理边界与行政区划；具体情况请以主管部门公布的资料为准。
+      <span v-if="['vietnam', 'malaysia', 'singapore', 'brunei'].includes(scope)">
+        本专题在西沙、南沙的离散岛礁图形不提供行政区悬停或选择。
+      </span>
     </p>
     <p
       v-if="mapError"
@@ -223,13 +159,68 @@ onBeforeUnmount(() => renderer?.destroy());
     <div
       ref="host"
       class="map-surface"
+      :data-map-level="scope === 'france' || scope === 'china' ? level : undefined"
+      :data-map-mode="missingBoundary ? 'unavailable' : fallback ? 'canvas' : 'tiles'"
+      :data-map-zoom="fallback || missingBoundary ? undefined : mapZoom"
+      :data-map-center="mapCenter?.join(',')"
+      :data-visible-points="visiblePointCount"
+      :aria-busy="loading"
     >
-      <div v-if="hoverInfo" class="map-hover-card" :style="hoverStyle" role="tooltip">
+      <div
+        ref="mapHost"
+        class="tile-map-host"
+      />
+      <div
+        v-if="loading"
+        class="tile-map-status"
+        role="status"
+      >
+        正在载入地图…
+      </div>
+      <div
+        v-if="hoverInfo"
+        class="map-hover-card"
+        :style="hoverStyle"
+        role="tooltip"
+      >
         <strong>{{ hoverInfo.title }}</strong>
         <small>{{ hoverInfo.detail }}</small>
         <span>{{ hoverInfo.state }}</span>
       </div>
     </div>
+    <div
+      class="tile-map-note"
+      role="status"
+    >
+      <span>{{
+        missingBoundary
+          ? '本专题边界地图待补充'
+          : fallback
+            ? focus
+              ? '当前使用简化地图，仅显示所属地区范围，暂不支持地点精确居中。'
+              : '当前使用简化地图，仍可查看和记录到访。'
+            : providerFailed
+              ? '在线底图暂不可用，行政区地图仍可使用。'
+              : !provider
+                ? '行政区地图 · 在线底图未启用'
+                : '在线底图 · ' + provider.name
+      }}</span>
+      <button
+        v-if="fallback || providerFailed || mapError"
+        :disabled="loading"
+        @click="initialize"
+      >
+        重试地图
+      </button>
+      <button
+        v-if="mapError && !fallback && !missingBoundary"
+        :disabled="loading"
+        @click="useFallback"
+      >
+        使用简化地图
+      </button>
+    </div>
+    <BasemapSettings />
     <slot name="content-controls" />
     <div class="legend">
       <span
@@ -240,5 +231,62 @@ onBeforeUnmount(() => renderer?.destroy());
       </span>
     </div>
     <p class="note">拖动平移，滚轮缩放，点击选择；悬浮查看地区与要素信息。</p>
+    <p class="note map-data-attribution">
+      <a
+        v-for="credit in mapAttributions(scope, visitedLayers.visitedWorldHeritage)"
+        :key="credit.url"
+        :href="credit.url"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ credit.label }}</a
+      >
+    </p>
   </section>
 </template>
+
+<style scoped>
+.map-data-attribution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: 11px;
+}
+.tile-map-host {
+  width: 100%;
+  height: 100%;
+}
+.tile-map-status {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 8px 14px;
+  background: #ffffffed;
+  color: #244d40;
+  border-radius: 8px;
+  z-index: 2;
+}
+.tile-map-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #667a71;
+}
+.tile-map-note button {
+  font-size: 12px;
+  padding: 3px 9px;
+}
+.map-hover-card {
+  z-index: 3;
+  pointer-events: none;
+}
+:global([data-theme='dark']) .tile-map-note {
+  color: #b5cbbf;
+}
+:global([data-theme='dark']) .tile-map-status {
+  background: #20343bed;
+  color: #d7e4de;
+}
+</style>

@@ -1,15 +1,23 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { VISIT_LABELS, type MapLevel, type Scope } from '@fangyu/contracts';
+import { useRoute, useRouter } from 'vue-router';
+import { VISIT_LABELS, getScopeConfig, type MapLevel, type Scope } from '@fangyu/contracts';
 import type { EntryView } from '@fangyu/domain';
 import { useAppStore } from '../app/store.js';
 import MapSurface from '../components/MapSurface.vue';
 import VisitStateSelect from '../components/VisitStateSelect.vue';
 import CategoryEntryList from '../components/CategoryEntryList.vue';
+import HeritageProjects from '../components/HeritageProjects.vue';
+import TopicCoverage from '../components/TopicCoverage.vue';
+import FootballGrounds from '../components/FootballGrounds.vue';
+import NationalHeritage from '../components/NationalHeritage.vue';
 import { exportCsv } from '../features/exports/download.js';
+import { searchText } from '../features/search-text.js';
 
 const props = defineProps<{ scope: Scope }>();
 const store = useAppStore();
+const route = useRoute();
+const router = useRouter();
 const query = ref('');
 const status = ref('');
 const descendants = ref(true);
@@ -26,15 +34,18 @@ const emptyRecords = computed(() => {
   const snapshot = session.value.snapshot();
   return (
     !Object.values(snapshot.regions).some((state) => state !== 'unvisited') &&
-    !Object.values(snapshot.entries).some((record) => record.visited || record.subitemIds.length)
+    !Object.values(snapshot.entries).some(
+      (record) => record.visited || record.subitemIds.length || record.stadiumExperiences?.length,
+    )
   );
 });
 const index = computed(() => session.value.index);
-const title = computed(
-  () =>
-    ({ china: '中国旅游手册', world: '世界旅游手册', japan: '日本专题', korea: '韩国专题' })[
-      props.scope
-    ],
+const title = computed(() =>
+  props.scope === 'china'
+    ? '中国旅游手册'
+    : props.scope === 'world'
+      ? '世界旅游手册'
+      : getScopeConfig(props.scope).title,
 );
 const regions = computed(() =>
   index.value.catalog.regions.filter((region) => region.scope === props.scope),
@@ -50,12 +61,73 @@ const availableCategories = computed(() => {
 const selected = computed(() => index.value.regions.get(store.selectedRegionId));
 const childRegions = computed(() => index.value.children.get(store.selectedRegionId) || []);
 const visibleChildren = computed(() =>
-  showAllChildren.value ? childRegions.value : childRegions.value.slice(0, 18),
+  props.scope === 'france' || showAllChildren.value
+    ? childRegions.value
+    : childRegions.value.slice(0, 18),
 );
 const roots = computed(() =>
-  regions.value.filter((region) => (props.scope === 'china' ? region.level === 0 : true)),
+  regions.value.filter((region) =>
+    props.scope === 'china'
+      ? region.level === 0
+      : props.scope === 'france'
+        ? region.level === 1
+        : true,
+  ),
 );
+const regionGroups = computed(() => {
+  const groups = new Map<string, typeof roots.value>();
+  for (const region of roots.value) {
+    const label =
+      props.scope === 'france'
+        ? region.kind?.startsWith('metropolitan-')
+          ? '法国本土（13）'
+          : '海外地区层级（5）'
+        : props.scope === 'usa'
+          ? region.kind === 'state'
+            ? '州（50）'
+            : '哥伦比亚特区（1）'
+          : props.scope === 'spain'
+            ? region.kind === 'autonomous-community'
+              ? '自治社区（17）'
+              : '自治市（2）'
+            : props.scope === 'uk'
+              ? region.constituentCountry || '历史郡'
+              : props.scope === 'malaysia'
+                ? region.kind === 'state'
+                  ? '州（13） · States'
+                  : '联邦直辖区（3） · Federal territories'
+                : props.scope === 'thailand'
+                  ? region.kind === 'special-administrative-area'
+                    ? '曼谷 · Bangkok'
+                    : '府（76） · Provinces'
+                  : getScopeConfig(props.scope).boundaryLabel;
+    groups.set(label, [...(groups.get(label) || []), region]);
+  }
+  return [...groups].map(([label, items]) => ({ label, items }));
+});
 const path = computed(() => index.value.ancestors(store.selectedRegionId));
+const francePath = computed(() => path.value.filter((region) => region.scope === 'france'));
+const franceRoot = computed(() => francePath.value.find((region) => region.level === 1));
+const franceDepartment = computed(() => francePath.value.find((region) => region.level === 2));
+const franceDepartments = computed(() => regions.value.filter((region) => region.level === 2));
+const franceArrondissements = computed(() => regions.value.filter((region) => region.level === 3));
+const inIleDeFrance = computed(() => franceRoot.value?.code === 'FR-IDF');
+const inParis = computed(() => franceDepartment.value?.sourceCode === '75');
+const franceStatistics = computed(() => {
+  void store.revision;
+  return [
+    { label: '法国大区', items: roots.value },
+    { label: '法兰西岛省级单位', items: franceDepartments.value },
+    { label: '巴黎市区', items: franceArrondissements.value },
+  ].map(({ label, items }) => ({
+    label,
+    total: items.length,
+    count: items.filter((region) => session.value.arrived(region.id)).length,
+  }));
+});
+function franceBack() {
+  select(francePath.value.at(-2)?.id || '');
+}
 const province = computed(
   () => path.value.find((region) => region.scope === 'china' && region.level === 0)?.id || '',
 );
@@ -76,6 +148,8 @@ const counties = computed(() =>
 const level = computed({
   get: () => {
     void store.revision;
+    if (props.scope === 'france')
+      return inParis.value ? 'county' : inIleDeFrance.value ? 'city' : 'province';
     return session.value.preferences.mapLevel;
   },
   set: (value) => {
@@ -95,27 +169,28 @@ const rows = computed(() =>
           ? index.value.belongsTo(id, store.selectedRegionId)
           : id === store.selectedRegionId,
       );
-    const text = [
-      entry.name,
-      entry.path,
-      entry.code,
-      entry.description,
-      ...entry.aliases,
-      ...(entry.lines || []),
-      ...(entry.operators || []),
-    ]
-      .join(' ')
-      .toLocaleLowerCase();
+    const text = searchText(
+      [
+        entry.name,
+        entry.path,
+        entry.code,
+        entry.description,
+        ...entry.aliases,
+        ...(entry.lines || []),
+        ...(entry.operators || []),
+      ].join(' '),
+    );
     return (
       owners.length &&
       within &&
       (!store.category || entry.categoryId === store.category) &&
       (!status.value || entry.visited === (status.value === 'visited')) &&
       (!focusedEntry.value || entry.id === focusedEntry.value) &&
-      (!railType.value || (railType.value === 'J'
-        ? entry.railTypes?.includes('J')
-        : entry.categoryId === 'railway-station' && !entry.railTypes?.includes('J'))) &&
-      (!query.value || text.includes(query.value.trim().toLocaleLowerCase()))
+      (!railType.value ||
+        (railType.value === 'J'
+          ? entry.railTypes?.includes('J')
+          : entry.categoryId === 'railway-station' && !entry.railTypes?.includes('J'))) &&
+      (!query.value || text.includes(searchText(query.value.trim())))
     );
   }),
 );
@@ -123,16 +198,39 @@ const searchRegions = computed(() =>
   query.value.trim()
     ? regions.value
         .filter((region) =>
-          [region.name, region.code, ...region.aliases].join(' ').includes(query.value.trim()),
+          searchText([region.name, region.code, ...region.aliases].join(' ')).includes(
+            searchText(query.value.trim()),
+          ),
         )
         .slice(0, 40)
     : [],
 );
+const mapPoints = computed(() =>
+  (props.scope === 'china' || store.category
+    ? rows.value
+    : rows.value.filter((entry) =>
+        ['world-heritage-component', 'football-stadium', 'vn-national-special-component'].includes(
+          entry.categoryId,
+        ),
+      )
+  ).filter((entry) => !entry.coordinateReferenceOnly && entry.ordinaryPointEligible !== false),
+);
+const focusCoordinates = computed(() => {
+  const entry = index.value.entries.get(focusedEntry.value);
+  return entry?.coordinateReferenceOnly ||
+    entry?.ordinaryPointEligible === false ||
+    entry?.coordinateStatus?.includes('representative')
+    ? null
+    : entry?.coordinates || null;
+});
 
 function select(id: string) {
   store.selectedRegionId = id;
   focusedEntry.value = '';
   showAllChildren.value = false;
+  if (props.scope === 'france' && (route.query.region || '') !== id) {
+    void router.push({ query: { ...route.query, region: id || undefined } });
+  }
 }
 
 function locate(entry: EntryView) {
@@ -203,12 +301,37 @@ watch(
   },
   { immediate: true },
 );
+watch(
+  [() => route.query.region, () => props.scope],
+  ([id]) => {
+    if (typeof id === 'string' && index.value.regions.get(id)?.scope === props.scope) {
+      store.selectedRegionId = id;
+      focusedEntry.value = '';
+    } else if (props.scope === 'france') {
+      store.selectedRegionId = '';
+      focusedEntry.value = '';
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
   <section class="page-heading catalog-heading">
     <h2>{{ title }}</h2>
     <p>点选地图查看地区与旅行内容。</p>
+    <RouterLink
+      v-if="['malaysia', 'singapore', 'brunei'].includes(scope) && route.path !== '/malay-region'"
+      :to="{ path: '/malay-region', query: { country: scope } }"
+      class="import-shortcut"
+      >返回马新文专题</RouterLink
+    >
+    <RouterLink
+      v-if="route.query.from === 'achievements'"
+      to="/achievements"
+      class="import-shortcut"
+      >返回旅行成就</RouterLink
+    >
     <RouterLink
       to="/imports"
       class="import-shortcut"
@@ -231,17 +354,29 @@ watch(
   <div class="toolbar catalog-primary-controls">
     <select
       aria-label="地区"
-      :value="scope === 'china' ? province : store.selectedRegionId"
+      :value="
+        scope === 'china'
+          ? province
+          : scope === 'france'
+            ? franceRoot?.id || ''
+            : store.selectedRegionId
+      "
       @change="select(($event.target as HTMLSelectElement).value)"
     >
       <option value="">全部地区</option>
-      <option
-        v-for="region in roots"
-        :key="region.id"
-        :value="region.id"
+      <optgroup
+        v-for="group in regionGroups"
+        :key="group.label"
+        :label="group.label"
       >
-        {{ region.name }}
-      </option>
+        <option
+          v-for="region in group.items"
+          :key="region.id"
+          :value="region.id"
+        >
+          {{ region.name }}
+        </option>
+      </optgroup>
     </select>
     <template v-if="scope === 'china'">
       <select
@@ -266,6 +401,37 @@ watch(
         <option value="">全部县区</option>
         <option
           v-for="region in counties"
+          :key="region.id"
+          :value="region.id"
+        >
+          {{ region.name }}
+        </option>
+      </select>
+    </template>
+    <template v-if="scope === 'france' && inIleDeFrance">
+      <select
+        aria-label="法兰西岛省级单位"
+        :value="franceDepartment?.id || ''"
+        @change="select(($event.target as HTMLSelectElement).value || franceRoot!.id)"
+      >
+        <option value="">全部8个省级单位</option>
+        <option
+          v-for="region in franceDepartments"
+          :key="region.id"
+          :value="region.id"
+        >
+          {{ region.name }}
+        </option>
+      </select>
+      <select
+        v-if="inParis"
+        aria-label="巴黎市区"
+        :value="selected?.level === 3 ? selected.id : ''"
+        @change="select(($event.target as HTMLSelectElement).value || franceDepartment!.id)"
+      >
+        <option value="">全部20个市区</option>
+        <option
+          v-for="region in franceArrondissements"
           :key="region.id"
           :value="region.id"
         >
@@ -309,6 +475,73 @@ watch(
       </div>
     </details>
   </div>
+  <TopicCoverage :scope="scope" />
+  <section
+    v-if="scope === 'france'"
+    class="france-drilldown"
+    aria-label="法国分层导航与统计"
+  >
+    <nav
+      class="toolbar"
+      aria-label="法国地区路径"
+    >
+      <button @click="select('')">法国全部大区</button>
+      <button
+        v-for="region in francePath"
+        :key="region.id"
+        :aria-current="region.id === selected?.id ? 'location' : undefined"
+        @click="select(region.id)"
+      >
+        {{ region.name }}
+      </button>
+      <button
+        v-if="selected"
+        @click="franceBack"
+      >
+        返回上一级
+      </button>
+    </nav>
+    <div class="chip-list france-layer-statistics">
+      <span
+        v-for="item in franceStatistics"
+        :key="item.label"
+        >{{ item.label }}：已到访 {{ item.count }} / {{ item.total }}</span
+      >
+    </div>
+    <p class="note">
+      各层分别记录、分别计数，不合并为一个总数。标记大区不会填充下级；本页地区状态也不会自动修改上级。仅法兰西岛开放省级下钻，巴黎开放20区；Paris
+      Centre 为第1—4区合署管理，仍保留20个地理区。
+    </p>
+    <p
+      v-if="selected && selected.level > 1"
+      class="note"
+    >
+      现有地点保留原大区归属，尚未分配到省或市区；此层地点列表可能为空。
+    </p>
+    <details class="note">
+      <summary>下钻边界来源与许可</summary>
+      <p>
+        省界：<a
+          href="https://www.data.gouv.fr/datasets/contours-administratifs"
+          target="_blank"
+          rel="noopener noreferrer"
+          >data.gouv.fr Contours administratifs</a
+        >，2025年100米简化版；巴黎区界：<a
+          href="https://opendata.paris.fr/explore/dataset/arrondissements/information/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Ville de Paris — Arrondissements</a
+        >，来源元数据修改日期2016-03-04。均按
+        <a
+          href="https://opendatacommons.org/licenses/odbl/1.0/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >ODbL 1.0</a
+        >
+        使用，层间边缘可能有精度差异。成员清单按INSEE COG 2026核对。
+      </p>
+    </details>
+  </section>
   <div
     v-if="searchRegions.length"
     class="chip-list"
@@ -325,15 +558,25 @@ watch(
     </button>
   </div>
   <div class="map-layout">
+    <p
+      v-if="!regions.length"
+      class="note"
+      role="status"
+    >
+      此国家专题的数据仍在核验，尚未接入当前预览。区划、遗产点和球场不以缺失数据或代表坐标冒充完整收录。
+    </p>
     <MapSurface
+      v-if="regions.length"
       :scope="scope"
       :selected="store.selectedRegionId"
       :level="level"
       :category="store.category"
-      :points="scope === 'china' ? rows : []"
+      :points="mapPoints"
+      :focus="focusCoordinates"
       @select="select"
       @point="locatePoint"
       @level="changeLevel"
+      @overview="select('')"
     >
       <template #content-controls>
         <div class="map-content-controls">
@@ -349,18 +592,45 @@ watch(
               :key="category.id"
               :value="category.id"
             >
-              {{ scope === 'japan' && category.id === 'railway-station' ? '日本铁道车站' : category.name }}
+              {{
+                scope === 'japan' && category.id === 'railway-station'
+                  ? '日本铁道车站'
+                  : category.name
+              }}
             </option>
           </select>
           <span>选择类别后，地图与右栏只显示该类内容。</span>
+          <span v-if="store.category && scope === 'china'"
+            >当前颜色反映该类别的地点记录；查看地区造访颜色请选择“全部类别”。</span
+          >
+          <span v-else-if="store.category">点位与列表按类别筛选，区域底色保留地区造访状态。</span>
+          <small v-if="mapPoints.some((entry) => entry.coordinateAttribution)"
+            >部分球场坐标：© OpenStreetMap contributors ·
+            <a
+              href="https://www.openstreetmap.org/copyright"
+              target="_blank"
+              rel="noopener noreferrer"
+              >ODbL</a
+            >；逐地点来源见列表。</small
+          >
         </div>
       </template>
     </MapSurface>
     <aside class="inspector">
       <h2>{{ selected?.name || title }}</h2>
+      <small v-if="selected?.nameTranslationNeedsReview">译名待核 / Provisional name</small>
+      <details
+        v-if="selected?.nameZh && selected.originalName"
+        class="original-name"
+      >
+        <summary>原文名称 / Original name</summary>
+        <span>{{ selected.originalName }}</span>
+        <small v-if="selected.nameTranslationNote">{{ selected.nameTranslationNote }}</small>
+      </details>
       <VisitStateSelect
         v-if="selected"
         :region-id="selected.id"
+        :propagate="scope !== 'france'"
       />
       <p
         v-if="selected"
@@ -393,7 +663,7 @@ watch(
           </button>
         </div>
         <button
-          v-if="childRegions.length > 18"
+          v-if="scope !== 'france' && childRegions.length > 18"
           class="children-more"
           @click="showAllChildren = !showAllChildren"
         >
@@ -407,10 +677,32 @@ watch(
         请先在地图上点选政区，或用上方搜索查找项目。
       </p>
       <CategoryEntryList
-        v-else
+        v-if="selected || query || focusedEntry || store.category"
         :rows="rows"
         :scope="scope"
         :selected-region-id="store.selectedRegionId"
+        @locate="locate"
+      />
+      <HeritageProjects
+        v-if="
+          !store.category ||
+          store.category === 'world-heritage' ||
+          store.category === 'world-heritage-component'
+        "
+        :scope="scope"
+        :region-id="store.selectedRegionId"
+        :query="query"
+        @locate="locate"
+      />
+      <FootballGrounds
+        v-if="!store.category || store.category === 'football-stadium'"
+        :scope="scope"
+        @locate="locate"
+      />
+      <NationalHeritage
+        v-if="!store.category || store.category.startsWith('vn-national-special')"
+        :scope="scope"
+        :region-id="store.selectedRegionId"
         @locate="locate"
       />
       <form

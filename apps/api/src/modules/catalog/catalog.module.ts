@@ -1,5 +1,13 @@
-import { BadRequestException, Controller, Get, Inject, Module, Param } from '@nestjs/common';
-import type { Scope } from '@fangyu/contracts';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Inject,
+  Module,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
+import { isScope } from '@fangyu/contracts';
 import { CatalogService } from './catalog.service.js';
 
 @Controller('catalog')
@@ -13,9 +21,15 @@ class CatalogController {
 
   @Get('geometry/:scope')
   async geometry(@Param('scope') scope: string) {
-    if (!['china', 'world', 'japan', 'korea'].includes(scope))
-      throw new BadRequestException('未知地图范围');
-    return this.catalog.geometry(scope as Scope);
+    if (!isScope(scope)) throw new BadRequestException('未知地图范围');
+    try {
+      return await this.catalog.geometry(scope);
+    } catch (error) {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+        throw new NotFoundException('该专题暂无已发布的边界数据');
+      }
+      throw error;
+    }
   }
 }
 

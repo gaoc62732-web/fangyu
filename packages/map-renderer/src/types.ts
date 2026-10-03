@@ -1,3 +1,5 @@
+import type { VisitedMarkerKind } from './visited-marker-icons.js';
+
 export interface RenderFeature {
   id: string;
   name: string;
@@ -12,11 +14,15 @@ export interface RenderPoint {
   name: string;
   coords: [number, number];
   marked: boolean;
+  markerKind?: VisitedMarkerKind | undefined;
 }
 
 export interface MapScene {
   features: RenderFeature[];
   points: RenderPoint[];
+  /** Optional geographic hit policy for administrative polygons only; points remain selectable. */
+  allowsRegionHit?:
+    ((coordinates: [number, number], renderedGeometry?: GeoJSON.Geometry) => boolean) | undefined;
   world?: boolean;
   dark?: boolean;
   detailLevel?: 'province' | 'city' | 'county' | undefined;

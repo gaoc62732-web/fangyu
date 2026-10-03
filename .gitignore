@@ -26,3 +26,15 @@ __pycache__/
 *.py[cod]
 
 .tools/
+
+# Local source captures; concise provenance extracts are versioned separately.
+data/extensions/research/france868-evidence/*.html
+data/extensions/research/france868-evidence/*.js
+data/extensions/research/vn-official-location-sources/
+data/extensions/research/vn-helper-evidence/*.html
+data/extensions/research/german-single-entity-gis-*.js.txt
+
+# Raw gazetteer captures; reviewed extracts and hashes remain versioned.
+data/extensions/research/vn-batch*-evidence/*.pdf
+data/extensions/research/vn-batch*-evidence/*.png
+data/extensions/research/vn-batch*-evidence/*.html

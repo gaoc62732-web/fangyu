@@ -1,8 +1,10 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
+import { SCOPE_IDS } from '@fangyu/contracts';
 
 const routes: RouteRecordRaw[] = [
   { path: '/', redirect: '/china' },
-  ...(['china', 'world', 'japan', 'korea'] as const).map((scope) => ({
+  { path: '/malay-region', component: () => import('../pages/MalayRegionPage.vue') },
+  ...SCOPE_IDS.map((scope) => ({
     path: '/' + scope,
     component: () => import('../pages/CatalogPage.vue'),
     props: { scope },

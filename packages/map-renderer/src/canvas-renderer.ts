@@ -1,9 +1,20 @@
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
-import type { MapScene, RenderFeature } from './types.js';
+import type { MapScene, RenderFeature, RenderPoint } from './types.js';
+import { projectionGeometry } from './projection-geometry.js';
+import { clusterScreenMarkers, type ScreenMarkerCluster } from './marker-clusters.js';
+import { drawVisitedCluster, drawVisitedMarker } from './visited-marker-icons.js';
 
 type Bounds = [number, number, number, number];
 type Shape = RenderFeature & { path: Path2D; bounds: Bounds };
-export type MapHover = { id: string; name: string; point: boolean; x: number; y: number };
+export type MapHover = {
+  id: string;
+  name: string;
+  point: boolean;
+  x: number;
+  y: number;
+  markerIds?: string[];
+  markerCount?: number;
+};
 const mercator = ([x, y]: number[]): [number, number] => [
   x!,
   (-Math.log(Math.tan(Math.PI / 4 + (Math.max(-80, Math.min(80, y!)) * Math.PI) / 360)) * 180) /
@@ -17,11 +28,16 @@ export class CanvasMapRenderer {
   private observer: ResizeObserver;
   private scene: MapScene = { features: [], points: [] };
   private shapes: Shape[] = [];
+  private markerGroups: ScreenMarkerCluster<RenderPoint>[] = [];
   private pathCache = new WeakMap<
     GeoJSON.Geometry,
     { world: boolean; path: Path2D; bounds: Bounds }
   >();
   private project = mercator;
+  private unproject: (point: [number, number]) => [number, number] | null = ([x, y]) => [
+    x,
+    ((2 * Math.atan(Math.exp((-y * Math.PI) / 180)) - Math.PI / 2) * 180) / Math.PI,
+  ];
   private width = 1;
   private height = 1;
   private scale = 1;
@@ -29,11 +45,12 @@ export class CanvasMapRenderer {
   private x = 0;
   private y = 0;
   private drag: { x: number; y: number; startX: number; startY: number } | undefined;
+  private pendingClick: { id: string; point: boolean; markerIds?: string[] } | undefined;
   private abort = new AbortController();
 
   constructor(
     host: HTMLElement,
-    private select: (id: string, point: boolean) => void,
+    private select: (id: string, point: boolean, markerIds?: string[]) => void,
     private hover: (item: MapHover | undefined) => void = () => {},
   ) {
     this.canvas = document.createElement('canvas');
@@ -47,6 +64,7 @@ export class CanvasMapRenderer {
     this.canvas.addEventListener(
       'pointerdown',
       (event) => {
+        this.pendingClick = undefined;
         this.drag = {
           x: event.offsetX,
           y: event.offsetY,
@@ -81,16 +99,28 @@ export class CanvasMapRenderer {
           this.drag &&
           Math.hypot(event.offsetX - this.drag.startX, event.offsetY - this.drag.startY) < 5
         ) {
-          const hit = this.hit(event.offsetX, event.offsetY);
-          if (hit) this.select(hit.id, hit.point);
+          this.pendingClick = this.hit(event.offsetX, event.offsetY);
         }
         this.drag = undefined;
+      },
+      options,
+    );
+    // Wait for native click to fix its target before selection inserts details.
+    // Selecting on touch pointerup can retarget the following compatibility
+    // click to a newly inserted detail button and replace the cluster selection.
+    this.canvas.addEventListener(
+      'click',
+      () => {
+        const hit = this.pendingClick;
+        this.pendingClick = undefined;
+        if (hit) this.select(hit.id, hit.point, hit.markerIds);
       },
       options,
     );
     this.canvas.addEventListener(
       'pointercancel',
       () => {
+        this.pendingClick = undefined;
         this.drag = undefined;
         this.hover(undefined);
       },
@@ -106,15 +136,27 @@ export class CanvasMapRenderer {
       },
       { ...options, passive: false },
     );
-    this.observer = new ResizeObserver(() => {
-      this.width = host.clientWidth || 800;
-      this.height = host.clientHeight || 560;
+    const resize = () => {
+      if (!host.clientWidth || !host.clientHeight) return;
+      const first = this.width === 1,
+        oldWidth = this.width,
+        oldHeight = this.height;
+      this.width = host.clientWidth;
+      this.height = host.clientHeight;
       const ratio = devicePixelRatio || 1;
       this.canvas.width = Math.round(this.width * ratio);
       this.canvas.height = Math.round(this.height * ratio);
-      this.fit();
-    });
+      if (first) this.fit();
+      else {
+        this.x += (this.width - oldWidth) / 2;
+        this.y += (this.height - oldHeight) / 2;
+        this.draw();
+      }
+    };
+    this.observer = new ResizeObserver(resize);
     this.observer.observe(host);
+    // Export renderers may be used before the first ResizeObserver delivery.
+    resize();
   }
 
   setScene(scene: MapScene, reset = false) {
@@ -126,6 +168,12 @@ export class CanvasMapRenderer {
     this.project = scene.world
       ? (point) => projection(point as [number, number]) || [0, 0]
       : mercator;
+    this.unproject = scene.world
+      ? (point) => projection.invert?.(point) || null
+      : ([x, y]) => [
+          x,
+          ((2 * Math.atan(Math.exp((-y * Math.PI) / 180)) - Math.PI / 2) * 180) / Math.PI,
+        ];
     const path = geoPath(projection);
     this.shapes = scene.features.map((feature) => {
       const cached = this.pathCache.get(feature.geometry);
@@ -135,7 +183,11 @@ export class CanvasMapRenderer {
       const bounds: Bounds = [Infinity, Infinity, -Infinity, -Infinity];
       let shape: Path2D;
       if (scene.world) {
-        const f = { type: 'Feature' as const, geometry: feature.geometry, properties: {} };
+        const f = {
+          type: 'Feature' as const,
+          geometry: projectionGeometry(feature.geometry),
+          properties: {},
+        };
         shape = new Path2D(path(f) || '');
         const b = path.bounds(f);
         bounds.splice(0, 4, b[0][0], b[0][1], b[1][0], b[1][1]);
@@ -188,27 +240,70 @@ export class CanvasMapRenderer {
       Math.max(1, this.height - 36) / (b[3] - b[1] || 1),
     );
     if (!ids?.length) this.fullScale = targetScale;
-    this.scale = Math.min(targetScale, this.fullScale * (this.scene.world ? 20 : 36)) * selectionScale;
+    this.scale =
+      Math.min(targetScale, this.fullScale * (this.scene.world ? 20 : 36)) * selectionScale;
     this.x = this.width / 2 - ((b[0] + b[2]) / 2) * this.scale;
     this.y = this.height / 2 - ((b[1] + b[3]) / 2) * this.scale;
     this.draw();
   }
   zoom(factor: number, x = this.width / 2, y = this.height / 2) {
-    const next = Math.max(this.fullScale * 0.75, Math.min(this.fullScale * (this.scene.world ? 20 : 36), this.scale * factor));
+    const next = Math.max(
+      this.fullScale * 0.75,
+      Math.min(this.fullScale * (this.scene.world ? 20 : 36), this.scale * factor),
+    );
     const scaleRatio = next / this.scale;
     this.x = x - (x - this.x) * scaleRatio;
     this.y = y - (y - this.y) * scaleRatio;
     this.scale = next;
     this.draw();
   }
+  focusPoints(ids: readonly string[], maxRelativeZoom = 24) {
+    const wanted = new Set(ids);
+    const points = this.scene.points.filter((point) => point.markerKind && wanted.has(point.id));
+    if (!points.length) return;
+    const bounds = points.reduce<Bounds>(
+      (b, point) => {
+        const [x, y] = this.project(point.coords);
+        return [Math.min(b[0], x), Math.min(b[1], y), Math.max(b[2], x), Math.max(b[3], y)];
+      },
+      [Infinity, Infinity, -Infinity, -Infinity],
+    );
+    const maxScale = this.fullScale * Math.min(maxRelativeZoom, this.scene.world ? 20 : 36);
+    this.scale = Math.min(
+      maxScale,
+      Math.max(1, this.width - 80) / (bounds[2] - bounds[0] || 1e-6),
+      Math.max(1, this.height - 80) / (bounds[3] - bounds[1] || 1e-6),
+    );
+    this.x = this.width / 2 - ((bounds[0] + bounds[2]) / 2) * this.scale;
+    this.y = this.height / 2 - ((bounds[1] + bounds[3]) / 2) * this.scale;
+    this.draw();
+  }
   private hit(x: number, y: number) {
-    for (const point of [...this.scene.points].reverse()) {
+    for (const group of [...(this.markerGroups || [])].reverse()) {
+      if (Math.hypot(group.x - x, group.y - y) <= (group.members.length > 1 ? 19 : 16)) {
+        return {
+          id: group.members[0]!.id,
+          name:
+            group.members.length > 1
+              ? `${group.members.length} 个已到访地点`
+              : group.members[0]!.name,
+          point: true,
+          markerIds: group.members.map((point) => point.id),
+          markerCount: group.members.length,
+        };
+      }
+    }
+    for (const point of [...this.scene.points].filter((point) => !point.markerKind).reverse()) {
       const p = this.project(point.coords);
       if (Math.hypot(p[0] * this.scale + this.x - x, p[1] * this.scale + this.y - y) < 7)
         return { id: point.id, name: point.name, point: true };
     }
     const px = (x - this.x) / this.scale;
     const py = (y - this.y) / this.scale;
+    const coordinates = this.scene.allowsRegionHit ? this.unproject([px, py]) : null;
+    if (this.scene.allowsRegionHit) {
+      if (!coordinates || !this.scene.allowsRegionHit(coordinates)) return;
+    }
     const ctx = this.context;
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -221,7 +316,9 @@ export class CanvasMapRenderer {
           px <= f.bounds[2] &&
           py >= f.bounds[1] &&
           py <= f.bounds[3] &&
-          ctx.isPointInPath(f.path, px, py, 'evenodd'),
+          ctx.isPointInPath(f.path, px, py, 'evenodd') &&
+          (!this.scene.allowsRegionHit ||
+            (coordinates && this.scene.allowsRegionHit(coordinates, f.geometry))),
       );
     ctx.restore();
     return found ? { id: found.id, name: found.name, point: false } : undefined;
@@ -248,7 +345,7 @@ export class CanvasMapRenderer {
       ctx.lineWidth = (f.selected ? 2 : boundaryWidth) / this.scale;
       ctx.stroke(f.path);
     }
-    for (const point of this.scene.points) {
+    for (const point of this.scene.points.filter((point) => !point.markerKind)) {
       const [x, y] = this.project(point.coords);
       ctx.beginPath();
       ctx.arc(x, y, 3.5 / this.scale, 0, Math.PI * 2);
@@ -258,11 +355,45 @@ export class CanvasMapRenderer {
       ctx.lineWidth = 0.7 / this.scale;
       ctx.stroke();
     }
+    this.markerGroups = clusterScreenMarkers(
+      this.scene.points
+        .filter((point) => point.markerKind)
+        .map((point) => {
+          const [x, y] = this.project(point.coords);
+          return {
+            id: point.id,
+            value: point,
+            x: x * this.scale + this.x,
+            y: y * this.scale + this.y,
+          };
+        }),
+    );
+    // Marker sizes are screen pixels, independent of map projection and zoom.
+    // PNG export uses this same path, including the original SVG-derived symbols.
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    for (const group of this.markerGroups) {
+      if (group.members.length > 1) drawVisitedCluster(ctx, group.members.length, group.x, group.y);
+      else drawVisitedMarker(ctx, group.members[0]!.markerKind!, group.x, group.y);
+    }
   }
-  async png(title: string, legend: { label: string; color: string }[] = []): Promise<Blob> {
+  async png(
+    title: string,
+    legend: { label: string; color: string }[] = [],
+    credits: string[] = [],
+  ): Promise<Blob> {
+    const markerKinds = (['airport', 'world-heritage', 'project-reference'] as const).filter(
+      (kind) => this.scene.points.some((point) => point.markerKind === kind),
+    );
+    const hasClusters =
+      markerKinds.length > 0 && this.markerGroups.some((group) => group.members.length > 1);
+    const markerLegendRows = markerKinds.length + (hasClusters ? 1 : 0);
     const image = document.createElement('canvas');
     image.width = Math.max(this.canvas.width, 720);
-    image.height = this.canvas.height + 160;
+    image.height =
+      this.canvas.height +
+      160 +
+      (markerLegendRows ? 8 + markerLegendRows * 30 : 0) +
+      credits.length * 18;
     const ctx = image.getContext('2d')!;
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, image.width, image.height);
@@ -280,7 +411,37 @@ export class CanvasMapRenderer {
       ctx.fillStyle = '#234339';
       ctx.fillText(item.label, x + 20, y);
     });
-    ctx.fillText('边界与点位仅供旅行记录参考，不作为权威区划依据。', 24, image.height - 12);
+    const markerLabels = {
+      airport: '已到访机场',
+      'world-heritage': '世遗组成地点到访记录（不表示整个项目完成）',
+      'project-reference': '项目代表位置：仅反映项目记录，不表示全部组成地点到访',
+    };
+    markerKinds.forEach((kind, index) => {
+      const y = this.canvas.height + 150 + index * 30;
+      drawVisitedMarker(ctx, kind, 35, y - 5, 24);
+      ctx.fillStyle = '#234339';
+      ctx.fillText(markerLabels[kind], 58, y);
+    });
+    if (hasClusters) {
+      const y = this.canvas.height + 150 + markerKinds.length * 30;
+      drawVisitedCluster(ctx, 2, 35, y - 5, 24);
+      ctx.fillStyle = '#234339';
+      ctx.fillText('聚合数字表示合并展示的到访记录数，不代表项目完成数。', 58, y);
+    }
+    ctx.fillText(
+      '边界与点位仅供旅行记录参考，不作为权威区划依据。',
+      24,
+      image.height - 12 - credits.length * 18,
+    );
+    ctx.font = '11px sans-serif';
+    credits.forEach((credit, index) =>
+      ctx.fillText(
+        credit,
+        24,
+        image.height - 12 - (credits.length - index - 1) * 18,
+        image.width - 48,
+      ),
+    );
     return new Promise((resolve, reject) =>
       image.toBlob((blob) => (blob ? resolve(blob) : reject(Error('PNG 导出失败'))), 'image/png'),
     );

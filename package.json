@@ -1,7 +1,7 @@
 {
   "name": "fangyu",
   "private": true,
-  "version": "0.6.7-dev",
+  "version": "0.7.1",
   "packageManager": "pnpm@10.15.0",
   "engines": {
     "node": ">=22.12.0"
@@ -17,7 +17,8 @@
     "db:migrate": "pnpm --filter @fangyu/api migrate",
     "create-user": "pnpm --filter @fangyu/api create-user",
     "catalog:stats": "node tools/data/catalog-stats.mjs",
-    "catalog:check": "node scripts/verify-catalog.mjs"
+    "catalog:check": "node scripts/verify-catalog.mjs",
+    "prepare:web": "node scripts/prepare-web.mjs"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
@@ -25,7 +26,10 @@
     "@types/node": "^22.18.0",
     "@types/geojson": "^7946.0.16",
     "@types/d3-geo": "^3.1.0",
-    "pnpm": "10.15.0"
+    "pnpm": "10.15.0",
+    "geojson-vt": "^4.0.3",
+    "vt-pbf": "^3.1.3",
+    "@turf/simplify": "^7.4.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -1,10 +1,12 @@
 # 方舆旅游手册
 
-方舆用于记录地区到访、景点与交通项目、旅行成就和卯分。当前为 **0.6.7-dev 架构重构版**，使用 Vue 3 + TypeScript 前端、NestJS 后端、PostgreSQL/PostGIS 数据库，统一由 pnpm workspace 管理。
+方舆用于记录地区到访、景点与交通项目、旅行成就和卯分。当前版本为 **0.7.1**，使用 Vue 3 + TypeScript 前端、NestJS 后端、PostgreSQL/PostGIS 数据库，统一由 pnpm workspace 管理。新增功能、数据边界及升级回退方式见 [0.7.1 更新说明](docs/release-v0.7.1.md)。
 
-本轮地图、列表、成就与点卯界面的更新详见 [v0.6.7-dev 修订说明](docs/revision-notes-v0.6.7-dev-2026-09-30.md)。
+当前包含瓦片及 Canvas 地图、本机底图设置、世界与国家专题、已到访机场和世界遗产图层，以及法国法兰西岛和巴黎下钻。此前地图、列表、成就与点卯界面的更新详见 [v0.6.7-dev 修订说明](docs/revision-notes-v0.6.7-dev-2026-09-30.md)。
 
-本轮已经迁移现有功能的源码与目录数据。2026-09-29 的最小检查通过了类型检查、目录引用检查、前后端生产构建及前端本地演示模式的关键操作，发现 5 项待处理的功能差异；详见 [检查报告](docs/minimal-verification-2026-09-29.md)。**数据库与服务端联调、完整功能回归仍未完成，不能视为已验证的上线版本**。详细设计见 [重构方案](REFACTOR_PLAN.md)，第一轮实现边界见 [迁移记录](docs/first-round-migration.md)。
+0.7.1 已进行类型检查、目录引用检查、前后端构建及本地演示模式的地图／成就专项验收；验证范围与限制见 [更新说明](docs/release-v0.7.1.md)。**生产数据库、真实账号及服务端联调仍未验收**。早期迁移历史见 [2026-09-29 检查报告](docs/minimal-verification-2026-09-29.md)、[重构方案](REFACTOR_PLAN.md)和[迁移记录](docs/first-round-migration.md)。
+
+公开包仅保留运行、构建和当前专项验收所需的核实数据，不包含个人配置、记录、研究全文缓存或旧的中间迁移脚本。数据来源、许可、地图加工及缺口见 [数据说明](docs/data-notices.md)。
 
 ## 测试人员：一键安装
 
@@ -34,7 +36,7 @@ npm run dev:web
 
 ## 当前功能
 
-- 中国省、市、县地图，世界地图，日本与韩国专题；地区选择、搜索、要素筛选、已有地点坐标显示及 PNG 导出。
+- 中国省、市、县地图，世界总览及多国专题；法国行政区下钻、地区搜索、要素筛选、已到访机场／世界遗产图层及 PNG 导出。
 - 六级到访状态、项目与组成项目标记、个人名称和备注、个人新增项目、关联地区状态、撤销和命名存档。
 - 数量成就、政区与历史专题、趣味及国际成就；卯分计算、分省排序和 CSV 导出。
 - 新版 JSON 完整备份与恢复；新版 Excel 双向导入导出；文本/DOCX 名称清单；机场代码和别名匹配。
@@ -45,20 +47,20 @@ npm run dev:web
 
 ## 开发目录
 
-| 目录                           | 职责                                         |
-| ------------------------------ | -------------------------------------------- |
-| apps/web                       | Vue 页面、交互状态、导入流程编排             |
-| apps/api                       | 登录会话、公共目录查询、个人记录与存档 API   |
-| packages/contracts             | TypeScript 数据结构及 Zod 输入校验           |
-| packages/catalog               | 目录加载、地区树和查询索引                   |
-| packages/domain                | 到访、撤销、共享记录、成就与卯分规则         |
-| packages/data-access           | IndexedDB 与 HTTP 存储实现                   |
-| packages/import-export         | 文件解码、候选匹配、Excel 记录转换           |
-| packages/map-renderer          | Canvas 地图绘制、投影、命中与图片导出        |
-| data/catalog                   | 当前公共目录、声明式成就目标和四个地图数据包 |
-| data/references、data/fixtures | 固定榜单来源及非个人导入样例                 |
-| infra                          | PostgreSQL/PostGIS 开发配置及业务 SQL        |
-| scripts、tools/data            | 安装、启动、格式和目录检查工具               |
+| 目录                           | 职责                                           |
+| ------------------------------ | ---------------------------------------------- |
+| apps/web                       | Vue 页面、交互状态、导入流程编排               |
+| apps/api                       | 登录会话、公共目录查询、个人记录与存档 API     |
+| packages/contracts             | TypeScript 数据结构及 Zod 输入校验             |
+| packages/catalog               | 目录加载、地区树和查询索引                     |
+| packages/domain                | 到访、撤销、共享记录、成就与卯分规则           |
+| packages/data-access           | IndexedDB 与 HTTP 存储实现                     |
+| packages/import-export         | 文件解码、候选匹配、Excel 记录转换             |
+| packages/map-renderer          | Canvas 地图绘制、投影、命中与图片导出          |
+| data/catalog                   | 当前公共目录、声明式成就目标和各专题地图数据包 |
+| data/references、data/fixtures | 固定榜单来源及非个人导入样例                   |
+| infra                          | PostgreSQL/PostGIS 开发配置及业务 SQL          |
+| scripts、tools/data            | 安装、启动、格式和目录检查工具                 |
 
 ```sh
 npm run typecheck
@@ -67,7 +69,7 @@ npm run catalog:check
 npm run catalog:stats
 ```
 
-生产构建命令为 npm run build，已在 2026-09-29 的最小检查中通过。当前没有配置自动部署或生产发布流水线。
+生产构建命令为 npm run build。公开构建不应设置 VITE_TIANDITU_KEY；用户可在浏览器的本机底图设置中自行配置。当前没有配置 GitHub 自动测试或部署流水线，本版本不自动部署网站。
 
 ## 格式变更与资料范围
 

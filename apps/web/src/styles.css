@@ -387,6 +387,11 @@ nav a.router-link-active {
   gap: 8px;
   margin: 10px 0 16px;
 }
+.toolbar select,
+.toolbar input {
+  min-width: 0;
+  max-width: 100%;
+}
 .records-region-filter {
   display: inline-flex;
   align-items: center;
@@ -527,6 +532,25 @@ textarea {
 }
 .chip-list button {
   font-size: 12px;
+}
+.france-drilldown {
+  margin-bottom: 12px;
+}
+.france-drilldown nav button {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.france-drilldown nav [aria-current='location'] {
+  border-color: #26775b;
+  font-weight: 600;
+}
+.france-layer-statistics {
+  gap: 8px 20px;
+}
+.france-layer-statistics span {
+  padding: 4px 8px;
+  border: 1px solid #cbd8d2;
+  border-radius: 6px;
 }
 .search-results {
   display: grid;

@@ -1,0 +1,183 @@
+{
+  "title": "Chancellor achievement pre-extension catalog .15 baseline (not release 0.7.0 / catalog .13)",
+  "format": "fangyu-chancellor-baseline",
+  "version": 1,
+  "catalogVersion": "2026-10-03.15",
+  "provenance": {
+    "sourceCommit": "ead4b62",
+    "sourcePath": "data/catalog/catalog.json",
+    "sourceCatalogSha256": "24dc99d789cebb248273c4f34d726b601d8fd8b0ff7116ceed23e00edd1dacad",
+    "note": "Generated once from catalog-only data. Tests do not require the source commit or Git history."
+  },
+  "normalization": "Recursive object keys sorted using JavaScript default string sort; array order retained; JSON.stringify without whitespace; SHA-256 of UTF-8 bytes.",
+  "counts": {
+    "entries": 35897,
+    "regions": 3995,
+    "otherAchievements": 457
+  },
+  "hashes": {
+    "entries": "f19d7901081593f74a1e09d8e3cb5f1e0cbe7fb0e918755eae6d680a0ae16dfa",
+    "regions": "3c27882833fd588447c2ccf988c56da02f3270a4191bbb99dc6109b8197145cf",
+    "otherDefinitions": "44441f05251149802a94017495db2047676a4bff2758810df1323a5d0ff40e49",
+    "quantityRegionIds": "6c6271d609210b93bb99e6169d919f4bcbcef8aa8af2362e28320fadec0beaaa"
+  },
+  "originalAchievement": {
+    "id": "theme-chancellor",
+    "title": "丞相祠堂",
+    "section": "history",
+    "note": "按用户给定四市，任一所辖县区到访即可；不是以武侯祠内容项勾选为条件。",
+    "pending": [],
+    "sources": [],
+    "steps": null,
+    "need": 4,
+    "catalogComplete": true,
+    "targets": [
+      {
+        "label": "襄阳市",
+        "regionIds": [
+          "bd92020b-9042-52f5-abc7-8278996ec948",
+          "d65ba84c-429b-50fd-a6bf-fe51650a59ed",
+          "8f572514-9b3f-54c7-a721-45ecff373332",
+          "293a0d8c-f803-56d7-aee1-71e646e36316",
+          "55f803d1-31a9-5409-a87f-03e0931a9fb4",
+          "9cfd1939-ff1e-5b05-aa0f-f0e209381f98",
+          "b6bf99c5-145a-5181-a8bd-ab5e937b60e1",
+          "1887c85c-c120-5814-a167-7691123f85b3",
+          "92c25dab-e293-59c7-a13e-ad0a05bb9b10"
+        ],
+        "condition": {
+          "mode": "any",
+          "regionIds": [
+            "bd92020b-9042-52f5-abc7-8278996ec948",
+            "d65ba84c-429b-50fd-a6bf-fe51650a59ed",
+            "8f572514-9b3f-54c7-a721-45ecff373332",
+            "293a0d8c-f803-56d7-aee1-71e646e36316",
+            "55f803d1-31a9-5409-a87f-03e0931a9fb4",
+            "9cfd1939-ff1e-5b05-aa0f-f0e209381f98",
+            "b6bf99c5-145a-5181-a8bd-ab5e937b60e1",
+            "1887c85c-c120-5814-a167-7691123f85b3",
+            "92c25dab-e293-59c7-a13e-ad0a05bb9b10"
+          ]
+        }
+      },
+      {
+        "label": "南阳市",
+        "regionIds": [
+          "b98b7678-8022-5ae2-a143-08535fdfd80b",
+          "05393484-863e-5579-ad50-98059faafb37",
+          "de1d33c8-786f-59d4-a6e6-621be83a1ad7",
+          "a893d353-82e9-543c-ad27-a8adb63080ac",
+          "ce92a1e2-2b9e-5dee-a7ff-29c7fcd0dcf5",
+          "1911beb0-5ecf-5758-a915-d9152e0e7756",
+          "06b1d9f0-5b81-51b3-a073-983626816c18",
+          "80339ea1-c0a7-59e7-a741-c656343b0a30",
+          "4251f09f-39f9-5f15-a67f-3bd507ccae74",
+          "1bab1da6-b9b6-5abb-a5fd-11e6475201be",
+          "f856f40a-2c94-5518-a4f1-177b126921bb",
+          "df611388-b117-5fc7-a9d1-4254cf7a2e3a",
+          "03e88fc0-fa8c-55d6-a8f3-1c9bdf1be7a2"
+        ],
+        "condition": {
+          "mode": "any",
+          "regionIds": [
+            "b98b7678-8022-5ae2-a143-08535fdfd80b",
+            "05393484-863e-5579-ad50-98059faafb37",
+            "de1d33c8-786f-59d4-a6e6-621be83a1ad7",
+            "a893d353-82e9-543c-ad27-a8adb63080ac",
+            "ce92a1e2-2b9e-5dee-a7ff-29c7fcd0dcf5",
+            "1911beb0-5ecf-5758-a915-d9152e0e7756",
+            "06b1d9f0-5b81-51b3-a073-983626816c18",
+            "80339ea1-c0a7-59e7-a741-c656343b0a30",
+            "4251f09f-39f9-5f15-a67f-3bd507ccae74",
+            "1bab1da6-b9b6-5abb-a5fd-11e6475201be",
+            "f856f40a-2c94-5518-a4f1-177b126921bb",
+            "df611388-b117-5fc7-a9d1-4254cf7a2e3a",
+            "03e88fc0-fa8c-55d6-a8f3-1c9bdf1be7a2"
+          ]
+        }
+      },
+      {
+        "label": "成都市",
+        "regionIds": [
+          "489c34dc-ee50-506d-afbf-2cfd4284d38f",
+          "5dd232a3-9ff3-5b4e-a54f-a7f0ad6a642a",
+          "3de4b606-460f-5534-a026-b81907d5d394",
+          "72047d8d-5193-544f-a91f-15de05f53fbc",
+          "b898793d-4639-5815-a57c-80ecec1147d4",
+          "196e7a1e-e385-52e7-a80f-7c35a8223240",
+          "da8f6b9f-032f-5382-af3e-84f1ce2f8f24",
+          "f9718cf9-e40c-5337-a803-9c96a709c436",
+          "2fb97751-b85b-58e9-a521-498ba69fc64b",
+          "1bf2a479-425d-527b-a2e5-a982fbc2abbb",
+          "97ab5856-3a86-5e90-acb0-ea9d24858bd9",
+          "3dd4c46b-76a7-5dee-a5d5-fc0e223515d8",
+          "c2e7208c-fc4e-55bb-ac2e-e17011b1cbd2",
+          "7f19195a-e3fe-5e97-abea-777a36165b62",
+          "4e1d65ac-8360-5a62-acff-f091e794f646",
+          "9f174d04-5338-5c5d-a67c-7a1efe2dd7d1",
+          "b258a76d-28d9-5c2f-ae2f-9aba89ea6f5b",
+          "b28d1eb6-f71f-557d-a2be-437a63b46793",
+          "552bf151-e291-5b2e-acf2-3168595ea3f2",
+          "6d13829d-b25b-5bd3-a877-58a97ef04af8"
+        ],
+        "condition": {
+          "mode": "any",
+          "regionIds": [
+            "489c34dc-ee50-506d-afbf-2cfd4284d38f",
+            "5dd232a3-9ff3-5b4e-a54f-a7f0ad6a642a",
+            "3de4b606-460f-5534-a026-b81907d5d394",
+            "72047d8d-5193-544f-a91f-15de05f53fbc",
+            "b898793d-4639-5815-a57c-80ecec1147d4",
+            "196e7a1e-e385-52e7-a80f-7c35a8223240",
+            "da8f6b9f-032f-5382-af3e-84f1ce2f8f24",
+            "f9718cf9-e40c-5337-a803-9c96a709c436",
+            "2fb97751-b85b-58e9-a521-498ba69fc64b",
+            "1bf2a479-425d-527b-a2e5-a982fbc2abbb",
+            "97ab5856-3a86-5e90-acb0-ea9d24858bd9",
+            "3dd4c46b-76a7-5dee-a5d5-fc0e223515d8",
+            "c2e7208c-fc4e-55bb-ac2e-e17011b1cbd2",
+            "7f19195a-e3fe-5e97-abea-777a36165b62",
+            "4e1d65ac-8360-5a62-acff-f091e794f646",
+            "9f174d04-5338-5c5d-a67c-7a1efe2dd7d1",
+            "b258a76d-28d9-5c2f-ae2f-9aba89ea6f5b",
+            "b28d1eb6-f71f-557d-a2be-437a63b46793",
+            "552bf151-e291-5b2e-acf2-3168595ea3f2",
+            "6d13829d-b25b-5bd3-a877-58a97ef04af8"
+          ]
+        }
+      },
+      {
+        "label": "汉中市",
+        "regionIds": [
+          "9e723892-68ff-55d1-a8ea-4fc58b1755d6",
+          "f6b55409-0d64-54a6-a9a6-f8fdf7e1d9fe",
+          "ce20afcd-073a-5a45-aabd-b9e49ed0e21c",
+          "f5935d99-22fe-595d-aeb9-eb320caa80e8",
+          "fc9ba179-5eb6-5ad3-a659-ac1722008940",
+          "8854c053-a8e6-5b87-afd1-065790097721",
+          "bf5729f3-65b7-589d-a996-2c8e4fc8982f",
+          "973b16d5-ff34-513f-a580-71dccfaedfdf",
+          "8f843e68-6bc3-5bf6-a08c-0f336b241f53",
+          "1279274f-14b1-5ff3-a26a-dea5c15df531",
+          "3ba75fe9-598f-545b-aed1-0ccda214b81d"
+        ],
+        "condition": {
+          "mode": "any",
+          "regionIds": [
+            "9e723892-68ff-55d1-a8ea-4fc58b1755d6",
+            "f6b55409-0d64-54a6-a9a6-f8fdf7e1d9fe",
+            "ce20afcd-073a-5a45-aabd-b9e49ed0e21c",
+            "f5935d99-22fe-595d-aeb9-eb320caa80e8",
+            "fc9ba179-5eb6-5ad3-a659-ac1722008940",
+            "8854c053-a8e6-5b87-afd1-065790097721",
+            "bf5729f3-65b7-589d-a996-2c8e4fc8982f",
+            "973b16d5-ff34-513f-a580-71dccfaedfdf",
+            "8f843e68-6bc3-5bf6-a08c-0f336b241f53",
+            "1279274f-14b1-5ff3-a26a-dea5c15df531",
+            "3ba75fe9-598f-545b-aed1-0ccda214b81d"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-10-02",
+  "dataSha256": "f5a343f6aecdb793793508ad4b3b2ef45242485070027bcb6f5da93385cdc23d",
+  "clubs": 108,
+  "uniqueVenues": 108,
+  "homeGroundRelations": 109,
+  "coordinates": {
+    "total": 108,
+    "officialLinkedPlace": 21,
+    "osmPolygonInterior": 87,
+    "missing": 0
+  },
+  "checks": {
+    "clubCounts": true,
+    "uniqueVenueIds": true,
+    "relationForeignKeys": true,
+    "coordinateRangeAndFinite": true,
+    "allOsmPointsInsidePolygonExcludingHoles": true,
+    "allOsmAttributionAndLicense": true,
+    "uniqueCoordinates": true
+  },
+  "byCompetition": [
+    {
+      "competitionId": "eng-premier-league",
+      "clubs": 20,
+      "venues": 20,
+      "coordinates": 20
+    },
+    {
+      "competitionId": "de-bundesliga",
+      "clubs": 18,
+      "venues": 18,
+      "coordinates": 18
+    },
+    {
+      "competitionId": "it-serie-a",
+      "clubs": 20,
+      "venues": 18,
+      "coordinates": 18
+    },
+    {
+      "competitionId": "sco-premiership",
+      "clubs": 12,
+      "venues": 12,
+      "coordinates": 12
+    },
+    {
+      "competitionId": "es-la-liga",
+      "clubs": 20,
+      "venues": 21,
+      "coordinates": 21
+    },
+    {
+      "competitionId": "fr-ligue-1",
+      "clubs": 18,
+      "venues": 18,
+      "coordinates": 18
+    }
+  ]
+}

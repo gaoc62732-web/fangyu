@@ -1,6 +1,7 @@
 import { computed, markRaw, ref, shallowRef } from 'vue';
 import { defineStore } from 'pinia';
-import { CatalogIndex, loadCatalog, loadGeometry } from '@fangyu/catalog';
+import { loadWebCatalog } from './catalog-loader.js';
+import { CatalogIndex, loadGeometry } from '@fangyu/catalog';
 import { HandbookSession, PALETTES, darkColors, type MapColors } from '@fangyu/domain';
 import type { ArchiveDocument, GeometryFeature, Scope } from '@fangyu/contracts';
 import type { HandbookStorage } from '@fangyu/data-access';
@@ -30,7 +31,7 @@ export const useAppStore = defineStore('app', () => {
     loading.value = true;
     loadError.value = '';
     try {
-      const catalog = await loadCatalog(baseUrl);
+      const catalog = await loadWebCatalog(baseUrl);
       storage = createAppDataAccess();
       const index = new CatalogIndex(catalog);
       let saved = await storage.read();
@@ -61,7 +62,7 @@ export const useAppStore = defineStore('app', () => {
     if (existing) return existing;
     let request = geometryRequests.get(scope);
     if (!request) {
-      request = loadGeometry(baseUrl, scope);
+      request = loadGeometry(baseUrl + 'geometry/', scope);
       geometryRequests.set(scope, request);
     }
     try {

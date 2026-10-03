@@ -1,0 +1,4102 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-02",
+  "scopeNote": "England and Scotland top divisions; Germany, France, Italy and Spain top divisions; Wales only Millennium Stadium; no Northern Ireland football layer.",
+  "competitions": [
+    {
+      "season": "2026-27",
+      "competitionId": "eng-premier-league",
+      "countryCode": "GB-ENG",
+      "expectedClubCount": 20,
+      "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+      "checkedAt": "2026-10-02",
+      "coverage": "complete",
+      "coverageMeaning": "Complete official current-season club and listed home-ground names. All 20 venue coordinates are verified; home-ground assignments are a checked-at snapshot and historical tenure dates remain incomplete.",
+      "clubs": [
+        {
+          "id": "club:gb-eng:arsenal",
+          "name": "Arsenal"
+        },
+        {
+          "id": "club:gb-eng:aston-villa",
+          "name": "Aston Villa"
+        },
+        {
+          "id": "club:gb-eng:bournemouth",
+          "name": "AFC Bournemouth"
+        },
+        {
+          "id": "club:gb-eng:brentford",
+          "name": "Brentford"
+        },
+        {
+          "id": "club:gb-eng:brighton",
+          "name": "Brighton & Hove Albion"
+        },
+        {
+          "id": "club:gb-eng:chelsea",
+          "name": "Chelsea"
+        },
+        {
+          "id": "club:gb-eng:coventry-city",
+          "name": "Coventry City"
+        },
+        {
+          "id": "club:gb-eng:crystal-palace",
+          "name": "Crystal Palace"
+        },
+        {
+          "id": "club:gb-eng:everton",
+          "name": "Everton"
+        },
+        {
+          "id": "club:gb-eng:fulham",
+          "name": "Fulham"
+        },
+        {
+          "id": "club:gb-eng:hull-city",
+          "name": "Hull City"
+        },
+        {
+          "id": "club:gb-eng:ipswich-town",
+          "name": "Ipswich Town"
+        },
+        {
+          "id": "club:gb-eng:leeds-united",
+          "name": "Leeds United"
+        },
+        {
+          "id": "club:gb-eng:liverpool",
+          "name": "Liverpool"
+        },
+        {
+          "id": "club:gb-eng:manchester-city",
+          "name": "Manchester City"
+        },
+        {
+          "id": "club:gb-eng:manchester-united",
+          "name": "Manchester United"
+        },
+        {
+          "id": "club:gb-eng:newcastle-united",
+          "name": "Newcastle United"
+        },
+        {
+          "id": "club:gb-eng:nottingham-forest",
+          "name": "Nottingham Forest"
+        },
+        {
+          "id": "club:gb-eng:sunderland",
+          "name": "Sunderland"
+        },
+        {
+          "id": "club:gb-eng:tottenham",
+          "name": "Tottenham Hotspur"
+        }
+      ],
+      "venues": [
+        {
+          "id": "venue:gb-eng:emirates",
+          "name": "Emirates Stadium",
+          "aliases": [],
+          "coordinates": [
+            -0.1083997,
+            51.5550404
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/25651711",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Emirates Stadium",
+            "osmName": "Emirates Stadium",
+            "osmAddress": "Emirates Stadium, 75, Drayton Park, Finsbury Park, London Borough of Islington, Greater London, England, N5 1BU, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:villa-park",
+          "name": "Villa Park",
+          "aliases": [],
+          "coordinates": [
+            -1.8850354,
+            52.5091264
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/23136743",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Villa Park",
+            "osmName": "Villa Park",
+            "osmAddress": "Villa Park, Trinity Road, Aston, Birmingham, West Midlands, England, B6 6HE, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:dean-court",
+          "name": "Vitality Stadium",
+          "aliases": [
+            "Dean Court"
+          ],
+          "coordinates": [
+            -1.8383279,
+            50.7351815
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/612208694",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Vitality Stadium",
+            "osmName": "Vitality Stadium",
+            "osmAddress": "Vitality Stadium, Middleton Gardens, Littledown, Bournemouth, Bournemouth, Christchurch and Poole, England, BH7 7AF, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:brentford-community",
+          "name": "Gtech Community Stadium",
+          "aliases": [
+            "Brentford Community Stadium"
+          ],
+          "coordinates": [
+            -0.2891696,
+            51.4907295
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.premierleague.com/en/clubs/94/brentford/stadium",
+          "coordinateMethod": "Official Premier League stadium page named ground Google Maps link, resolved explicit place coordinates (!3d,!4d) or named-place q coordinate."
+        },
+        {
+          "id": "venue:gb-eng:falmer",
+          "name": "American Express Stadium",
+          "aliases": [
+            "Falmer Stadium",
+            "Amex"
+          ],
+          "coordinates": [
+            -0.0837163,
+            50.8615651
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.premierleague.com/en/clubs/36/brighton-and-hove-albion/stadium",
+          "coordinateMethod": "Official Premier League stadium page named ground Google Maps link, resolved explicit place coordinates (!3d,!4d) or named-place q coordinate."
+        },
+        {
+          "id": "venue:gb-eng:stamford-bridge",
+          "name": "Stamford Bridge",
+          "aliases": [],
+          "coordinates": [
+            -0.1910336,
+            51.4816869
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/5986169",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Stamford Bridge",
+            "osmName": "Stamford Bridge",
+            "osmAddress": "Stamford Bridge, Britannia Gate, Walham Green, Fulham, London Borough of Hammersmith and Fulham, Greater London, England, SW6 1HD, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:coventry-arena",
+          "name": "Coventry Building Society Arena",
+          "aliases": [
+            "Ricoh Arena",
+            "CBS Arena"
+          ],
+          "coordinates": [
+            -1.4970174,
+            52.4481582
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/1832945",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Coventry Building Society Arena",
+            "osmName": "Coventry Building Society Arena",
+            "osmAddress": "Coventry Building Society Arena, 71, Phoenix Way, Rowley Green, Coventry, West Midlands, England, CV6 6GE, United Kingdom",
+            "matchedOn": "Exact official arena name and Coventry address; OSM maps the physical stadium building as sports_centre.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "sports_centre"
+          }
+        },
+        {
+          "id": "venue:gb-eng:selhurst-park",
+          "name": "Selhurst Park",
+          "aliases": [],
+          "coordinates": [
+            -0.0852551,
+            51.3982429
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/704819406",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Selhurst Park",
+            "osmName": "Selhurst Park",
+            "osmAddress": "Selhurst Park, Whitehorse Lane, Thornton Heath, London Borough of Croydon, Greater London, England, SE25 6PU, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:bramley-moore-dock",
+          "name": "Hill Dickinson Stadium",
+          "aliases": [],
+          "coordinates": [
+            -3.0027092,
+            53.4250024
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/1367633428",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Hill Dickinson Stadium",
+            "osmName": "Hill Dickinson Stadium",
+            "osmAddress": "Hill Dickinson Stadium, Regent Road, Vauxhall, Liverpool, Liverpool City Region, England, L5 9TG, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:craven-cottage",
+          "name": "Craven Cottage",
+          "aliases": [],
+          "coordinates": [
+            -0.2217448,
+            51.4749218
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/4380344",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Craven Cottage",
+            "osmName": "Craven Cottage",
+            "osmAddress": "Craven Cottage, Stevenage Road, Fulham, London Borough of Hammersmith and Fulham, Greater London, England, SW6 6HH, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:hull-stadium",
+          "name": "MKM Stadium",
+          "aliases": [
+            "KC Stadium"
+          ],
+          "coordinates": [
+            -0.3678239,
+            53.7462257
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/219432070",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "MKM Stadium",
+            "osmName": "MKM Stadium",
+            "osmAddress": "MKM Stadium, The Circle, Avenues, Hull, Kingston upon Hull, Hull and East Yorkshire, England, HU3 6HU, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:portman-road",
+          "name": "Portman Road",
+          "aliases": [],
+          "coordinates": [
+            1.1452848,
+            52.0549518
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/117953386",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Portman Road",
+            "osmName": "Portman Road Stadium",
+            "osmAddress": "Portman Road Stadium, Portman Road, Stoke, Ipswich, Suffolk, England, IP1 2DA, United Kingdom",
+            "matchedOn": "Official venue identity and club locality, checked against specific stadium name and OSM address; excluded roads, stops and similarly named venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:elland-road",
+          "name": "Elland Road",
+          "aliases": [],
+          "coordinates": [
+            -1.5721446,
+            53.7778162
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.premierleague.com/en/clubs/2/leeds-united/stadium",
+          "coordinateMethod": "Official Premier League stadium page named ground Google Maps link, resolved explicit place coordinates (!3d,!4d) or named-place q coordinate."
+        },
+        {
+          "id": "venue:gb-eng:anfield",
+          "name": "Anfield",
+          "aliases": [],
+          "coordinates": [
+            -2.9609719,
+            53.4309011
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/4830206",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Anfield",
+            "osmName": "Anfield",
+            "osmAddress": "Anfield, Anfield Road, Anfield, Liverpool, Liverpool City Region, England, L4 0TH, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:city-of-manchester",
+          "name": "Etihad Stadium",
+          "aliases": [
+            "City of Manchester Stadium"
+          ],
+          "coordinates": [
+            -2.2005273,
+            53.4831448
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/26329734",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Etihad Stadium",
+            "osmName": "Etihad Stadium",
+            "osmAddress": "Etihad Stadium, Joe Mercer Way, Bradford, Manchester, Greater Manchester, England, M11 3FF, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:old-trafford",
+          "name": "Old Trafford",
+          "aliases": [],
+          "coordinates": [
+            -2.2913865,
+            53.4631096
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/99403577",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Old Trafford",
+            "osmName": "Old Trafford",
+            "osmAddress": "Old Trafford, Sir Matt Busby Way, Wharfside, Stretford, Trafford, Greater Manchester, England, M16 0RA, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:st-james-park",
+          "name": "St James’ Park",
+          "aliases": [],
+          "coordinates": [
+            -1.621667,
+            54.975556
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.premierleague.com/en/clubs/4/newcastle-united/stadium",
+          "coordinateMethod": "Official Premier League stadium page named ground Google Maps link, resolved explicit place coordinates (!3d,!4d) or named-place q coordinate."
+        },
+        {
+          "id": "venue:gb-eng:city-ground",
+          "name": "City Ground",
+          "aliases": [],
+          "coordinates": [
+            -1.1328954,
+            52.9399387
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/24724754",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "City Ground",
+            "osmName": "The City Ground",
+            "osmAddress": "The City Ground, Pavilion Road, Lady Bay, West Bridgford, City of Nottingham, Nottinghamshire, East Midlands, England, NG2 5FJ, United Kingdom",
+            "matchedOn": "Official venue identity and club locality, checked against specific stadium name and OSM address; excluded roads, stops and similarly named venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:stadium-of-light",
+          "name": "Stadium of Light",
+          "aliases": [],
+          "coordinates": [
+            -1.3882579,
+            54.9143953
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/33003560",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+            "officialVenueName": "Stadium of Light",
+            "osmName": "Stadium of Light",
+            "osmAddress": "Stadium of Light, Vaux Brewery Way, Millfield, Sunderland, Tyne and Wear, North East, England, SR5 1SU, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-eng:tottenham-stadium",
+          "name": "Tottenham Hotspur Stadium",
+          "aliases": [],
+          "coordinates": [
+            -0.0663813,
+            51.6042856
+          ],
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.premierleague.com/en/clubs/6/tottenham-hotspur/stadium",
+          "coordinateMethod": "Official Premier League stadium page named ground Google Maps link, resolved explicit place coordinates (!3d,!4d) or named-place q coordinate."
+        }
+      ],
+      "homeGrounds": [
+        {
+          "clubId": "club:gb-eng:arsenal",
+          "venueId": "venue:gb-eng:emirates",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:aston-villa",
+          "venueId": "venue:gb-eng:villa-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:bournemouth",
+          "venueId": "venue:gb-eng:dean-court",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:brentford",
+          "venueId": "venue:gb-eng:brentford-community",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:brighton",
+          "venueId": "venue:gb-eng:falmer",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:chelsea",
+          "venueId": "venue:gb-eng:stamford-bridge",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:coventry-city",
+          "venueId": "venue:gb-eng:coventry-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:crystal-palace",
+          "venueId": "venue:gb-eng:selhurst-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:everton",
+          "venueId": "venue:gb-eng:bramley-moore-dock",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:fulham",
+          "venueId": "venue:gb-eng:craven-cottage",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:hull-city",
+          "venueId": "venue:gb-eng:hull-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:ipswich-town",
+          "venueId": "venue:gb-eng:portman-road",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:leeds-united",
+          "venueId": "venue:gb-eng:elland-road",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:liverpool",
+          "venueId": "venue:gb-eng:anfield",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:manchester-city",
+          "venueId": "venue:gb-eng:city-of-manchester",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:manchester-united",
+          "venueId": "venue:gb-eng:old-trafford",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:newcastle-united",
+          "venueId": "venue:gb-eng:st-james-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:nottingham-forest",
+          "venueId": "venue:gb-eng:city-ground",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:sunderland",
+          "venueId": "venue:gb-eng:stadium-of-light",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        },
+        {
+          "clubId": "club:gb-eng:tottenham",
+          "venueId": "venue:gb-eng:tottenham-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.premierleague.com/en/news/4725666/all-you-need-to-know-about-the-20-premier-league-stadiums"
+        }
+      ],
+      "clubRosterCoverage": "complete",
+      "coordinateCoverage": {
+        "verified": 20,
+        "total": 20
+      }
+    },
+    {
+      "season": "2026-27",
+      "competitionId": "de-bundesliga",
+      "countryCode": "DE",
+      "expectedClubCount": 18,
+      "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+      "checkedAt": "2026-10-02",
+      "coverage": "complete",
+      "coverageMeaning": "Complete official current-season club and listed home-ground names. All 18 venue coordinates are verified; home-ground assignments are a checked-at snapshot and historical tenure dates remain incomplete.",
+      "clubs": [
+        {
+          "id": "club:de:augsburg",
+          "name": "FC Augsburg"
+        },
+        {
+          "id": "club:de:union-berlin",
+          "name": "1. FC Union Berlin"
+        },
+        {
+          "id": "club:de:werder-bremen",
+          "name": "SV Werder Bremen"
+        },
+        {
+          "id": "club:de:dortmund",
+          "name": "Borussia Dortmund"
+        },
+        {
+          "id": "club:de:elversberg",
+          "name": "SV Elversberg"
+        },
+        {
+          "id": "club:de:frankfurt",
+          "name": "Eintracht Frankfurt"
+        },
+        {
+          "id": "club:de:freiburg",
+          "name": "Sport-Club Freiburg"
+        },
+        {
+          "id": "club:de:hamburg",
+          "name": "Hamburger SV"
+        },
+        {
+          "id": "club:de:hoffenheim",
+          "name": "TSG Hoffenheim"
+        },
+        {
+          "id": "club:de:koeln",
+          "name": "1. FC Köln"
+        },
+        {
+          "id": "club:de:leipzig",
+          "name": "RB Leipzig"
+        },
+        {
+          "id": "club:de:leverkusen",
+          "name": "Bayer 04 Leverkusen"
+        },
+        {
+          "id": "club:de:mainz",
+          "name": "1. FSV Mainz 05"
+        },
+        {
+          "id": "club:de:moenchengladbach",
+          "name": "Borussia Mönchengladbach"
+        },
+        {
+          "id": "club:de:bayern",
+          "name": "FC Bayern München"
+        },
+        {
+          "id": "club:de:paderborn",
+          "name": "SC Paderborn 07"
+        },
+        {
+          "id": "club:de:schalke",
+          "name": "FC Schalke 04"
+        },
+        {
+          "id": "club:de:stuttgart",
+          "name": "VfB Stuttgart"
+        }
+      ],
+      "venues": [
+        {
+          "id": "venue:de:augsburg-arena",
+          "name": "WWK ARENA",
+          "aliases": [],
+          "coordinates": [
+            10.8860303,
+            48.3231683
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:alte-foersterei",
+          "name": "An der Alten Försterei",
+          "aliases": [],
+          "coordinates": [
+            13.5681581,
+            52.4578269
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:weserstadion",
+          "name": "Weserstadion",
+          "aliases": [],
+          "coordinates": [
+            8.8376051,
+            53.0664328
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:dortmund-stadium",
+          "name": "SIGNAL IDUNA PARK",
+          "aliases": [],
+          "coordinates": [
+            7.4518574,
+            51.4925888
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:elversberg-arena",
+          "name": "URSAPHARM-Arena",
+          "aliases": [],
+          "coordinates": [
+            7.1215724,
+            49.3188045
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/1154632806",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+            "officialVenueName": "URSAPHARM-Arena",
+            "osmName": "Ursapharm-Arena",
+            "osmAddress": "Ursapharm-Arena, Jahnstraße, Elversberg, Spiesen-Elversberg, Landkreis Neunkirchen, Saarland, 66583, Deutschland",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:de:frankfurt-stadium",
+          "name": "Deutsche Bank Park",
+          "aliases": [],
+          "coordinates": [
+            8.645472,
+            50.0685807
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:europa-park",
+          "name": "Europa-Park Stadion",
+          "aliases": [],
+          "coordinates": [
+            7.829817,
+            48.0213778
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/908440531",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+            "officialVenueName": "Europa-Park Stadion",
+            "osmName": "Europa-Park Stadion",
+            "osmAddress": "Europa-Park Stadion, 1, Achim-Stocker-Straße, Brühl-Industriegebiet, Brühl, Freiburg im Breisgau, Baden-Württemberg, 79108, Deutschland",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:de:volksparkstadion",
+          "name": "Volksparkstadion",
+          "aliases": [],
+          "coordinates": [
+            9.8986004,
+            53.5871279
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:sinsheim-arena",
+          "name": "SNP Arena",
+          "aliases": [],
+          "coordinates": [
+            8.8879801,
+            49.2380385
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:cologne-stadium",
+          "name": "RheinEnergieSTADION",
+          "aliases": [],
+          "coordinates": [
+            6.8751545,
+            50.9334609
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:leipzig-arena",
+          "name": "Red Bull Arena",
+          "aliases": [],
+          "coordinates": [
+            12.3482562,
+            51.3459852
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:bayarena",
+          "name": "BayArena",
+          "aliases": [],
+          "coordinates": [
+            7.0022566,
+            51.0382091
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:mainz-arena",
+          "name": "MEWA ARENA",
+          "aliases": [],
+          "coordinates": [
+            8.2243816,
+            49.9839442
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:borussia-park",
+          "name": "ista-Borussia-Park",
+          "aliases": [],
+          "coordinates": [
+            6.3855055,
+            51.1745698
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:allianz-arena",
+          "name": "Allianz Arena",
+          "aliases": [],
+          "coordinates": [
+            11.6247072,
+            48.2187997
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:paderborn-arena",
+          "name": "Home Deluxe Arena",
+          "aliases": [],
+          "coordinates": [
+            8.7112373,
+            51.7301715
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:gelsenkirchen-arena",
+          "name": "VELTINS-Arena",
+          "aliases": [],
+          "coordinates": [
+            7.0675262,
+            51.5546309
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl, explicit place latitude/longitude (!3d,!4d), not camera center (@)."
+        },
+        {
+          "id": "venue:de:stuttgart-arena",
+          "name": "MHPArena",
+          "aliases": [],
+          "coordinates": [
+            9.23208,
+            48.7922577
+          ],
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs",
+          "coordinateStatus": "official-linked-place",
+          "coordinateSourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs/sport-club-freiburg",
+          "coordinateMethod": "Official league stadium metadata mapsUrl short link redirects to explicit place (!3d,!4d) coordinates, not camera center (@)."
+        }
+      ],
+      "homeGrounds": [
+        {
+          "clubId": "club:de:augsburg",
+          "venueId": "venue:de:augsburg-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:union-berlin",
+          "venueId": "venue:de:alte-foersterei",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:werder-bremen",
+          "venueId": "venue:de:weserstadion",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:dortmund",
+          "venueId": "venue:de:dortmund-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:elversberg",
+          "venueId": "venue:de:elversberg-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:frankfurt",
+          "venueId": "venue:de:frankfurt-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:freiburg",
+          "venueId": "venue:de:europa-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:hamburg",
+          "venueId": "venue:de:volksparkstadion",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:hoffenheim",
+          "venueId": "venue:de:sinsheim-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:koeln",
+          "venueId": "venue:de:cologne-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:leipzig",
+          "venueId": "venue:de:leipzig-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:leverkusen",
+          "venueId": "venue:de:bayarena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:mainz",
+          "venueId": "venue:de:mainz-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:moenchengladbach",
+          "venueId": "venue:de:borussia-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:bayern",
+          "venueId": "venue:de:allianz-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:paderborn",
+          "venueId": "venue:de:paderborn-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:schalke",
+          "venueId": "venue:de:gelsenkirchen-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        },
+        {
+          "clubId": "club:de:stuttgart",
+          "venueId": "venue:de:stuttgart-arena",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.bundesliga.com/de/bundesliga/clubs"
+        }
+      ],
+      "clubRosterCoverage": "complete",
+      "coordinateCoverage": {
+        "verified": 18,
+        "total": 18
+      }
+    },
+    {
+      "season": "2026-27",
+      "competitionId": "it-serie-a",
+      "countryCode": "IT",
+      "expectedClubCount": 20,
+      "sourceUrl": "https://en.legaseriea.it/team",
+      "checkedAt": "2026-10-02",
+      "coverage": "complete",
+      "coverageMeaning": "Complete official current-season club and listed home-ground names. All 18 venue coordinates are verified; home-ground assignments are a checked-at snapshot and historical tenure dates remain incomplete.",
+      "clubs": [
+        {
+          "id": "club:it:atalanta",
+          "name": "Atalanta"
+        },
+        {
+          "id": "club:it:bologna",
+          "name": "Bologna"
+        },
+        {
+          "id": "club:it:cagliari",
+          "name": "Cagliari"
+        },
+        {
+          "id": "club:it:como",
+          "name": "Como"
+        },
+        {
+          "id": "club:it:fiorentina",
+          "name": "Fiorentina"
+        },
+        {
+          "id": "club:it:frosinone",
+          "name": "Frosinone"
+        },
+        {
+          "id": "club:it:genoa",
+          "name": "Genoa"
+        },
+        {
+          "id": "club:it:internazionale",
+          "name": "Internazionale"
+        },
+        {
+          "id": "club:it:juventus",
+          "name": "Juventus"
+        },
+        {
+          "id": "club:it:lazio",
+          "name": "Lazio"
+        },
+        {
+          "id": "club:it:lecce",
+          "name": "Lecce"
+        },
+        {
+          "id": "club:it:milan",
+          "name": "Milan"
+        },
+        {
+          "id": "club:it:monza",
+          "name": "Monza"
+        },
+        {
+          "id": "club:it:napoli",
+          "name": "Napoli"
+        },
+        {
+          "id": "club:it:parma",
+          "name": "Parma"
+        },
+        {
+          "id": "club:it:roma",
+          "name": "Roma"
+        },
+        {
+          "id": "club:it:sassuolo",
+          "name": "Sassuolo"
+        },
+        {
+          "id": "club:it:torino",
+          "name": "Torino"
+        },
+        {
+          "id": "club:it:udinese",
+          "name": "Udinese"
+        },
+        {
+          "id": "club:it:venezia",
+          "name": "Venezia"
+        }
+      ],
+      "venues": [
+        {
+          "id": "venue:it:bergamo-stadium",
+          "name": "New Balance Arena",
+          "aliases": [],
+          "coordinates": [
+            9.6808327,
+            45.7092068
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/34835536",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "New Balance Arena",
+            "osmName": "New Balance Arena",
+            "osmAddress": "New Balance Arena, 18, Viale Giulio Cesare, Borgo Santa Caterina, Bergamo, Lombardia, 24124, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:dallara",
+          "name": "Renato Dall'Ara",
+          "aliases": [],
+          "coordinates": [
+            11.3099971,
+            44.492317
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/823094953",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Renato Dall'Ara",
+            "osmName": "Stadio Renato Dall'Ara",
+            "osmAddress": "Stadio Renato Dall'Ara, Via dello Sport, Meloncello, Saragozza, Porto-Saragozza, Bologna, Emilia-Romagna, 40135, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:unipol-domus",
+          "name": "Unipol Domus",
+          "aliases": [],
+          "coordinates": [
+            9.1374283,
+            39.1991949
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/522940390",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Unipol Domus",
+            "osmName": "Unipol Domus",
+            "osmAddress": "Unipol Domus, Via Raimondo Carta Raspi, Nuovo Borgo Sant'Elia, Casteddu/Cagliari, Sardigna/Sardegna, 09126, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:sinigaglia",
+          "name": "Giuseppe Sinigaglia",
+          "aliases": [],
+          "coordinates": [
+            9.0723243,
+            45.8138295
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/288519795",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Giuseppe Sinigaglia",
+            "osmName": "Stadio Giuseppe Sinigaglia",
+            "osmAddress": "Stadio Giuseppe Sinigaglia, 2, Via Giuseppe Sinigaglia, Stadio, Vico, Como, Lombardia, 22100, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:artemio-franchi",
+          "name": "Artemio Franchi",
+          "aliases": [],
+          "coordinates": [
+            11.2828191,
+            43.7808838
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/28653500",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Artemio Franchi",
+            "osmName": "Stadio comunale Artemio Franchi",
+            "osmAddress": "Stadio comunale Artemio Franchi, Via San Gervasio, Campo di Marte, Quartiere 2, Firenze, Toscana, 50137, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:benito-stirpe",
+          "name": "Benito Stirpe",
+          "aliases": [],
+          "coordinates": [
+            13.3217978,
+            41.6340108
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/41813956",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Benito Stirpe",
+            "osmName": "Stadio Benito Stirpe",
+            "osmAddress": "Stadio Benito Stirpe, Viale Olimpia, Casaleno, Frosinone, Lazio, 03100, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:luigi-ferraris",
+          "name": "Luigi Ferraris",
+          "aliases": [],
+          "coordinates": [
+            8.9525341,
+            44.4164753
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/379998036",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Luigi Ferraris",
+            "osmName": "Stadio Luigi Ferraris",
+            "osmAddress": "Stadio Luigi Ferraris, Largo 7 settembre 1893, Marassi, Bassa Val Bisagno, Genova, Liguria, 16139, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:giuseppe-meazza",
+          "name": "Giuseppe Meazza",
+          "aliases": [],
+          "coordinates": [
+            9.123964,
+            45.4782003
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/218520505",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Giuseppe Meazza",
+            "osmName": "Stadio Giuseppe Meazza",
+            "osmAddress": "Stadio Giuseppe Meazza, Piazzale Angelo Moratti, Quartiere Harar, San Siro, Municipio 7, Milano, Lombardia, 20151, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:juventus-stadium",
+          "name": "Allianz Stadium",
+          "aliases": [],
+          "coordinates": [
+            7.6421338,
+            45.1095759
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/1642536",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Allianz Stadium",
+            "osmName": "Allianz Stadium",
+            "osmAddress": "Allianz Stadium, Via Druento, Continassa, Vallette, Circoscrizione 5, Torino, Piemonte, 10151, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:roma-olimpico",
+          "name": "Olimpico",
+          "aliases": [],
+          "coordinates": [
+            12.4546438,
+            41.9336727
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/24553174",
+          "coordinateMethod": "Point generated from the matched OSM polygon bounds and verified inside its geometry; interior scanline fallback where required.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Olimpico",
+            "osmName": null,
+            "osmAddress": "Unnamed sports_centre polygon, Stadio Olimpico (historical identity), Foro Italico, Roma",
+            "matchedOn": "Currently unnamed sports_centre polygon; same OSM way version 21 explicitly named Stadio Olimpico (2025-07-12), matched with AS Roma official stadium page map and Foro Italico travel directions. Not the Torino stadium or nearby Stadio dei Marmi.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "sports_centre",
+            "additionalOfficialSourceUrl": "https://www.asroma.com/en/stadium",
+            "historicalIdentitySourceUrl": "https://www.openstreetmap.org/way/24553174/history/21"
+          }
+        },
+        {
+          "id": "venue:it:via-del-mare",
+          "name": "Ettore Giardiniero - Via Del Mare",
+          "aliases": [],
+          "coordinates": [
+            18.2089177,
+            40.3651144
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/5719245",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Ettore Giardiniero - Via Del Mare",
+            "osmName": "Stadio Ettore Giardiniero - Via del Mare",
+            "osmAddress": "Stadio Ettore Giardiniero - Via del Mare, Viale della Libertà, Lecce, Puglia, 73100, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "MultiPolygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:brianteo",
+          "name": "Brianteo",
+          "aliases": [],
+          "coordinates": [
+            9.3079276,
+            45.583112
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/24545210",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Brianteo",
+            "osmName": "Stadio Brianteo",
+            "osmAddress": "Stadio Brianteo, 4, Via Franco Tognini, Cristo Re, Monza, Monza e della Brianza, Lombardia, 20900, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:diego-maradona",
+          "name": "Diego Armando Maradona",
+          "aliases": [],
+          "coordinates": [
+            14.1917953,
+            40.827969
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/1115971",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Diego Armando Maradona",
+            "osmName": "Diego Armando Maradona",
+            "osmAddress": "Diego Armando Maradona, Via Claudio, Rione Lauro, Fuorigrotta, Municipalità 10, Napoli, Campania, 80125, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:ennio-tardini",
+          "name": "Ennio Tardini",
+          "aliases": [],
+          "coordinates": [
+            10.3383727,
+            44.7947582
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/840960473",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Ennio Tardini",
+            "osmName": "Stadio Ennio Tardini",
+            "osmAddress": "Stadio Ennio Tardini, Via Giacomo Puccini, Cittadella, Parma, Emilia-Romagna, 43121, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:mapei-stadium",
+          "name": "Mapei Stadium",
+          "aliases": [],
+          "coordinates": [
+            10.6497308,
+            44.7145456
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/67657560",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Mapei Stadium",
+            "osmName": "MAPEI STADIUM - Città del Tricolore",
+            "osmAddress": "MAPEI STADIUM - Città del Tricolore, Viale Severino Taddei, Castello di Mancasale, Mancasale, Reggio nell'Emilia, Reggio Emilia, Emilia-Romagna, 42100, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:grande-torino",
+          "name": "Olimpico - Grande Torino",
+          "aliases": [],
+          "coordinates": [
+            7.6492037,
+            45.0417439
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/9080570",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Olimpico - Grande Torino",
+            "osmName": "Stadio Olimpico",
+            "osmAddress": "Stadio Olimpico, Via Filadelfia, Santa Rita, Circoscrizione 2, Torino, Piemonte, 10134, Italia",
+            "matchedOn": "Official venue identity and club locality, checked against specific stadium name and OSM address; excluded roads, stops and similarly named venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:friuli",
+          "name": "Bluenergy stadium",
+          "aliases": [
+            "Friuli"
+          ],
+          "coordinates": [
+            13.1997411,
+            46.081402
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/566753907",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Bluenergy stadium",
+            "osmName": "Bluenergy Stadium",
+            "osmAddress": "Bluenergy Stadium, Piazzale Repubblica Argentina, Villaggio del Sole, Rizzi, Udine, Friuli-Venezia Giulia, 33100, Italia",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:it:pier-luigi-penzo",
+          "name": "Pier Luigi Penzo",
+          "aliases": [],
+          "coordinates": [
+            12.3640204,
+            45.4277138
+          ],
+          "sourceUrl": "https://en.legaseriea.it/team",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/286784079",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://en.legaseriea.it/team",
+            "officialVenueName": "Pier Luigi Penzo",
+            "osmName": "Stadio Pier Luigi Penzo",
+            "osmAddress": "Stadio Pier Luigi Penzo, 5, Fondamenta Sant'Elena, Sant'Elena, Venezia-Murano-Burano, Lido, Venezia, Veneto, 30132, Italia",
+            "matchedOn": "Official venue identity and club locality, checked against specific stadium name and OSM address; excluded roads, stops and similarly named venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        }
+      ],
+      "homeGrounds": [
+        {
+          "clubId": "club:it:atalanta",
+          "venueId": "venue:it:bergamo-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:bologna",
+          "venueId": "venue:it:dallara",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:cagliari",
+          "venueId": "venue:it:unipol-domus",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:como",
+          "venueId": "venue:it:sinigaglia",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:fiorentina",
+          "venueId": "venue:it:artemio-franchi",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:frosinone",
+          "venueId": "venue:it:benito-stirpe",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:genoa",
+          "venueId": "venue:it:luigi-ferraris",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:internazionale",
+          "venueId": "venue:it:giuseppe-meazza",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:juventus",
+          "venueId": "venue:it:juventus-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:lazio",
+          "venueId": "venue:it:roma-olimpico",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:lecce",
+          "venueId": "venue:it:via-del-mare",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:milan",
+          "venueId": "venue:it:giuseppe-meazza",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:monza",
+          "venueId": "venue:it:brianteo",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:napoli",
+          "venueId": "venue:it:diego-maradona",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:parma",
+          "venueId": "venue:it:ennio-tardini",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:roma",
+          "venueId": "venue:it:roma-olimpico",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:sassuolo",
+          "venueId": "venue:it:mapei-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:torino",
+          "venueId": "venue:it:grande-torino",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:udinese",
+          "venueId": "venue:it:friuli",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        },
+        {
+          "clubId": "club:it:venezia",
+          "venueId": "venue:it:pier-luigi-penzo",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://en.legaseriea.it/team"
+        }
+      ],
+      "clubRosterCoverage": "complete",
+      "coordinateCoverage": {
+        "verified": 18,
+        "total": 18
+      }
+    },
+    {
+      "season": "2026-27",
+      "competitionId": "sco-premiership",
+      "countryCode": "GB-SCT",
+      "expectedClubCount": 12,
+      "sourceUrl": "https://spfl.co.uk/clubs",
+      "checkedAt": "2026-10-02",
+      "coverage": "complete",
+      "coverageMeaning": "Complete official current-season club and listed home-ground names. All 12 venue coordinates are verified; home-ground assignments are a checked-at snapshot and historical tenure dates remain incomplete.",
+      "clubs": [
+        {
+          "id": "club:gb-sct:aberdeen",
+          "name": "Aberdeen"
+        },
+        {
+          "id": "club:gb-sct:celtic",
+          "name": "Celtic"
+        },
+        {
+          "id": "club:gb-sct:dundee",
+          "name": "Dundee"
+        },
+        {
+          "id": "club:gb-sct:dundee-united",
+          "name": "Dundee United"
+        },
+        {
+          "id": "club:gb-sct:falkirk",
+          "name": "Falkirk"
+        },
+        {
+          "id": "club:gb-sct:heart-of-midlothian",
+          "name": "Heart of Midlothian"
+        },
+        {
+          "id": "club:gb-sct:hibernian",
+          "name": "Hibernian"
+        },
+        {
+          "id": "club:gb-sct:kilmarnock",
+          "name": "Kilmarnock"
+        },
+        {
+          "id": "club:gb-sct:motherwell",
+          "name": "Motherwell"
+        },
+        {
+          "id": "club:gb-sct:rangers",
+          "name": "Rangers"
+        },
+        {
+          "id": "club:gb-sct:st-johnstone",
+          "name": "St. Johnstone"
+        },
+        {
+          "id": "club:gb-sct:st-mirren",
+          "name": "St. Mirren"
+        }
+      ],
+      "venues": [
+        {
+          "id": "venue:gb-sct:pittodrie",
+          "name": "Pittodrie Stadium",
+          "aliases": [],
+          "coordinates": [
+            -2.0884178,
+            57.1587345
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/aberdeen",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/263291554",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/aberdeen",
+            "officialVenueName": "Pittodrie Stadium",
+            "osmName": "Pittodrie Stadium",
+            "osmAddress": "Pittodrie Stadium, Pittodrie Street, Pittodrie, Castlehill and Pittodrie, Aberdeen City, Alba / Scotland, AB24 5QH, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:celtic-park",
+          "name": "Celtic Park",
+          "aliases": [],
+          "coordinates": [
+            -4.2068227,
+            55.8501815
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/celtic",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/1279407593",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/celtic",
+            "officialVenueName": "Celtic Park",
+            "osmName": "Celtic Park",
+            "osmAddress": "Celtic Park, Holywell Street, Barrowfield, Camlachie, Glasgow, Glasgow City, Alba / Scotland, G40 3RE, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:dens-park",
+          "name": "Dens Park",
+          "aliases": [],
+          "coordinates": [
+            -2.9736296,
+            56.4746055
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/dundee",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/26476777",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/dundee",
+            "officialVenueName": "Dens Park",
+            "osmName": "Dens Park",
+            "osmAddress": "Dens Park, Sandeman Street, Clepington, Stobswell, Dundee, Dundee City, Alba / Scotland, DD3 7JY, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:tannadice",
+          "name": "Tannadice Park",
+          "aliases": [],
+          "coordinates": [
+            -2.9690463,
+            56.4745804
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/dundee-united",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/193218104",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/dundee-united",
+            "officialVenueName": "Tannadice Park",
+            "osmName": "Tannadice Park",
+            "osmAddress": "Tannadice Park, Tannadice Street, Clepington, Stobswell, Dundee, Dundee City, Alba / Scotland, DD3 7JW, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:falkirk-stadium",
+          "name": "Falkirk Stadium",
+          "aliases": [],
+          "coordinates": [
+            -3.75274445,
+            56.005417
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/falkirk",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/193873761",
+          "coordinateMethod": "Point generated from the matched OSM polygon bounds and verified inside its geometry; interior scanline fallback where required.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/falkirk",
+            "officialVenueName": "Falkirk Stadium",
+            "osmName": null,
+            "osmAddress": "Unnamed Falkirk FC stadium, Westfield, Falkirk",
+            "matchedOn": "Unnamed stadium polygon with operator Falkirk Football Club, address Falkirk/Westfield and Wikipedia identity Falkirk Stadium; matches SPFL official Falkirk stadium facility by Stadium Way.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:tynecastle",
+          "name": "Tynecastle Park",
+          "aliases": [],
+          "coordinates": [
+            -3.2322709,
+            55.9390197
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/heart-of-midlothian",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/4223856",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/heart-of-midlothian",
+            "officialVenueName": "Tynecastle Park",
+            "osmName": "Tynecastle Park",
+            "osmAddress": "Tynecastle Park, Foundation Plaza, Tynecastle, Gorgie, City of Edinburgh, Alba / Scotland, EH11 2NL, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:easter-road",
+          "name": "Easter Road Stadium",
+          "aliases": [],
+          "coordinates": [
+            -3.1651678,
+            55.9616856
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/hibernian",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/19754330",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/hibernian",
+            "officialVenueName": "Easter Road Stadium",
+            "osmName": "Easter Road Stadium",
+            "osmAddress": "Easter Road Stadium, 12, Albion Place, Lorne, Hillside, Leith, City of Edinburgh, Alba / Scotland, EH7 5QG, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:rugby-park",
+          "name": "Rugby Park",
+          "aliases": [],
+          "coordinates": [
+            -4.5093662,
+            55.6040974
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/kilmarnock",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/116475823",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/kilmarnock",
+            "officialVenueName": "Rugby Park",
+            "osmName": "The BBSP Stadium",
+            "osmAddress": "The BBSP Stadium, Harperland Drive, Annandale, Grange, Kilmarnock, East Ayrshire, Alba / Scotland, KA1 1UJ, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:fir-park",
+          "name": "Fir Park Stadium",
+          "aliases": [],
+          "coordinates": [
+            -3.9802627,
+            55.7804229
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/motherwell",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/193879599",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/motherwell",
+            "officialVenueName": "Fir Park Stadium",
+            "osmName": "Fir Park Stadium",
+            "osmAddress": "Fir Park Stadium, Edward Street, Knowetop, Watsonville, Motherwell, North Lanarkshire, Alba / Scotland, ML1 2QN, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:ibrox",
+          "name": "Ibrox Stadium",
+          "aliases": [],
+          "coordinates": [
+            -4.3093239,
+            55.8532207
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/rangers",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/15090854",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/rangers",
+            "officialVenueName": "Ibrox Stadium",
+            "osmName": "Ibrox Stadium",
+            "osmAddress": "Ibrox Stadium, 50, Edmiston Drive, Ibroxholm, Ibrox, Glasgow, Glasgow City, Alba / Scotland, G51 2XD, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:mcdiarmid",
+          "name": "McDiarmid Park",
+          "aliases": [],
+          "coordinates": [
+            -3.476894,
+            56.4098709
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/st-johnstone",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/56291030",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/st-johnstone",
+            "officialVenueName": "McDiarmid Park",
+            "osmName": "McDiarmid Park",
+            "osmAddress": "McDiarmid Park, Crieff Road, Hillyland, Perth, Perth and Kinross, Alba / Scotland, PH1 2SJ, United Kingdom",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:gb-sct:greenhill-road",
+          "name": "Marbill Coaches Stadium",
+          "aliases": [],
+          "coordinates": [
+            -4.4442054,
+            55.8505344
+          ],
+          "sourceUrl": "https://spfl.co.uk/clubs/st-mirren",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/521570813",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://spfl.co.uk/clubs/st-mirren",
+            "officialVenueName": "Marbill Coaches Stadium",
+            "osmName": "St Mirren Park",
+            "osmAddress": "St Mirren Park, Greenhill Road, Shortroods, Paisley, Renfrewshire, Alba / Scotland, PA3 1RQ, United Kingdom",
+            "matchedOn": "Official venue identity and club locality, checked against specific stadium name and OSM address; excluded roads, stops and similarly named venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        }
+      ],
+      "homeGrounds": [
+        {
+          "clubId": "club:gb-sct:aberdeen",
+          "venueId": "venue:gb-sct:pittodrie",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/aberdeen"
+        },
+        {
+          "clubId": "club:gb-sct:celtic",
+          "venueId": "venue:gb-sct:celtic-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/celtic"
+        },
+        {
+          "clubId": "club:gb-sct:dundee",
+          "venueId": "venue:gb-sct:dens-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/dundee"
+        },
+        {
+          "clubId": "club:gb-sct:dundee-united",
+          "venueId": "venue:gb-sct:tannadice",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/dundee-united"
+        },
+        {
+          "clubId": "club:gb-sct:falkirk",
+          "venueId": "venue:gb-sct:falkirk-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/falkirk"
+        },
+        {
+          "clubId": "club:gb-sct:heart-of-midlothian",
+          "venueId": "venue:gb-sct:tynecastle",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/heart-of-midlothian"
+        },
+        {
+          "clubId": "club:gb-sct:hibernian",
+          "venueId": "venue:gb-sct:easter-road",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/hibernian"
+        },
+        {
+          "clubId": "club:gb-sct:kilmarnock",
+          "venueId": "venue:gb-sct:rugby-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/kilmarnock"
+        },
+        {
+          "clubId": "club:gb-sct:motherwell",
+          "venueId": "venue:gb-sct:fir-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/motherwell"
+        },
+        {
+          "clubId": "club:gb-sct:rangers",
+          "venueId": "venue:gb-sct:ibrox",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/rangers"
+        },
+        {
+          "clubId": "club:gb-sct:st-johnstone",
+          "venueId": "venue:gb-sct:mcdiarmid",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/st-johnstone"
+        },
+        {
+          "clubId": "club:gb-sct:st-mirren",
+          "venueId": "venue:gb-sct:greenhill-road",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://spfl.co.uk/clubs/st-mirren"
+        }
+      ],
+      "clubRosterCoverage": "complete",
+      "coordinateCoverage": {
+        "verified": 12,
+        "total": 12
+      }
+    },
+    {
+      "season": "2026-27",
+      "competitionId": "es-la-liga",
+      "countryCode": "ES",
+      "expectedClubCount": 20,
+      "sourceUrl": "https://www.laliga.com/en-CA/laliga-easports/clubs",
+      "checkedAt": "2026-10-02",
+      "coverage": "complete",
+      "coverageMeaning": "Complete official current-season club and listed home-ground names. All 21 venue coordinates are verified; home-ground assignments are a checked-at snapshot and historical tenure dates remain incomplete.",
+      "clubs": [
+        {
+          "id": "club:es:athletic-club",
+          "name": "Athletic Club"
+        },
+        {
+          "id": "club:es:atletico-de-madrid",
+          "name": "Atlético de Madrid"
+        },
+        {
+          "id": "club:es:c-a-osasuna",
+          "name": "CA Osasuna"
+        },
+        {
+          "id": "club:es:rc-celta",
+          "name": "Celta"
+        },
+        {
+          "id": "club:es:d-alaves",
+          "name": "Deportivo Alavés"
+        },
+        {
+          "id": "club:es:elche-c-f",
+          "name": "Elche CF"
+        },
+        {
+          "id": "club:es:fc-barcelona",
+          "name": "FC Barcelona"
+        },
+        {
+          "id": "club:es:getafe-cf",
+          "name": "Getafe CF"
+        },
+        {
+          "id": "club:es:levante-ud",
+          "name": "Levante UD"
+        },
+        {
+          "id": "club:es:malaga-cf",
+          "name": "Málaga CF"
+        },
+        {
+          "id": "club:es:r-racing-club",
+          "name": "R. Racing Club"
+        },
+        {
+          "id": "club:es:rayo-vallecano",
+          "name": "Rayo Vallecano"
+        },
+        {
+          "id": "club:es:rc-deportivo",
+          "name": "RC Deportivo"
+        },
+        {
+          "id": "club:es:rcd-espanyol",
+          "name": "RCD Espanyol de Barcelona"
+        },
+        {
+          "id": "club:es:real-betis",
+          "name": "Real Betis"
+        },
+        {
+          "id": "club:es:real-madrid",
+          "name": "Real Madrid"
+        },
+        {
+          "id": "club:es:real-sociedad",
+          "name": "Real Sociedad"
+        },
+        {
+          "id": "club:es:sevilla-fc",
+          "name": "Sevilla FC"
+        },
+        {
+          "id": "club:es:valencia-cf",
+          "name": "Valencia CF"
+        },
+        {
+          "id": "club:es:villarreal-cf",
+          "name": "Villarreal CF"
+        }
+      ],
+      "venues": [
+        {
+          "id": "venue:es:san-mames",
+          "name": "Estadio San Mamés",
+          "aliases": [],
+          "coordinates": [
+            -2.9493915,
+            43.264204
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/athletic-club/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/59171758",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/athletic-club/squad",
+            "officialVenueName": "Estadio San Mamés",
+            "osmName": "San Mames",
+            "osmAddress": "San Mames, Rafael Moreno Pitxitxi pasealekua, Basurtu, Basurtu-Zorrotza, Bilbao, Bizkaia, Euskadi, 48014, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:metropolitano",
+          "name": "Riyadh Air Metropolitano",
+          "aliases": [],
+          "coordinates": [
+            -3.599699,
+            40.4360102
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/atletico-de-madrid/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/458731140",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/atletico-de-madrid/squad",
+            "officialVenueName": "Riyadh Air Metropolitano",
+            "osmName": "Riyadh Air Metropolitano",
+            "osmAddress": "Riyadh Air Metropolitano, Avenida 26 de Abril, Rosas, San Blas - Canillejas, Madrid, Comunidad de Madrid, 28022, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:el-sadar",
+          "name": "Estadio El Sadar",
+          "aliases": [],
+          "coordinates": [
+            -1.6371311,
+            42.7966625
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/c-a-osasuna/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/23454955",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/c-a-osasuna/squad",
+            "officialVenueName": "Estadio El Sadar",
+            "osmName": "Estadio El Sadar",
+            "osmAddress": "Estadio El Sadar, Sadar kalea, Arrosadia, Milagrosa-Arrosadia, Pamplona / Iruña, Iruñerria, Navarra, Navarra / Nafarroa, 31006, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:balaidos",
+          "name": "Estadio ABANCA Balaídos",
+          "aliases": [],
+          "coordinates": [
+            -8.7396656,
+            42.2117659
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/rc-celta/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/2651229",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/rc-celta/squad",
+            "officialVenueName": "Estadio ABANCA Balaídos",
+            "osmName": "Estadio Abanca-Balaídos",
+            "osmAddress": "Estadio Abanca-Balaídos, Avenida Citroën, A Aparicia, Balaídos, Vigo, Pontevedra, Galicia, 36210, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:mendizorroza",
+          "name": "Mendizorroza",
+          "aliases": [],
+          "coordinates": [
+            -2.688263,
+            42.8370538
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/d-alaves/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/39962765",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/d-alaves/squad",
+            "officialVenueName": "Mendizorroza",
+            "osmName": "Mendizorrotza",
+            "osmAddress": "Mendizorrotza, Amadeo Garcia de Salazar plaza, Batan, Mendizorrotza, Vitoria-Gasteiz, Gasteizko kuadrilla, Araba / Álava, Euskadi, 01007, España",
+            "matchedOn": "Official Mendizorroza ground in Vitoria-Gasteiz; OSM Basque name Mendizorrotza, Amadeo Garcia de Salazar plaza. Excluded similarly named suburb and adjacent sports centre.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:martinez-valero",
+          "name": "Estadio Martínez Valero",
+          "aliases": [],
+          "coordinates": [
+            -0.6633051,
+            38.2670445
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/elche-c-f/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/79833556",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/elche-c-f/squad",
+            "officialVenueName": "Estadio Martínez Valero",
+            "osmName": "Estadi Manuel Martínez Valero",
+            "osmAddress": "Estadi Manuel Martínez Valero, avinguda Manuel Martínez Valero, Camp de Futbol, Urbanització Les Atzavares, Elx / Elche, el Baix Vinalopó, Alacant / Alicante, Comunitat Valenciana, 03202, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:camp-nou",
+          "name": "Spotify Camp Nou",
+          "aliases": [],
+          "coordinates": [
+            2.1228182,
+            41.3808806
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/fc-barcelona/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/34607291",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/fc-barcelona/squad",
+            "officialVenueName": "Spotify Camp Nou",
+            "osmName": "Spotify Camp Nou",
+            "osmAddress": "Spotify Camp Nou, Avinguda de Joan XXIII, la Maternitat, la Maternitat i Sant Ramon, les Corts, Barcelona, Barcelonès, Barcelona, Catalunya, 08028, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:coliseum",
+          "name": "Coliseum",
+          "aliases": [],
+          "coordinates": [
+            -3.7149326,
+            40.3257247
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/getafe-cf/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/380991629",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/getafe-cf/squad",
+            "officialVenueName": "Coliseum",
+            "osmName": "Coliseum",
+            "osmAddress": "Coliseum, Avenida Teresa de Calcuta, Los Espartales, Getafe Norte, Getafe, Comunidad de Madrid, 28903, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:ciutat-valencia",
+          "name": "Estadio Ciutat de València",
+          "aliases": [],
+          "coordinates": [
+            -0.3638622,
+            39.4946425
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/levante-ud/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/549557293",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/levante-ud/squad",
+            "officialVenueName": "Estadio Ciutat de València",
+            "osmName": "Estadi Ciutat de València",
+            "osmAddress": "Estadi Ciutat de València, Carrer de Sant Vicent de Paül, Sant Llorenç, Rascanya, València, Comarca de València, València / Valencia, Comunitat Valenciana, 46019, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:la-rosaleda",
+          "name": "La Rosaleda",
+          "aliases": [],
+          "coordinates": [
+            -4.4265346,
+            36.7349435
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/malaga-cf/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/146539049",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/malaga-cf/squad",
+            "officialVenueName": "La Rosaleda",
+            "osmName": "Estadio La Rosaleda",
+            "osmAddress": "Estadio La Rosaleda, Paseo Martiricos, Martiricos, Palma-Palmilla, Málaga, Málaga-Costa del Sol, Málaga, Andalucía, 29011, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:sardinero",
+          "name": "El Sardinero",
+          "aliases": [],
+          "coordinates": [
+            -3.7939533,
+            43.4762607
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/r-racing-club/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/11678725",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/r-racing-club/squad",
+            "officialVenueName": "El Sardinero",
+            "osmName": "Estadio El Sardinero",
+            "osmAddress": "Estadio El Sardinero, 4, Calle del Real Racing Club, El Sardinero, Tetuán, Cueto, Santander, Cantabria, 39005, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:vallecas",
+          "name": "Estadio de Vallecas",
+          "aliases": [],
+          "coordinates": [
+            -3.6587366,
+            40.3917566
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/rayo-vallecano/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/339388126",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/rayo-vallecano/squad",
+            "officialVenueName": "Estadio de Vallecas",
+            "osmName": "Campo de Fútbol de Vallecas",
+            "osmAddress": "Campo de Fútbol de Vallecas, Calle del Payaso Fofó, Palomeras Bajas, Puente de Vallecas, Madrid, Comunidad de Madrid, 28018, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:riazor",
+          "name": "Estadio ABANCA-RIAZOR",
+          "aliases": [],
+          "coordinates": [
+            -8.4175098,
+            43.3687157
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/rc-deportivo/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/34237293",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/rc-deportivo/squad",
+            "officialVenueName": "Estadio ABANCA-RIAZOR",
+            "osmName": "Estadio ABANCA-RIAZOR",
+            "osmAddress": "Estadio ABANCA-RIAZOR, 1, Rúa Manuel Murguía, San Roque de Fóra, Riazor, A Coruña, Galicia, 15011, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:cornella-el-prat",
+          "name": "RCDE Stadium",
+          "aliases": [],
+          "coordinates": [
+            2.0764584,
+            41.3478567
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/rcd-espanyol/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/9157615",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/rcd-espanyol/squad",
+            "officialVenueName": "RCDE Stadium",
+            "osmName": "RCDE Stadium",
+            "osmAddress": "RCDE Stadium, Splau parking, Cornellà de Llobregat, Baix Llobregat, Barcelona, Catalunya, 08940, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:la-cartuja",
+          "name": "Estadio La Cartuja",
+          "aliases": [],
+          "coordinates": [
+            -6.003618,
+            37.4172398
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/real-betis/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/6138566",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/real-betis/squad",
+            "officialVenueName": "Estadio La Cartuja",
+            "osmName": "Estadio La Cartuja",
+            "osmAddress": "Estadio La Cartuja, Acceso Estadio Olímpico, Triana, Sevilla, Andalucía, 41092, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:bernabeu",
+          "name": "Bernabéu",
+          "aliases": [],
+          "coordinates": [
+            -3.688197,
+            40.4530437
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/real-madrid/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/1507411898",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/real-madrid/squad",
+            "officialVenueName": "Bernabéu",
+            "osmName": "Bernabéu",
+            "osmAddress": "Bernabéu, Acceso Parking, Hispanoamérica, Chamartín, Madrid, Comunidad de Madrid, 28020, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:anoeta",
+          "name": "Anoeta",
+          "aliases": [
+            "Reale Arena"
+          ],
+          "coordinates": [
+            -1.9735689,
+            43.3013899
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/real-sociedad/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/1426500083",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/real-sociedad/squad",
+            "officialVenueName": "Anoeta",
+            "osmName": "Estadio Municipal de Anoeta",
+            "osmAddress": "Estadio Municipal de Anoeta, 1, Anoeta pasealekua, Amaraberri, Anoeta, Amara Berri, Centro, Donostia / San Sebastián, Gipuzkoa, Euskadi, 20014, España",
+            "matchedOn": "Official venue identity and club locality, checked against specific stadium name and OSM address; excluded roads, stops and similarly named venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:ramon-sanchez-pizjuan",
+          "name": "Ramón Sánchez-Pizjuán",
+          "aliases": [],
+          "coordinates": [
+            -5.9706309,
+            37.3840876
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/sevilla-fc/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/22742138",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/sevilla-fc/squad",
+            "officialVenueName": "Ramón Sánchez-Pizjuán",
+            "osmName": "Estadio Ramón Sánchez-Pizjuán",
+            "osmAddress": "Estadio Ramón Sánchez-Pizjuán, Calle Sevilla Futbol Club, La Buhaira, Nervión, Sevilla, Andalucía, 41018, España",
+            "matchedOn": "Official venue identity and club locality, checked against specific stadium name and OSM address; excluded roads, stops and similarly named venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:mestalla",
+          "name": "Camp de Mestalla",
+          "aliases": [],
+          "coordinates": [
+            -0.3581566,
+            39.4745279
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/valencia-cf/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/8082830",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/valencia-cf/squad",
+            "officialVenueName": "Camp de Mestalla",
+            "osmName": "Mestalla",
+            "osmAddress": "Mestalla, Avinguda de Suècia, Mestalla, el Pla del Real, València, Comarca de València, València / Valencia, Comunitat Valenciana, 46010, España",
+            "matchedOn": "Official venue identity and club locality, checked against specific stadium name and OSM address; excluded roads, stops and similarly named venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:ceramica",
+          "name": "Estadio de la Cerámica",
+          "aliases": [],
+          "coordinates": [
+            -0.1034046,
+            39.9442083
+          ],
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/villarreal-cf/squad",
+          "coordinateStatus": "osm-polygon-interior",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/21875758",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.laliga.com/en-CA/clubs/villarreal-cf/squad",
+            "officialVenueName": "Estadio de la Cerámica",
+            "osmName": "Estadio de la Cerámica",
+            "osmAddress": "Estadio de la Cerámica, Carrer del Riu Millars, Vila-real, la Plana Baixa, Castelló / Castellón, Comunitat Valenciana, 12540, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:es:butarque",
+          "name": "Estadio Ontime Butarque",
+          "aliases": [
+            "Estadio Municipal Ontime Butarque"
+          ],
+          "coordinates": [
+            -3.760643,
+            40.3405621
+          ],
+          "coordinateStatus": "osm-polygon-interior",
+          "sourceUrl": "https://www.rayovallecano.es/noticias/rayo-vallecano-2-rcd-espanyol-1",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/616253154",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.rayovallecano.es/noticias/rayo-vallecano-2-rcd-espanyol-1",
+            "officialVenueName": "Estadio Ontime Butarque",
+            "osmName": "Ontime Butarque",
+            "osmAddress": "Ontime Butarque, Calle Minería, Quinto Centenario, Zarzaquemada, Leganés, Comunidad de Madrid, 28913, España",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        }
+      ],
+      "homeGrounds": [
+        {
+          "clubId": "club:es:athletic-club",
+          "venueId": "venue:es:san-mames",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/athletic-club/squad"
+        },
+        {
+          "clubId": "club:es:atletico-de-madrid",
+          "venueId": "venue:es:metropolitano",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/atletico-de-madrid/squad"
+        },
+        {
+          "clubId": "club:es:c-a-osasuna",
+          "venueId": "venue:es:el-sadar",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/c-a-osasuna/squad"
+        },
+        {
+          "clubId": "club:es:rc-celta",
+          "venueId": "venue:es:balaidos",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/rc-celta/squad"
+        },
+        {
+          "clubId": "club:es:d-alaves",
+          "venueId": "venue:es:mendizorroza",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/d-alaves/squad"
+        },
+        {
+          "clubId": "club:es:elche-c-f",
+          "venueId": "venue:es:martinez-valero",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/elche-c-f/squad"
+        },
+        {
+          "clubId": "club:es:fc-barcelona",
+          "venueId": "venue:es:camp-nou",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/fc-barcelona/squad"
+        },
+        {
+          "clubId": "club:es:getafe-cf",
+          "venueId": "venue:es:coliseum",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/getafe-cf/squad"
+        },
+        {
+          "clubId": "club:es:levante-ud",
+          "venueId": "venue:es:ciutat-valencia",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/levante-ud/squad"
+        },
+        {
+          "clubId": "club:es:malaga-cf",
+          "venueId": "venue:es:la-rosaleda",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/malaga-cf/squad"
+        },
+        {
+          "clubId": "club:es:r-racing-club",
+          "venueId": "venue:es:sardinero",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/r-racing-club/squad"
+        },
+        {
+          "clubId": "club:es:rayo-vallecano",
+          "venueId": "venue:es:vallecas",
+          "validFrom": null,
+          "validTo": null,
+          "status": "unknown",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/rayo-vallecano/squad",
+          "notes": "League page lists Vallecas. Official club reports confirm the 2026-09-15 league match against Espanyol at temporary venue Butarque, recorded as a separate dated relation. The full temporary tenure start/end dates remain unverified. The club confirms a friendly at Vallecas on 2026-10-03; this does not establish a permanent league-return date."
+        },
+        {
+          "clubId": "club:es:rc-deportivo",
+          "venueId": "venue:es:riazor",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/rc-deportivo/squad"
+        },
+        {
+          "clubId": "club:es:rcd-espanyol",
+          "venueId": "venue:es:cornella-el-prat",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/rcd-espanyol/squad"
+        },
+        {
+          "clubId": "club:es:real-betis",
+          "venueId": "venue:es:la-cartuja",
+          "validFrom": null,
+          "validTo": null,
+          "status": "unknown",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/real-betis/squad"
+        },
+        {
+          "clubId": "club:es:real-madrid",
+          "venueId": "venue:es:bernabeu",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/real-madrid/squad"
+        },
+        {
+          "clubId": "club:es:real-sociedad",
+          "venueId": "venue:es:anoeta",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/real-sociedad/squad"
+        },
+        {
+          "clubId": "club:es:sevilla-fc",
+          "venueId": "venue:es:ramon-sanchez-pizjuan",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/sevilla-fc/squad"
+        },
+        {
+          "clubId": "club:es:valencia-cf",
+          "venueId": "venue:es:mestalla",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/valencia-cf/squad"
+        },
+        {
+          "clubId": "club:es:villarreal-cf",
+          "venueId": "venue:es:ceramica",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.laliga.com/en-CA/clubs/villarreal-cf/squad"
+        },
+        {
+          "clubId": "club:es:rayo-vallecano",
+          "venueId": "venue:es:butarque",
+          "validFrom": "2026-09-15",
+          "validTo": "2026-09-15",
+          "status": "temporary",
+          "dateSemantics": "Confirmed match date only, not full start/end of temporary tenure.",
+          "sourceUrl": "https://www.rayovallecano.es/noticias/rayo-vallecano-2-rcd-espanyol-1",
+          "additionalSourceUrls": [
+            "https://www.rayovallecano.es/noticias/comunicado-oficial-14-09-2026",
+            "https://www.rayovallecano.es/noticias/comunicado-oficial-estadio-de-vallecas-12-09-26"
+          ],
+          "fixture": "2026-27 LaLiga J6: Rayo Vallecano - RCD Espanyol"
+        }
+      ],
+      "clubRosterCoverage": "complete",
+      "coordinateCoverage": {
+        "verified": 21,
+        "total": 21
+      }
+    },
+    {
+      "season": "2026-27",
+      "competitionId": "fr-ligue-1",
+      "countryCode": "FR",
+      "expectedClubCount": 18,
+      "sourceUrl": "https://ligue1.com/en/articles/l1_article_5082-les-maillots-de-la-saison-2026-2027-l1",
+      "checkedAt": "2026-10-02",
+      "coverage": "complete",
+      "coverageMeaning": "Complete official 18-club 2026-27 roster and listed/scheduled home-ground names verified against club stadium pages and ESTAC official season fixtures. All 18 venue coordinates are verified; historical home-ground tenure dates remain incomplete.",
+      "clubs": [
+        {
+          "id": "club:fr:angers",
+          "name": "Angers SCO"
+        },
+        {
+          "id": "club:fr:auxerre",
+          "name": "AJ Auxerre"
+        },
+        {
+          "id": "club:fr:brest",
+          "name": "Stade Brestois 29"
+        },
+        {
+          "id": "club:fr:le-havre",
+          "name": "Le Havre AC"
+        },
+        {
+          "id": "club:fr:lens",
+          "name": "RC Lens"
+        },
+        {
+          "id": "club:fr:lille",
+          "name": "LOSC Lille"
+        },
+        {
+          "id": "club:fr:lorient",
+          "name": "FC Lorient"
+        },
+        {
+          "id": "club:fr:lyon",
+          "name": "Olympique Lyonnais"
+        },
+        {
+          "id": "club:fr:le-mans",
+          "name": "Le Mans FC"
+        },
+        {
+          "id": "club:fr:marseille",
+          "name": "Olympique de Marseille"
+        },
+        {
+          "id": "club:fr:monaco",
+          "name": "AS Monaco"
+        },
+        {
+          "id": "club:fr:nice",
+          "name": "OGC Nice"
+        },
+        {
+          "id": "club:fr:paris-fc",
+          "name": "Paris FC"
+        },
+        {
+          "id": "club:fr:paris-saint-germain",
+          "name": "Paris Saint-Germain"
+        },
+        {
+          "id": "club:fr:rennes",
+          "name": "Stade Rennais FC"
+        },
+        {
+          "id": "club:fr:strasbourg",
+          "name": "RC Strasbourg Alsace"
+        },
+        {
+          "id": "club:fr:toulouse",
+          "name": "Toulouse FC"
+        },
+        {
+          "id": "club:fr:troyes",
+          "name": "ESTAC Troyes"
+        }
+      ],
+      "venues": [
+        {
+          "id": "venue:fr:raymond-kopa",
+          "name": "Stade Raymond-Kopa",
+          "aliases": [],
+          "coordinates": [
+            -0.5306948,
+            47.4605516
+          ],
+          "sourceUrl": "https://angers-sco.fr/plan-portes-tribunes/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/302691255",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://angers-sco.fr/plan-portes-tribunes/",
+            "officialVenueName": "Stade Raymond-Kopa",
+            "osmName": "Stade Raymond-Kopa",
+            "osmAddress": "Stade Raymond-Kopa, 11, Boulevard Pierre de Coubertin, Justices - Madeleine - Saint-Léonard, Angers, Maine-et-Loire, Pays de la Loire, France métropolitaine, 49000, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:abbe-deschamps",
+          "name": "Stade Abbé-Deschamps",
+          "aliases": [],
+          "coordinates": [
+            3.5886237,
+            47.7867848
+          ],
+          "sourceUrl": "https://www.aja.fr/le-stade-abbe-deschamps//",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/269095205",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.aja.fr/le-stade-abbe-deschamps//",
+            "officialVenueName": "Stade Abbé-Deschamps",
+            "osmName": "Stade Abbé-Deschamps",
+            "osmAddress": "Stade Abbé-Deschamps, Route de Vaux, La Noue, Auxerre, Yonne, Bourgogne-Franche-Comté, France métropolitaine, 89000, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:francis-le-ble",
+          "name": "Stade Francis-Le Blé",
+          "aliases": [],
+          "coordinates": [
+            -4.4613605,
+            48.4030423
+          ],
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/5184294",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+            "officialVenueName": "Stade Francis-Le Blé",
+            "osmName": "Stade Francis-Le Blé",
+            "osmAddress": "Stade Francis-Le Blé, Rue Maurice Piquemal, Le Bot, Le Petit Paris, Kerbernard, Brest, Finistère, Bretagne, France métropolitaine, 29200, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:oceane",
+          "name": "Stade CMA CGM Océane",
+          "aliases": [],
+          "coordinates": [
+            0.1694637,
+            49.4987513
+          ],
+          "sourceUrl": "https://billetterie.hac.football/stade-oceane/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/238067304",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://billetterie.hac.football/stade-oceane/",
+            "officialVenueName": "Stade CMA CGM Océane",
+            "osmName": "Stade CMA CGM Océane",
+            "osmAddress": "Stade CMA CGM Océane, Parvis, Champs Barets, Le Havre, Seine-Maritime, Normandie, France métropolitaine, 76610, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:bollaert-delelis",
+          "name": "Stade Bollaert-Delelis",
+          "aliases": [],
+          "coordinates": [
+            2.8149863,
+            50.4328242
+          ],
+          "sourceUrl": "https://www.rclens.fr/fr/stade-bollaert-delelis/passion-unisson",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/268785933",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.rclens.fr/fr/stade-bollaert-delelis/passion-unisson",
+            "officialVenueName": "Stade Bollaert-Delelis",
+            "osmName": "Stade Bollaert-Delelis",
+            "osmAddress": "Stade Bollaert-Delelis, Avenue Alfred Maës, Cité n°4, Lens, Pas-de-Calais, Hauts-de-France, France métropolitaine, 62300, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:pierre-mauroy",
+          "name": "Decathlon Arena - Stade Pierre-Mauroy",
+          "aliases": [],
+          "coordinates": [
+            3.130508,
+            50.6119044
+          ],
+          "sourceUrl": "https://billetterie.losc.fr/fr/faq",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/151494291",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://billetterie.losc.fr/fr/faq",
+            "officialVenueName": "Decathlon Arena - Stade Pierre-Mauroy",
+            "osmName": "Decathlon Arena-Stade Pierre-Mauroy",
+            "osmAddress": "Decathlon Arena-Stade Pierre-Mauroy, Boulevard de Tournai, Hôtel-de-Ville, Saint-Sauveur, Villeneuve-d'Ascq, Lille, Nord, Hauts-de-France, France métropolitaine, 59491, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:moustoir",
+          "name": "Stade du Moustoir",
+          "aliases": [
+            "Yves Allainmat"
+          ],
+          "coordinates": [
+            -3.3695412,
+            47.7488021
+          ],
+          "sourceUrl": "https://entreprises.fclorient.bzh/contact/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/28305037",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://entreprises.fclorient.bzh/contact/",
+            "officialVenueName": "Stade du Moustoir",
+            "osmName": "Stade du Moustoir – Yves Allainmat",
+            "osmAddress": "Stade du Moustoir – Yves Allainmat, Rue Jean Le Coutaller, Bailli de Suffren, Le Moustoir, La Villeneuve, Lorient, Morbihan, Bretagne, France métropolitaine, 56100, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:lyon-stadium",
+          "name": "Groupama Stadium",
+          "aliases": [],
+          "coordinates": [
+            4.9820543,
+            45.7653624
+          ],
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/353267337",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+            "officialVenueName": "Groupama Stadium",
+            "osmName": "Groupama Stadium",
+            "osmAddress": "Groupama Stadium, Allée Sud-Ouest, Le Grand Montout, Charpieu, Décines-Charpieu, Lyon, Métropole de Lyon, Rhône, Auvergne-Rhône-Alpes, France métropolitaine, 69150, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:le-mans-stadium",
+          "name": "Stade Marie-Marvingt",
+          "aliases": [],
+          "coordinates": [
+            0.223941,
+            47.9591652
+          ],
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/7100811",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+            "officialVenueName": "Stade Marie-Marvingt",
+            "osmName": "Stade Marie-Marvingt",
+            "osmAddress": "Stade Marie-Marvingt, Chemin aux Bœufs, Le Tertre Rouge, Le Mans, Sarthe, Pays de la Loire, France métropolitaine, 72100, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:velodrome",
+          "name": "CEPAC VELODROME",
+          "aliases": [],
+          "coordinates": [
+            5.3959082,
+            43.2698474
+          ],
+          "sourceUrl": "https://www.om.fr/fr/decouvrir-le-stade",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/172853962",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.om.fr/fr/decouvrir-le-stade",
+            "officialVenueName": "CEPAC VELODROME",
+            "osmName": "CEPAC Vélodrome",
+            "osmAddress": "CEPAC Vélodrome, 3, Boulevard Michelet, Saint-Giniez, Marseille 8e Arrondissement, Marseille, Bouches-du-Rhône, Provence-Alpes-Côte d'Azur, France métropolitaine, 13008, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:mc:louis-ii",
+          "name": "Stade Louis-II",
+          "aliases": [],
+          "coordinates": [
+            7.4154577,
+            43.7275713
+          ],
+          "sourceUrl": "https://www.asmonaco.com/fr/club/stade-louis-ii",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "countryCode": "MC",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/49209155",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.asmonaco.com/fr/club/stade-louis-ii",
+            "officialVenueName": "Stade Louis-II",
+            "osmName": "Stade Louis-II",
+            "osmAddress": "Stade Louis-II, Avenue des Castelans, Fontvieille, Monaco, 98020, Monaco",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:nice-stadium",
+          "name": "Allianz Riviera",
+          "aliases": [],
+          "coordinates": [
+            7.1926033,
+            43.7051477
+          ],
+          "sourceUrl": "https://www.ogcnice.com/fr/stade/allianz-riviera.html",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/202892016",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.ogcnice.com/fr/stade/allianz-riviera.html",
+            "officialVenueName": "Allianz Riviera",
+            "osmName": "Allianz Riviera",
+            "osmAddress": "Allianz Riviera, Allée Camille Muffat, Saint-Isidore, Nice, Alpes-Maritimes, Provence-Alpes-Côte d'Azur, France métropolitaine, 06284, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:jean-bouin",
+          "name": "Stade Jean Bouin",
+          "aliases": [],
+          "coordinates": [
+            2.2529615,
+            48.8433187
+          ],
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/403524549",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+            "officialVenueName": "Stade Jean Bouin",
+            "osmName": "Stade Jean-Bouin",
+            "osmAddress": "Stade Jean-Bouin, 20 - 40, Avenue du Général Sarrail, Quartier d'Auteuil, Paris 16e Arrondissement, Paris, Île-de-France, France métropolitaine, 75016, France",
+            "matchedOn": "Official stadium name and Paris FC locality; selected Paris 16e, excluded same-name Marseille venue.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:parc-des-princes",
+          "name": "Parc des Princes",
+          "aliases": [],
+          "coordinates": [
+            2.2530693,
+            48.8413634
+          ],
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/53559935",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+            "officialVenueName": "Parc des Princes",
+            "osmName": "Parc des Princes",
+            "osmAddress": "Parc des Princes, 24, Rue du Commandant Guilbaud, Quartier d'Auteuil, Paris 16e Arrondissement, Paris, Île-de-France, France métropolitaine, 75016, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:roazhon-park",
+          "name": "Roazhon Park",
+          "aliases": [],
+          "coordinates": [
+            -1.7126543,
+            48.1075655
+          ],
+          "sourceUrl": "https://www.staderennais.com/le-roazon-park",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/1313073237",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.staderennais.com/le-roazon-park",
+            "officialVenueName": "Roazhon Park",
+            "osmName": "Roazhon Park",
+            "osmAddress": "Roazhon Park, Rue de Lorient, Moulin du Comte, Bourg l'Évesque - La Touche - Moulin du Comte, Quartiers Ouest, Rennes, Ille-et-Vilaine, Bretagne, France métropolitaine, 35000, France",
+            "matchedOn": "Exact official ground name and Rennes/Rue de Lorient address; OSM maps stadium extent as sports_centre.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "sports_centre"
+          }
+        },
+        {
+          "id": "venue:fr:meinau",
+          "name": "Stade de la Meinau",
+          "aliases": [],
+          "coordinates": [
+            7.7551221,
+            48.5599481
+          ],
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/relation/3856635",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+            "officialVenueName": "Stade de la Meinau",
+            "osmName": "Stade de la Meinau",
+            "osmAddress": "Stade de la Meinau, Piste Georges Speicher, Meinau, Strasbourg, Bas-Rhin, Collectivité européenne d'Alsace, Grand Est, France métropolitaine, 67100, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:toulouse-stadium",
+          "name": "Stadium de Toulouse",
+          "aliases": [],
+          "coordinates": [
+            1.4340638,
+            43.5832262
+          ],
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/534217397",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+            "officialVenueName": "Stadium de Toulouse",
+            "osmName": "Stadium de Toulouse",
+            "osmAddress": "Stadium de Toulouse, 1bis, Allée Gabriel Biénès, Empalot, Saint-Michel / Saint-Agne / Empalot / Le Busca / Île du Ramier / Montplaisir, Toulouse, Haute-Garonne, Occitanie, France métropolitaine, 31028, France",
+            "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "stadium"
+          }
+        },
+        {
+          "id": "venue:fr:aube",
+          "name": "Stade de l'Aube",
+          "aliases": [],
+          "coordinates": [
+            4.0985168,
+            48.3075171
+          ],
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "coordinateStatus": "osm-polygon-interior",
+          "verificationStatus": "official",
+          "additionalSourceUrls": [
+            "https://www.estac.fr/equipe-premiere/calendrier-resultats/"
+          ],
+          "coordinateSourceUrl": "https://www.openstreetmap.org/way/327506183",
+          "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+          "coordinateLicense": "ODbL-1.0",
+          "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+          "coordinateAttribution": "© OpenStreetMap contributors",
+          "coordinateCheckedAt": "2026-10-02",
+          "coordinateMatchEvidence": {
+            "officialSourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+            "officialVenueName": "Stade de l'Aube",
+            "osmName": null,
+            "osmAddress": "Unnamed football ground polygon containing named stadium node 11962401363 (Stade de l’Aube, Avenue Robert Schumann, Troyes)",
+            "matchedOn": "OSM named stadium node 11962401363 (Stade de l’Aube, Troyes) verified inside this soccer sports_centre polygon; polygon image tag identifies Stade de l’Aube. The polygon itself is unnamed.",
+            "geometryType": "Polygon",
+            "osmFeatureType": "sports_centre"
+          }
+        }
+      ],
+      "homeGrounds": [
+        {
+          "clubId": "club:fr:angers",
+          "venueId": "venue:fr:raymond-kopa",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://angers-sco.fr/plan-portes-tribunes/",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:auxerre",
+          "venueId": "venue:fr:abbe-deschamps",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.aja.fr/le-stade-abbe-deschamps//",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:brest",
+          "venueId": "venue:fr:francis-le-ble",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "verificationBasis": "Official opponent club published 2026-27 home fixture; scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:le-havre",
+          "venueId": "venue:fr:oceane",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://billetterie.hac.football/stade-oceane/"
+        },
+        {
+          "clubId": "club:fr:lens",
+          "venueId": "venue:fr:bollaert-delelis",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.rclens.fr/fr/stade-bollaert-delelis/passion-unisson",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:lille",
+          "venueId": "venue:fr:pierre-mauroy",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://billetterie.losc.fr/fr/faq",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:lorient",
+          "venueId": "venue:fr:moustoir",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://entreprises.fclorient.bzh/contact/",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:lyon",
+          "venueId": "venue:fr:lyon-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:le-mans",
+          "venueId": "venue:fr:le-mans-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:marseille",
+          "venueId": "venue:fr:velodrome",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.om.fr/fr/decouvrir-le-stade"
+        },
+        {
+          "clubId": "club:fr:monaco",
+          "venueId": "venue:mc:louis-ii",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.asmonaco.com/fr/club/stade-louis-ii",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:nice",
+          "venueId": "venue:fr:nice-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.ogcnice.com/fr/stade/allianz-riviera.html",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:paris-fc",
+          "venueId": "venue:fr:jean-bouin",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:paris-saint-germain",
+          "venueId": "venue:fr:parc-des-princes",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:rennes",
+          "venueId": "venue:fr:roazhon-park",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.staderennais.com/le-roazon-park",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:strasbourg",
+          "venueId": "venue:fr:meinau",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:toulouse",
+          "venueId": "venue:fr:toulouse-stadium",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        },
+        {
+          "clubId": "club:fr:troyes",
+          "venueId": "venue:fr:aube",
+          "validFrom": null,
+          "validTo": null,
+          "status": "regular",
+          "sourceUrl": "https://www.estac.fr/equipe-premiere/calendrier-resultats/",
+          "verificationBasis": "Official club venue information or published 2026-27 home fixture; future scheduled fixtures can change."
+        }
+      ],
+      "clubRosterCoverage": "complete",
+      "coordinateCoverage": {
+        "verified": 18,
+        "total": 18
+      }
+    }
+  ],
+  "standaloneVenues": [
+    {
+      "id": "venue:gb-wls:millennium-stadium",
+      "name": "Principality Stadium",
+      "aliases": [
+        "Millennium Stadium"
+      ],
+      "countryCode": "GB-WLS",
+      "coordinates": [
+        -3.1826256,
+        51.4782484
+      ],
+      "coordinateStatus": "osm-polygon-interior",
+      "sourceUrl": "https://www.principalitystadium.wales/information/about-the-venue/",
+      "addressSourceUrl": "https://www.principalitystadium.wales/information/getting-here/",
+      "checkedAt": "2026-10-02",
+      "notes": "Standalone user-requested Cardiff Millennium Stadium; do not confuse with Cardiff City Stadium or infer a resident top-flight football club.",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/1287329038",
+      "coordinateMethod": "Point verified inside the matched OSM stadium geometry; Nominatim representative point, with interior scanline fallback.",
+      "coordinateLicense": "ODbL-1.0",
+      "coordinateLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+      "coordinateAttribution": "© OpenStreetMap contributors",
+      "coordinateCheckedAt": "2026-10-02",
+      "coordinateMatchEvidence": {
+        "officialSourceUrl": "https://www.principalitystadium.wales/information/about-the-venue/",
+        "officialVenueName": "Principality Stadium",
+        "osmName": "Principality Stadium",
+        "osmAddress": "Principality Stadium, Park Street, Central Square, Castle Quarter, Castle, Cardiff, Cymru / Wales, CF10 1NT, United Kingdom",
+        "matchedOn": "Official venue name and club identity, with expected locality checked against the OSM stadium address; excluded same-name settlements, stops and unrelated venues.",
+        "geometryType": "Polygon",
+        "osmFeatureType": "stadium"
+      }
+    }
+  ],
+  "pendingCompetitions": [],
+  "limitations": [
+    "All 108 unique venue coordinates are verified: 21 from official-linked published map locations and 87 from matched OpenStreetMap physical-venue polygon interior points, cross-checked against official venue identity. OSM-derived coordinates retain their object source, matching evidence, attribution and ODbL-1.0 license.",
+    "Regular home-ground assignments are a checked-at snapshot, not exhaustive match-by-match temporary ground history.",
+    "Null validFrom/validTo means dates not verified, not perpetual tenure.",
+    "Venue IDs are stable physical-place IDs; sponsorship renames must update aliases rather than create new places.",
+    "No personal visit, tour or match-attendance states are inferred.",
+    "Rayo temporary use of Butarque is confirmed for the 2026-09-15 league match only. Full temporary tenure start/end dates and permanent league-return date remain unverified; the 2026-10-03 friendly announcement alone is insufficient.",
+    "Competition country is not venue geography: AS Monaco belongs to Ligue 1 while Stade Louis-II is in Monaco.",
+    "Some official home-ground evidence is a published future season fixture, not a completed match; verify again before attending or freezing date-specific venue history."
+  ]
+}

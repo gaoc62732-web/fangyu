@@ -1,0 +1,3177 @@
+{
+  "schemaVersion": "fangyu-unesco-components-research-1",
+  "checkedAt": "2026-10-03",
+  "scope": [
+    "IDN",
+    "THA",
+    "MYS",
+    "SGP",
+    "BRN"
+  ],
+  "coverageDefinition": "complete means the official maps geographical table only; tourist-place decomposition remains partial.",
+  "sourceAccessNote": "UNESCO官方HTTPS页由web工具读取；本机默认TLS urllib遇证书链错误，独立Chrome返回403挑战后停止。未关闭证书校验、未绕过挑战。web缓存抓取日期不同于核对日期。",
+  "countryListEvidence": [
+    {
+      "countryCode": "IDN",
+      "officialListedProjectCount": 10,
+      "sourceUrl": "https://whc.unesco.org/en/statesparties/id/",
+      "checkedAt": "2026-10-03",
+      "projectIds": [
+        "592",
+        "608",
+        "609",
+        "642",
+        "593",
+        "955",
+        "1167",
+        "1194",
+        "1610",
+        "1671"
+      ]
+    },
+    {
+      "countryCode": "THA",
+      "officialListedProjectCount": 9,
+      "sourceUrl": "https://whc.unesco.org/en/statesparties/th/",
+      "checkedAt": "2026-10-03",
+      "projectIds": [
+        "574",
+        "575",
+        "576",
+        "590",
+        "591",
+        "1461",
+        "1507",
+        "1662",
+        "1761"
+      ]
+    },
+    {
+      "countryCode": "MYS",
+      "officialListedProjectCount": 6,
+      "sourceUrl": "https://whc.unesco.org/en/statesparties/my/",
+      "checkedAt": "2026-10-03",
+      "projectIds": [
+        "1012",
+        "1013",
+        "1223",
+        "1396",
+        "1014",
+        "1734"
+      ]
+    },
+    {
+      "countryCode": "SGP",
+      "officialListedProjectCount": 1,
+      "sourceUrl": "https://whc.unesco.org/en/statesparties/sg/",
+      "checkedAt": "2026-10-03",
+      "projectIds": [
+        "1483"
+      ]
+    },
+    {
+      "countryCode": "BRN",
+      "officialListedProjectCount": 0,
+      "sourceUrl": "https://whc.unesco.org/en/statesparties/bn/",
+      "checkedAt": "2026-10-03",
+      "projectIds": [],
+      "note": "官方缔约国页显示已列入世界遗产0项、暂定名录0项；本包不创建占位遗产。"
+    }
+  ],
+  "stats": {
+    "projectCount": 26,
+    "officialGeographicalRows": 62,
+    "ordinaryPointCount": 11,
+    "roleCounts": {
+      "place-reference": 11,
+      "area-reference": 32,
+      "project-reference": 15,
+      "unverified-reference": 1,
+      "linear-reference": 2,
+      "group-reference": 1
+    },
+    "countries": [
+      {
+        "countryCode": "IDN",
+        "officialListedProjectCount": 10,
+        "sourceUrl": "https://whc.unesco.org/en/statesparties/id/",
+        "checkedAt": "2026-10-03",
+        "projectIds": [
+          "592",
+          "608",
+          "609",
+          "642",
+          "593",
+          "955",
+          "1167",
+          "1194",
+          "1610",
+          "1671"
+        ],
+        "geographicalRows": 33
+      },
+      {
+        "countryCode": "THA",
+        "officialListedProjectCount": 9,
+        "sourceUrl": "https://whc.unesco.org/en/statesparties/th/",
+        "checkedAt": "2026-10-03",
+        "projectIds": [
+          "574",
+          "575",
+          "576",
+          "590",
+          "591",
+          "1461",
+          "1507",
+          "1662",
+          "1761"
+        ],
+        "geographicalRows": 18
+      },
+      {
+        "countryCode": "MYS",
+        "officialListedProjectCount": 6,
+        "sourceUrl": "https://whc.unesco.org/en/statesparties/my/",
+        "checkedAt": "2026-10-03",
+        "projectIds": [
+          "1012",
+          "1013",
+          "1223",
+          "1396",
+          "1014",
+          "1734"
+        ],
+        "geographicalRows": 10
+      },
+      {
+        "countryCode": "SGP",
+        "officialListedProjectCount": 1,
+        "sourceUrl": "https://whc.unesco.org/en/statesparties/sg/",
+        "checkedAt": "2026-10-03",
+        "projectIds": [
+          "1483"
+        ],
+        "geographicalRows": 1
+      },
+      {
+        "countryCode": "BRN",
+        "officialListedProjectCount": 0,
+        "sourceUrl": "https://whc.unesco.org/en/statesparties/bn/",
+        "checkedAt": "2026-10-03",
+        "projectIds": [],
+        "note": "官方缔约国页显示已列入世界遗产0项、暂定名录0项；本包不创建占位遗产。",
+        "geographicalRows": 0
+      }
+    ]
+  },
+  "projects": [
+    {
+      "unescoId": "592",
+      "name": "Borobudur Temple Compounds",
+      "nameEn": "Borobudur Temple Compounds",
+      "nameZh": "婆罗浮屠寺庙群",
+      "nameOriginal": "Borobudur Temple Compounds",
+      "originalLanguage": "en",
+      "aliases": [
+        "Borobudur Temple Compounds",
+        "婆罗浮屠寺庙群"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/592/",
+        "https://whc.unesco.org/zh/list/592/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/592/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 3,
+      "officialGeographicalRowCount": 3,
+      "components": [
+        {
+          "componentId": "592-001",
+          "officialComponentId": "592-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "592-001",
+          "name": "Borobudur Temple",
+          "nameEn": "Borobudur Temple",
+          "nameOriginal": "Borobudur Temple",
+          "originalLanguage": "en",
+          "nameZh": "婆罗浮屠寺",
+          "aliases": [
+            "Borobudur Temple",
+            "婆罗浮屠寺"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/592/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            110.203861111,
+            -7.607778056
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/592/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/592/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S7 36 28.001 E110 12 13.9",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "592-002",
+          "officialComponentId": "592-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "592-002",
+          "name": "Mendut Temple",
+          "nameEn": "Mendut Temple",
+          "nameOriginal": "Mendut Temple",
+          "originalLanguage": "en",
+          "nameZh": "门杜寺",
+          "aliases": [
+            "Mendut Temple",
+            "门杜寺"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/592/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            110.230111111,
+            -7.604861111
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/592/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/592/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S7 36 17.5 E110 13 48.4",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "592-003",
+          "officialComponentId": "592-003",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "592-003",
+          "name": "Pawon Temple",
+          "nameEn": "Pawon Temple",
+          "nameOriginal": "Pawon Temple",
+          "originalLanguage": "en",
+          "nameZh": "巴翁寺",
+          "aliases": [
+            "Pawon Temple",
+            "巴翁寺"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/592/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            110.219611111,
+            -7.606083056
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/592/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/592/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S7 36 21.899 E110 13 10.6",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 3,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "608",
+      "name": "Ujung Kulon National Park",
+      "nameEn": "Ujung Kulon National Park",
+      "nameZh": "马戎格库龙国家公园",
+      "nameOriginal": "Ujung Kulon National Park",
+      "originalLanguage": "en",
+      "aliases": [
+        "Ujung Kulon National Park",
+        "马戎格库龙国家公园"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/608/",
+        "https://whc.unesco.org/zh/list/608/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 5,
+      "officialGeographicalRowCount": 5,
+      "components": [
+        {
+          "componentId": "608-001",
+          "officialComponentId": "608-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "608-001",
+          "name": "Ujung Kulon peninsula",
+          "nameEn": "Ujung Kulon peninsula",
+          "nameOriginal": "Ujung Kulon peninsula",
+          "originalLanguage": "en",
+          "nameZh": "乌戎库隆半岛",
+          "aliases": [
+            "Ujung Kulon peninsula",
+            "乌戎库隆半岛"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/608/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            105.374758333,
+            -6.781763889
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S6 46 54.35 E105 22 29.13",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "608-002",
+          "officialComponentId": "608-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "608-002",
+          "name": "Honje Nature Reserve",
+          "nameEn": "Honje Nature Reserve",
+          "nameOriginal": "Honje Nature Reserve",
+          "originalLanguage": "en",
+          "nameZh": "洪杰自然保护区",
+          "aliases": [
+            "Honje Nature Reserve",
+            "洪杰自然保护区"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/608/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            105.572708333,
+            -6.713808333
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S6 42 49.71 E105 34 21.75",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "608-003",
+          "officialComponentId": "608-003",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "608-003",
+          "name": "Panaitan Island",
+          "nameEn": "Panaitan Island",
+          "nameOriginal": "Panaitan Island",
+          "originalLanguage": "en",
+          "nameZh": "帕奈坦岛",
+          "aliases": [
+            "Panaitan Island",
+            "帕奈坦岛"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/608/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            105.206208333,
+            -6.644711111
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S6 38 40.96 E105 12 22.35",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "608-004",
+          "officialComponentId": "608-004",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "608-004",
+          "name": "Peucang Island",
+          "nameEn": "Peucang Island",
+          "nameOriginal": "Peucang Island",
+          "originalLanguage": "en",
+          "nameZh": "佩乌仓岛",
+          "aliases": [
+            "Peucang Island",
+            "佩乌仓岛"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/608/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            105.2563,
+            -6.738013889
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S6 44 16.85 E105 15 22.68",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "608-005",
+          "officialComponentId": "608-005",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "608-005",
+          "name": "Krakatau Nature Reserve",
+          "nameEn": "Krakatau Nature Reserve",
+          "nameOriginal": "Krakatau Nature Reserve",
+          "originalLanguage": "en",
+          "nameZh": "喀拉喀托自然保护区",
+          "aliases": [
+            "Krakatau Nature Reserve",
+            "喀拉喀托自然保护区"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/608/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            105.442241667,
+            -6.149380556
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/608/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S6 8 57.77 E105 26 32.07",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "609",
+      "name": "Komodo National Park",
+      "nameEn": "Komodo National Park",
+      "nameZh": "科莫多国家公园",
+      "nameOriginal": "Komodo National Park",
+      "originalLanguage": "en",
+      "aliases": [
+        "Komodo National Park",
+        "科莫多国家公园"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/609/",
+        "https://whc.unesco.org/zh/list/609/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/609/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "609",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "609",
+          "name": "Komodo National Park",
+          "nameEn": "Komodo National Park",
+          "nameOriginal": "Komodo National Park",
+          "originalLanguage": "en",
+          "nameZh": "科莫多国家公园",
+          "aliases": [
+            "Komodo National Park",
+            "科莫多国家公园"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/609/",
+            "https://whc.unesco.org/zh/list/609/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            119.48944,
+            -8.54333
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/609/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/609/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S8 32 35.988 E119 29 21.984",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "642",
+      "name": "Prambanan Temple Compounds",
+      "nameEn": "Prambanan Temple Compounds",
+      "nameZh": "普兰巴南寺庙群",
+      "nameOriginal": "Prambanan Temple Compounds",
+      "originalLanguage": "en",
+      "aliases": [
+        "Prambanan Temple Compounds",
+        "普兰巴南寺庙群"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/642/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/642/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "642",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "642",
+          "name": "Prambanan Temple Compounds",
+          "nameEn": "Prambanan Temple Compounds",
+          "nameOriginal": "Prambanan Temple Compounds",
+          "originalLanguage": "en",
+          "nameZh": "普兰巴南寺庙群",
+          "aliases": [
+            "Prambanan Temple Compounds",
+            "普兰巴南寺庙群"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/642/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            110.49167,
+            -7.75222
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/642/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/642/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S7 45 7.992 E110 29 30.012",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "593",
+      "name": "Sangiran Early Man Site",
+      "nameEn": "Sangiran Early Man Site",
+      "nameZh": "桑义兰早期人类遗址",
+      "nameOriginal": "Sangiran Early Man Site",
+      "originalLanguage": "en",
+      "aliases": [
+        "Sangiran Early Man Site",
+        "桑义兰早期人类遗址"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/593/",
+        "https://whc.unesco.org/zh/list/593/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/593/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "593",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "593",
+          "name": "Sangiran Early Man Site",
+          "nameEn": "Sangiran Early Man Site",
+          "nameOriginal": "Sangiran Early Man Site",
+          "originalLanguage": "en",
+          "nameZh": "桑义兰早期人类遗址",
+          "aliases": [
+            "Sangiran Early Man Site",
+            "桑义兰早期人类遗址"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/593/",
+            "https://whc.unesco.org/zh/list/593/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            110.816666667,
+            -7.4
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/593/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/593/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S7 24 0 E110 49 0",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "955",
+      "name": "Lorentz National Park",
+      "nameEn": "Lorentz National Park",
+      "nameZh": "洛伦兹国家公园",
+      "nameOriginal": "Lorentz National Park",
+      "originalLanguage": "en",
+      "aliases": [
+        "Lorentz National Park",
+        "洛伦兹国家公园"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/955/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/955/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "955",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "955",
+          "name": "Lorentz National Park",
+          "nameEn": "Lorentz National Park",
+          "nameOriginal": "Lorentz National Park",
+          "originalLanguage": "en",
+          "nameZh": "洛伦兹国家公园",
+          "aliases": [
+            "Lorentz National Park",
+            "洛伦兹国家公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/955/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            137.83333,
+            -4.75
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/955/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/955/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S4 45 0 E137 49 59.988",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1167",
+      "name": "Tropical Rainforest Heritage of Sumatra",
+      "nameEn": "Tropical Rainforest Heritage of Sumatra",
+      "nameZh": "苏门答腊热带雨林遗产",
+      "nameOriginal": "Tropical Rainforest Heritage of Sumatra",
+      "originalLanguage": "en",
+      "aliases": [
+        "Tropical Rainforest Heritage of Sumatra",
+        "苏门答腊热带雨林遗产"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1167/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1167/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 3,
+      "officialGeographicalRowCount": 3,
+      "components": [
+        {
+          "componentId": "1167-001",
+          "officialComponentId": "1167-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1167-001",
+          "name": "Gunung Leuser National Park",
+          "nameEn": "Gunung Leuser National Park",
+          "nameOriginal": "Gunung Leuser National Park",
+          "originalLanguage": "en",
+          "nameZh": "勒塞尔山国家公园",
+          "aliases": [
+            "Gunung Leuser National Park",
+            "勒塞尔山国家公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1167/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            97.174236111,
+            3.758722222
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1167/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1167/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N3 45 31.4 E97 10 27.25",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1167-002",
+          "officialComponentId": "1167-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1167-002",
+          "name": "Kerinci Seblat National Park",
+          "nameEn": "Kerinci Seblat National Park",
+          "nameOriginal": "Kerinci Seblat National Park",
+          "originalLanguage": "en",
+          "nameZh": "克林芝塞布拉国家公园",
+          "aliases": [
+            "Kerinci Seblat National Park",
+            "克林芝塞布拉国家公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1167/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            101.266433333,
+            -1.691391667
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1167/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1167/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S1 41 29.01 E101 15 59.16",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1167-003",
+          "officialComponentId": "1167-003",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1167-003",
+          "name": "Bukit Barisan Selatan National Park",
+          "nameEn": "Bukit Barisan Selatan National Park",
+          "nameOriginal": "Bukit Barisan Selatan National Park",
+          "originalLanguage": "en",
+          "nameZh": "南武吉巴里杉国家公园",
+          "aliases": [
+            "Bukit Barisan Selatan National Park",
+            "南武吉巴里杉国家公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1167/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            104.352686111,
+            -5.435163889
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1167/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1167/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S5 26 6.59 E104 21 9.67",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1194",
+      "name": "Cultural Landscape of Bali Province: the Subak System as a Manifestation of the Tri Hita Karana Philosophy",
+      "nameEn": "Cultural Landscape of Bali Province: the Subak System as a Manifestation of the Tri Hita Karana Philosophy",
+      "nameZh": "巴厘省文化景观：体现幸福三要素哲学的苏巴克灌溉系统",
+      "nameOriginal": "Cultural Landscape of Bali Province: the Subak System as a Manifestation of the Tri Hita Karana Philosophy",
+      "originalLanguage": "en",
+      "aliases": [
+        "Cultural Landscape of Bali Province: the Subak System as a Manifestation of the Tri Hita Karana Philosophy",
+        "巴厘省文化景观：体现幸福三要素哲学的苏巴克灌溉系统"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1194/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 5,
+      "officialGeographicalRowCount": 5,
+      "components": [
+        {
+          "componentId": "1194rev-001",
+          "officialComponentId": "1194rev-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1194rev-001",
+          "name": "Supreme Water Temple Pura Ulun Danu Batur",
+          "nameEn": "Supreme Water Temple Pura Ulun Danu Batur",
+          "nameOriginal": "Supreme Water Temple Pura Ulun Danu Batur",
+          "originalLanguage": "en",
+          "nameZh": "巴图尔乌伦达努最高水神庙",
+          "aliases": [
+            "Supreme Water Temple Pura Ulun Danu Batur",
+            "巴图尔乌伦达努最高水神庙"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1194/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            115.336111111,
+            -8.254722222
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S8 15 17.00 E115 20 10.00",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1194rev-002",
+          "officialComponentId": "1194rev-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1194rev-002",
+          "name": "Lake Batur",
+          "nameEn": "Lake Batur",
+          "nameOriginal": "Lake Batur",
+          "originalLanguage": "en",
+          "nameZh": "巴图尔湖",
+          "aliases": [
+            "Lake Batur",
+            "巴图尔湖"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1194/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            115.402777778,
+            -8.259166667
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S8 15 33.00 E115 24 10.00",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1194rev-003",
+          "officialComponentId": "1194rev-003",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1194rev-003",
+          "name": "Subak Landscape of Pekerisan Watershed",
+          "nameEn": "Subak Landscape of Pekerisan Watershed",
+          "nameOriginal": "Subak Landscape of Pekerisan Watershed",
+          "originalLanguage": "en",
+          "nameZh": "佩克里桑流域苏巴克景观",
+          "aliases": [
+            "Subak Landscape of Pekerisan Watershed",
+            "佩克里桑流域苏巴克景观"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1194/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            115.312222222,
+            -8.429444444
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S8 25 46.00 E115 18 44.00",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1194rev-004",
+          "officialComponentId": "1194rev-004",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1194rev-004",
+          "name": "Subak Landscape of Catur Angga Batukaru",
+          "nameEn": "Subak Landscape of Catur Angga Batukaru",
+          "nameOriginal": "Subak Landscape of Catur Angga Batukaru",
+          "originalLanguage": "en",
+          "nameZh": "查图尔安加巴图卡鲁苏巴克景观",
+          "aliases": [
+            "Subak Landscape of Catur Angga Batukaru",
+            "查图尔安加巴图卡鲁苏巴克景观"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1194/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            115.122222222,
+            -8.343611111
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S8 20 37.00 E115 7 20.00",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1194rev-005",
+          "officialComponentId": "1194rev-005",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1194rev-005",
+          "name": "Royal Water Temple Pura Taman Ayun",
+          "nameEn": "Royal Water Temple Pura Taman Ayun",
+          "nameOriginal": "Royal Water Temple Pura Taman Ayun",
+          "originalLanguage": "en",
+          "nameZh": "塔曼阿云皇家水神庙",
+          "aliases": [
+            "Royal Water Temple Pura Taman Ayun",
+            "塔曼阿云皇家水神庙"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1194/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            115.1725,
+            -8.541944444
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1194/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S8 32 31.00 E115 10 21.00",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 2,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1610",
+      "name": "Ombilin Coal Mining Heritage of Sawahlunto",
+      "nameEn": "Ombilin Coal Mining Heritage of Sawahlunto",
+      "nameZh": "沙哇伦多的翁比林煤矿遗产",
+      "nameOriginal": "Ombilin Coal Mining Heritage of Sawahlunto",
+      "originalLanguage": "en",
+      "aliases": [
+        "Ombilin Coal Mining Heritage of Sawahlunto",
+        "沙哇伦多的翁比林煤矿遗产"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1610/",
+        "https://whc.unesco.org/zh/list/1610/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 12,
+      "officialGeographicalRowCount": 12,
+      "components": [
+        {
+          "componentId": "1610-001",
+          "officialComponentId": "1610-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-001",
+          "name": "Soengai Doerian Mining Site",
+          "nameEn": "Soengai Doerian Mining Site",
+          "nameOriginal": "Soengai Doerian Mining Site",
+          "originalLanguage": "en",
+          "nameZh": "宋盖杜里安煤矿遗址",
+          "aliases": [
+            "Soengai Doerian Mining Site",
+            "宋盖杜里安煤矿遗址"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.777572222,
+            -0.677502778
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 40 39.01 E100 46 39.26",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-002",
+          "officialComponentId": "1610-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-002",
+          "name": "Mining School",
+          "nameEn": "Mining School",
+          "nameOriginal": "Mining School",
+          "originalLanguage": "en",
+          "nameZh": "矿业学校",
+          "aliases": [
+            "Mining School",
+            "矿业学校"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.766666944,
+            0.67425
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-coordinate-hemisphere-anomaly-unverified",
+          "coordinateRole": "unverified-reference",
+          "coordinatePrecisionNote": "官方表列北纬，与同项目其余南纬组成存在显著异常；保留原值，不擅自改为南纬，暂停普通点定位。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N0 40 27.3 E100 46 0.001",
+          "unitKind": "official-geographical-component",
+          "coordinateReviewRequired": true
+        },
+        {
+          "componentId": "1610-003",
+          "officialComponentId": "1610-003",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-003",
+          "name": "Coal Processing Plant Compound",
+          "nameEn": "Coal Processing Plant Compound",
+          "nameOriginal": "Coal Processing Plant Compound",
+          "originalLanguage": "en",
+          "nameZh": "煤炭加工厂建筑群",
+          "aliases": [
+            "Coal Processing Plant Compound",
+            "煤炭加工厂建筑群"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.776166667,
+            -0.680016667
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 40 48.06 E100 46 34.2",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-004",
+          "officialComponentId": "1610-004",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-004",
+          "name": "Ombilin Railway",
+          "nameEn": "Ombilin Railway",
+          "nameOriginal": "Ombilin Railway",
+          "originalLanguage": "en",
+          "nameZh": "翁比林铁路",
+          "aliases": [
+            "Ombilin Railway",
+            "翁比林铁路"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.77695,
+            -0.683869444
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "linear-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 41 1.93 E100 46 37.02",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-005",
+          "officialComponentId": "1610-005",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-005",
+          "name": "Company Town",
+          "nameEn": "Company Town",
+          "nameOriginal": "Company Town",
+          "originalLanguage": "en",
+          "nameZh": "矿业公司城镇",
+          "aliases": [
+            "Company Town",
+            "矿业公司城镇"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.779058333,
+            -0.681925
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 40 54.93 E100 46 44.61",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-006",
+          "officialComponentId": "1610-006",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-006",
+          "name": "Salak Power Plant and Ranith Water Pumping Station",
+          "nameEn": "Salak Power Plant and Ranith Water Pumping Station",
+          "nameOriginal": "Salak Power Plant and Ranith Water Pumping Station",
+          "originalLanguage": "en",
+          "nameZh": "萨拉克发电厂与拉尼特抽水站",
+          "aliases": [
+            "Salak Power Plant and Ranith Water Pumping Station",
+            "萨拉克发电厂与拉尼特抽水站"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.769097222,
+            -0.635
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "group-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 38 6 E100 46 8.75",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-007",
+          "officialComponentId": "1610-007",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-007",
+          "name": "Railway System",
+          "nameEn": "Railway System",
+          "nameOriginal": "Railway System",
+          "originalLanguage": "en",
+          "nameZh": "铁路系统",
+          "aliases": [
+            "Railway System",
+            "铁路系统"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.737877778,
+            -0.766625
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "linear-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 45 59.85 E100 44 16.36",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-008",
+          "officialComponentId": "1610-008",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-008",
+          "name": "Batu Tabal Train Station",
+          "nameEn": "Batu Tabal Train Station",
+          "nameOriginal": "Batu Tabal Train Station",
+          "originalLanguage": "en",
+          "nameZh": "巴都塔巴尔火车站",
+          "aliases": [
+            "Batu Tabal Train Station",
+            "巴都塔巴尔火车站"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            100.522977778,
+            -0.543963889
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 32 38.27 E100 31 22.72",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-009",
+          "officialComponentId": "1610-009",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-009",
+          "name": "Padang Pandjang Train Station",
+          "nameEn": "Padang Pandjang Train Station",
+          "nameOriginal": "Padang Pandjang Train Station",
+          "originalLanguage": "en",
+          "nameZh": "巴当班让火车站",
+          "aliases": [
+            "Padang Pandjang Train Station",
+            "巴当班让火车站"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            100.395113889,
+            -0.463672222
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 27 49.22 E100 23 42.41",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-010",
+          "officialComponentId": "1610-010",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-010",
+          "name": "Tinggi Bridge",
+          "nameEn": "Tinggi Bridge",
+          "nameOriginal": "Tinggi Bridge",
+          "originalLanguage": "en",
+          "nameZh": "丁宜桥",
+          "aliases": [
+            "Tinggi Bridge",
+            "丁宜桥"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            100.366988889,
+            -0.475872222
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 28 33.14 E100 22 1.16",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-011",
+          "officialComponentId": "1610-011",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-011",
+          "name": "Kayu Tanam Train Station",
+          "nameEn": "Kayu Tanam Train Station",
+          "nameOriginal": "Kayu Tanam Train Station",
+          "originalLanguage": "en",
+          "nameZh": "卡尤塔南火车站",
+          "aliases": [
+            "Kayu Tanam Train Station",
+            "卡尤塔南火车站"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            100.331141667,
+            -0.547852778
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 32 52.27 E100 19 52.11",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1610-012",
+          "officialComponentId": "1610-012",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1610-012",
+          "name": "Coal Storage",
+          "nameEn": "Coal Storage",
+          "nameOriginal": "Coal Storage",
+          "originalLanguage": "en",
+          "nameZh": "储煤设施",
+          "aliases": [
+            "Coal Storage",
+            "储煤设施"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1610/maps/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": [
+            100.380430556,
+            -0.991694444
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1610/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S0 59 30.1 E100 22 49.55",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 5,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1671",
+      "name": "The Cosmological Axis of Yogyakarta and its Historic Landmarks",
+      "nameEn": "The Cosmological Axis of Yogyakarta and its Historic Landmarks",
+      "nameZh": "日惹的宇宙中轴线及其历史地标",
+      "nameOriginal": "The Cosmological Axis of Yogyakarta and its Historic Landmarks",
+      "originalLanguage": "en",
+      "aliases": [
+        "The Cosmological Axis of Yogyakarta and its Historic Landmarks",
+        "日惹的宇宙中轴线及其历史地标"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1671/",
+        "https://whc.unesco.org/zh/list/1671/"
+      ],
+      "countryCodes": [
+        "IDN"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1671/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "1671",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "1671",
+          "name": "The Cosmological Axis of Yogyakarta and its Historic Landmarks",
+          "nameEn": "The Cosmological Axis of Yogyakarta and its Historic Landmarks",
+          "nameOriginal": "The Cosmological Axis of Yogyakarta and its Historic Landmarks",
+          "originalLanguage": "en",
+          "nameZh": "日惹的宇宙中轴线及其历史地标",
+          "aliases": [
+            "The Cosmological Axis of Yogyakarta and its Historic Landmarks",
+            "日惹的宇宙中轴线及其历史地标"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1671/",
+            "https://whc.unesco.org/zh/list/1671/"
+          ],
+          "countryCode": "IDN",
+          "coordinates": null,
+          "referenceCoordinates": [
+            110.364777778,
+            -7.801388889
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1671/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1671/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "S7 48 5 E110 21 53.2",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "574",
+      "name": "Historic Town of Sukhothai and Associated Historic Towns",
+      "nameEn": "Historic Town of Sukhothai and Associated Historic Towns",
+      "nameZh": "素可泰历史城镇及相关历史城镇",
+      "nameOriginal": "Historic Town of Sukhothai and Associated Historic Towns",
+      "originalLanguage": "en",
+      "aliases": [
+        "Historic Town of Sukhothai and Associated Historic Towns",
+        "素可泰历史城镇及相关历史城镇"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/574/",
+        "https://whc.unesco.org/zh/list/574/"
+      ],
+      "countryCodes": [
+        "THA"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/574/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 3,
+      "officialGeographicalRowCount": 3,
+      "components": [
+        {
+          "componentId": "574-001",
+          "officialComponentId": "574-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "574-001",
+          "name": "Sukhotai Historical Park",
+          "nameEn": "Sukhotai Historical Park",
+          "nameOriginal": "Sukhotai Historical Park",
+          "originalLanguage": "en",
+          "nameZh": "素可泰历史公园",
+          "aliases": [
+            "Sukhotai Historical Park",
+            "素可泰历史公园",
+            "Sukhothai Historical Park"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/574/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            99.704313056,
+            17.018011944
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/574/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/574/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N17 1 4.843 E99 42 15.527",
+          "unitKind": "official-geographical-component",
+          "translationNote": "官方maps原文Sukhotai保留，项目名Sukhothai另作检索别名。"
+        },
+        {
+          "componentId": "574-002",
+          "officialComponentId": "574-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "574-002",
+          "name": "Si Satchanalai Historical Park",
+          "nameEn": "Si Satchanalai Historical Park",
+          "nameOriginal": "Si Satchanalai Historical Park",
+          "originalLanguage": "en",
+          "nameZh": "西萨查那莱历史公园",
+          "aliases": [
+            "Si Satchanalai Historical Park",
+            "西萨查那莱历史公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/574/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            99.788628889,
+            17.426153056
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/574/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/574/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N17 25 34.151 E99 47 19.064",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "574-003",
+          "officialComponentId": "574-003",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "574-003",
+          "name": "Kamphaeng Phet Historical Park",
+          "nameEn": "Kamphaeng Phet Historical Park",
+          "nameOriginal": "Kamphaeng Phet Historical Park",
+          "originalLanguage": "en",
+          "nameZh": "甘烹碧历史公园",
+          "aliases": [
+            "Kamphaeng Phet Historical Park",
+            "甘烹碧历史公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/574/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            99.510693056,
+            16.495921111
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/574/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/574/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N16 29 45.316 E99 30 38.495",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "575",
+      "name": "Ban Chiang Archaeological Site",
+      "nameEn": "Ban Chiang Archaeological Site",
+      "nameZh": "班清考古遗址",
+      "nameOriginal": "Ban Chiang Archaeological Site",
+      "originalLanguage": "en",
+      "aliases": [
+        "Ban Chiang Archaeological Site",
+        "班清考古遗址"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/575/",
+        "https://whc.unesco.org/zh/list/575/"
+      ],
+      "countryCodes": [
+        "THA"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/575/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "575",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "575",
+          "name": "Ban Chiang Archaeological Site",
+          "nameEn": "Ban Chiang Archaeological Site",
+          "nameOriginal": "Ban Chiang Archaeological Site",
+          "originalLanguage": "en",
+          "nameZh": "班清考古遗址",
+          "aliases": [
+            "Ban Chiang Archaeological Site",
+            "班清考古遗址"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/575/",
+            "https://whc.unesco.org/zh/list/575/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            103.237588889,
+            17.407771944
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/575/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/575/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N17 24 27.979 E103 14 15.32",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "576",
+      "name": "Historic City of Ayutthaya",
+      "nameEn": "Historic City of Ayutthaya",
+      "nameZh": "阿育他亚(大城)历史城及相关城镇",
+      "nameOriginal": "Historic City of Ayutthaya",
+      "originalLanguage": "en",
+      "aliases": [
+        "Historic City of Ayutthaya",
+        "阿育他亚(大城)历史城及相关城镇"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/576/",
+        "https://whc.unesco.org/zh/list/576/"
+      ],
+      "countryCodes": [
+        "THA"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/576/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "576",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "576",
+          "name": "Historic City of Ayutthaya",
+          "nameEn": "Historic City of Ayutthaya",
+          "nameOriginal": "Historic City of Ayutthaya",
+          "originalLanguage": "en",
+          "nameZh": "阿育他亚(大城)历史城及相关城镇",
+          "aliases": [
+            "Historic City of Ayutthaya",
+            "阿育他亚(大城)历史城及相关城镇"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/576/",
+            "https://whc.unesco.org/zh/list/576/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.56056,
+            14.34778
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/576/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/576/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N14 20 52.008 E100 33 38.016",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "590",
+      "name": "Dong Phayayen-Khao Yai Forest Complex",
+      "nameEn": "Dong Phayayen-Khao Yai Forest Complex",
+      "nameZh": "东帕牙延－考艾森林保护区",
+      "nameOriginal": "Dong Phayayen-Khao Yai Forest Complex",
+      "originalLanguage": "en",
+      "aliases": [
+        "Dong Phayayen-Khao Yai Forest Complex",
+        "东帕牙延－考艾森林保护区"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/590/"
+      ],
+      "countryCodes": [
+        "THA"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 5,
+      "officialGeographicalRowCount": 5,
+      "components": [
+        {
+          "componentId": "590-001",
+          "officialComponentId": "590-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "590-001",
+          "name": "Khao Yai National Park",
+          "nameEn": "Khao Yai National Park",
+          "nameOriginal": "Khao Yai National Park",
+          "originalLanguage": "en",
+          "nameZh": "考艾国家公园",
+          "aliases": [
+            "Khao Yai National Park",
+            "考艾国家公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/590/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            101.435481944,
+            14.353005
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N14 21 10.818 E101 26 7.735",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "590-002",
+          "officialComponentId": "590-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "590-002",
+          "name": "Thap Lan National Park",
+          "nameEn": "Thap Lan National Park",
+          "nameOriginal": "Thap Lan National Park",
+          "originalLanguage": "en",
+          "nameZh": "塔兰国家公园",
+          "aliases": [
+            "Thap Lan National Park",
+            "塔兰国家公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/590/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            102.127,
+            14.229
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N14 13 44.4 E102 7 37.2",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "590-003",
+          "officialComponentId": "590-003",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "590-003",
+          "name": "Pang Sida National Park",
+          "nameEn": "Pang Sida National Park",
+          "nameOriginal": "Pang Sida National Park",
+          "originalLanguage": "en",
+          "nameZh": "邦斯达国家公园",
+          "aliases": [
+            "Pang Sida National Park",
+            "邦斯达国家公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/590/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            102.166666667,
+            14.083333333
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N14 4 60.00 E102 10 0.00",
+          "unitKind": "official-geographical-component",
+          "coordinateConversionNote": "原始DMS含60秒；按60秒等于1分进行算术进位，原始字符串不改写。"
+        },
+        {
+          "componentId": "590-004",
+          "officialComponentId": "590-004",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "590-004",
+          "name": "Ta Phraya National Park",
+          "nameEn": "Ta Phraya National Park",
+          "nameOriginal": "Ta Phraya National Park",
+          "originalLanguage": "en",
+          "nameZh": "达帕雅国家公园",
+          "aliases": [
+            "Ta Phraya National Park",
+            "达帕雅国家公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/590/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            102.886,
+            14.202
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N14 12 7.2 E102 53 9.6",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "590-005",
+          "officialComponentId": "590-005",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "590-005",
+          "name": "Dong Yai Wildlife Sanctuary",
+          "nameEn": "Dong Yai Wildlife Sanctuary",
+          "nameOriginal": "Dong Yai Wildlife Sanctuary",
+          "originalLanguage": "en",
+          "nameZh": "东艾野生动物保护区",
+          "aliases": [
+            "Dong Yai Wildlife Sanctuary",
+            "东艾野生动物保护区"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/590/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            102.583333333,
+            14.2
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/590/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N14 12 0.00 E102 34 60.00",
+          "unitKind": "official-geographical-component",
+          "coordinateConversionNote": "原始DMS含60秒；按60秒等于1分进行算术进位，原始字符串不改写。"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "591",
+      "name": "Thungyai-Huai Kha Khaeng Wildlife Sanctuaries",
+      "nameEn": "Thungyai-Huai Kha Khaeng Wildlife Sanctuaries",
+      "nameZh": "通艾－会卡肯野生动物保护区",
+      "nameOriginal": "Thungyai-Huai Kha Khaeng Wildlife Sanctuaries",
+      "originalLanguage": "en",
+      "aliases": [
+        "Thungyai-Huai Kha Khaeng Wildlife Sanctuaries",
+        "通艾－会卡肯野生动物保护区"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/591/"
+      ],
+      "countryCodes": [
+        "THA"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/591/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "591",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "591",
+          "name": "Thungyai-Huai Kha Khaeng Wildlife Sanctuaries",
+          "nameEn": "Thungyai-Huai Kha Khaeng Wildlife Sanctuaries",
+          "nameOriginal": "Thungyai-Huai Kha Khaeng Wildlife Sanctuaries",
+          "originalLanguage": "en",
+          "nameZh": "通艾－会卡肯野生动物保护区",
+          "aliases": [
+            "Thungyai-Huai Kha Khaeng Wildlife Sanctuaries",
+            "通艾－会卡肯野生动物保护区"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/591/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            98.91667,
+            15.33333
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/591/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/591/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N15 19 59.988 E98 55 0.012",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1461",
+      "name": "Kaeng Krachan Forest Complex",
+      "nameEn": "Kaeng Krachan Forest Complex",
+      "nameZh": "岗卡章森林保护区",
+      "nameOriginal": "Kaeng Krachan Forest Complex",
+      "originalLanguage": "en",
+      "aliases": [
+        "Kaeng Krachan Forest Complex",
+        "岗卡章森林保护区"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1461/",
+        "https://whc.unesco.org/zh/list/1461/"
+      ],
+      "countryCodes": [
+        "THA"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1461/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "1461rev",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "1461rev",
+          "name": "Kaeng Krachan Forest Complex",
+          "nameEn": "Kaeng Krachan Forest Complex",
+          "nameOriginal": "Kaeng Krachan Forest Complex",
+          "originalLanguage": "en",
+          "nameZh": "岗卡章森林保护区",
+          "aliases": [
+            "Kaeng Krachan Forest Complex",
+            "岗卡章森林保护区"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1461/",
+            "https://whc.unesco.org/zh/list/1461/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            99.400166667,
+            12.865666667
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1461/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1461/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N12 51 56.4 E99 24 0.6",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1507",
+      "name": "Phu Phrabat, a testimony to the Sīma stone tradition of the Dvaravati period",
+      "nameEn": "Phu Phrabat, a testimony to the Sīma stone tradition of the Dvaravati period",
+      "nameZh": "普普拉巴特历史公园",
+      "nameOriginal": "Phu Phrabat, a testimony to the Sīma stone tradition of the Dvaravati period",
+      "originalLanguage": "en",
+      "aliases": [
+        "Phu Phrabat, a testimony to the Sīma stone tradition of the Dvaravati period",
+        "普普拉巴特历史公园"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1507/",
+        "https://whc.unesco.org/zh/list/1507/"
+      ],
+      "countryCodes": [
+        "THA"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1507/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 2,
+      "officialGeographicalRowCount": 2,
+      "components": [
+        {
+          "componentId": "1507-001",
+          "officialComponentId": "1507-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1507-001",
+          "name": "The Phu Phrabat Historical Park",
+          "nameEn": "The Phu Phrabat Historical Park",
+          "nameOriginal": "The Phu Phrabat Historical Park",
+          "originalLanguage": "en",
+          "nameZh": "普普拉巴特历史公园",
+          "aliases": [
+            "The Phu Phrabat Historical Park",
+            "普普拉巴特历史公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1507/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            102.356266667,
+            17.731058333
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1507/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1507/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N17 43 51.81 E102 21 22.56",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1507-002",
+          "officialComponentId": "1507-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1507-002",
+          "name": "The Sīma Cultural Site at Wat Phra Phuthabat Buaban",
+          "nameEn": "The Sīma Cultural Site at Wat Phra Phuthabat Buaban",
+          "nameOriginal": "The Sīma Cultural Site at Wat Phra Phuthabat Buaban",
+          "originalLanguage": "en",
+          "nameZh": "普普塔巴特布阿班寺界石文化遗址",
+          "aliases": [
+            "The Sīma Cultural Site at Wat Phra Phuthabat Buaban",
+            "普普塔巴特布阿班寺界石文化遗址"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1507/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            102.331877778,
+            17.630497222
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1507/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1507/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N17 37 49.79 E102 19 54.76",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1662",
+      "name": "The Ancient Town of Si Thep and its Associated Dvaravati Monuments",
+      "nameEn": "The Ancient Town of Si Thep and its Associated Dvaravati Monuments",
+      "nameZh": "西贴古镇及相关陀罗钵地古迹",
+      "nameOriginal": "The Ancient Town of Si Thep and its Associated Dvaravati Monuments",
+      "originalLanguage": "en",
+      "aliases": [
+        "The Ancient Town of Si Thep and its Associated Dvaravati Monuments",
+        "西贴古镇及相关陀罗钵地古迹"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1662/",
+        "https://whc.unesco.org/zh/list/1662/"
+      ],
+      "countryCodes": [
+        "THA"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1662/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 3,
+      "officialGeographicalRowCount": 3,
+      "components": [
+        {
+          "componentId": "1662-001",
+          "officialComponentId": "1662-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1662-001",
+          "name": "The Ancient Town of Si Thep",
+          "nameEn": "The Ancient Town of Si Thep",
+          "nameOriginal": "The Ancient Town of Si Thep",
+          "originalLanguage": "en",
+          "nameZh": "西贴古镇",
+          "aliases": [
+            "The Ancient Town of Si Thep",
+            "西贴古镇"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1662/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            101.151113889,
+            15.465816667
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1662/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1662/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N15 27 56.94 E101 9 4.01",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1662-002",
+          "officialComponentId": "1662-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1662-002",
+          "name": "Khao Klang Nok ancient monument",
+          "nameEn": "Khao Klang Nok ancient monument",
+          "nameOriginal": "Khao Klang Nok ancient monument",
+          "originalLanguage": "en",
+          "nameZh": "考康诺古迹",
+          "aliases": [
+            "Khao Klang Nok ancient monument",
+            "考康诺古迹"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1662/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": [
+            101.144472222,
+            15.486841667
+          ],
+          "referenceCoordinates": null,
+          "sourceUrl": "https://whc.unesco.org/en/list/1662/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1662/maps/",
+          "coordinateStatus": "official-component-place-reference",
+          "coordinateRole": "place-reference",
+          "coordinatePrecisionNote": "UNESCO组成表的场所参考坐标；未核实入口或测绘精度。",
+          "ordinaryPointEligible": true,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N15 29 12.63 E101 8 40.1",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1662-003",
+          "officialComponentId": "1662-003",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1662-003",
+          "name": "Khao Thamorrat Cave ancient monument",
+          "nameEn": "Khao Thamorrat Cave ancient monument",
+          "nameOriginal": "Khao Thamorrat Cave ancient monument",
+          "originalLanguage": "en",
+          "nameZh": "考塔莫拉特洞古迹",
+          "aliases": [
+            "Khao Thamorrat Cave ancient monument",
+            "考塔莫拉特洞古迹"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1662/maps/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.989091667,
+            15.494063889
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1662/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1662/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N15 29 38.63 E100 59 20.73",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 1,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1761",
+      "name": "Wat Phra Mahathat Woramahawihan, Nakhon Si Thammarat",
+      "nameEn": "Wat Phra Mahathat Woramahawihan, Nakhon Si Thammarat",
+      "nameZh": "洛坤府的玛哈泰寺",
+      "nameOriginal": "Wat Phra Mahathat Woramahawihan, Nakhon Si Thammarat",
+      "originalLanguage": "en",
+      "aliases": [
+        "Wat Phra Mahathat Woramahawihan, Nakhon Si Thammarat",
+        "洛坤府的玛哈泰寺"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1761/",
+        "https://whc.unesco.org/zh/list/1761/"
+      ],
+      "countryCodes": [
+        "THA"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1761/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "1761",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "1761",
+          "name": "Wat Phra Mahathat Woramahawihan, Nakhon Si Thammarat",
+          "nameEn": "Wat Phra Mahathat Woramahawihan, Nakhon Si Thammarat",
+          "nameOriginal": "Wat Phra Mahathat Woramahawihan, Nakhon Si Thammarat",
+          "originalLanguage": "en",
+          "nameZh": "洛坤府的玛哈泰寺",
+          "aliases": [
+            "Wat Phra Mahathat Woramahawihan, Nakhon Si Thammarat",
+            "洛坤府的玛哈泰寺"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1761/",
+            "https://whc.unesco.org/zh/list/1761/"
+          ],
+          "countryCode": "THA",
+          "coordinates": null,
+          "referenceCoordinates": [
+            99.966216667,
+            8.411475
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1761/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1761/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N8 24 41.31 E99 57 58.38",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1012",
+      "name": "Kinabalu Park",
+      "nameEn": "Kinabalu Park",
+      "nameZh": "基纳巴卢公园",
+      "nameOriginal": "Kinabalu Park",
+      "originalLanguage": "en",
+      "aliases": [
+        "Kinabalu Park",
+        "基纳巴卢公园"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1012/"
+      ],
+      "countryCodes": [
+        "MYS"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1012/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "1012",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "1012",
+          "name": "Kinabalu Park",
+          "nameEn": "Kinabalu Park",
+          "nameOriginal": "Kinabalu Park",
+          "originalLanguage": "en",
+          "nameZh": "基纳巴卢公园",
+          "aliases": [
+            "Kinabalu Park",
+            "基纳巴卢公园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1012/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            116.642,
+            6.147
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1012/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1012/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N6 8 49.2 E116 38 31.2",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1013",
+      "name": "Gunung Mulu National Park",
+      "nameEn": "Gunung Mulu National Park",
+      "nameZh": "穆鲁山国家公园",
+      "nameOriginal": "Gunung Mulu National Park",
+      "originalLanguage": "en",
+      "aliases": [
+        "Gunung Mulu National Park",
+        "穆鲁山国家公园"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1013/",
+        "https://whc.unesco.org/zh/list/1013/"
+      ],
+      "countryCodes": [
+        "MYS"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1013/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "1013",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "1013",
+          "name": "Gunung Mulu National Park",
+          "nameEn": "Gunung Mulu National Park",
+          "nameOriginal": "Gunung Mulu National Park",
+          "originalLanguage": "en",
+          "nameZh": "穆鲁山国家公园",
+          "aliases": [
+            "Gunung Mulu National Park",
+            "穆鲁山国家公园"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1013/",
+            "https://whc.unesco.org/zh/list/1013/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            114.91667,
+            4.13333
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1013/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1013/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N4 7 59.988 E114 55 0.012",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1223",
+      "name": "Melaka and George Town, Historic Cities of the Straits of Malacca",
+      "nameEn": "Melaka and George Town, Historic Cities of the Straits of Malacca",
+      "nameZh": "马六甲海峡历史城市：马六甲与乔治市",
+      "nameOriginal": "Melaka and George Town, Historic Cities of the Straits of Malacca",
+      "originalLanguage": "en",
+      "aliases": [
+        "Melaka and George Town, Historic Cities of the Straits of Malacca",
+        "马六甲海峡历史城市：马六甲与乔治市"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1223/"
+      ],
+      "countryCodes": [
+        "MYS"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1223/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 2,
+      "officialGeographicalRowCount": 2,
+      "components": [
+        {
+          "componentId": "1223-001",
+          "officialComponentId": "1223-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1223-001",
+          "name": "The Historic City of Melaka",
+          "nameEn": "The Historic City of Melaka",
+          "nameOriginal": "The Historic City of Melaka",
+          "originalLanguage": "en",
+          "nameZh": "马六甲历史城",
+          "aliases": [
+            "The Historic City of Melaka",
+            "马六甲历史城"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1223/maps/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            102.2625,
+            2.191666667
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1223/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1223/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N2 11 30.00 E102 15 45.00",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1223-002",
+          "officialComponentId": "1223-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1223-002",
+          "name": "The Historic City of George Town",
+          "nameEn": "The Historic City of George Town",
+          "nameOriginal": "The Historic City of George Town",
+          "originalLanguage": "en",
+          "nameZh": "乔治市历史城",
+          "aliases": [
+            "The Historic City of George Town",
+            "乔治市历史城"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1223/maps/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.343256944,
+            5.419776111
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1223/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1223/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N5 25 11.194 E100 20 35.725",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1396",
+      "name": "Archaeological Heritage of the Lenggong Valley",
+      "nameEn": "Archaeological Heritage of the Lenggong Valley",
+      "nameZh": "玲珑谷地考古遗产",
+      "nameOriginal": "Archaeological Heritage of the Lenggong Valley",
+      "originalLanguage": "en",
+      "aliases": [
+        "Archaeological Heritage of the Lenggong Valley",
+        "玲珑谷地考古遗产"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1396/"
+      ],
+      "countryCodes": [
+        "MYS"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1396/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 4,
+      "officialGeographicalRowCount": 4,
+      "components": [
+        {
+          "componentId": "1396-001",
+          "officialComponentId": "1396-001",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1396-001",
+          "name": "Bukit Bunkh – Kota Tampan",
+          "nameEn": "Bukit Bunkh – Kota Tampan",
+          "nameOriginal": "Bukit Bunkh – Kota Tampan",
+          "originalLanguage": "en",
+          "nameZh": "武吉本克－哥打淡班遗址",
+          "aliases": [
+            "Bukit Bunkh – Kota Tampan",
+            "武吉本克－哥打淡班遗址"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1396/maps/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.972327778,
+            5.067908333
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1396/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1396/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N5 4 4.47 E100 58 20.38",
+          "unitKind": "official-geographical-component",
+          "translationNote": "官方英文原文为 Bukit Bunkh，不擅自以相似地名修订；中文音译待核。"
+        },
+        {
+          "componentId": "1396-002",
+          "officialComponentId": "1396-002",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1396-002",
+          "name": "Bukit Jawa",
+          "nameEn": "Bukit Jawa",
+          "nameOriginal": "Bukit Jawa",
+          "originalLanguage": "en",
+          "nameZh": "武吉爪哇遗址",
+          "aliases": [
+            "Bukit Jawa",
+            "武吉爪哇遗址"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1396/maps/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.992777778,
+            5.128888889
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1396/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1396/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N5 7 44.00 E100 59 34.00",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1396-003",
+          "officialComponentId": "1396-003",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1396-003",
+          "name": "Bukit Kepala Gajah",
+          "nameEn": "Bukit Kepala Gajah",
+          "nameOriginal": "Bukit Kepala Gajah",
+          "originalLanguage": "en",
+          "nameZh": "武吉格巴拉加惹遗址",
+          "aliases": [
+            "Bukit Kepala Gajah",
+            "武吉格巴拉加惹遗址"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1396/maps/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.966691667,
+            5.126194444
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1396/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1396/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N5 7 34.30 E100 58 0.09",
+          "unitKind": "official-geographical-component"
+        },
+        {
+          "componentId": "1396-004",
+          "officialComponentId": "1396-004",
+          "identifierScheme": "unesco-component-id",
+          "componentKey": "1396-004",
+          "name": "Bukit Gua Harimau",
+          "nameEn": "Bukit Gua Harimau",
+          "nameOriginal": "Bukit Gua Harimau",
+          "originalLanguage": "en",
+          "nameZh": "武吉瓜哈里茂遗址",
+          "aliases": [
+            "Bukit Gua Harimau",
+            "武吉瓜哈里茂遗址"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1396/maps/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            100.980733333,
+            5.1494
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1396/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1396/maps/",
+          "coordinateStatus": "official-component-range-reference",
+          "coordinateRole": "area-reference",
+          "coordinatePrecisionNote": "UNESCO组成范围参考坐标；涉及区域、线路或组合，不表示单一景点或入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N5 8 57.84 E100 58 50.64",
+          "unitKind": "official-geographical-component"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1014",
+      "name": "The Archaeological Heritage of Niah National Park’s Caves Complex",
+      "nameEn": "The Archaeological Heritage of Niah National Park’s Caves Complex",
+      "nameZh": "尼亚国家公园洞穴考古遗产",
+      "nameOriginal": "The Archaeological Heritage of Niah National Park’s Caves Complex",
+      "originalLanguage": "en",
+      "aliases": [
+        "The Archaeological Heritage of Niah National Park’s Caves Complex",
+        "尼亚国家公园洞穴考古遗产"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1014/",
+        "https://whc.unesco.org/zh/list/1014/"
+      ],
+      "countryCodes": [
+        "MYS"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1014/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "1014",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "1014",
+          "name": "The Archaeological Heritage of Niah National Park’s Caves Complex",
+          "nameEn": "The Archaeological Heritage of Niah National Park’s Caves Complex",
+          "nameOriginal": "The Archaeological Heritage of Niah National Park’s Caves Complex",
+          "originalLanguage": "en",
+          "nameZh": "尼亚国家公园洞穴考古遗产",
+          "aliases": [
+            "The Archaeological Heritage of Niah National Park’s Caves Complex",
+            "尼亚国家公园洞穴考古遗产"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1014/",
+            "https://whc.unesco.org/zh/list/1014/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            113.780766667,
+            3.804291667
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1014/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1014/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N3 48 15.45 E113 46 50.76",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1734",
+      "name": "Forest Research Institute Malaysia Forest Park Selangor",
+      "nameEn": "Forest Research Institute Malaysia Forest Park Selangor",
+      "nameZh": "马来西亚森林研究院雪兰莪森林公园",
+      "nameOriginal": "Forest Research Institute Malaysia Forest Park Selangor",
+      "originalLanguage": "en",
+      "aliases": [
+        "Forest Research Institute Malaysia Forest Park Selangor",
+        "马来西亚森林研究院雪兰莪森林公园"
+      ],
+      "translationStatus": "official-unesco-zh",
+      "translationReviewRequired": false,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1734/",
+        "https://whc.unesco.org/zh/list/1734/"
+      ],
+      "countryCodes": [
+        "MYS"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1734/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "1734",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "1734",
+          "name": "Forest Research Institute Malaysia Forest Park Selangor",
+          "nameEn": "Forest Research Institute Malaysia Forest Park Selangor",
+          "nameOriginal": "Forest Research Institute Malaysia Forest Park Selangor",
+          "originalLanguage": "en",
+          "nameZh": "马来西亚森林研究院雪兰莪森林公园",
+          "aliases": [
+            "Forest Research Institute Malaysia Forest Park Selangor",
+            "马来西亚森林研究院雪兰莪森林公园"
+          ],
+          "translationStatus": "official-unesco-zh",
+          "translationReviewRequired": false,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1734/",
+            "https://whc.unesco.org/zh/list/1734/"
+          ],
+          "countryCode": "MYS",
+          "coordinates": null,
+          "referenceCoordinates": [
+            101.627277778,
+            3.22925
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1734/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1734/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N3 13 45.3 E101 37 38.2",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    },
+    {
+      "unescoId": "1483",
+      "name": "Singapore Botanic Gardens",
+      "nameEn": "Singapore Botanic Gardens",
+      "nameZh": "新加坡植物园",
+      "nameOriginal": "Singapore Botanic Gardens",
+      "originalLanguage": "en",
+      "aliases": [
+        "Singapore Botanic Gardens",
+        "新加坡植物园"
+      ],
+      "translationStatus": "provisional-editorial-zh",
+      "translationReviewRequired": true,
+      "nameSourceUrls": [
+        "https://whc.unesco.org/en/list/1483/"
+      ],
+      "countryCodes": [
+        "SGP"
+      ],
+      "sourceUrl": "https://whc.unesco.org/en/list/1483/maps/",
+      "checkedAt": "2026-10-03",
+      "coverage": "complete",
+      "coverageScope": "official-maps-geographical-table",
+      "touristPlaceCoverage": "partial",
+      "expectedComponentCount": 1,
+      "officialGeographicalRowCount": 1,
+      "components": [
+        {
+          "componentId": "1483",
+          "officialComponentId": null,
+          "identifierScheme": "unesco-geographical-row",
+          "componentKey": "1483",
+          "name": "Singapore Botanic Gardens",
+          "nameEn": "Singapore Botanic Gardens",
+          "nameOriginal": "Singapore Botanic Gardens",
+          "originalLanguage": "en",
+          "nameZh": "新加坡植物园",
+          "aliases": [
+            "Singapore Botanic Gardens",
+            "新加坡植物园"
+          ],
+          "translationStatus": "provisional-editorial-zh",
+          "translationReviewRequired": true,
+          "nameSourceUrls": [
+            "https://whc.unesco.org/en/list/1483/"
+          ],
+          "countryCode": "SGP",
+          "coordinates": null,
+          "referenceCoordinates": [
+            103.816111111,
+            1.315277778
+          ],
+          "sourceUrl": "https://whc.unesco.org/en/list/1483/maps/",
+          "coordinateSourceUrl": "https://whc.unesco.org/en/list/1483/maps/",
+          "coordinateStatus": "official-project-reference-coordinate",
+          "coordinateRole": "project-reference",
+          "coordinatePrecisionNote": "UNESCO项目参考坐标；尚未核实为独立场所，不表示入口。",
+          "ordinaryPointEligible": false,
+          "visitorEntranceVerified": false,
+          "officialCoordinatesDms": "N1 18 55 E103 48 58",
+          "unitKind": "official-project-geographical-row"
+        }
+      ],
+      "ordinaryPointCount": 0,
+      "coverageNote": "已收齐官方maps地理行；不是全部旅游地点清单。项目代表行、范围/线性或组合参考行保留，未推导次级景点或入口。"
+    }
+  ]
+}
