@@ -142,7 +142,6 @@ onBeforeUnmount(() => {
         />显示已标记项目点</label
       >
     </div>
-    <p class="note">使用手册边界生成，不依赖在线底图。</p>
     <p
       v-if="busy"
       role="status"

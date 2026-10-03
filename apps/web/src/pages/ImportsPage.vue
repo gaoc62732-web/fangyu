@@ -197,7 +197,6 @@ function selectFeatures(selected: boolean) {
 <template>
   <section class="page-heading">
     <h2>导入与导出</h2>
-    <p>解析文件后核对预览。写入前自动备份，批量导入只提升已有到访状态。</p>
   </section>
   <div class="toolbar">
     <button @click="exportJson(store.session!.snapshot())">导出 JSON 备份</button>
@@ -225,7 +224,7 @@ function selectFeatures(selected: boolean) {
     class="card"
   >
     <legend>名称清单</legend>
-    <p>每行一个项目，可用“名称 | 地区”限定同名地点；机场支持代码与别名。</p>
+    <p>每行一项，同名地点可写为“名称 | 地区”。</p>
     <select
       v-model="category"
       aria-label="名称类别"
@@ -270,14 +269,18 @@ function selectFeatures(selected: boolean) {
         @change="choosePhotos"
     /></label>
   </fieldset>
-  <p role="status">{{ busy ? '正在处理… ' : '' }}{{ message }}</p>
+  <p
+    v-if="busy || message"
+    role="status"
+  >
+    {{ busy ? '正在处理… ' : '' }}{{ message }}
+  </p>
 
   <section
     v-if="stage?.features.length"
     class="card"
   >
-    <h3>先选择 OSM 地图要素</h3>
-    <p>地图要素不自动代表旅行轨迹。仅所选点线参与匹配。</p>
+    <h3>选择 OSM 地图要素</h3>
     <div class="toolbar">
       <input
         v-model="featureSearch"
@@ -341,7 +344,7 @@ function selectFeatures(selected: boolean) {
   >
     <h3>{{ plan.title }}预览</h3>
     <p v-if="plan.snapshot">
-      将恢复 {{ Object.keys(plan.snapshot.regions).length }} 条地区记录和
+      将替换当前记录，恢复 {{ Object.keys(plan.snapshot.regions).length }} 条地区记录和
       {{ Object.keys(plan.snapshot.entries).length }} 条项目记录。
     </p>
     <p
@@ -472,7 +475,7 @@ function selectFeatures(selected: boolean) {
       <button @click="report">下载核对清单</button>
     </div>
     <details v-if="plan.notes.length">
-      <summary>未匹配与补充说明（{{ plan.notes.length }}）</summary>
+      <summary>需核对（{{ plan.notes.length }}）</summary>
       <p
         v-for="(note, index) in plan.notes"
         :key="index"

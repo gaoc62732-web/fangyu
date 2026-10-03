@@ -10,7 +10,7 @@ const osm: MapAttribution = {
 };
 const boundaries: Partial<Record<Scope, MapAttribution>> = {
   indonesia: {
-    label: '印尼陆地裁剪：Natural Earth 1:10m · Public Domain（小岛可能省略）',
+    label: '印尼边界：Natural Earth 1:10m · Public Domain',
     url: 'https://www.naturalearthdata.com/about/terms-of-use/',
   },
   france: {
@@ -18,7 +18,7 @@ const boundaries: Partial<Record<Scope, MapAttribution>> = {
     url: 'https://opendatacommons.org/licenses/odbl/1-0/',
   },
   vietnam: {
-    label: '越南边界：OCHA / HDX COD-AB · CC BY 3.0 IGO（显示裁剪）',
+    label: '越南边界：OCHA / HDX COD-AB · CC BY 3.0 IGO',
     url: 'https://data.humdata.org/dataset/cod-ab-vnm',
   },
   germany: {
@@ -57,7 +57,7 @@ export function mapAttributions(scope: Scope, includeHeritage = false): MapAttri
   const credits = specific ? [osm, specific] : [osm];
   if (includeHeritage)
     credits.push({
-      label: '项目元数据：UNESCO DataHub · CC BY-SA 4.0（含中文整理与地区关联）',
+      label: 'UNESCO DataHub · CC BY-SA 4.0（经整理）',
       url: 'https://data.unesco.org/explore/dataset/whc001/',
     });
   return credits;

@@ -146,7 +146,7 @@ describe('map lifecycle and selection', () => {
     lib.fail = true;
     const { wrapper } = await open();
     await flushPromises();
-    expect(wrapper.text()).toContain('当前使用简化地图');
+    expect(wrapper.text()).toContain('已切换为简化地图');
     const urls = vi.mocked(fetch).mock.calls.map((c) => String(c[0]));
     expect(urls).toContain('/maps/china.json');
     expect(urls.some((url) => url.includes('/geometry/'))).toBe(false);

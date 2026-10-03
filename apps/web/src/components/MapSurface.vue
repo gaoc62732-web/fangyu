@@ -33,7 +33,6 @@ const {
   mapError,
   loading,
   fallback,
-  provider,
   providerFailed,
   missingBoundary,
   mapZoom,
@@ -131,26 +130,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
       @close="closeVisitedSelection"
     />
     <p
-      v-if="showPoints && !category && !selected && !focus"
-      class="note"
-    >
-      {{
-        fallback
-          ? '全图优先显示已到访点位；选择类别或地区可查看其余地点。'
-          : '全图优先显示已到访点位；放大地图或选择类别、地区可查看其余地点。'
-      }}
-    </p>
-    <p
-      class="map-boundary-notice"
-      role="note"
-    >
-      <strong>地图边界说明</strong>
-      边界与行政区划图形仅供旅行记录参考，不代表权威或现行的地理边界与行政区划；具体情况请以主管部门公布的资料为准。
-      <span v-if="['vietnam', 'malaysia', 'singapore', 'brunei'].includes(scope)">
-        本专题在西沙、南沙的离散岛礁图形不提供行政区悬停或选择。
-      </span>
-    </p>
-    <p
       v-if="mapError"
       class="error"
     >
@@ -189,22 +168,12 @@ async function overview(group?: 'metropolitan' | 'overseas') {
       </div>
     </div>
     <div
+      v-if="fallback || providerFailed || (mapError && !missingBoundary)"
       class="tile-map-note"
       role="status"
     >
-      <span>{{
-        missingBoundary
-          ? '本专题边界地图待补充'
-          : fallback
-            ? focus
-              ? '当前使用简化地图，仅显示所属地区范围，暂不支持地点精确居中。'
-              : '当前使用简化地图，仍可查看和记录到访。'
-            : providerFailed
-              ? '在线底图暂不可用，行政区地图仍可使用。'
-              : !provider
-                ? '行政区地图 · 在线底图未启用'
-                : '在线底图 · ' + provider.name
-      }}</span>
+      <span v-if="fallback">{{ focus ? '简化地图暂不支持精确定位。' : '已切换为简化地图。' }}</span>
+      <span v-else-if="providerFailed">在线底图暂不可用。</span>
       <button
         v-if="fallback || providerFailed || mapError"
         :disabled="loading"
@@ -230,7 +199,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
         <i :style="{ background: store.colors[state] }"></i>{{ label }}
       </span>
     </div>
-    <p class="note">拖动平移，滚轮缩放，点击选择；悬浮查看地区与要素信息。</p>
     <p class="note map-data-attribution">
       <a
         v-for="credit in mapAttributions(scope, visitedLayers.visitedWorldHeritage)"

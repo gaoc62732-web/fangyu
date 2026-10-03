@@ -41,7 +41,6 @@ function exportResults() {
 <template>
   <section class="page-heading">
     <h2>点卯计算器</h2>
-    <p>依据当前手册的政区到访记录即时计算。</p>
   </section>
   <section class="maofen-calculator card">
     <div class="maofen-summary">
@@ -50,10 +49,9 @@ function exportResults() {
       <div><small>地级 · 每个 0.2 分</small><strong>{{ progress.counts[1] }} / {{ progress.totals[1] }}</strong></div>
       <div><small>卯县 · 每个 0.05 分</small><strong>{{ progress.counts[2] }} / {{ progress.totals[2] }}</strong></div>
     </div>
-    <p class="note">居住、短居、到达计分；途经、飞跃不计。县区到访可带入上级，但上级明确标为未到达时不推断到达。</p>
     <details class="maofen-rules">
-      <summary>计分规则与本版基数</summary>
-      <p>省级每个 1 分、地级每个 0.2 分、县级每个 0.05 分。省级统计含港澳台；地县级仅计中国大陆现行且符合计分条件的政区，历史对照行不计入。满分随当前目录基数自动更新。</p>
+      <summary>计分规则</summary>
+      <p>到达、短居、居住计分。省级 1 分，地级 0.2 分，县级 0.05 分；省级含港澳台，地县级仅计中国大陆现行政区。</p>
     </details>
     <div class="maofen-table-heading">
       <h3>分省点卯</h3>

@@ -213,20 +213,6 @@ nav a.router-link-active {
 .map-card {
   overflow: hidden;
 }
-.map-boundary-notice {
-  margin: 10px 12px 0;
-  padding: 10px 13px;
-  border: 1px solid #e4cca0;
-  border-left: 4px solid #b87a24;
-  border-radius: 6px;
-  background: #fff7e9;
-  color: #61451d;
-  font-size: 13px;
-  line-height: 1.55;
-}
-.map-boundary-notice strong {
-  margin-right: 8px;
-}
 .map-surface {
   position: relative;
   height: clamp(580px, 74vh, 880px);
@@ -951,12 +937,6 @@ a:focus-visible {
   background: #20343b;
   border-color: #6e9186;
   color: #e0ede6;
-}
-[data-theme='dark'] .map-boundary-notice {
-  background: #3d3427;
-  border-color: #8f754b;
-  border-left-color: #d8a352;
-  color: #f6e4c0;
 }
 [data-theme='dark'] .map-hover-card small,
 [data-theme='dark'] .map-hover-card span {

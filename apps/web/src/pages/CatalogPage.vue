@@ -319,7 +319,6 @@ watch(
 <template>
   <section class="page-heading catalog-heading">
     <h2>{{ title }}</h2>
-    <p>点选地图查看地区与旅行内容。</p>
     <RouterLink
       v-if="['malaysia', 'singapore', 'brunei'].includes(scope) && route.path !== '/malay-region'"
       :to="{ path: '/malay-region', query: { country: scope } }"
@@ -475,7 +474,6 @@ watch(
       </div>
     </details>
   </div>
-  <TopicCoverage :scope="scope" />
   <section
     v-if="scope === 'france'"
     class="france-drilldown"
@@ -508,39 +506,6 @@ watch(
         >{{ item.label }}：已到访 {{ item.count }} / {{ item.total }}</span
       >
     </div>
-    <p class="note">
-      各层分别记录、分别计数，不合并为一个总数。标记大区不会填充下级；本页地区状态也不会自动修改上级。仅法兰西岛开放省级下钻，巴黎开放20区；Paris
-      Centre 为第1—4区合署管理，仍保留20个地理区。
-    </p>
-    <p
-      v-if="selected && selected.level > 1"
-      class="note"
-    >
-      现有地点保留原大区归属，尚未分配到省或市区；此层地点列表可能为空。
-    </p>
-    <details class="note">
-      <summary>下钻边界来源与许可</summary>
-      <p>
-        省界：<a
-          href="https://www.data.gouv.fr/datasets/contours-administratifs"
-          target="_blank"
-          rel="noopener noreferrer"
-          >data.gouv.fr Contours administratifs</a
-        >，2025年100米简化版；巴黎区界：<a
-          href="https://opendata.paris.fr/explore/dataset/arrondissements/information/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Ville de Paris — Arrondissements</a
-        >，来源元数据修改日期2016-03-04。均按
-        <a
-          href="https://opendatacommons.org/licenses/odbl/1.0/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >ODbL 1.0</a
-        >
-        使用，层间边缘可能有精度差异。成员清单按INSEE COG 2026核对。
-      </p>
-    </details>
   </section>
   <div
     v-if="searchRegions.length"
@@ -563,7 +528,7 @@ watch(
       class="note"
       role="status"
     >
-      此国家专题的数据仍在核验，尚未接入当前预览。区划、遗产点和球场不以缺失数据或代表坐标冒充完整收录。
+      暂无地区数据。
     </p>
     <MapSurface
       v-if="regions.length"
@@ -599,11 +564,11 @@ watch(
               }}
             </option>
           </select>
-          <span>选择类别后，地图与右栏只显示该类内容。</span>
           <span v-if="store.category && scope === 'china'"
-            >当前颜色反映该类别的地点记录；查看地区造访颜色请选择“全部类别”。</span
+            >配色：{{
+              availableCategories.find((category) => category.id === store.category)?.name
+            }}到访</span
           >
-          <span v-else-if="store.category">点位与列表按类别筛选，区域底色保留地区造访状态。</span>
           <small v-if="mapPoints.some((entry) => entry.coordinateAttribution)"
             >部分球场坐标：© OpenStreetMap contributors ·
             <a
@@ -611,21 +576,19 @@ watch(
               target="_blank"
               rel="noopener noreferrer"
               >ODbL</a
-            >；逐地点来源见列表。</small
+            ></small
           >
         </div>
       </template>
     </MapSurface>
     <aside class="inspector">
       <h2>{{ selected?.name || title }}</h2>
-      <small v-if="selected?.nameTranslationNeedsReview">译名待核 / Provisional name</small>
       <details
         v-if="selected?.nameZh && selected.originalName"
         class="original-name"
       >
         <summary>原文名称 / Original name</summary>
         <span>{{ selected.originalName }}</span>
-        <small v-if="selected.nameTranslationNote">{{ selected.nameTranslationNote }}</small>
       </details>
       <VisitStateSelect
         v-if="selected"
@@ -674,7 +637,7 @@ watch(
         v-if="!selected && !query && !focusedEntry"
         class="inspector-prompt"
       >
-        请先在地图上点选政区，或用上方搜索查找项目。
+        选择地区或搜索地点。
       </p>
       <CategoryEntryList
         v-if="selected || query || focusedEntry || store.category"
@@ -721,4 +684,5 @@ watch(
       </form>
     </aside>
   </div>
+  <TopicCoverage :scope="scope" />
 </template>

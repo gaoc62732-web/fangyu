@@ -166,6 +166,11 @@ onBeforeUnmount(() => renderer?.destroy());
         <i :style="{ background: store.colors[state] }"></i>{{ label }}
       </span>
     </div>
-    <p class="note">{{ hovered || '拖动平移，滚轮缩放，点击选择。' }}</p>
+    <p
+      v-if="hovered"
+      class="note"
+    >
+      {{ hovered }}
+    </p>
   </section>
 </template>

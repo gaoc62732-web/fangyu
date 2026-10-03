@@ -43,14 +43,11 @@ function change(event: Event) {
       </option>
     </select>
     <small
-      v-if="city"
+      v-if="city && effective !== recorded"
       class="effective-visit-state"
       role="status"
     >
-      地图与统计状态：{{ VISIT_LABELS[effective]
-      }}<template v-if="effective !== recorded"
-        >（根据直属县级居住记录推导；手动记录保持为{{ VISIT_LABELS[recorded] }}）</template
-      >
+      地图状态：{{ VISIT_LABELS[effective] }}（含下辖县区居住记录）
     </small>
   </label>
 </template>

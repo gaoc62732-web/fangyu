@@ -26,6 +26,7 @@ __pycache__/
 *.py[cod]
 
 .tools/
+.pnpm-store/
 
 # Local source captures; concise provenance extracts are versioned separately.
 data/extensions/research/france868-evidence/*.html

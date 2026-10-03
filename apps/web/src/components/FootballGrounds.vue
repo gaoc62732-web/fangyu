@@ -94,16 +94,13 @@ const standalone = computed(() =>
       v-model="search"
       type="search"
       aria-label="搜索球队或球场"
-      placeholder="搜索中英文或原名 / Search clubs or stadiums"
+      placeholder="搜索球队或球场"
     />
     <p
       v-if="search && !filteredCompetitions.length && !standalone.length"
       class="note"
     >
-      没有匹配的球队或球场；清除搜索可查看全部。
-    </p>
-    <p class="note">
-      按 2026/27 赛季官方名单；共用球场共享记录。临时主场仅按已核实比赛或时间段展示。
+      没有匹配的球队或球场。
     </p>
     <details
       v-for="league in filteredCompetitions"
@@ -123,8 +120,7 @@ const standalone = computed(() =>
           v-for="club in league.clubs"
           :key="club.id"
         >
-          {{ club.name }} — {{ club.originalName
-          }}<small v-if="club.nameTranslationNote"> · {{ club.nameTranslationNote }}</small>
+          {{ club.name }} — {{ club.originalName }}
         </p>
       </details>
       <ul>
@@ -137,17 +133,14 @@ const standalone = computed(() =>
           }}</span>
           →
           {{ league.venues.find((v) => v.id === home.venueId)?.name }}
-          <small v-if="league.clubs.find((c) => c.id === home.clubId)?.nameTranslationNeedsReview">
-            · 译名待核 / Provisional name</small
-          >
           <small v-if="home.dateSemantics?.includes('match date only')">
-            · 已证实单场：{{ home.validFrom }} {{ home.fixture }}；整体借场起止未核实。</small
+            · 单场使用：{{ home.validFrom }} {{ home.fixture }}</small
           >
           <small v-else-if="home.status === 'temporary'">
-            · 临时场地；{{ home.validFrom || '开始日期未核实' }} 至
-            {{ home.validTo || '结束日期未核实' }}</small
+            · 临时场地：{{ home.validFrom || '日期未知' }} 至
+            {{ home.validTo || '日期未知' }}</small
           >
-          <small v-else-if="home.status === 'unknown'"> · 名单所列场地，实际使用期限待核实。</small>
+          <small v-else-if="home.status === 'unknown'"> · 使用期限未知</small>
           <a
             :href="home.sourceUrl"
             target="_blank"

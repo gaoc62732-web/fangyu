@@ -143,7 +143,6 @@ function csv() {
 <template>
   <section class="page-heading">
     <h2>要素列表</h2>
-    <p>先选地区，再按类别查看、标记和导出。跨政区的同一项目合并显示；勾选会同步更新其全部所属政区记录。</p>
   </section>
   <div class="toolbar">
     <input

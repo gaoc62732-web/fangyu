@@ -238,9 +238,7 @@ onBeforeUnmount(() => {
   <div class="achievements-page achievement-ui">
     <header class="page-heading split-heading">
       <div>
-        <span class="eyebrow">把走过的地方，收藏成章</span>
         <h1>旅行成就</h1>
-        <p>行遍山河，循迹古今。每个系列独立查看，随记录更新。</p>
       </div>
       <div class="segmented">
         <button
@@ -319,7 +317,7 @@ onBeforeUnmount(() => {
                 :value="summary.quantity.count"
                 :max="summary.quantity.next || 2500"
                 aria-label="县域数量成就进度"
-              /><small>到达、短居与居住计入；飞跃与途经不计入。</small>
+              />
             </div>
             <AchievementBadge
               :title="'数量 · ' + quantityName"
@@ -366,12 +364,6 @@ onBeforeUnmount(() => {
               </button>
             </div>
           </section>
-          <p
-            v-else
-            class="note"
-          >
-            从地图或地区手册记录第一次到访，成就将随之点亮。
-          </p>
         </div>
         <template v-else
           ><div class="series-heading">
@@ -428,15 +420,9 @@ onBeforeUnmount(() => {
               </option>
             </select>
           </div>
-          <p
-            v-if="series === 'history'"
-            class="note"
-            data-history-order="chronological"
-          >
-            按历史主题年代由早到晚：传说单列在前；区间先比起年、再比止年，同年代保留目录顺序；年代待核置后。朝代范围不代表每个目标的确切年代。
-          </p>
           <VirtualGrid
             v-if="visible.length"
+            :data-history-order="series === 'history' ? 'chronological' : undefined"
             :key="gridKey"
             :initial-scroll="gridScroll[gridKey] || 0"
             @scroll="(value) => (gridScroll[gridKey] = value)"
@@ -472,7 +458,6 @@ onBeforeUnmount(() => {
             class="empty-state"
           >
             <h3>没有符合筛选的成就</h3>
-            <p>试试切换系列或清除筛选。</p>
           </div>
         </template>
       </template>
@@ -495,7 +480,7 @@ onBeforeUnmount(() => {
               >{{
                 ((100 * summary.score.counts[2]!) / (summary.score.totals[2] || 1)).toFixed(1)
               }}%</strong
-            ><span>居住、短居计入到达</span>
+            >
           </article>
         </div>
         <div class="toolbar">
@@ -553,7 +538,7 @@ onBeforeUnmount(() => {
           <summary>计分规则与范围</summary>
           <p>
             省级 1 分，地级 0.2 分，县级 0.05
-            分；居住、短居、到达计分。基数由当前目录和现有计分规则计算，历史行与特殊范围沿用当前数据层定义。
+            分；到达、短居、居住计分。省级含港澳台，地县级仅计中国大陆现行政区。
           </p>
         </details>
       </section>
@@ -594,11 +579,10 @@ onBeforeUnmount(() => {
           </ul>
         </section>
         <p
-          v-for="p in detail.pending"
-          :key="p"
+          v-if="detail.pending.length"
           class="pending-note"
         >
-          暂缓：{{ p }}
+          目标资料不全，暂不判定完成。
         </p>
         <div class="source-links">
           <a

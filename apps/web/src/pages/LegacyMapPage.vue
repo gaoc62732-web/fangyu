@@ -13,8 +13,7 @@ const points = computed(() => store.session!.entries(scope.value));
 <template>
   <section class="legacy-map-page">
     <div class="toolbar">
-      <RouterLink to="/map">← 返回新地图</RouterLink><strong>旧地图对照</strong
-      ><span class="note">仅供验收对照；进入此页会加载原精度边界。</span>
+      <RouterLink to="/map">← 返回地图</RouterLink><strong>经典地图</strong>
     </div>
     <div class="toolbar">
       <select

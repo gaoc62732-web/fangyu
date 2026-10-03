@@ -62,7 +62,7 @@ try {
     }
     if ((await page.locator('.topic-coverage').getAttribute('open')) === null)
       await page.locator('.topic-coverage > summary').click();
-    assert((await page.locator('.topic-coverage').innerText()).includes('坐标'));
+    assert(await page.locator('.topic-coverage a[href^="https://"]').count());
     await page.getByRole('combobox', { name: '地区', exact: true }).selectOption({ index: 1 });
     await ready();
     assert.notEqual(await page.locator('.inspector > h2').innerText(), '');

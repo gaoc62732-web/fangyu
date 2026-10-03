@@ -101,7 +101,7 @@ try {
     await page.getByRole('combobox', { name: '地区', exact: true }).selectOption('');
     if ((await page.locator('.topic-coverage').getAttribute('open')) === null)
       await page.locator('.topic-coverage > summary').click();
-    assert((await page.locator('.topic-coverage').innerText()).includes('坐标'));
+    assert(await page.locator('.topic-coverage a[href^="https://"]').count());
     await noOverflow();
     await shot(scope);
     checks.push({ scope, regions: count, map: 'tiles', search: 'Chinese/English/original' });

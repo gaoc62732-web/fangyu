@@ -55,6 +55,6 @@ async function login() {
     >
       登录
     </button>
-    <p role="alert">{{ error }}</p>
+    <p v-if="error" role="alert">{{ error }}</p>
   </form>
 </template>

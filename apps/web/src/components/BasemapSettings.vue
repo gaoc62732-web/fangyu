@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import {
   applyBasemapKey,
-  basemapMode,
   basemapProvider,
   basemapEnabled,
   basemapCanEnable,
@@ -55,7 +54,7 @@ function clear() {
   draft.value = '';
   remember.value = false;
   message.value = clearBasemapKey()
-    ? '已清除本机输入并禁用在线底图，不会自动使用构建配置。'
+    ? '已清除密钥并关闭在线底图。'
     : '本次已禁用，但浏览器存储不可用；下次打开时请再次检查。';
 }
 function toggle(event: Event) {
@@ -65,13 +64,13 @@ function toggle(event: Event) {
   message.value = saved
     ? enabled
       ? '已启用所选在线底图。'
-      : '已关闭在线底图；保留已配置密钥，可用开关重新启用。'
+      : '已关闭在线底图。'
     : '设置已更新，但浏览器存储不可用。';
 }
 function disable() {
   resetTest();
   disableBasemap();
-  message.value = '已关闭在线底图；保留已配置密钥，可用开关重新启用。';
+  message.value = '已关闭在线底图。';
 }
 function changeKind(event: Event) {
   resetTest();
@@ -85,28 +84,13 @@ function environment() {
   draft.value = '';
   remember.value = false;
   useEnvironmentBasemap();
-  message.value = basemapProvider.value
-    ? '已明确切换为构建配置。'
-    : '构建配置未提供可用密钥，当前仅显示行政区地图。';
+  message.value = basemapProvider.value ? '已使用默认密钥。' : '无可用的默认密钥，请填写密钥。';
 }
 </script>
 <template>
   <details class="basemap-settings">
     <summary>在线底图设置</summary>
-    <p class="note">
-      密钥仅在此浏览器用于请求天地图，不进入旅行记录、备份或后端。默认仅当前会话；前端密钥请在天地图控制台限制域名。
-    </p>
-    <p class="note">
-      当前：{{
-        basemapMode === 'disabled'
-          ? '已禁用'
-          : basemapMode === 'custom'
-            ? '使用本机设置'
-            : basemapProvider
-              ? '使用构建配置'
-              : '未配置'
-      }}。开关关闭会保留已配置密钥；清除密钥会移除浏览器保存并阻止自动恢复构建配置。
-    </p>
+    <p class="note">密钥仅在此浏览器使用，请在天地图控制台限制授权域名。</p>
     <div class="toolbar">
       <label
         ><input
@@ -132,7 +116,7 @@ function environment() {
       v-if="!basemapCanEnable"
       class="note"
     >
-      请先应用密钥，或主动选择使用构建配置，再开启在线底图。
+      请先设置天地图密钥。
     </p>
     <form @submit.prevent="apply">
       <label
@@ -143,7 +127,7 @@ function environment() {
           aria-label="天地图浏览器密钥"
           autocomplete="off"
           spellcheck="false"
-          placeholder="由你本人填写"
+          placeholder="输入密钥"
           @input="resetTest"
         />
       </label>
@@ -178,11 +162,12 @@ function environment() {
           type="button"
           @click="environment"
         >
-          使用构建配置
+          使用默认密钥
         </button>
       </div>
     </form>
     <p
+      v-if="message"
       role="status"
       aria-live="polite"
     >

@@ -53,7 +53,6 @@ const summaries = computed(() => {
   >
     <div class="page-heading">
       <h2 id="malay-region-title">马新文 · Malaysia, Singapore &amp; Brunei</h2>
-      <p>三国分别浏览，分别统计。选择国家后查看地图、地区与世界遗产。</p>
     </div>
     <nav
       class="country-cards"
@@ -80,7 +79,6 @@ const summaries = computed(() => {
         >
       </RouterLink>
     </nav>
-    <p class="note">地区标记与地点到访分别计算；旧项目打卡不会自动计入新组成地点。</p>
   </section>
   <CatalogPage
     :key="selectedCountry"

@@ -7,9 +7,6 @@ import { useAppStore } from './app/store.js';
 import { exportJson } from './features/exports/download.js';
 import LoginPanel from './components/LoginPanel.vue';
 import { version } from '../package.json';
-declare const __FANGYU_BUILD__: { version: string; id: string; commit: string; dirty: boolean };
-const build = __FANGYU_BUILD__;
-
 const store = useAppStore();
 const route = useRoute();
 const navigationElement = ref<HTMLElement>();
@@ -102,7 +99,6 @@ watchEffect(() => {
         <h1>
           方舆 · 旅游手册地图 <span class="app-version">v{{ version }}</span>
         </h1>
-        <small>{{ mode === 'demo' ? '记录保存在此浏览器' : '记录通过服务端保存' }}</small>
       </div>
     </div>
     <nav
@@ -224,10 +220,6 @@ watchEffect(() => {
     </template>
   </main>
   <footer class="site-footer">
-    <span class="build-identity"
-      >{{ build.version.includes('-dev') ? '开发预览' : '版本 ' + build.version }} {{ build.id }} ·
-      {{ build.commit }}{{ build.dirty ? ' + 未提交修改' : '' }}</span
-    >
     <span role="status">{{ store.saveStatus }}</span>
     <button
       :disabled="!store.canUndo"

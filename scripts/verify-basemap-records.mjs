@@ -85,7 +85,7 @@ try {
       if (kind === 'disabled') await enabled.uncheck();
       else {
         if (await enabled.isDisabled())
-          await page.getByRole('button', { name: '使用构建配置', exact: true }).click();
+          await page.getByRole('button', { name: '使用默认密钥', exact: true }).click();
         await enabled.check();
         await page.getByRole('combobox', { name: '底图类型' }).selectOption(kind);
       }

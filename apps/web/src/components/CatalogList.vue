@@ -121,7 +121,6 @@ defineExpose({
     >
       <span class="empty-symbol">⌕</span>
       <h3>当前范围没有匹配项目</h3>
-      <p>试试清除搜索、切换类别，或查看下辖地区。</p>
     </div>
     <div
       v-else

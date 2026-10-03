@@ -70,9 +70,6 @@ watch(
       世界遗产项目与组成点<span v-if="scope === 'vietnam'"> · World Heritage</span> ·
       {{ projects.length }} 项
     </summary>
-    <p class="note">
-      组成点分别记录。旧项目打卡保留，不代表全部组成点已到访；官方地图单元与独立景点口径有差异，未核实部分明确标注。
-    </p>
     <input
       v-model="search"
       type="search"
@@ -83,7 +80,7 @@ watch(
       v-if="!projects.length"
       class="note"
     >
-      没有符合筛选的遗产项目，可清除搜索后继续查看。
+      没有匹配的遗产项目。
     </p>
     <article
       v-for="item in projects.slice(page * 10, (page + 1) * 10)"
@@ -92,9 +89,6 @@ watch(
       <details>
         <summary>
           {{ item.project.name }} <small>#{{ item.project.unescoId }}</small>
-          <small v-if="item.project.nameTranslationNeedsReview">
-            · 译名待核 / Provisional name</small
-          >
         </summary>
         <details
           v-if="item.project.nameZh && item.project.originalName"
@@ -102,32 +96,22 @@ watch(
         >
           <summary>原文名称 / Original name</summary>
           <span>{{ item.project.originalName }}</span>
-          <small v-if="item.project.nameTranslationNote">{{
-            item.project.nameTranslationNote
-          }}</small>
         </details>
         <p>
-          全球地点记录 {{ item.progress.visitedComponents }} /
-          {{ item.progress.totalComponents }}；本页可见 {{ item.components.length }} 个。
+          已到访 {{ item.progress.visitedComponents }} / {{ item.progress.totalComponents }} 个地点
         </p>
         <p
           v-if="item.progress.totalOfficialComponents !== undefined"
           class="note"
         >
           官方组成单元 {{ item.progress.visitedOfficialComponents }} /
-          {{ item.progress.totalOfficialComponents }}；同一单元包含多个地点时，需分别到访。
+          {{ item.progress.totalOfficialComponents }}
         </p>
         <p
           v-if="item.project.coverage !== 'complete'"
           class="note"
         >
-          组成资料尚未完整核验，当前不判定全项目完成。
-        </p>
-        <p
-          v-if="item.progress.legacyVisited"
-          class="note"
-        >
-          有旧记录；未由此推断新组成点到访。
+          地点收录不全，暂不判定完成。
         </p>
         <EntryList
           :rows="item.components"
@@ -136,7 +120,7 @@ watch(
           @locate="emit('locate', $event)"
         />
         <details v-if="item.legacy.length">
-          <summary>保留的旧记录（项目／组成单元）</summary>
+          <summary>项目记录</summary>
           <EntryList
             :rows="item.legacy"
             :page-size="10"

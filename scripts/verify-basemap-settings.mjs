@@ -105,14 +105,14 @@ try {
   stage = 'toggle off and resume';
   const enabled = page.getByRole('checkbox', { name: '启用天地图在线底图' });
   await enabled.uncheck();
-  await page.getByText('行政区地图 · 在线底图未启用', { exact: true }).waitFor();
+  assert.equal(await enabled.isChecked(), false);
   assert(
     await page.evaluate(() =>
       Boolean(JSON.parse(sessionStorage.getItem('fangyu-private-basemap-v1')).key),
     ),
   );
   await enabled.check();
-  await page.getByText('在线底图 · 天地图政区图', { exact: true }).waitFor();
+  assert.equal(await enabled.isChecked(), true);
   stage = 'satellite layers';
   await page.getByRole('combobox', { name: '底图类型' }).selectOption('satellite');
   await secret.fill(key);
@@ -120,7 +120,7 @@ try {
   await page.getByText('连接成功，可以应用。', { exact: true }).waitFor();
   assert(requestedLayers.has('img_w') && requestedLayers.has('cia_w'));
   await secret.fill('');
-  await page.getByText('在线底图 · 天地图卫星图', { exact: true }).waitFor();
+  assert.equal(await page.getByRole('combobox', { name: '底图类型' }).inputValue(), 'satellite');
   assert(
     await page.evaluate(
       () =>
@@ -131,7 +131,7 @@ try {
   stage = 'reload';
   await page.reload();
   await open();
-  await page.getByText('当前：使用本机设置。', { exact: false }).waitFor();
+  assert.equal(await enabled.isChecked(), true);
   assert.equal(await page.getByRole('combobox', { name: '底图类型' }).inputValue(), 'satellite');
   await page.getByRole('button', { name: '关闭在线底图（保留密钥）', exact: true }).click();
   await page.reload();
@@ -154,7 +154,7 @@ try {
   stage = 'reload';
   await page.reload();
   await open();
-  await page.getByText('当前：已禁用。', { exact: false }).waitFor();
+  assert.equal(await enabled.isChecked(), false);
   assert.equal(await enabled.isDisabled(), true);
   assert(
     await page.evaluate(
@@ -163,10 +163,10 @@ try {
         !JSON.parse(localStorage.getItem('fangyu-private-basemap-v1')).key,
     ),
   );
-  await page.getByRole('button', { name: '使用构建配置', exact: true }).click();
+  await page.getByRole('button', { name: '使用默认密钥', exact: true }).click();
   await page
     .locator('.basemap-settings [role="status"]')
-    .filter({ hasText: /已明确切换为构建配置|构建配置未提供可用密钥/ })
+    .filter({ hasText: /已使用默认密钥|无可用的默认密钥/ })
     .waitFor();
   await context.unroute('https://t0.tianditu.gov.cn/**');
   await context.route('https://t0.tianditu.gov.cn/**', (r) =>

@@ -94,18 +94,15 @@ watch(
         class="visited-layer-summary"
         role="status"
       >
-        可定位 {{ result.counts.mappedRecords }} 条到访记录<span v-if="result.counts.omittedRecords"
-          >；已到访但暂不能定位 {{ result.counts.omittedRecords }} 条</span
-        >。
-      </p>
-      <p class="visited-layer-help">
-        按当前国家和已知地区归属显示，独立于目录搜索、类别筛选和“显示点位”。近邻点合并为数字，点击可展开。神庙轮廓统一代表世界遗产（含自然遗产），为原创图形。
+        已定位 {{ result.counts.mappedRecords }} 条<span v-if="result.counts.omittedRecords">
+          · 无法定位 {{ result.counts.omittedRecords }} 条</span
+        >
       </p>
       <details
         v-if="result.markers.length"
         class="visited-marker-list"
       >
-        <summary>按名称查看地图标记（{{ result.markers.length }}）</summary>
+        <summary>已到访地点（{{ result.markers.length }}）</summary>
         <input
           v-model="query"
           type="search"
@@ -118,8 +115,7 @@ watch(
             :key="marker.id"
             @click="emit('choose', marker.id)"
           >
-            {{ marker.name
-            }}<small v-if="marker.kind === 'project-reference'">项目级代表位置</small>
+            {{ marker.name }}<small v-if="marker.kind === 'project-reference'">参考位置</small>
           </button>
         </div>
         <p v-if="!items.length">没有匹配的已到访地图标记。</p>
@@ -134,10 +130,7 @@ watch(
         v-if="result.omitted.length"
         class="visited-marker-omissions"
       >
-        <summary>查看暂不能定位的记录（{{ result.omitted.length }}）</summary>
-        <p>
-          记录仍保留。缺少坐标、坐标仅供参考或缺少项目代表位置证据的记录暂不绘制；项目到访不会自动标为全部组成点已到访。
-        </p>
+        <summary>无法定位（{{ result.omitted.length }}）</summary>
         <ul>
           <li
             v-for="item in result.omitted.slice(0, 30)"
@@ -146,7 +139,7 @@ watch(
             {{ item.name }}
           </li>
         </ul>
-        <p v-if="result.omitted.length > 30">此处显示前30条；完整记录可在目录中查看。</p>
+        <p v-if="result.omitted.length > 30">仅显示前 30 条。</p>
       </details>
       <section
         v-if="selected.length"
@@ -179,10 +172,7 @@ watch(
             >
               {{ marker.name }}
             </button>
-            <p v-if="marker.kind === 'project-reference'">
-              项目级代表位置，不代表入口或所有组成地点；此标记只反映该项目自身的记录。
-            </p>
-            <p v-if="marker.coordinateNote">{{ marker.coordinateNote }}</p>
+            <p v-if="marker.kind === 'project-reference'">项目参考位置，非入口。</p>
             <label
               ><input
                 type="checkbox"
@@ -226,7 +216,6 @@ watch(
 .visited-layer-summary {
   margin: 8px 0 4px;
 }
-.visited-layer-help,
 .visited-marker-omissions p {
   font-size: 12px;
   line-height: 1.6;
@@ -300,7 +289,6 @@ small {
   display: block;
   margin-top: 6px;
 }
-:global([data-theme='dark']) .visited-layer-help,
 :global([data-theme='dark']) .visited-marker-omissions p {
   color: #b5cbbf;
 }

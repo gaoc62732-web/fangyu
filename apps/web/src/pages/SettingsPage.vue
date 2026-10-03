@@ -3,9 +3,11 @@ import { computed, ref } from 'vue';
 import { PALETTES, tonalColors } from '@fangyu/domain';
 import { VISIT_LABELS, type ArchiveDocument } from '@fangyu/contracts';
 import { useAppStore } from '../app/store.js';
+import { appMode } from '../app/mode.js';
 import { exportJson } from '../features/exports/download.js';
 
 const store = useAppStore();
+const mode = appMode();
 const archiveName = ref('');
 const baseColor = ref('#438d6a');
 const message = ref('');
@@ -74,11 +76,21 @@ async function clear() {
 <template>
   <section class="page-heading">
     <h2>存档与外观</h2>
-    <p>存档独立保存当前记录，恢复与清空前会自动备份。</p>
   </section>
-  <p role="status">{{ message }}</p>
+  <p
+    v-if="message"
+    role="status"
+  >
+    {{ message }}
+  </p>
   <section class="card">
     <h3>命名存档</h3>
+    <p
+      v-if="mode === 'demo'"
+      class="note"
+    >
+      记录仅保存在此浏览器，请定期下载备份。
+    </p>
     <form
       class="toolbar"
       @submit.prevent="saveArchive"

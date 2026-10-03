@@ -112,10 +112,9 @@ defineExpose({ canLeave });
         :indeterminate="entry.partial"
         :disabled="!owner && owners.length > 1 && !entry.checked"
         @change="mark(($event.target as HTMLInputElement).checked)"
-      /><span
-        >{{ entry.partial ? '已记录部分组成项目' : entry.checked ? '已到访' : '标记到访'
-        }}<small>同时按现有规则补记所属政区</small></span
-      ></label
+      /><span>{{
+        entry.partial ? '已记录部分组成项目' : entry.checked ? '已到访' : '标记到访'
+      }}</span></label
     >
     <section class="detail-section">
       <h3>所属地区</h3>
@@ -136,7 +135,7 @@ defineExpose({ canLeave });
         v-else
         class="note"
       >
-        尚无精确坐标，可查看所属地区手册。
+        暂无坐标。
       </p>
     </section>
     <section

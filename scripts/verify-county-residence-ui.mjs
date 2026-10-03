@@ -36,13 +36,13 @@ async function open(region) {
 }
 const state = () => page.locator('.state-select select');
 async function effective(label) {
-  await page.waitForFunction(
-    (label) =>
-      document
-        .querySelector('.effective-visit-state')
-        ?.textContent?.includes('地图与统计状态：' + label),
-    label,
-  );
+  await page.waitForFunction((label) => {
+    const derived = document.querySelector('.effective-visit-state');
+    return derived
+      ? derived.textContent?.includes('地图状态：' + label)
+      : document.querySelector('.state-select select')?.selectedOptions[0]?.textContent?.trim() ===
+          label;
+  }, label);
 }
 async function shot(name) {
   await page.evaluate(() => scrollTo(0, 0));
@@ -63,7 +63,7 @@ try {
   await open(city);
   await effective('居住');
   assert.equal(await state().inputValue(), 'transit');
-  assert.match(await page.locator('.effective-visit-state').innerText(), /手动记录保持为途经/);
+  assert.match(await page.locator('.effective-visit-state').innerText(), /含下辖县区居住记录/);
   await page.getByRole('button', { name: '市州盟', exact: true }).click();
   await page.getByRole('checkbox', { name: '显示点位', exact: true }).uncheck();
   await page.waitForTimeout(500);

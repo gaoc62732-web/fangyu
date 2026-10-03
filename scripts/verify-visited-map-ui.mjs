@@ -66,8 +66,8 @@ async function assertMapped(page, count, omitted) {
     ({ count, omitted }) => {
       const t = document.querySelector('.visited-layer-summary')?.textContent || '';
       return (
-        t.includes(`可定位 ${count} 条`) &&
-        (omitted === undefined || t.includes(`暂不能定位 ${omitted} 条`))
+        t.includes(`已定位 ${count} 条`) &&
+        (omitted === undefined || t.includes(`无法定位 ${omitted} 条`))
       );
     },
     { count, omitted },

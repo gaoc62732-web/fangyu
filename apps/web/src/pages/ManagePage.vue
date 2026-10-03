@@ -8,9 +8,7 @@ const tab = ref('import');
   <section class="manage-page">
     <header class="page-heading split-heading">
       <div>
-        <span class="eyebrow">记录在手，旅程有底</span>
         <h1>记录管理</h1>
-        <p>导入旅行痕迹，核对后写入；用备份保存每一段足迹。</p>
       </div>
       <nav
         class="segmented"
