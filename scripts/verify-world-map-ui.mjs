@@ -157,6 +157,35 @@ async function centerClick(page, touch) {
   if (touch) await page.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2);
   else await page.mouse.click(b.x + b.width / 2, b.y + b.height / 2);
 }
+async function waitForMarkerCamera(page, marker, mode) {
+  // A fixed 450 ms delay can expire before a loaded browser paints easeTo's end.
+  // Assert the public camera has actually reached this marker before a centre hit.
+  await canvasBox(page);
+  if (mode === 'tiles')
+    await page.waitForFunction(
+      ({ coordinates, zoom }) => {
+        const host = document.querySelector('.map-surface');
+        const center = (host?.dataset.mapCenter || '').split(',').map(Number);
+        return (
+          center.length === 2 &&
+          center.every((v, i) => Math.abs(v - coordinates[i]) < 0.00001) &&
+          Math.abs(Number(host?.dataset.mapZoom) - zoom) < 0.001
+        );
+      },
+      {
+        coordinates: marker.coordinates,
+        zoom: marker.id === fixture.cases.project.id ? 7 : 14,
+      },
+    );
+  await page.evaluate(
+    () => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))),
+  );
+  return page.locator('.map-surface').evaluate((e) => ({
+    center: e.dataset.mapCenter,
+    zoom: e.dataset.mapZoom,
+    mode: e.dataset.mapMode,
+  }));
+}
 async function closeDetails(page) {
   const close = page.getByRole('button', { name: '关闭已到访地点详情', exact: true });
   if (await close.count()) await close.click();
@@ -447,11 +476,14 @@ try {
             assert(text.includes(marker.note));
             if (role === 'project') assert(text.includes('不代表入口或所有组成地点'));
             await closeDetails(page);
+            const camera = await waitForMarkerCamera(page, marker, mode);
+            const beforeHit = resolve(out, `${prefix}-world-${role}-before-hit.png`);
+            await page.locator('.map-surface').screenshot({ path: beforeHit });
             await centerClick(page, size.touch);
             await page.locator('.visited-map-selection').waitFor();
             text = await page.locator('.visited-map-selection').innerText();
             assert(text.includes(marker.name));
-            checked.push({ role, text });
+            checked.push({ role, text, camera, beforeHit });
             await snapshot(page, `world-${role}-details`, prefix);
           }
           return { checked };

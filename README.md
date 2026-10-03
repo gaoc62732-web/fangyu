@@ -69,7 +69,7 @@ npm run catalog:check
 npm run catalog:stats
 ```
 
-生产构建命令为 npm run build。公开构建不应设置 VITE_TIANDITU_KEY；用户可在浏览器的本机底图设置中自行配置。当前没有配置 GitHub 自动测试或部署流水线，本版本不自动部署网站。
+生产构建命令为 npm run build。公开构建不应设置 VITE_TIANDITU_KEY；用户可在浏览器的本机底图设置中自行配置。此发布分支没有新增自动测试或部署配置；仓库已有 main 分支的 Pages 构建记录，本次只发布独立源码分支，不执行网站部署。远端既有 Pages 成功记录不能视为本版本的测试结果。
 
 ## 格式变更与资料范围
 
