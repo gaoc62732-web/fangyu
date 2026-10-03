@@ -1,17 +1,34 @@
-import type { StyleSpecification } from 'maplibre-gl';
+import type { ExpressionSpecification, StyleSpecification } from 'maplibre-gl';
 import type { Scope } from '@fangyu/contracts';
 import { mapAssetUrl, type MapDataManifest, type BasemapProvider } from './types.js';
+import { mapAttributions } from './data-attribution.js';
+
+export const VISITED_MARKER_LAYER_IDS = ['visited-clusters', 'visited-markers'] as const;
+
+export function boundaryFillOpacity(
+  provider: BasemapProvider | null,
+): number | ExpressionSpecification {
+  if (!provider) return 1;
+  return [
+    'case',
+    ['boolean', ['feature-state', 'recorded'], false],
+    provider.kind === 'satellite' ? 0.65 : 0.82,
+    provider.kind === 'satellite' ? 0.08 : 0.15,
+  ];
+}
+
+// Keep the collaborator's MVT/feature-state architecture behind the existing map controls.
 export function createMapStyle(
   manifest: MapDataManifest,
   scope: Scope,
-  focused: string,
+  level: string,
   provider: BasemapProvider | null,
   base: string,
   origin: string,
 ): StyleSpecification {
   const sources: StyleSpecification['sources'] = {};
   const layers: StyleSpecification['layers'] = [
-    { id: 'background', type: 'background', paint: { 'background-color': '#eaf0ed' } },
+    { id: 'background', type: 'background', paint: { 'background-color': '#eef4f3' } },
   ];
   if (provider) {
     sources.basemap = {
@@ -22,17 +39,7 @@ export function createMapStyle(
       maxzoom: 18,
       attribution: provider.attribution,
     };
-    sources.labels = {
-      type: 'raster',
-      tiles: provider.labels,
-      tileSize: 256,
-      minzoom: 1,
-      maxzoom: 18,
-    };
-    layers.push(
-      { id: 'basemap', source: 'basemap', type: 'raster' },
-      { id: 'labels', source: 'labels', type: 'raster' },
-    );
+    layers.push({ id: 'basemap', source: 'basemap', type: 'raster' });
   }
   for (const layer of manifest.scopes[scope].layers) {
     sources[layer.level] = {
@@ -42,17 +49,24 @@ export function createMapStyle(
       maxzoom: layer.maxzoom,
       bounds: layer.bounds,
       promoteId: 'regionId',
-      attribution: '边界仅供旅行记录参考',
+      attribution: mapAttributions(scope)
+        .map(
+          (credit) =>
+            `<a href="${credit.url}" target="_blank" rel="noopener noreferrer">${credit.label}</a>`,
+        )
+        .join(' · '),
     };
+    const visibility = layer.level === level || layer.level === 'border' ? 'visible' : 'none';
     if (layer.level !== 'border')
       layers.push({
         id: layer.level + '-fill',
         type: 'fill',
         source: layer.level,
         'source-layer': 'regions',
+        layout: { visibility },
         paint: {
-          'fill-color': ['coalesce', ['feature-state', 'fill'], '#edf1e9'],
-          'fill-opacity': 0.3,
+          'fill-color': ['coalesce', ['feature-state', 'fill'], '#f5f8f3'],
+          'fill-opacity': boundaryFillOpacity(provider),
         },
       });
     layers.push({
@@ -60,18 +74,20 @@ export function createMapStyle(
       type: 'line',
       source: layer.level,
       'source-layer': 'regions',
-      // Legacy "border" also contains coarse province polygons. Drawing those
-      // over the administrative layer creates false gaps and crossing outlines.
+      // Legacy border data also contains coarse province polygons. Only draw
+      // independent border lines over the administrative boundary layers.
       ...(layer.level === 'border'
         ? { filter: ['==', ['geometry-type'], 'LineString'] as const }
         : {}),
-      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      layout: { visibility, 'line-join': 'round', 'line-cap': 'round' },
       paint: {
         'line-color': [
           'case',
           ['boolean', ['feature-state', 'selected'], false],
-          '#bb8137',
-          '#829c91',
+          '#cf762b',
+          ['boolean', ['feature-state', 'hover'], false],
+          '#548774',
+          '#8ca49d',
         ],
         'line-width': [
           'case',
@@ -79,76 +95,66 @@ export function createMapStyle(
           2,
           ['boolean', ['feature-state', 'hover'], false],
           1.5,
-          0.65,
+          layer.level === 'county' ? 0.5 : 1,
         ],
       },
     });
   }
-  sources.points = {
+  if (provider) {
+    sources.labels = {
+      type: 'raster',
+      tiles: provider.labels,
+      tileSize: 256,
+      minzoom: 1,
+      maxzoom: 18,
+    };
+    layers.push({ id: 'labels', source: 'labels', type: 'raster' });
+  }
+  sources.points = { type: 'geojson', data: { type: 'FeatureCollection', features: [] } };
+  layers.push({
+    id: 'points',
+    type: 'circle',
+    source: 'points',
+    paint: {
+      'circle-radius': 4,
+      'circle-color': ['case', ['boolean', ['get', 'marked'], false], '#26775b', '#438fae'],
+      'circle-stroke-width': 1,
+      'circle-stroke-color': '#fff',
+    },
+  });
+  sources['visited-markers'] = {
     type: 'geojson',
     data: { type: 'FeatureCollection', features: [] },
     cluster: true,
-    clusterMaxZoom: 14,
     clusterRadius: 44,
+    // Keep coincident markers clustered through the map's maximum zoom (15).
+    // They stay clickable as a member list instead of becoming stacked icons.
+    clusterMaxZoom: 15,
+    maxzoom: 16,
   };
-  layers.push({
-    id: 'clusters',
-    type: 'circle',
-    source: 'points',
-    filter: ['has', 'point_count'],
-    paint: {
-      'circle-color': '#376c5c',
-      'circle-radius': ['step', ['get', 'point_count'], 17, 100, 22, 1000, 27],
-      'circle-stroke-color': '#fffdf7',
-      'circle-stroke-width': 2,
+  layers.push(
+    {
+      id: 'visited-clusters',
+      type: 'symbol',
+      source: 'visited-markers',
+      filter: ['has', 'point_count'],
+      layout: {
+        'icon-image': ['concat', 'visited-cluster-', ['to-string', ['get', 'point_count']]],
+        'icon-allow-overlap': true,
+        'icon-ignore-placement': true,
+      },
     },
-  });
-  layers.push({
-    id: 'cluster-count',
-    type: 'symbol',
-    source: 'points',
-    filter: ['has', 'point_count'],
-    layout: {
-      'text-field': ['get', 'point_count_abbreviated'],
-      'text-font': ['sans-serif'],
-      'text-size': 12,
+    {
+      id: 'visited-markers',
+      type: 'symbol',
+      source: 'visited-markers',
+      filter: ['!', ['has', 'point_count']],
+      layout: {
+        'icon-image': ['concat', 'visited-', ['get', 'kind']],
+        'icon-allow-overlap': true,
+        'icon-ignore-placement': true,
+      },
     },
-    paint: { 'text-color': '#fff' },
-  });
-  layers.push({
-    id: 'selected-point',
-    type: 'circle',
-    source: 'points',
-    filter: ['==', ['get', 'id'], focused],
-    paint: {
-      'circle-radius': 20,
-      'circle-color': 'transparent',
-      'circle-stroke-color': '#be873d',
-      'circle-stroke-width': 3,
-    },
-  });
-  layers.push({
-    id: 'points',
-    type: 'symbol',
-    source: 'points',
-    filter: ['!', ['has', 'point_count']],
-    layout: { 'icon-image': ['get', 'icon'], 'icon-size': 0.62, 'icon-allow-overlap': false },
-  });
-  layers.push({
-    id: 'point-labels',
-    type: 'symbol',
-    source: 'points',
-    minzoom: 9,
-    filter: ['!', ['has', 'point_count']],
-    layout: {
-      'text-field': ['get', 'name'],
-      'text-font': ['sans-serif'],
-      'text-size': 12,
-      'text-anchor': 'top',
-      'text-offset': [0, 1.5],
-      'text-max-width': 12,
-    },
-    paint: { 'text-color': '#29453a', 'text-halo-color': '#fffdf7', 'text-halo-width': 1.5 },
-  });
+  );
   return { version: 8, sources, layers };
 }

@@ -1,12 +1,25 @@
 {
-  "version": "2026-09-28.1",
-  "regions": 3563,
-  "entries": 31912,
+  "version": "2026-10-03.16",
+  "regions": 3995,
+  "entries": 35897,
   "files": [
     "catalog.json",
     "china.geo.json",
     "world.geo.json",
     "japan.geo.json",
-    "korea.geo.json"
+    "korea.geo.json",
+    "uzbekistan.geo.json",
+    "germany.geo.json",
+    "france.geo.json",
+    "italy.geo.json",
+    "usa.geo.json",
+    "spain.geo.json",
+    "uk.geo.json",
+    "vietnam.geo.json",
+    "indonesia.geo.json",
+    "thailand.geo.json",
+    "malaysia.geo.json",
+    "singapore.geo.json",
+    "brunei.geo.json"
   ]
 }

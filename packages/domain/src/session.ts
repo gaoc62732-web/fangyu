@@ -1,15 +1,18 @@
 import {
   emptySnapshot,
   snapshotSchema,
+  stadiumExperienceSchema,
   VISIT_LABELS,
   VISIT_RANK,
   type CatalogEntry,
   type RecordSnapshot,
   type Region,
   type Scope,
+  type StadiumExperience,
   type VisitState,
 } from '@fangyu/contracts';
 import { CatalogIndex } from '@fangyu/catalog';
+import { acceptsCatalogVersion } from './heritage.js';
 
 export interface EntryView extends CatalogEntry {
   checked: boolean;
@@ -49,7 +52,7 @@ export class HandbookSession {
 
   validate(input: unknown): RecordSnapshot {
     const snapshot = snapshotSchema.parse(input);
-    if (snapshot.catalogVersion !== this.index.catalog.version) {
+    if (!acceptsCatalogVersion(this.index.catalog, snapshot.catalogVersion)) {
       throw Error('存档与当前目录版本不同。开发版不支持旧格式迁移。');
     }
 
@@ -69,18 +72,27 @@ export class HandbookSession {
     const records = new Map(
       [...entries.values()].map((entry) => [entry.recordId, entries.get(entry.recordId) || entry]),
     );
+    const stadiumRecordIds = new Set(
+      [...entries.values()]
+        .filter((entry) => entry.categoryId === 'football-stadium')
+        .map((entry) => entry.recordId),
+    );
     for (const id of Object.keys(snapshot.regions)) {
       if (!this.index.regions.has(id)) throw Error('存档中存在未知地区：' + id);
     }
     for (const [id, record] of Object.entries(snapshot.entries)) {
       const entry = records.get(id);
       if (!entry) throw Error('存档中存在未知项目：' + id);
+      if (record.stadiumExperiences !== undefined && !stadiumRecordIds.has(id)) {
+        throw Error('非球场项目不能包含球场体验记录。');
+      }
       if (
         record.subitemIds.some((subitemId) => !entry.subitems.some((item) => item.id === subitemId))
       ) {
         throw Error('存档中存在未知组成项目。');
       }
     }
+    snapshot.catalogVersion = this.index.catalog.version;
     return snapshot;
   }
 
@@ -110,8 +122,29 @@ export class HandbookSession {
     this.state = previous;
   }
 
-  visitState(regionId: string): VisitState {
+  /** The saved manual/legacy value, without county residence aggregation. */
+  recordedVisitState(regionId: string): VisitState {
     return this.state.regions[regionId] || 'unvisited';
+  }
+
+  visitState(regionId: string): VisitState {
+    let effective = this.recordedVisitState(regionId);
+    const region = this.index.regions.get(regionId);
+    // County residence describes residence in its immediate Chinese prefecture too.
+    // Derive it on read: clearing/moving a county record restores the parent's own state.
+    // Do not recurse, infer province residence, or persist over a manually chosen parent state.
+    if (region?.scope === 'china' && region.level === 1) {
+      for (const child of this.index.children.get(regionId) || []) {
+        if (child.scope !== 'china' || child.level !== 2) continue;
+        const state = this.recordedVisitState(child.id);
+        if (
+          (state === 'shortstay' || state === 'resident') &&
+          VISIT_RANK[state] > VISIT_RANK[effective]
+        )
+          effective = state;
+      }
+    }
+    return effective;
   }
 
   hasExplicitState(regionId: string): boolean {
@@ -139,7 +172,21 @@ export class HandbookSession {
   }
 
   private markAncestors(regionId: string): void {
+    const origin = this.index.regions.get(regionId);
+    const countyParent =
+      origin?.scope === 'china' && origin.level === 2 && origin.parentId
+        ? this.index.regions.get(origin.parentId)
+        : undefined;
     for (const region of this.index.ancestors(regionId)) {
+      // A county downgrade to ordinary arrival must not erase a saved prefecture choice.
+      // Legacy saved arrivals cannot be distinguished from manual ones, so retain them too.
+      if (
+        region.id === countyParent?.id &&
+        region.scope === 'china' &&
+        region.level === 1 &&
+        this.hasExplicitState(region.id)
+      )
+        continue;
       if (!this.arrived(region.id)) this.state.regions[region.id] = 'arrived';
     }
   }
@@ -191,6 +238,30 @@ export class HandbookSession {
     record.visited = visited;
     if (!visited) record.subitemIds = [];
     if (visited) this.markEntryRegions(entry, selectedRegionId);
+  }
+
+  private stadiumEntry(entryId: string, type: StadiumExperience): CatalogEntry {
+    if (!stadiumExperienceSchema.safeParse(type).success) throw Error('未知球场体验类型。');
+    const entry = this.entry(entryId);
+    if (entry.categoryId !== 'football-stadium') throw Error('该项目不是足球场。');
+    return entry;
+  }
+
+  stadiumExperience(entryId: string, type: StadiumExperience): boolean {
+    const entry = this.stadiumEntry(entryId, type);
+    return this.state.entries[entry.recordId]?.stadiumExperiences?.includes(type) || false;
+  }
+
+  markStadiumExperience(entryId: string, type: StadiumExperience, checked: boolean): void {
+    const entry = this.stadiumEntry(entryId, type);
+    if (typeof checked !== 'boolean') throw Error('无效球场体验状态。');
+    const record = this.record(entry);
+    const experiences = new Set(record.stadiumExperiences || []);
+    if (checked) experiences.add(type);
+    else experiences.delete(type);
+    record.stadiumExperiences = [...experiences];
+    this.state.version = 2;
+    // Experiences do not imply an arrival, a generic visit or another experience.
   }
 
   markSubitem(

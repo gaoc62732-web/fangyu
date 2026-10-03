@@ -1,5 +1,5 @@
 import type { Scope } from '@fangyu/contracts';
-import type { Bounds } from '../../app/workspace.js';
+export type Bounds = [number, number, number, number];
 export interface MapDataManifest {
   version: string;
   scopes: Record<
@@ -13,13 +13,15 @@ export interface MapDataManifest {
   >;
 }
 export interface BasemapProvider {
+  kind: BasemapKind;
   id: string;
   name: string;
   attribution: string;
   tiles: string[];
   labels: string[];
 }
-export function tianditu(key: string): BasemapProvider | null {
+export type BasemapKind = 'vector' | 'satellite';
+export function tianditu(key: string, kind: BasemapKind = 'vector'): BasemapProvider | null {
   if (!/^[a-zA-Z0-9_-]{10,}$/.test(key)) return null;
   const url = (layer: string) =>
     'https://t0.tianditu.gov.cn/DataServer?T=' +
@@ -28,10 +30,11 @@ export function tianditu(key: string): BasemapProvider | null {
     encodeURIComponent(key);
   return {
     id: 'tianditu',
-    name: '天地图',
+    kind,
+    name: kind === 'satellite' ? '天地图卫星图' : '天地图政区图',
     attribution: '<a href="https://www.tianditu.gov.cn/" target="_blank">天地图</a>',
-    tiles: [url('vec')],
-    labels: [url('cva')],
+    tiles: [url(kind === 'satellite' ? 'img' : 'vec')],
+    labels: [url(kind === 'satellite' ? 'cia' : 'cva')],
   };
 }
 

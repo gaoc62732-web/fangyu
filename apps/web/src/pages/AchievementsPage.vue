@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { computed, onActivated, onDeactivated, ref, shallowRef, watch } from 'vue';
+import { computed, onActivated, onDeactivated, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { achievementChronology } from '@fangyu/domain';
 import type { AchievementProgress, quantityProgress, maofenProgress } from '@fangyu/domain';
+import { AchievementWorker } from '../features/achievements/client.js';
 import { useAppStore } from '../app/store.js';
 import {
   SERIES,
@@ -24,7 +26,11 @@ type Summary = {
 };
 const store = useAppStore(),
   router = useRouter();
-const series = ref(localStorage.getItem('fangyu-achievement-series') || 'quantity');
+const worker = new AchievementWorker(store.session!.index.catalog, store.session!.snapshot());
+const series = ref('quantity');
+try {
+  series.value = localStorage.getItem('fangyu-achievement-series') || 'quantity';
+} catch {}
 if (!SERIES.some((s) => s[0] === series.value)) series.value = 'quantity';
 const world = ref('world-atlas'),
   province = ref(''),
@@ -130,10 +136,10 @@ async function loadDetail() {
   const ticket = ++detailSerial;
   if (!selected.value) return;
   try {
-    const result = await store.worker!.request<AchievementProgress>('achievement', selected.value);
+    const result = await worker.request<AchievementProgress>('achievement', selected.value);
     if (ticket === detailSerial) detail.value = result;
   } catch (cause) {
-    error.value = String(cause);
+    if (ticket === detailSerial) error.value = String(cause);
   }
 }
 function open(id: string) {
@@ -148,8 +154,8 @@ function locate(id: string) {
   const region = store.session!.index.regions.get(id);
   if (region)
     void router.push({
-      path: '/map',
-      query: { scope: region.scope, region: id, from: 'achievements' },
+      path: '/' + region.scope,
+      query: { region: id, from: 'achievements' },
     });
 }
 function safeUrl(source: string | { title: string; url: string }) {
@@ -192,14 +198,16 @@ watch(
     const ticket = ++revisionSerial;
     if (!active.value) return;
     busy.value = true;
+    error.value = '';
     try {
-      const result = await store.worker!.request<Summary>('achievements');
+      await worker.request('sync', store.session!.snapshot());
+      const result = await worker.request<Summary>('achievements');
       if (ticket === revisionSerial) {
         summary.value = result;
         if (selected.value) void loadDetail();
       }
     } catch (cause) {
-      error.value = String(cause);
+      if (ticket === revisionSerial) error.value = String(cause);
     } finally {
       if (ticket === revisionSerial) busy.value = false;
     }
@@ -216,10 +224,18 @@ watch(series, () => {
 });
 watch([targetQuery, targetStatus], () => (targetPage.value = 0));
 onActivated(() => (active.value = true));
-onDeactivated(() => (active.value = false));
+onDeactivated(() => {
+  active.value = false;
+  detailSerial++;
+});
+onBeforeUnmount(() => {
+  revisionSerial++;
+  detailSerial++;
+  worker.destroy();
+});
 </script>
 <template>
-  <div class="achievements-page">
+  <div class="achievements-page achievement-ui">
     <header class="page-heading split-heading">
       <div>
         <span class="eyebrow">把走过的地方，收藏成章</span>
@@ -412,6 +428,13 @@ onDeactivated(() => (active.value = false));
               </option>
             </select>
           </div>
+          <p
+            v-if="series === 'history'"
+            class="note"
+            data-history-order="chronological"
+          >
+            按历史主题年代由早到晚：传说单列在前；区间先比起年、再比止年，同年代保留目录顺序；年代待核置后。朝代范围不代表每个目标的确切年代。
+          </p>
           <VirtualGrid
             v-if="visible.length"
             :key="gridKey"
@@ -431,6 +454,11 @@ onDeactivated(() => (active.value = false));
                 :lit="b.lit"
                 :region="regionStyle(b)"
               /><strong>{{ b.title }}</strong
+              ><small
+                v-if="b.section === 'history'"
+                :title="achievementChronology(b)?.basis"
+                class="achievement-chronology"
+                >{{ achievementChronology(b)?.label }}</small
               ><span
                 >{{ b.count }} / {{ b.total }} <small>{{ badgeStatus(b) }}</small></span
               ><progress
@@ -536,6 +564,7 @@ onDeactivated(() => (active.value = false));
       @close="
         selected = '';
         detail = undefined;
+        detailSerial++;
       "
       ><template v-if="detail"
         ><p class="detail-progress">
@@ -543,6 +572,27 @@ onDeactivated(() => (active.value = false));
           }}<span v-if="detail.next"> · 下一级 {{ detail.next }}</span>
         </p>
         <p>{{ detail.note }}</p>
+        <section
+          v-if="achievementChronology(detail)"
+          class="chronology-detail"
+          aria-label="历史年代依据"
+        >
+          <strong>{{ achievementChronology(detail)?.label }}</strong>
+          <p>{{ achievementChronology(detail)?.basis }}</p>
+          <ul v-if="achievementChronology(detail)?.sources.length">
+            <li
+              v-for="source in achievementChronology(detail)?.sources"
+              :key="source.url"
+            >
+              <a
+                :href="source.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                >{{ source.title }}</a
+              >
+            </li>
+          </ul>
+        </section>
         <p
           v-for="p in detail.pending"
           :key="p"
@@ -575,6 +625,12 @@ onDeactivated(() => (active.value = false));
             <option value="todo">未完成</option></select
           ><button @click="targetsCsv">导出目标</button>
         </div>
+        <p
+          v-if="!targets.length"
+          class="empty-state"
+        >
+          没有符合筛选的目标。
+        </p>
         <div class="achievement-targets">
           <div
             v-for="(t, i) in targets.slice(targetPage * 60, (targetPage + 1) * 60)"
@@ -624,3 +680,5 @@ onDeactivated(() => (active.value = false));
     >
   </div>
 </template>
+
+<style src="../features/achievements/achievements.css"></style>

@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-03",
+  "catalogVersion": "2026-10-03.15",
+  "catalogSha256": "24dc99d789cebb248273c4f34d726b601d8fd8b0ff7116ceed23e00edd1dacad",
+  "scope": "Only four requested additions to existing chancellor achievement; no catalog/application mutation.",
+  "achievementBaseline": {
+    "id": "theme-chancellor",
+    "title": "丞相祠堂",
+    "need": 4,
+    "targetLabels": [
+      "襄阳市",
+      "南阳市",
+      "成都市",
+      "汉中市"
+    ],
+    "note": "按用户给定四市，任一所辖县区到访即可；不是以武侯祠内容项勾选为条件。",
+    "existingTargetCount": 4
+  },
+  "recommendedAchievementUpdate": {
+    "preserveId": "theme-chancellor",
+    "preserveExistingFourTargets": true,
+    "appendTargetCount": 4,
+    "need": 8,
+    "conditionSemantics": "保持已有行政区到访口径；新四地精确按用户县区，不扩大为宝鸡/保山/陇南/重庆全域。",
+    "suggestedNote": "原四市任一所辖县区到访，加眉县、隆阳区、礼县、奉节县各自到访；不是以祠庙内容项勾选为条件。眉县关联具体祠庙尚待核，不能把岐山县五丈原庙标作眉县。"
+  },
+  "summary": {
+    "requestedRegions": 4,
+    "regionMappingsResolved": 4,
+    "verifiedTempleIdentities": 3,
+    "unresolvedTempleIdentities": 1,
+    "verifiedCoordinates": 0,
+    "newEntriesRequiredForAchievement": 0,
+    "existingExactTempleRecords": 0
+  },
+  "idPolicy": {
+    "optionalEntry": "UUIDv5 URL namespace of urn:fangyu:chengxiang-temple:CN:<regionCode>; proposal only, not inserted",
+    "achievementTarget": "current contract has no per-target ID; targetKey is research-only stable identity, actual mapping uses existing region UUID"
+  },
+  "rows": [
+    {
+      "sourceId": "chengxiang-temple:CN:610326",
+      "requestedLocation": "陕西眉县",
+      "regionName": "眉县",
+      "regionCode": "610326",
+      "regionId": "48e887fb-1bcc-5b81-a141-a0f60c2ffc67",
+      "achievementId": "theme-chancellor",
+      "targetKey": "theme-chancellor:region:610326",
+      "recommendedAchievementTarget": {
+        "label": "眉县",
+        "regionIds": [
+          "48e887fb-1bcc-5b81-a141-a0f60c2ffc67"
+        ],
+        "condition": {
+          "mode": "any",
+          "regionIds": [
+            "48e887fb-1bcc-5b81-a141-a0f60c2ffc67"
+          ]
+        }
+      },
+      "templeIdentityStatus": "unresolved-within-requested-county",
+      "name": null,
+      "address": null,
+      "coordinates": null,
+      "coordinateStatus": "not-verified-no-placeholder",
+      "sourceIds": [
+        "caijiapo-wuzhangyuan",
+        "qishan-overview",
+        "shaanxi-shitouhe-gazetteer"
+      ],
+      "existingExactTempleRecordId": null,
+      "relatedExistingEntries": [],
+      "optionalFutureEntryProposal": null,
+      "decision": "append-requested-region-target-only; retain-county; temple-identity-pending",
+      "unresolvedReason": "本轮查“眉县 武侯祠/诸葛亮庙/孔明庙”及眉县政府线索，未获眉县内具体祠庙的官方明证。常被联想到的五丈原诸葛亮庙官方归岐山县；不擅改用户眉县，不虚构眉县武侯祠。",
+      "rejectedSubstitution": {
+        "name": "五丈原诸葛亮庙",
+        "officialRegion": "岐山县",
+        "regionId": "8bc96277-a3ca-5db9-a2a1-9f2f7481ef99",
+        "reason": "outside-requested-county"
+      }
+    },
+    {
+      "sourceId": "chengxiang-temple:CN:530502",
+      "requestedLocation": "云南保山市隆阳区",
+      "regionName": "隆阳区",
+      "regionCode": "530502",
+      "regionId": "b01b2c54-3f87-5595-ae83-17796544c77a",
+      "achievementId": "theme-chancellor",
+      "targetKey": "theme-chancellor:region:530502",
+      "recommendedAchievementTarget": {
+        "label": "隆阳区",
+        "regionIds": [
+          "b01b2c54-3f87-5595-ae83-17796544c77a"
+        ],
+        "condition": {
+          "mode": "any",
+          "regionIds": [
+            "b01b2c54-3f87-5595-ae83-17796544c77a"
+          ]
+        }
+      },
+      "templeIdentityStatus": "verified",
+      "name": "太保山武侯祠",
+      "address": "保山市隆阳区九隆街道太保社区太保公园内",
+      "coordinates": null,
+      "coordinateStatus": "not-verified-no-placeholder",
+      "sourceIds": [
+        "longyang-wenlv-20250925"
+      ],
+      "existingExactTempleRecordId": null,
+      "relatedExistingEntries": [],
+      "optionalFutureEntryProposal": {
+        "sourceKey": "chengxiang-temple:CN:530502",
+        "entryId": "5fb39fb8-6a55-505a-a3e3-764a0ed9b6c8",
+        "recordId": "5fb39fb8-6a55-505a-a3e3-764a0ed9b6c8",
+        "name": "太保山武侯祠",
+        "regionIds": [
+          "b01b2c54-3f87-5595-ae83-17796544c77a"
+        ],
+        "coordinates": null,
+        "categoryId": null,
+        "applyNow": false,
+        "note": "成就按行政区到访计算，无需新建场所记录。本ID仅为未来独立专题场所的确定性建议；不得未经等级核实塞入全国重点文物保护单位分类。"
+      },
+      "decision": "append-requested-region-target; retain-temple-evidence-without-automatic-entry-creation"
+    },
+    {
+      "sourceId": "chengxiang-temple:CN:621226",
+      "requestedLocation": "甘肃礼县",
+      "regionName": "礼县",
+      "regionCode": "621226",
+      "regionId": "a49a0f80-df06-5e51-a5ff-8fa94a819314",
+      "achievementId": "theme-chancellor",
+      "targetKey": "theme-chancellor:region:621226",
+      "recommendedAchievementTarget": {
+        "label": "礼县",
+        "regionIds": [
+          "a49a0f80-df06-5e51-a5ff-8fa94a819314"
+        ],
+        "condition": {
+          "mode": "any",
+          "regionIds": [
+            "a49a0f80-df06-5e51-a5ff-8fa94a819314"
+          ]
+        }
+      },
+      "templeIdentityStatus": "verified",
+      "name": "祁山武侯祠",
+      "address": "陇南市礼县祁山镇祁山村祁山堡（景区登记地址：一组193号）",
+      "coordinates": null,
+      "coordinateStatus": "not-verified-no-placeholder",
+      "sourceIds": [
+        "gansu-scenic-20240630",
+        "gansu-qishan-20241210"
+      ],
+      "existingExactTempleRecordId": null,
+      "relatedExistingEntries": [],
+      "optionalFutureEntryProposal": {
+        "sourceKey": "chengxiang-temple:CN:621226",
+        "entryId": "a9659daa-b155-5a9f-9e20-663abf1c7d5e",
+        "recordId": "a9659daa-b155-5a9f-9e20-663abf1c7d5e",
+        "name": "祁山武侯祠",
+        "regionIds": [
+          "a49a0f80-df06-5e51-a5ff-8fa94a819314"
+        ],
+        "coordinates": null,
+        "categoryId": null,
+        "applyNow": false,
+        "note": "成就按行政区到访计算，无需新建场所记录。本ID仅为未来独立专题场所的确定性建议；不得未经等级核实塞入全国重点文物保护单位分类。"
+      },
+      "decision": "append-requested-region-target; retain-temple-evidence-without-automatic-entry-creation"
+    },
+    {
+      "sourceId": "chengxiang-temple:CN:500236",
+      "requestedLocation": "重庆奉节",
+      "regionName": "奉节县",
+      "regionCode": "500236",
+      "regionId": "8ac5c202-6e80-50df-a14b-f634471e8549",
+      "achievementId": "theme-chancellor",
+      "targetKey": "theme-chancellor:region:500236",
+      "recommendedAchievementTarget": {
+        "label": "奉节县",
+        "regionIds": [
+          "8ac5c202-6e80-50df-a14b-f634471e8549"
+        ],
+        "condition": {
+          "mode": "any",
+          "regionIds": [
+            "8ac5c202-6e80-50df-a14b-f634471e8549"
+          ]
+        }
+      },
+      "templeIdentityStatus": "verified",
+      "name": "白帝城武侯祠",
+      "address": "重庆市奉节县白帝城古建筑群，白帝庙内",
+      "coordinates": null,
+      "coordinateStatus": "not-verified-no-placeholder",
+      "sourceIds": [
+        "cq-baidi-2022",
+        "cq-baidi-2024"
+      ],
+      "existingExactTempleRecordId": null,
+      "relatedExistingEntries": [
+        {
+          "id": "e88fdf8f-5679-538a-af8b-9bd6b370559d",
+          "recordId": "e88fdf8f-5679-538a-af8b-9bd6b370559d",
+          "name": "白帝城•瞿塘峡景区",
+          "relationship": "broader-enclosing-site-not-identical-temple"
+        },
+        {
+          "id": "0ae7110a-8dbf-54c3-aaa9-917ce45f8d2d",
+          "recordId": "0ae7110a-8dbf-54c3-aaa9-917ce45f8d2d",
+          "name": "奉节县白帝城博物馆",
+          "relationship": "broader-enclosing-site-not-identical-temple"
+        },
+        {
+          "id": "573a05c7-f396-5b74-a7c3-af6079e61bb4",
+          "recordId": "573a05c7-f396-5b74-a7c3-af6079e61bb4",
+          "name": "白帝城",
+          "relationship": "broader-enclosing-site-not-identical-temple"
+        },
+        {
+          "id": "789dbf1a-db48-59c2-a8da-ad8a694ab351",
+          "recordId": "789dbf1a-db48-59c2-a8da-ad8a694ab351",
+          "name": "白帝城遗址",
+          "relationship": "broader-enclosing-site-not-identical-temple"
+        }
+      ],
+      "optionalFutureEntryProposal": {
+        "sourceKey": "chengxiang-temple:CN:500236",
+        "entryId": "4f195e9f-34c4-5aa5-99df-c0340a10414c",
+        "recordId": "4f195e9f-34c4-5aa5-99df-c0340a10414c",
+        "name": "白帝城武侯祠",
+        "regionIds": [
+          "8ac5c202-6e80-50df-a14b-f634471e8549"
+        ],
+        "coordinates": null,
+        "categoryId": null,
+        "applyNow": false,
+        "note": "成就按行政区到访计算，无需新建场所记录。本ID仅为未来独立专题场所的确定性建议；不得未经等级核实塞入全国重点文物保护单位分类。"
+      },
+      "decision": "append-requested-region-target; retain-temple-evidence-without-automatic-entry-creation",
+      "deduplicationNote": "目录已有白帝城、白帝城遗址、白帝城博物馆及白帝城•瞿塘峡景区，均为更大范围；未发现独立武侯祠 entry/subitem，不能共享父record或自动承接其到访。当前建议仅加县区成就target，避免重复造景点。"
+    }
+  ],
+  "sources": [
+    {
+      "id": "longyang-wenlv-20250925",
+      "url": "https://www.longyang.gov.cn/info/17045/14035599.htm",
+      "title": "隆阳区文化和旅游局关于社会力量参与文物保护利用认领认养的公告",
+      "authority": "隆阳区文化和旅游局",
+      "publishedAt": "2025-09-25",
+      "access": "full-page-read",
+      "supports": "太保山武侯祠名称、隆阳区九隆街道太保社区太保公园归属；为纪念诸葛亮的院落；仅市级文保，不是全国重点文物保护单位。"
+    },
+    {
+      "id": "gansu-scenic-20240630",
+      "url": "https://ydyl.gansu.gov.cn/gsydyl/gjjl/szsl/202407/t20240716_21279.html",
+      "title": "甘肃省A级旅游景区名录（截至2024年6月30日）",
+      "authority": "甘肃一带一路网，来源甘肃省文化和旅游厅",
+      "publishedAt": "2024-07-16",
+      "access": "full-page-read-and-indexed-row",
+      "supports": "礼县祁山武侯祠旅游景区的具名地址为礼县祁山镇祁山村一组193号；是景区地址而非精确祠庙坐标。"
+    },
+    {
+      "id": "gansu-qishan-20241210",
+      "url": "https://www.gswbj.gov.cn/a/2024/12/10/23535.html",
+      "title": "陇南礼县：深挖秦汉文化 推动文旅新发展",
+      "authority": "甘肃省文博局政府门户转载中国甘肃网",
+      "publishedAt": "2024-12-10",
+      "access": "full-page-read",
+      "supports": "诸葛亮纪念武侯祠位于礼县祁山堡上；祠庙与新建三国文化产业园不是同一范围。"
+    },
+    {
+      "id": "cq-baidi-2022",
+      "url": "https://cgj.cq.gov.cn/rdzt/ylsmypcswm/202207/t20220715_10923423.html",
+      "title": "历史名园｜白帝城：流淌千年的烽烟与诗情",
+      "authority": "重庆市城市管理局",
+      "publishedAt": "2022-07-15",
+      "access": "search-index-full-article-excerpt; direct-open-error",
+      "supports": "白帝城位于奉节县；白帝庙内有武侯祠、明良殿、观星亭。"
+    },
+    {
+      "id": "cq-baidi-2024",
+      "url": "https://admin.cq.gov.cn/zwgk/zfxxgkml/zdlyxxgk/ggwh/wh/zxdt/202408/t20240826_13556530.html",
+      "title": "建设长江国家文化公园 重庆又有新动作",
+      "authority": "重庆市人民政府网",
+      "publishedAt": "2024-05-31",
+      "access": "full-page-read",
+      "supports": "奉节章节明确白帝城古建筑群内含武侯祠；不能把整个白帝城旧到访自动等同武侯祠到访。"
+    },
+    {
+      "id": "caijiapo-wuzhangyuan",
+      "url": "https://cjp.baoji.gov.cn/col3866/col3880/200810/t20081027_710024.html",
+      "title": "五丈原诸葛亮庙风景名胜区",
+      "authority": "蔡家坡经济技术开发区管理委员会",
+      "publishedAt": "2008-10-27",
+      "access": "full-page-read",
+      "supports": "五丈原诸葛亮庙在蔡家坡经开区；不能据此登记为眉县。"
+    },
+    {
+      "id": "qishan-overview",
+      "url": "https://qs.baojidj.gov.cn/lxwm/qsgk.htm",
+      "title": "岐山概况",
+      "authority": "中共岐山县委组织部",
+      "access": "full-page-read",
+      "supports": "岐山县辖蔡家坡经开区并列诸葛亮庙景区；眉县是相邻县，不能替换用户所列县。"
+    },
+    {
+      "id": "shaanxi-shitouhe-gazetteer",
+      "url": "https://dfz.shaanxi.gov.cn/zslm/fzzlk/dqcs/201706/P020240924620705890775.pdf",
+      "title": "石头河水库志：第一章地理环境，武侯祠",
+      "authority": "陕西省地方志办公室数字方志",
+      "access": "indexed-pdf-excerpt",
+      "supports": "武侯祠明确位于岐山县五丈原；佐证误配排除，非眉县独立祠庙证据。"
+    }
+  ],
+  "limitations": [
+    "行政区到访成就不证明实地参拜祠庙。",
+    "所有坐标均null；本轮身份资料无可验证寺庙坐标，不用县城中心/公园中心替代。",
+    "仅三个具体场所身份已核；不得把眉县未查明写作不存在。",
+    "不创建全国/省市级文保分类数据，不修改目录、应用或用户记录。"
+  ]
+}

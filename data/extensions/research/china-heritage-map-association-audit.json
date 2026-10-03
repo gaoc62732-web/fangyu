@@ -1,0 +1,2538 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-03T07:28:59.835557+00:00",
+  "scope": "Bounded local source audit only; no user records or private settings read; no catalog mutation.",
+  "catalog": {
+    "path": "data/catalog/catalog.json",
+    "sha256": "24dc99d789cebb248273c4f34d726b601d8fd8b0ff7116ceed23e00edd1dacad",
+    "version": "2026-10-03.15"
+  },
+  "summary": {
+    "chinaHeritageEntryCount": 245,
+    "chinaDistinctNames": 61,
+    "chinaFieldsPopulated": {
+      "code": 0,
+      "source": 0,
+      "coordinates": 0,
+      "aliases": 0,
+      "description": 0,
+      "metadata": 0
+    },
+    "worldChinaHeritageParentCount": 61,
+    "worldChinaHeritageParentsWithCoordinates": 60,
+    "sharedRecordIdCount": 0,
+    "acceptedAssociationCount": 0,
+    "unresolvedChinaEntries": 245,
+    "originalChinaRowsDeepEqualAtRefactor": true
+  },
+  "evidence": {
+    "refactorBaseline": "270220d:data/catalog/catalog.json",
+    "legacyStaticPayloads": [
+      {
+        "revision": "ec806b5b3e8ce2768c38cfa1f1fbc05656293e4e",
+        "path": "地图/方舆旅游手册地图_空白审核版.html",
+        "blobId": "9520a3c3c09f624a6d650cc5ad589750e5db1b7a",
+        "sha256": "628c6a19b4960e7bf2947a0137493c2951a658a02156ccfdd458d9cae3247daa",
+        "inspectedStaticFields": [
+          "payload.nodes[].cells.E",
+          "payload.original.E*",
+          "payload.itemMeta",
+          "payload.world.items"
+        ],
+        "nonemptyHeritageSourceRows": 233,
+        "itemMetaCount": 315,
+        "itemMetaUnescoOrHeritageCount": 0,
+        "worldChineseHeritageOfficialIdCount": 61,
+        "finding": "中国 E 列源只有行号/中文文本；世界 items 的 W:heritage:官方ID:CHN 独立保存，未存跨表稳定键。"
+      },
+      {
+        "revision": "3decac601f17050400f57ad462eaa65d7da113be",
+        "path": "地图/方舆旅游手册地图_空白审核版.html",
+        "blobId": "4d067c9cb1428fd7e66f828c87ca4c5662bcba58",
+        "sha256": "ada05d019d22e3ac9ea997390d1d86332c360915cac972f1d2a9df8761ee5e04",
+        "inspectedStaticFields": [
+          "payload.nodes[].cells.E",
+          "payload.original.E*",
+          "payload.itemMeta",
+          "payload.world.items"
+        ],
+        "nonemptyHeritageSourceRows": 233,
+        "itemMetaCount": 315,
+        "itemMetaUnescoOrHeritageCount": 0,
+        "worldChineseHeritageOfficialIdCount": 61,
+        "finding": "中国 E 列源只有行号/中文文本；世界 items 的 W:heritage:官方ID:CHN 独立保存，未存跨表稳定键。"
+      }
+    ],
+    "additionalBoundedChecks": [
+      "All-refs Git filename history contains no XLSX/CSV original workbook or China UNESCO crosswalk.",
+      "data/extensions/research/unesco-record-crosswalk.json is same-place component work for other countries; no China original-source ID crosswalk found.",
+      "Current data/references contains ccid-2025.json, no China heritage ID source."
+    ],
+    "exampleOriginalSource": {
+      "field": "payload.nodes[r3].cells.E[0] / payload.original.E3",
+      "value": "#北京和沈阳的明清皇宫[北京故宫]；北京皇家祭坛—天坛；#大运河[通惠河北京旧城段（玉河故道）、澄清中闸（含东不压桥）]；#北京中轴线——中国理想都城秩序的杰作",
+      "limitation": "表格地址E3和行政区code不等于UNESCO项目ID；标题相似/相同不构成此次授权的稳定ID关联。"
+    }
+  },
+  "associations": [],
+  "unresolved": [
+    {
+      "entryId": "452ef8d7-2163-5cc5-ab66-56cb45b2274f",
+      "recordId": "452ef8d7-2163-5cc5-ab66-56cb45b2274f",
+      "name": "北京和沈阳的明清皇宫",
+      "regionIds": [
+        "6ef8072a-ae9c-5be7-a7cf-bd7a1b453315"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3038519d-dbf8-5abd-a14a-44ed3bffdd3f",
+      "recordId": "3038519d-dbf8-5abd-a14a-44ed3bffdd3f",
+      "name": "北京皇家祭坛—天坛",
+      "regionIds": [
+        "6ef8072a-ae9c-5be7-a7cf-bd7a1b453315"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "190fc404-33ff-5300-ac7c-b7d179b72055",
+      "recordId": "190fc404-33ff-5300-ac7c-b7d179b72055",
+      "name": "大运河",
+      "regionIds": [
+        "6ef8072a-ae9c-5be7-a7cf-bd7a1b453315"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e5653a8d-fe5c-51ba-a06e-8470f9541ead",
+      "recordId": "e5653a8d-fe5c-51ba-a06e-8470f9541ead",
+      "name": "北京中轴线——中国理想都城秩序的杰作",
+      "regionIds": [
+        "6ef8072a-ae9c-5be7-a7cf-bd7a1b453315"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3198f045-8fb4-53e4-abf9-7efb87f67c33",
+      "recordId": "3198f045-8fb4-53e4-abf9-7efb87f67c33",
+      "name": "大运河",
+      "regionIds": [
+        "8e8d787b-64b6-5fbf-af08-98d9b8a74a26"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "625c8172-8a3c-58e3-a6ff-3b8d92d2af04",
+      "recordId": "625c8172-8a3c-58e3-a6ff-3b8d92d2af04",
+      "name": "北京中轴线——中国理想都城秩序的杰作",
+      "regionIds": [
+        "8e8d787b-64b6-5fbf-af08-98d9b8a74a26"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9b127b73-42e0-5145-a4a0-f5bae8fd46bd",
+      "recordId": "9b127b73-42e0-5145-a4a0-f5bae8fd46bd",
+      "name": "北京皇家园林—颐和园",
+      "regionIds": [
+        "835dea8b-e159-53f6-ac5b-742b8a1fbd35"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "82c2dd0c-a1f0-595f-afa5-849483c672d0",
+      "recordId": "82c2dd0c-a1f0-595f-afa5-849483c672d0",
+      "name": "周口店北京人遗址",
+      "regionIds": [
+        "b2695110-d1b9-5d96-af1a-6a426d99d427"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "84a518ad-f7a5-5c2a-a565-d0b1770eafc8",
+      "recordId": "84a518ad-f7a5-5c2a-a565-d0b1770eafc8",
+      "name": "大运河",
+      "regionIds": [
+        "f830e6eb-0899-51f5-a7c8-21746701bc28"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "26d1f6e0-2271-59b0-a900-e0e13d1de1d6",
+      "recordId": "26d1f6e0-2271-59b0-a900-e0e13d1de1d6",
+      "name": "明清皇家陵寝",
+      "regionIds": [
+        "ce19e2ed-ce0d-5f9e-aee1-a1afc18ea645"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "0ba4ebd5-5a85-572d-a559-e14e183a44ab",
+      "recordId": "0ba4ebd5-5a85-572d-a559-e14e183a44ab",
+      "name": "长城",
+      "regionIds": [
+        "bc8ff08e-1efe-54d9-a8bc-b02a8246eb26"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f9e8c371-4bf2-5bca-a4da-080dbd43439f",
+      "recordId": "f9e8c371-4bf2-5bca-a4da-080dbd43439f",
+      "name": "大运河",
+      "regionIds": [
+        "01415c4a-697d-5cf9-a4d3-4729685dede3"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "d26196c8-902a-5b22-aa3c-f5ff4cfcd33c",
+      "recordId": "d26196c8-902a-5b22-aa3c-f5ff4cfcd33c",
+      "name": "大运河",
+      "regionIds": [
+        "00064e6b-4117-5b1a-a164-95340cbb04d8"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4fd3cb7b-0690-5bb9-ac9d-de579a22d0f2",
+      "recordId": "4fd3cb7b-0690-5bb9-ac9d-de579a22d0f2",
+      "name": "大运河",
+      "regionIds": [
+        "dfbf8865-01ec-5b59-ae96-f5c06ff75415"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f606ab5e-b6bf-5236-a40c-91d8c6c4055c",
+      "recordId": "f606ab5e-b6bf-5236-a40c-91d8c6c4055c",
+      "name": "大运河",
+      "regionIds": [
+        "57ba262f-30a0-5938-aaf4-d109ff28d274"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e5eacbe6-0ffc-5b1f-a9f2-3029cc3c82a2",
+      "recordId": "e5eacbe6-0ffc-5b1f-a9f2-3029cc3c82a2",
+      "name": "大运河",
+      "regionIds": [
+        "bc71815f-7664-5a6a-ad81-a7cab7497565"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4f0ff982-b21b-5787-aa20-848adf361d67",
+      "recordId": "4f0ff982-b21b-5787-aa20-848adf361d67",
+      "name": "大运河",
+      "regionIds": [
+        "c946a1db-36f4-5044-a7ae-d3521a2b3118"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "0e8bdcb4-3189-56cf-ad11-01ff51a1ffd8",
+      "recordId": "0e8bdcb4-3189-56cf-ad11-01ff51a1ffd8",
+      "name": "明清皇家陵寝",
+      "regionIds": [
+        "d83285cf-f77c-57e1-a172-40386d7642a9"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "bc1a9818-ae34-5be0-afdc-acea67387a38",
+      "recordId": "bc1a9818-ae34-5be0-afdc-acea67387a38",
+      "name": "长城",
+      "regionIds": [
+        "2fdc96aa-8f5a-57ae-a3af-64c4f1c1619c"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "6661b904-34d5-595c-a99c-abd4a730bdf8",
+      "recordId": "6661b904-34d5-595c-a99c-abd4a730bdf8",
+      "name": "明清皇家陵寝",
+      "regionIds": [
+        "7a1ffe1b-97ea-553a-ae6f-5294f94e8bac"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e94aae2a-a420-5996-adaf-2c1c854df94d",
+      "recordId": "e94aae2a-a420-5996-adaf-2c1c854df94d",
+      "name": "承德避暑山庄及周围寺庙",
+      "regionIds": [
+        "323fede9-b497-5eb8-abb8-ed54f51fc476"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3f5fb3dd-fff2-5cbe-aa0e-f65e23e730fa",
+      "recordId": "3f5fb3dd-fff2-5cbe-aa0e-f65e23e730fa",
+      "name": "大运河",
+      "regionIds": [
+        "00ffac29-fef8-5bc3-a9ed-1de8a7026a9e"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "01ea7dbf-084f-5486-afbd-bb7dd109904e",
+      "recordId": "01ea7dbf-084f-5486-afbd-bb7dd109904e",
+      "name": "大运河",
+      "regionIds": [
+        "5bf787a0-3f34-5013-a855-f61aac604672"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "ac96138d-afd7-547b-a10e-d63a920720b2",
+      "recordId": "ac96138d-afd7-547b-a10e-d63a920720b2",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "0aecddfb-4bdc-5568-a1ca-681fce97a449"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f3fae81a-a2d2-5781-aa9a-9dac249ab392",
+      "recordId": "f3fae81a-a2d2-5781-aa9a-9dac249ab392",
+      "name": "大运河",
+      "regionIds": [
+        "442e38d6-c9ef-5b3f-a3b2-9c75cc78499a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "05337beb-b755-5295-a805-9d64b1033b78",
+      "recordId": "05337beb-b755-5295-a805-9d64b1033b78",
+      "name": "大运河",
+      "regionIds": [
+        "ff47fc02-00eb-5d39-a6bb-a1cabfa03d28"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "13499429-e5f2-59b1-a1c1-65169b1bcffc",
+      "recordId": "13499429-e5f2-59b1-a1c1-65169b1bcffc",
+      "name": "云冈石窟",
+      "regionIds": [
+        "2444ff86-b3fc-549a-a052-390e1878b04a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "b6c95e19-5675-53fe-a7c5-f1c64ef67348",
+      "recordId": "b6c95e19-5675-53fe-a7c5-f1c64ef67348",
+      "name": "平遥古城",
+      "regionIds": [
+        "d9d27aad-5bf2-5951-a89b-b06e9b38c4da"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "64fdf477-eb7c-526a-a266-f580f72f5dea",
+      "recordId": "64fdf477-eb7c-526a-a266-f580f72f5dea",
+      "name": "五台山",
+      "regionIds": [
+        "5c918e1c-eb47-580d-a1a3-e5ec674cfce0"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "7a8c841b-162a-5360-afd3-998277a5028c",
+      "recordId": "7a8c841b-162a-5360-afd3-998277a5028c",
+      "name": "五台山",
+      "regionIds": [
+        "823a65e8-cfd1-505e-ae19-d18d050e976b"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8e6d6874-8ee4-50dd-a5f2-aba8d1847a08",
+      "recordId": "8e6d6874-8ee4-50dd-a5f2-aba8d1847a08",
+      "name": "元上都遗址",
+      "regionIds": [
+        "a241d313-f498-5bfb-aefc-0ec3a6e99335"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "2274e88b-08ce-57b4-a7be-3cf56146a0f8",
+      "recordId": "2274e88b-08ce-57b4-a7be-3cf56146a0f8",
+      "name": "元上都遗址",
+      "regionIds": [
+        "d9be1f26-214b-5ca5-ae54-b11654b1a038"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "88b18ce1-e5ec-5cb3-aa2b-e41b89dafc62",
+      "recordId": "88b18ce1-e5ec-5cb3-aa2b-e41b89dafc62",
+      "name": "巴丹吉林沙漠—沙山湖泊群",
+      "regionIds": [
+        "7aefb9b5-fd08-5863-a676-361e3c941900"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e517bb41-9f53-5c28-a849-d020ae97ace2",
+      "recordId": "e517bb41-9f53-5c28-a849-d020ae97ace2",
+      "name": "北京和沈阳的明清皇宫",
+      "regionIds": [
+        "f10d65ce-6db3-5471-a0f8-32aa1f52e0c3"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "5a4fee6d-72ba-5671-acc6-8d7df385b2d1",
+      "recordId": "5a4fee6d-72ba-5671-acc6-8d7df385b2d1",
+      "name": "明清皇家陵寝",
+      "regionIds": [
+        "e790b36f-8c64-577d-a0bf-a65ef922ac3b"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "c989aba6-fe87-59e3-a65d-e47203fea9e9",
+      "recordId": "c989aba6-fe87-59e3-a65d-e47203fea9e9",
+      "name": "明清皇家陵寝",
+      "regionIds": [
+        "17b98e29-e705-5551-a280-f59684a4304c"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f554141f-63f3-5689-a18c-aab6d64dfa57",
+      "recordId": "f554141f-63f3-5689-a18c-aab6d64dfa57",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "76a6af7d-b846-5f36-a980-ae3d769b08a5"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "6a506311-9ad8-52b2-ae96-f92976b42527",
+      "recordId": "6a506311-9ad8-52b2-ae96-f92976b42527",
+      "name": "明清皇家陵寝",
+      "regionIds": [
+        "26423a73-c9be-5c79-acb7-93e318c65bce"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3e600fe2-9999-5b23-a31f-a4024c38c58f",
+      "recordId": "3e600fe2-9999-5b23-a31f-a4024c38c58f",
+      "name": "高句丽王城、王陵及贵族墓葬",
+      "regionIds": [
+        "15176786-6c59-5259-a975-b13628e54974"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f4a57867-f87c-5f3b-ae9a-2c02978c37fb",
+      "recordId": "f4a57867-f87c-5f3b-ae9a-2c02978c37fb",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "729138f5-2497-53d8-af4a-9efcdd0c0843"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "7ad068a9-4eb2-53a8-abe9-1ff7d3f6342f",
+      "recordId": "7ad068a9-4eb2-53a8-abe9-1ff7d3f6342f",
+      "name": "高句丽王城、王陵及贵族墓葬",
+      "regionIds": [
+        "bf9aedd6-334f-5e35-a83c-b74b1aea1138"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "1ca3f764-870c-50c4-a8ed-837132d1bfb9",
+      "recordId": "1ca3f764-870c-50c4-a8ed-837132d1bfb9",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "ae0b8822-17f4-5c81-a4dd-206e3c08d875"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "66e6347d-e1b5-5c83-ab00-633cae4829f2",
+      "recordId": "66e6347d-e1b5-5c83-ab00-633cae4829f2",
+      "name": "明清皇家陵寝",
+      "regionIds": [
+        "188b296a-cd3f-5eed-a395-74469043bddb"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "42922abe-c53d-552b-a99a-fe123213c6a3",
+      "recordId": "42922abe-c53d-552b-a99a-fe123213c6a3",
+      "name": "大运河",
+      "regionIds": [
+        "23c02461-32f8-528a-a865-02e2b1610b4e"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "45ec202a-c3a5-5635-a768-b8d5ff91f20d",
+      "recordId": "45ec202a-c3a5-5635-a768-b8d5ff91f20d",
+      "name": "大运河",
+      "regionIds": [
+        "fe7dad90-c8ff-57f6-a89a-7dea969b584d"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4d7eb801-e6cd-55ea-a2ab-d24a39543719",
+      "recordId": "4d7eb801-e6cd-55ea-a2ab-d24a39543719",
+      "name": "大运河",
+      "regionIds": [
+        "026abaa3-4afb-5f2d-a533-53be605bccf0"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4e1c65ef-fdcb-54aa-a166-989ab94dd5a7",
+      "recordId": "4e1c65ef-fdcb-54aa-a166-989ab94dd5a7",
+      "name": "大运河",
+      "regionIds": [
+        "395913e0-6835-58f9-a0c9-cd6169127089"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "218dc271-e386-5c34-ad5e-f276ea169f0d",
+      "recordId": "218dc271-e386-5c34-ad5e-f276ea169f0d",
+      "name": "大运河",
+      "regionIds": [
+        "74d59c59-cd3e-5c24-a103-b512b319e4ab"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "a226ac35-a11d-57c5-af6e-c6d50a389280",
+      "recordId": "a226ac35-a11d-57c5-af6e-c6d50a389280",
+      "name": "大运河",
+      "regionIds": [
+        "a74c146e-520f-526d-a0de-4d2b86f87efa"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "91627cef-72e9-5949-adad-712a6f54af5a",
+      "recordId": "91627cef-72e9-5949-adad-712a6f54af5a",
+      "name": "大运河",
+      "regionIds": [
+        "555cc9b9-ceae-5d1b-a15a-1410d22f514f"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8079cdf9-8c2e-5f95-a00f-c4779fba8a4a",
+      "recordId": "8079cdf9-8c2e-5f95-a00f-c4779fba8a4a",
+      "name": "苏州古典园林",
+      "regionIds": [
+        "39dcb282-d193-57d0-a633-1a212c25e647"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9812621c-f1b2-57cb-a2a1-b7b0106bb216",
+      "recordId": "9812621c-f1b2-57cb-a2a1-b7b0106bb216",
+      "name": "大运河",
+      "regionIds": [
+        "39dcb282-d193-57d0-a633-1a212c25e647"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "65d1369e-fcfc-5f39-a3ae-fd0f2b42e978",
+      "recordId": "65d1369e-fcfc-5f39-a3ae-fd0f2b42e978",
+      "name": "苏州古典园林",
+      "regionIds": [
+        "65953c02-fbbd-5fdd-ae5c-e0f27161927a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9c68131d-c28d-5ca5-a50f-62a665607120",
+      "recordId": "9c68131d-c28d-5ca5-a50f-62a665607120",
+      "name": "大运河",
+      "regionIds": [
+        "65953c02-fbbd-5fdd-ae5c-e0f27161927a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "cd8fb54f-9760-5791-a6fc-43eada51682c",
+      "recordId": "cd8fb54f-9760-5791-a6fc-43eada51682c",
+      "name": "大运河",
+      "regionIds": [
+        "89920115-578c-542e-a348-a9c7b59a7a5c"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "84c37681-2720-5fc9-a07f-9aea6ab71969",
+      "recordId": "84c37681-2720-5fc9-a07f-9aea6ab71969",
+      "name": "大运河",
+      "regionIds": [
+        "3ef8fec8-ed09-5404-a021-6d82378336a1"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e16bbd07-a9bf-5f94-aaf6-50884e721761",
+      "recordId": "e16bbd07-a9bf-5f94-aaf6-50884e721761",
+      "name": "大运河",
+      "regionIds": [
+        "be23cef6-3479-5a28-a2c9-6718a233dc67"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "dc886ee8-4f02-5619-a5fc-04e1362b8b09",
+      "recordId": "dc886ee8-4f02-5619-a5fc-04e1362b8b09",
+      "name": "大运河",
+      "regionIds": [
+        "5e82398b-9b23-55da-a6ce-e8a56ebf2ffb"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e5cd7b47-9940-5614-a5d9-638aa27d0ecd",
+      "recordId": "e5cd7b47-9940-5614-a5d9-638aa27d0ecd",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "a6fb1f45-c4b3-50aa-a0dd-ea5b93fe9d23"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e2d97660-5df3-57cc-aba2-ae7905b4ef8e",
+      "recordId": "e2d97660-5df3-57cc-aba2-ae7905b4ef8e",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "0649b2b6-d7f8-5ebd-a696-138241613029"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "18ad0fdc-10a5-5213-a275-2c8609990f9e",
+      "recordId": "18ad0fdc-10a5-5213-a275-2c8609990f9e",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "c7c39710-c1f0-53b1-a7a6-a39991b3bfc6"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "79d8b4f9-4d51-5ba6-a4fc-c58680031238",
+      "recordId": "79d8b4f9-4d51-5ba6-a4fc-c58680031238",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "761d0d4e-3e7e-5234-a5e2-c52710ac78d5"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "0e9a82e3-eeb0-5ed4-a557-88bb32d24d9e",
+      "recordId": "0e9a82e3-eeb0-5ed4-a557-88bb32d24d9e",
+      "name": "大运河",
+      "regionIds": [
+        "499a3b11-e87c-58ae-a1a7-115c736ed0ed"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "a7694481-36e9-5fe5-a9e6-9b97f2d2e478",
+      "recordId": "a7694481-36e9-5fe5-a9e6-9b97f2d2e478",
+      "name": "大运河",
+      "regionIds": [
+        "5cc79b7d-2188-5385-a33e-98c97a51d1b8"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "294cbfae-6e94-5d57-ac31-6eed47e3eee8",
+      "recordId": "294cbfae-6e94-5d57-ac31-6eed47e3eee8",
+      "name": "大运河",
+      "regionIds": [
+        "4af5c6c1-48ab-5c45-aca3-a2f0ff1e2f92"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9c9a8108-84e5-5255-a206-13f35c9f0a13",
+      "recordId": "9c9a8108-84e5-5255-a206-13f35c9f0a13",
+      "name": "大运河",
+      "regionIds": [
+        "728d81b5-1136-50f0-a1bb-9dd94a7ac33c"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e3f68ebf-1b78-5342-a21a-8c672f24c94c",
+      "recordId": "e3f68ebf-1b78-5342-a21a-8c672f24c94c",
+      "name": "大运河",
+      "regionIds": [
+        "7cadbbb9-ff53-512e-a405-b4781dd60f91"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "d4e38b59-bd57-5270-a5b4-d2d5afff83f7",
+      "recordId": "d4e38b59-bd57-5270-a5b4-d2d5afff83f7",
+      "name": "大运河",
+      "regionIds": [
+        "2ba98aac-a47b-5f5c-afe6-63ce2fa028a9"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "5f4cbb97-8204-5678-ae47-033492fbce41",
+      "recordId": "5f4cbb97-8204-5678-ae47-033492fbce41",
+      "name": "大运河",
+      "regionIds": [
+        "f22ef971-f31f-5353-a2b7-bd96b6232578"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f7dab404-80bb-5194-a04b-236de84572d8",
+      "recordId": "f7dab404-80bb-5194-a04b-236de84572d8",
+      "name": "杭州西湖文化景观",
+      "regionIds": [
+        "7204612b-83b1-5526-a724-cfecb2158326"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8aa4fa7b-5d25-50ad-aed4-234f93f05d79",
+      "recordId": "8aa4fa7b-5d25-50ad-aed4-234f93f05d79",
+      "name": "大运河",
+      "regionIds": [
+        "7204612b-83b1-5526-a724-cfecb2158326"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "98316442-ea71-55f4-afbc-ff8335a1a586",
+      "recordId": "98316442-ea71-55f4-afbc-ff8335a1a586",
+      "name": "大运河",
+      "regionIds": [
+        "b654406e-f3cb-509c-ab24-72b37f358d02"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3d8d250d-4222-52bc-af24-716efaf37dd1",
+      "recordId": "3d8d250d-4222-52bc-af24-716efaf37dd1",
+      "name": "杭州西湖文化景观",
+      "regionIds": [
+        "139d8172-03eb-5c31-a94b-741ac20f43f8"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "b9777d4a-094f-5129-a85f-27daf3f4023d",
+      "recordId": "b9777d4a-094f-5129-a85f-27daf3f4023d",
+      "name": "大运河",
+      "regionIds": [
+        "f8d5c466-80d9-5b76-ab6b-da03855b7ad4"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e128d081-4854-5914-a9b7-a9b4cc59cdfc",
+      "recordId": "e128d081-4854-5914-a9b7-a9b4cc59cdfc",
+      "name": "大运河",
+      "regionIds": [
+        "06b22a5f-0a18-53ce-a8d4-b519758558cc"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e4b1b287-c4cf-59af-aa98-828d87bb529f",
+      "recordId": "e4b1b287-c4cf-59af-aa98-828d87bb529f",
+      "name": "大运河",
+      "regionIds": [
+        "c4db8f9d-eca0-57e6-a34c-c1a58e27dd9d"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "35af418e-81c1-5057-a686-2577e3dacd61",
+      "recordId": "35af418e-81c1-5057-a686-2577e3dacd61",
+      "name": "良渚古城遗址",
+      "regionIds": [
+        "c4db8f9d-eca0-57e6-a34c-c1a58e27dd9d"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "285276e2-a9c9-5bcf-ab07-311a6a511be8",
+      "recordId": "285276e2-a9c9-5bcf-ab07-311a6a511be8",
+      "name": "大运河",
+      "regionIds": [
+        "a5ebd031-a754-56a9-aa36-54e229e2c9de"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "87d40830-91e9-5c36-a827-30ffdba4c449",
+      "recordId": "87d40830-91e9-5c36-a827-30ffdba4c449",
+      "name": "大运河",
+      "regionIds": [
+        "5b7fe468-53ef-5728-aee9-76948c4d7feb"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f757d584-9906-589b-abc8-5fd851f56118",
+      "recordId": "f757d584-9906-589b-abc8-5fd851f56118",
+      "name": "大运河",
+      "regionIds": [
+        "54bb4531-5536-5c3d-a0bd-cc47b9577362"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "21dc9fb2-08c9-54b3-acd2-63d687493b5a",
+      "recordId": "21dc9fb2-08c9-54b3-acd2-63d687493b5a",
+      "name": "大运河",
+      "regionIds": [
+        "86ae9a1c-0fa3-5d06-abfb-abf44915ebac"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "1413b5ea-a99f-546e-a9a0-acc4e63a1c6b",
+      "recordId": "1413b5ea-a99f-546e-a9a0-acc4e63a1c6b",
+      "name": "大运河",
+      "regionIds": [
+        "b3a92017-78f8-5ada-ae19-05784fcde6e7"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "bbbc42d9-4ef6-5440-ace1-0ef8500f9ce7",
+      "recordId": "bbbc42d9-4ef6-5440-ace1-0ef8500f9ce7",
+      "name": "大运河",
+      "regionIds": [
+        "51b4b2e8-2f6b-5a2d-a94e-bdbacfd68ebc"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "da788b5b-eda1-58a8-a188-a1909be1b32d",
+      "recordId": "da788b5b-eda1-58a8-a188-a1909be1b32d",
+      "name": "大运河",
+      "regionIds": [
+        "5cf953bd-c049-5d6b-a54f-22dab4745b7c"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "b74af930-040a-5c84-acb1-4923e3b8adaa",
+      "recordId": "b74af930-040a-5c84-acb1-4923e3b8adaa",
+      "name": "大运河",
+      "regionIds": [
+        "bc741148-1197-51ca-a122-17154dce01f9"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "051047ab-10be-5ed4-a6ca-2f94e27b9134",
+      "recordId": "051047ab-10be-5ed4-a6ca-2f94e27b9134",
+      "name": "大运河",
+      "regionIds": [
+        "0b3a7897-9ba1-557c-abad-8c39d9623013"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "eeb8cc24-84a5-5c0f-a182-513d2d515f24",
+      "recordId": "eeb8cc24-84a5-5c0f-a182-513d2d515f24",
+      "name": "大运河",
+      "regionIds": [
+        "ace4debe-38b7-5c95-a414-96d191c4c49e"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "6f54816c-36f1-5e80-a3c4-6049c0899120",
+      "recordId": "6f54816c-36f1-5e80-a3c4-6049c0899120",
+      "name": "大运河",
+      "regionIds": [
+        "09db28f5-6069-5171-a5a5-9a746e44ab8b"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4fb72c49-5a3d-5e6e-a02a-d77ef11498e0",
+      "recordId": "4fb72c49-5a3d-5e6e-a02a-d77ef11498e0",
+      "name": "大运河",
+      "regionIds": [
+        "e1b450e9-15c4-5146-ab91-c2967b388ace"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "d6293014-ab87-545e-adf7-5370ce9d46d5",
+      "recordId": "d6293014-ab87-545e-adf7-5370ce9d46d5",
+      "name": "大运河",
+      "regionIds": [
+        "74b4c03c-08d5-58c0-a9c6-7c48aed23bb5"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "b3776bd0-3482-54d1-acba-d818760c638c",
+      "recordId": "b3776bd0-3482-54d1-acba-d818760c638c",
+      "name": "大运河",
+      "regionIds": [
+        "9401662e-38cd-5b05-a8ef-d97b7b13a38e"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3cb46e50-5c6d-5bc6-a8e2-01ff8b00cb84",
+      "recordId": "3cb46e50-5c6d-5bc6-a8e2-01ff8b00cb84",
+      "name": "大运河",
+      "regionIds": [
+        "bf40e6c0-3435-5200-aca8-cd8354c02d65"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "1ee51af9-8135-52d5-ad46-11772d6637d3",
+      "recordId": "1ee51af9-8135-52d5-ad46-11772d6637d3",
+      "name": "中国丹霞",
+      "regionIds": [
+        "7c63529f-ce2b-56d6-ac6b-7f8a6a64f1f4"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "00d30c18-be03-5304-a178-cef30b167a51",
+      "recordId": "00d30c18-be03-5304-a178-cef30b167a51",
+      "name": "大运河",
+      "regionIds": [
+        "cd75683c-1f00-5b58-ad00-187b5745db99"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "b2803024-17c4-52f1-acc1-aaae1c53ae77",
+      "recordId": "b2803024-17c4-52f1-acc1-aaae1c53ae77",
+      "name": "黄山",
+      "regionIds": [
+        "e22e35cb-6fa9-5812-acf2-3b2903205eda"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9e32a7e4-d37f-5422-ad5a-e72b5390e14f",
+      "recordId": "9e32a7e4-d37f-5422-ad5a-e72b5390e14f",
+      "name": "皖南古村落—西递、宏村",
+      "regionIds": [
+        "f3f67662-1ae2-5f10-a4d6-17f16c107137"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "a3bed302-1f16-5a49-a082-ec941887c73e",
+      "recordId": "a3bed302-1f16-5a49-a082-ec941887c73e",
+      "name": "大运河",
+      "regionIds": [
+        "9f1dd05e-01c3-54f3-a9e4-54b2d797f752"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "6363173b-99e8-52e0-a0bc-95fb6d34d60a",
+      "recordId": "6363173b-99e8-52e0-a0bc-95fb6d34d60a",
+      "name": "鼓浪屿：历史国际社区",
+      "regionIds": [
+        "edc9ec2b-cb88-5eae-a58d-b3766f1b5201"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "697b6b43-7be0-5646-a572-b8eecdeb3ced",
+      "recordId": "697b6b43-7be0-5646-a572-b8eecdeb3ced",
+      "name": "中国丹霞",
+      "regionIds": [
+        "eb31463f-a2f4-5271-aeeb-cce44ce16741"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "7b9541cc-224c-571c-a297-ee0828c7b0fb",
+      "recordId": "7b9541cc-224c-571c-a297-ee0828c7b0fb",
+      "name": "泉州：宋元中国的世界海洋商贸中心",
+      "regionIds": [
+        "d6260a64-5307-5a00-ae11-04c95547a966"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e25a5ea9-806e-5150-a472-d55667f9dfc4",
+      "recordId": "e25a5ea9-806e-5150-a472-d55667f9dfc4",
+      "name": "泉州：宋元中国的世界海洋商贸中心",
+      "regionIds": [
+        "c62387f6-2ec2-5d9f-a36a-e94dbf9fb455"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "250424d3-032d-5eae-a16d-1ea27ebf04a5",
+      "recordId": "250424d3-032d-5eae-a16d-1ea27ebf04a5",
+      "name": "泉州：宋元中国的世界海洋商贸中心",
+      "regionIds": [
+        "f1cae0ed-5285-5646-ac59-b8437bd20cf7"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e69c9dd9-534a-5460-a417-d66c45cc4cc7",
+      "recordId": "e69c9dd9-534a-5460-a417-d66c45cc4cc7",
+      "name": "泉州：宋元中国的世界海洋商贸中心",
+      "regionIds": [
+        "843ce7db-e532-58b8-acc9-850c183e6af5"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "7b6ce187-84cb-53a7-a0aa-73d70085c882",
+      "recordId": "7b6ce187-84cb-53a7-a0aa-73d70085c882",
+      "name": "泉州：宋元中国的世界海洋商贸中心",
+      "regionIds": [
+        "30e8c03e-eb22-5834-a501-bf3393f429b2"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "491ecfa0-8e6a-57b1-a7e2-701ac53d763f",
+      "recordId": "491ecfa0-8e6a-57b1-a7e2-701ac53d763f",
+      "name": "泉州：宋元中国的世界海洋商贸中心",
+      "regionIds": [
+        "0cd9c417-2f07-5f95-a159-0824dfddade2"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "475f4374-8449-5a47-ad94-7010c90865ad",
+      "recordId": "475f4374-8449-5a47-ad94-7010c90865ad",
+      "name": "泉州：宋元中国的世界海洋商贸中心",
+      "regionIds": [
+        "6f370619-e34e-5834-a729-94d90c68b2b2"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "5725e122-3520-58bb-a448-42dbaedb89a8",
+      "recordId": "5725e122-3520-58bb-a448-42dbaedb89a8",
+      "name": "泉州：宋元中国的世界海洋商贸中心",
+      "regionIds": [
+        "26f93df0-1661-5d1f-a6ec-df51eefb8406"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "861d3019-e90f-5608-a68d-2007b430fa7f",
+      "recordId": "861d3019-e90f-5608-a68d-2007b430fa7f",
+      "name": "泉州：宋元中国的世界海洋商贸中心",
+      "regionIds": [
+        "91fc22d0-20e6-5dfc-ad1a-87ac245051d9"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9ab57b52-7d8b-5b63-a95a-c750502f278c",
+      "recordId": "9ab57b52-7d8b-5b63-a95a-c750502f278c",
+      "name": "福建土楼",
+      "regionIds": [
+        "7f971386-0929-5392-a78b-ef314cfffaab"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "749735d7-1e9f-5fee-ace4-a9f9646b879e",
+      "recordId": "749735d7-1e9f-5fee-ace4-a9f9646b879e",
+      "name": "福建土楼",
+      "regionIds": [
+        "9e33e450-6a98-5e77-a2dd-4629b9f8295a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9970e611-3462-557e-a14a-a36e3ce78aa1",
+      "recordId": "9970e611-3462-557e-a14a-a36e3ce78aa1",
+      "name": "武夷山",
+      "regionIds": [
+        "142de96d-f842-5a86-ad4a-a0981cbfc152"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "0b0b9422-028c-5930-a122-da3c744fa079",
+      "recordId": "0b0b9422-028c-5930-a122-da3c744fa079",
+      "name": "武夷山",
+      "regionIds": [
+        "b2ebf9a0-3826-523d-a1ce-9ee18f6ae02b"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3acc2112-6306-5283-a47b-986bcfa12b7a",
+      "recordId": "3acc2112-6306-5283-a47b-986bcfa12b7a",
+      "name": "武夷山",
+      "regionIds": [
+        "6635ffcf-2e07-5af6-a31b-8afd807f0143"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4b5cf989-9f5b-5772-af01-3529b7409460",
+      "recordId": "4b5cf989-9f5b-5772-af01-3529b7409460",
+      "name": "武夷山",
+      "regionIds": [
+        "d6acf14f-ceed-59fc-abcd-3a487c35b259"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f9086334-73a0-59ba-aafe-8fbc71dca194",
+      "recordId": "f9086334-73a0-59ba-aafe-8fbc71dca194",
+      "name": "福建土楼",
+      "regionIds": [
+        "ea074845-1f02-584f-a0cf-ac23c49b8a3d"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "ec3d54a4-fde7-5889-a4b4-95a06d2bc84d",
+      "recordId": "ec3d54a4-fde7-5889-a4b4-95a06d2bc84d",
+      "name": "景德镇手工瓷业遗存",
+      "regionIds": [
+        "cc1d2b64-3df9-5d1a-a993-b8002c3392a6"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "bd3dfaf1-6780-5502-a9a7-344c79b2eeff",
+      "recordId": "bd3dfaf1-6780-5502-a9a7-344c79b2eeff",
+      "name": "景德镇手工瓷业遗存",
+      "regionIds": [
+        "de2c0b13-8f0d-5815-a95d-1f38afba13ee"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "50ed00ea-37ba-5250-ac1c-e7eba0db9623",
+      "recordId": "50ed00ea-37ba-5250-ac1c-e7eba0db9623",
+      "name": "庐山风景名胜区",
+      "regionIds": [
+        "35181c17-d742-5b57-a77b-3e40dfac528b"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "da5b00dd-9a4e-5732-a3e0-5ce3c6238eeb",
+      "recordId": "da5b00dd-9a4e-5732-a3e0-5ce3c6238eeb",
+      "name": "庐山风景名胜区",
+      "regionIds": [
+        "75f23360-e1a1-56c4-a6f9-d7ae317a5db3"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "040d80e3-c1b3-51b1-ab31-205f4e094782",
+      "recordId": "040d80e3-c1b3-51b1-ab31-205f4e094782",
+      "name": "庐山风景名胜区",
+      "regionIds": [
+        "dade62b2-0c07-5902-a1be-afb93f5c85a0"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "ff4b5770-69d9-5d30-a1df-43d464e67dd3",
+      "recordId": "ff4b5770-69d9-5d30-a1df-43d464e67dd3",
+      "name": "中国丹霞",
+      "regionIds": [
+        "04a164fb-3edd-56a1-a284-4b5874f91a89"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "7b759365-af79-56bb-ac6a-fef14006829a",
+      "recordId": "7b759365-af79-56bb-ac6a-fef14006829a",
+      "name": "中国丹霞",
+      "regionIds": [
+        "f8c0ebbf-fb06-57f0-a8ae-180d058f6956"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "408d4a9f-a476-5a28-a530-f4b418da3548",
+      "recordId": "408d4a9f-a476-5a28-a530-f4b418da3548",
+      "name": "三清山风景名胜区",
+      "regionIds": [
+        "95c02a71-d014-59c8-a4a8-6e0a531a5cae"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "700defc3-771f-5c85-a880-079917ca37e5",
+      "recordId": "700defc3-771f-5c85-a880-079917ca37e5",
+      "name": "武夷山",
+      "regionIds": [
+        "ecf62d4d-2663-54bd-a5c0-27d9cfe336a0"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "86d6fd24-7a7b-5263-a5bd-03bf48d513dd",
+      "recordId": "86d6fd24-7a7b-5263-a5bd-03bf48d513dd",
+      "name": "中国丹霞",
+      "regionIds": [
+        "61132ba6-6db9-55b3-ae24-94aaca652e2a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "156cd0a1-3265-57d7-a17e-65632728cf4c",
+      "recordId": "156cd0a1-3265-57d7-a17e-65632728cf4c",
+      "name": "三清山风景名胜区",
+      "regionIds": [
+        "d383b0ad-7af2-533c-a7fc-4808aab76821"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3f827323-933a-5840-ad1b-e83d46aec792",
+      "recordId": "3f827323-933a-5840-ad1b-e83d46aec792",
+      "name": "泰山",
+      "regionIds": [
+        "ea3fa9aa-d0e9-5ace-ac78-1fc6fe78ca5a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "846d39bd-5dca-5b37-a99c-013f08c41ce4",
+      "recordId": "846d39bd-5dca-5b37-a99c-013f08c41ce4",
+      "name": "大运河",
+      "regionIds": [
+        "09104971-6992-51d8-ab0e-5640d352b003"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "845a9f37-a5ec-53e2-ae7b-bf8b440fe732",
+      "recordId": "845a9f37-a5ec-53e2-ae7b-bf8b440fe732",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "44992f8a-2bee-58b3-a96c-e4fd4b2a7c87"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "ab8de167-c724-5c25-ae75-f0a3581d18cc",
+      "recordId": "ab8de167-c724-5c25-ae75-f0a3581d18cc",
+      "name": "中国黄（渤）海候鸟栖息地",
+      "regionIds": [
+        "2f190a0c-270f-5090-ae9e-5303ba47cea2"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "244fbeea-5f35-5284-a050-8825df92a626",
+      "recordId": "244fbeea-5f35-5284-a050-8825df92a626",
+      "name": "大运河",
+      "regionIds": [
+        "19aa5be5-414b-5c96-a62b-4d64141f3d4b"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "91e75f70-e343-5d9a-afba-1116aba46a11",
+      "recordId": "91e75f70-e343-5d9a-afba-1116aba46a11",
+      "name": "大运河",
+      "regionIds": [
+        "9e47047b-2a69-5d83-a8c0-3635334aea63"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f24b75c7-e917-5480-a9bb-9ae2202c63c3",
+      "recordId": "f24b75c7-e917-5480-a9bb-9ae2202c63c3",
+      "name": "大运河",
+      "regionIds": [
+        "7d6ba6a8-bc21-5877-afc6-26517b4c39f8"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "eaa71460-e6ae-57ae-af60-0722f8e99ab9",
+      "recordId": "eaa71460-e6ae-57ae-af60-0722f8e99ab9",
+      "name": "大运河",
+      "regionIds": [
+        "ba050acb-7996-5fde-a9fa-6817ab3f63f9"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8a650a6e-50be-5708-a0fc-4bc1ded6ef4a",
+      "recordId": "8a650a6e-50be-5708-a0fc-4bc1ded6ef4a",
+      "name": "曲阜孔庙、孔府和孔林",
+      "regionIds": [
+        "9b9144c9-0eba-5783-a554-aa6d63fce81a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "439f2b84-5950-5d28-a94c-5ae4269c9fe5",
+      "recordId": "439f2b84-5950-5d28-a94c-5ae4269c9fe5",
+      "name": "泰山",
+      "regionIds": [
+        "f77512d3-59b0-5325-a6cc-aa2393072a2e"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "48d780f8-be3f-5a94-a3f1-8858497bb127",
+      "recordId": "48d780f8-be3f-5a94-a3f1-8858497bb127",
+      "name": "泰山",
+      "regionIds": [
+        "6db5f167-cfdc-5d8e-a757-6657444865ad"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "97af054d-bda7-5118-acb6-4f4252ce69b8",
+      "recordId": "97af054d-bda7-5118-acb6-4f4252ce69b8",
+      "name": "大运河",
+      "regionIds": [
+        "7447c4f9-fc67-51b0-ae99-b2888dfd6d29"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "d8a5c90c-1e65-5a24-a82c-5a8a45e2aeec",
+      "recordId": "d8a5c90c-1e65-5a24-a82c-5a8a45e2aeec",
+      "name": "大运河",
+      "regionIds": [
+        "ebfacf62-f6cf-5db7-a84f-20f195533844"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "a0e97011-aee3-5a7c-a467-cfc99e6d642c",
+      "recordId": "a0e97011-aee3-5a7c-a467-cfc99e6d642c",
+      "name": "大运河",
+      "regionIds": [
+        "4534bb43-ff16-5182-af68-e3132ab779a9"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "acf14cef-fe4e-58c4-a41b-947eaa5cd56a",
+      "recordId": "acf14cef-fe4e-58c4-a41b-947eaa5cd56a",
+      "name": "大运河",
+      "regionIds": [
+        "9eb9c162-8edc-5234-af45-589ac5a2ed19"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "c9e7780f-ce17-5514-a56a-205f29b12b10",
+      "recordId": "c9e7780f-ce17-5514-a56a-205f29b12b10",
+      "name": "大运河",
+      "regionIds": [
+        "b8ddc351-b94d-5062-ade1-8fa0f017b2eb"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "5b4a2621-a487-5531-ab92-0f7890b49733",
+      "recordId": "5b4a2621-a487-5531-ab92-0f7890b49733",
+      "name": "登封“天地之中”历史建筑群",
+      "regionIds": [
+        "7ec1ccb7-2ac9-5bf1-acda-6adbca716867"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4fbea5ea-4916-595a-ae64-d74fbfad766b",
+      "recordId": "4fbea5ea-4916-595a-ae64-d74fbfad766b",
+      "name": "大运河",
+      "regionIds": [
+        "abdae88d-576a-5516-ad94-dab96b0b643f"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9af188b1-111b-579c-a99a-809557be3b9e",
+      "recordId": "9af188b1-111b-579c-a99a-809557be3b9e",
+      "name": "大运河",
+      "regionIds": [
+        "95491f3a-a52d-5c97-a6d4-436a8067ba5c"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "26c08f66-fb64-543c-ad8d-82ce16d28151",
+      "recordId": "26c08f66-fb64-543c-ad8d-82ce16d28151",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "48e79361-9f0f-5811-a0b7-e177d38c13df"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "d33c5900-ecee-5c75-ac2c-b8efe897ac6f",
+      "recordId": "d33c5900-ecee-5c75-ac2c-b8efe897ac6f",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "e953600d-f828-5b01-af6b-6f0c59c40037"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "28e94936-b273-5c53-a9db-8c23afd58b87",
+      "recordId": "28e94936-b273-5c53-a9db-8c23afd58b87",
+      "name": "龙门石窟",
+      "regionIds": [
+        "20e790ff-9f23-566f-a7af-e232c1025de3"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "31f43857-b7e4-54e4-af9d-c0e89763edec",
+      "recordId": "31f43857-b7e4-54e4-af9d-c0e89763edec",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "20e790ff-9f23-566f-a7af-e232c1025de3"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e51e981b-7e07-5b64-a203-fd9618dc753d",
+      "recordId": "e51e981b-7e07-5b64-a203-fd9618dc753d",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "0ddb24cd-0b5c-5117-a23c-b4d836d5221b"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8fb3f1ed-e71c-5c74-af5e-ade7941dc3df",
+      "recordId": "8fb3f1ed-e71c-5c74-af5e-ade7941dc3df",
+      "name": "殷墟",
+      "regionIds": [
+        "f8d21f38-6055-5918-abda-5e5d70a50666"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "c0d4a1af-5275-53a4-a6ef-67dd876c79f2",
+      "recordId": "c0d4a1af-5275-53a4-a6ef-67dd876c79f2",
+      "name": "大运河",
+      "regionIds": [
+        "1bd976b8-e7bd-56b1-a7bd-ba6a3c54a6db"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8d8647b2-d916-51dc-a7c2-d741db96553a",
+      "recordId": "8d8647b2-d916-51dc-a7c2-d741db96553a",
+      "name": "大运河",
+      "regionIds": [
+        "91faac09-2506-5412-ac58-338fb33a9c26"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "0d94e4da-9880-593f-ae3a-afc002a6af65",
+      "recordId": "0d94e4da-9880-593f-ae3a-afc002a6af65",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "9bd88680-9d03-5f30-a8c2-87b0d92cd93f"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "d3c0e069-7b0a-5a99-a0ae-9411436f4c2c",
+      "recordId": "d3c0e069-7b0a-5a99-a0ae-9411436f4c2c",
+      "name": "大运河",
+      "regionIds": [
+        "62aea115-c9a6-5ba4-a865-5ae8502d7087"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "1bfd391b-bfcd-50cc-a906-3a88c5a2302a",
+      "recordId": "1bfd391b-bfcd-50cc-a906-3a88c5a2302a",
+      "name": "大运河",
+      "regionIds": [
+        "9a28d170-bdc1-5c0c-ab59-2a9187ab2a99"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "340deb66-d64f-5aae-a101-a3e6c8e159c0",
+      "recordId": "340deb66-d64f-5aae-a101-a3e6c8e159c0",
+      "name": "武当山古建筑群",
+      "regionIds": [
+        "c96d84c3-e08e-57d8-ae1c-a3f688a3b6fa"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "cfca33f8-88df-552a-ad7b-233461cb83ff",
+      "recordId": "cfca33f8-88df-552a-ad7b-233461cb83ff",
+      "name": "明清皇家陵寝",
+      "regionIds": [
+        "eb1a208b-09da-51e4-a295-93d09b3397b2"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "dffdeecc-a9ec-51df-a1a9-4360e4db68f1",
+      "recordId": "dffdeecc-a9ec-51df-a1a9-4360e4db68f1",
+      "name": "湖北神农架",
+      "regionIds": [
+        "1c7ea304-aaa6-5e7e-a325-b55c01da9ee7"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8c3256a3-a580-5c75-a244-67401110067b",
+      "recordId": "8c3256a3-a580-5c75-a244-67401110067b",
+      "name": "土司遗址",
+      "regionIds": [
+        "915e9b10-c1aa-53ae-af89-f231dcf22795"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "6381dc8a-fcd8-552b-afe3-a9d5f88d2920",
+      "recordId": "6381dc8a-fcd8-552b-afe3-a9d5f88d2920",
+      "name": "湖北神农架",
+      "regionIds": [
+        "15c0a3cb-c4a3-5cbf-a0e5-c6f5d7aed559"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "0cab7e28-8056-5447-a7b8-c1e42d09f12c",
+      "recordId": "0cab7e28-8056-5447-a7b8-c1e42d09f12c",
+      "name": "中国丹霞",
+      "regionIds": [
+        "ad890593-af79-5241-a143-d2a9617072cd"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "bbf0448e-163f-565a-a814-771bbb7a4e2c",
+      "recordId": "bbf0448e-163f-565a-a814-771bbb7a4e2c",
+      "name": "武陵源风景名胜区",
+      "regionIds": [
+        "ac140b2c-3029-5265-a795-5cf266a90c5b"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "ca483a21-cc96-54eb-a2e2-1b9449419729",
+      "recordId": "ca483a21-cc96-54eb-a2e2-1b9449419729",
+      "name": "土司遗址",
+      "regionIds": [
+        "7dc298ce-b556-5bc5-a108-d5f380768622"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "5220f520-4fa8-53c3-a667-f57f83970217",
+      "recordId": "5220f520-4fa8-53c3-a667-f57f83970217",
+      "name": "中国丹霞",
+      "regionIds": [
+        "23e88f22-faa5-5860-a8e2-27269140e287"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "db76d8e8-ad51-51df-a4ee-b0da701b7de7",
+      "recordId": "db76d8e8-ad51-51df-a4ee-b0da701b7de7",
+      "name": "中国丹霞",
+      "regionIds": [
+        "124021af-8ee4-52f2-a264-666a5f660d02"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "5b48a4d7-4d6b-530d-a4c2-013803d3aa59",
+      "recordId": "5b48a4d7-4d6b-530d-a4c2-013803d3aa59",
+      "name": "开平碉楼及村落",
+      "regionIds": [
+        "10371040-dffc-5010-acfa-3553eb11a8e6"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "90297235-20ab-5159-a8a9-f9bf5fed74b9",
+      "recordId": "90297235-20ab-5159-a8a9-f9bf5fed74b9",
+      "name": "中国南方喀斯特",
+      "regionIds": [
+        "18288627-a9c0-5c4a-aa29-e39def49394e"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "80ad9f12-f2c4-576f-a284-6171a305b2ee",
+      "recordId": "80ad9f12-f2c4-576f-a284-6171a305b2ee",
+      "name": "中国南方喀斯特",
+      "regionIds": [
+        "0d714b87-b5c3-5bb4-a048-83aa3541bd2a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "fa917fbe-7bc4-5846-a1dc-fc7193b1054a",
+      "recordId": "fa917fbe-7bc4-5846-a1dc-fc7193b1054a",
+      "name": "中国丹霞",
+      "regionIds": [
+        "4deb73b7-ff41-583c-a0a9-60e604690d32"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "29310e9c-5be8-5b83-af13-d23e4d94a571",
+      "recordId": "29310e9c-5be8-5b83-af13-d23e4d94a571",
+      "name": "中国南方喀斯特",
+      "regionIds": [
+        "aab03e9b-0e96-5097-a982-dd4f4621cfc7"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f5df6742-8d87-5eb1-a41c-2042be04dfb3",
+      "recordId": "f5df6742-8d87-5eb1-a41c-2042be04dfb3",
+      "name": "左江花山岩画文化景观",
+      "regionIds": [
+        "e1e52b6b-6943-564e-a106-f8bd1334f705"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "88f0461b-9b08-56bb-a421-d9568924c064",
+      "recordId": "88f0461b-9b08-56bb-a421-d9568924c064",
+      "name": "左江花山岩画文化景观",
+      "regionIds": [
+        "68024e19-4bfd-551e-af89-df16e49d2577"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "803c9472-b1be-58fd-af25-8f9ca416a10f",
+      "recordId": "803c9472-b1be-58fd-af25-8f9ca416a10f",
+      "name": "左江花山岩画文化景观",
+      "regionIds": [
+        "fe85860f-36db-5af2-a6ce-ee36fabf92e2"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "576ff6d5-0ddf-5459-a00d-18478a4833b4",
+      "recordId": "576ff6d5-0ddf-5459-a00d-18478a4833b4",
+      "name": "左江花山岩画文化景观",
+      "regionIds": [
+        "3bff52a4-11f1-525d-af03-00de085977e4"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "55ce0540-32f1-514d-a8ab-09872556c520",
+      "recordId": "55ce0540-32f1-514d-a8ab-09872556c520",
+      "name": "大足石刻",
+      "regionIds": [
+        "432eacb3-b1c1-5ee1-aee2-86861a6bab10"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "bb346b2c-bacc-506e-a9c8-f0f94f1cd177",
+      "recordId": "bb346b2c-bacc-506e-a9c8-f0f94f1cd177",
+      "name": "中国南方喀斯特",
+      "regionIds": [
+        "6ab6d1c9-dbcb-5090-aa0e-609e6358e2b6"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f7dc054c-3024-5b34-a5d7-8f6ab98d8802",
+      "recordId": "f7dc054c-3024-5b34-a5d7-8f6ab98d8802",
+      "name": "中国南方喀斯特",
+      "regionIds": [
+        "5ce509e8-02f0-5a6d-a78f-d8150fe3016e"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "c11d7f23-9bd4-5dbb-ac42-351cb7c75b80",
+      "recordId": "c11d7f23-9bd4-5dbb-ac42-351cb7c75b80",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "7f19195a-e3fe-5e97-abea-777a36165b62"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "bdf4d45c-a900-5b40-adf9-724c4aa6c7dc",
+      "recordId": "bdf4d45c-a900-5b40-adf9-724c4aa6c7dc",
+      "name": "青城山—都江堰",
+      "regionIds": [
+        "9f174d04-5338-5c5d-a67c-7a1efe2dd7d1"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "7f83309f-6225-55a4-a26f-cd4df03a8681",
+      "recordId": "7f83309f-6225-55a4-a26f-cd4df03a8681",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "9f174d04-5338-5c5d-a67c-7a1efe2dd7d1"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9725bd37-3db7-5604-afa6-07d97f6c6f8a",
+      "recordId": "9725bd37-3db7-5604-afa6-07d97f6c6f8a",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "552bf151-e291-5b2e-acf2-3168595ea3f2"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "33a436ff-3c8a-58cc-a54a-46c0f0402799",
+      "recordId": "33a436ff-3c8a-58cc-a54a-46c0f0402799",
+      "name": "峨眉山—乐山大佛风景区",
+      "regionIds": [
+        "772db50c-e852-5697-aa11-0904b1dd7f2e"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "ddcb5a2a-b0f2-5d22-a1f0-5b85323d957c",
+      "recordId": "ddcb5a2a-b0f2-5d22-a1f0-5b85323d957c",
+      "name": "峨眉山—乐山大佛风景区",
+      "regionIds": [
+        "d4842aed-ab03-5393-a554-acc511f26d83"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "a001f0e4-e6f2-5a95-a8fe-6e6906bb448f",
+      "recordId": "a001f0e4-e6f2-5a95-a8fe-6e6906bb448f",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "b54c1650-1ef8-5c79-a178-3fb07f960751"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "caf1dba2-5efc-526c-a3b9-d85aeb6c6955",
+      "recordId": "caf1dba2-5efc-526c-a3b9-d85aeb6c6955",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "e3879a13-d7a4-5062-a30d-79ef6b9776ef"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "dd1b37e5-40fc-5349-a91c-38098d59dda5",
+      "recordId": "dd1b37e5-40fc-5349-a91c-38098d59dda5",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "b872a4bd-79d7-5ee7-a27a-a0824e03c8f8"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f1471402-783f-517d-a9f9-87bfe326854e",
+      "recordId": "f1471402-783f-517d-a9f9-87bfe326854e",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "a3c225dc-9eab-534f-a110-324f1e9b76d1"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8db597b9-0e03-5421-a06e-c8191d9278f0",
+      "recordId": "8db597b9-0e03-5421-a06e-c8191d9278f0",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "9a332e8b-7da4-5da0-a4bc-15ad977a80e5"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "aa850623-6694-566c-a60f-792b38f616de",
+      "recordId": "aa850623-6694-566c-a60f-792b38f616de",
+      "name": "黄龙风景名胜区",
+      "regionIds": [
+        "aa70806d-7dec-59e6-ab3a-90f3be968d93"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "2bdca886-c562-5437-a5e0-b0bf42288511",
+      "recordId": "2bdca886-c562-5437-a5e0-b0bf42288511",
+      "name": "九寨沟风景名胜区",
+      "regionIds": [
+        "be6de7f3-7207-55a5-ad31-d7321e34ff01"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "de1a21ef-e539-5d6b-a5e2-8d1027bcd457",
+      "recordId": "de1a21ef-e539-5d6b-a5e2-8d1027bcd457",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "8666e6b0-a5f7-56ff-a160-647b465bb056"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "fdee166a-a103-5899-a74b-11acf1eb90d4",
+      "recordId": "fdee166a-a103-5899-a74b-11acf1eb90d4",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "c90e6695-1363-55dc-a769-eebea3c8071d"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "ee825856-3e31-51f5-a131-11bd5ff2989c",
+      "recordId": "ee825856-3e31-51f5-a131-11bd5ff2989c",
+      "name": "四川大熊猫栖息地—卧龙、四姑娘山和夹金山脉",
+      "regionIds": [
+        "c28ae428-c92a-53d3-acde-8126556fd659"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "c0649b97-ac44-5842-a6a9-f96e05feb6f2",
+      "recordId": "c0649b97-ac44-5842-a6a9-f96e05feb6f2",
+      "name": "土司遗址",
+      "regionIds": [
+        "3686066d-f87e-52ef-a3d3-d3aca6c4d643"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "b2b085c1-aa1c-5987-a305-3776f5d78bb7",
+      "recordId": "b2b085c1-aa1c-5987-a305-3776f5d78bb7",
+      "name": "中国丹霞",
+      "regionIds": [
+        "cffe42ca-69d4-5765-af91-99c1bfe1b44a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "58d15384-5c7d-542a-a2fc-705efc6f3653",
+      "recordId": "58d15384-5c7d-542a-a2fc-705efc6f3653",
+      "name": "中国丹霞",
+      "regionIds": [
+        "dddf660c-7804-5073-a21a-b6f8f72a0b67"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "11452763-f9dd-52c1-ace8-b41ca7db932d",
+      "recordId": "11452763-f9dd-52c1-ace8-b41ca7db932d",
+      "name": "梵净山",
+      "regionIds": [
+        "c71cc278-90e2-5b70-a0f0-4772316fbf1f"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "af8bf7a4-119a-5161-a6a4-be0e8b4a9498",
+      "recordId": "af8bf7a4-119a-5161-a6a4-be0e8b4a9498",
+      "name": "梵净山",
+      "regionIds": [
+        "61be9efe-0505-5bed-a232-caebbe7d1261"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8b78e109-8615-511e-a475-55a4c74639d8",
+      "recordId": "8b78e109-8615-511e-a475-55a4c74639d8",
+      "name": "梵净山",
+      "regionIds": [
+        "5d2da730-6e00-5d7c-a504-6a0d78c0df8a"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3e9c1ea6-2c99-50e8-a965-74c802c8ffcd",
+      "recordId": "3e9c1ea6-2c99-50e8-a965-74c802c8ffcd",
+      "name": "中国南方喀斯特",
+      "regionIds": [
+        "3bca1aa7-3607-5f0e-a048-115fde4a2075"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "6ee0f90a-0525-5e75-a7a4-0289f4f7b159",
+      "recordId": "6ee0f90a-0525-5e75-a7a4-0289f4f7b159",
+      "name": "中国南方喀斯特",
+      "regionIds": [
+        "33950f9c-a126-5b61-adb9-f8c41741760e"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "171bca06-f273-5de0-a65d-2501cb84c79f",
+      "recordId": "171bca06-f273-5de0-a65d-2501cb84c79f",
+      "name": "中国南方喀斯特",
+      "regionIds": [
+        "30f3726b-d39d-58d5-a3ce-22c28eaaa6e1"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "dfc83f6d-ee65-501a-a3c1-9ef677689f0d",
+      "recordId": "dfc83f6d-ee65-501a-a3c1-9ef677689f0d",
+      "name": "澄江化石地",
+      "regionIds": [
+        "69a9289e-47e4-58d3-a496-9999be73be02"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "cbe62c3d-7f71-5b7d-a74d-710971b4addf",
+      "recordId": "cbe62c3d-7f71-5b7d-a74d-710971b4addf",
+      "name": "丽江古城",
+      "regionIds": [
+        "ee7dd040-ba6c-5749-a87a-31a9360e72f4"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "9cbb0fd3-8b1d-5899-aa48-70904e2cc9fb",
+      "recordId": "9cbb0fd3-8b1d-5899-aa48-70904e2cc9fb",
+      "name": "云南三江并流保护区",
+      "regionIds": [
+        "faedfd1d-65fa-5173-aaad-58f237f7b0e3"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4fcb6785-8aef-5b82-a5da-e15c8eeed380",
+      "recordId": "4fcb6785-8aef-5b82-a5da-e15c8eeed380",
+      "name": "丽江古城",
+      "regionIds": [
+        "faedfd1d-65fa-5173-aaad-58f237f7b0e3"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "6b2912c1-3fa4-5c70-a452-94a0730daa42",
+      "recordId": "6b2912c1-3fa4-5c70-a452-94a0730daa42",
+      "name": "普洱景迈山古茶林文化景观",
+      "regionIds": [
+        "08689451-de8a-5d92-a83c-5b325fb21941"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "44b65adc-29ab-58fa-a7ea-8badbeeb7687",
+      "recordId": "44b65adc-29ab-58fa-a7ea-8badbeeb7687",
+      "name": "红河哈尼梯田文化景观",
+      "regionIds": [
+        "98ad1846-716c-59f0-a6b7-43e4770386ee"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "030d94c7-db86-5d80-a561-12fd75a1ed6d",
+      "recordId": "030d94c7-db86-5d80-a561-12fd75a1ed6d",
+      "name": "云南三江并流保护区",
+      "regionIds": [
+        "07a25a1a-5650-5d24-a9cd-d9db0916f0e6"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "f619682f-f0b1-5cc1-a074-5b6a02340d54",
+      "recordId": "f619682f-f0b1-5cc1-a074-5b6a02340d54",
+      "name": "云南三江并流保护区",
+      "regionIds": [
+        "f2953647-5824-52fc-ae30-a557c3a675d3"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "1dbc6eb0-051c-5ae0-a893-6fc3fce63c02",
+      "recordId": "1dbc6eb0-051c-5ae0-a893-6fc3fce63c02",
+      "name": "云南三江并流保护区",
+      "regionIds": [
+        "31c4d342-bd24-5c81-a192-9365ae9c54f1"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "ac9ddc1b-8f1f-51af-ae83-946eadb39d08",
+      "recordId": "ac9ddc1b-8f1f-51af-ae83-946eadb39d08",
+      "name": "云南三江并流保护区",
+      "regionIds": [
+        "04c350fb-c90f-52c0-ad1b-c778e4d0fbec"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "b864423f-a7f8-5292-ab00-54ef87663caf",
+      "recordId": "b864423f-a7f8-5292-ab00-54ef87663caf",
+      "name": "云南三江并流保护区",
+      "regionIds": [
+        "e9787c9b-2b33-5020-a046-a426e39fd2c0"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "19a999c6-38cc-5b47-abcc-f1d6cedef732",
+      "recordId": "19a999c6-38cc-5b47-abcc-f1d6cedef732",
+      "name": "云南三江并流保护区",
+      "regionIds": [
+        "e4e1fc46-babe-5124-a581-018739231956"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4bb179da-2e52-5361-ac29-c206d4d8fbef",
+      "recordId": "4bb179da-2e52-5361-ac29-c206d4d8fbef",
+      "name": "云南三江并流保护区",
+      "regionIds": [
+        "7076e743-9965-5a50-a5b9-1765f0353783"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "85560275-5703-53d6-a1bf-a997fc6ce359",
+      "recordId": "85560275-5703-53d6-a1bf-a997fc6ce359",
+      "name": "拉萨布达拉宫历史建筑群",
+      "regionIds": [
+        "e9c30864-65f8-549b-a9df-7695732fba45"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "0ffdba32-7a50-5d03-af92-469e0214612b",
+      "recordId": "0ffdba32-7a50-5d03-af92-469e0214612b",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "9e532fd9-a14f-5b7b-a7ca-6a8c3dd97ee6"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "867d2c78-7e3f-5978-a13a-621525aa1f12",
+      "recordId": "867d2c78-7e3f-5978-a13a-621525aa1f12",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "8cc5c398-44f9-5823-a270-97da032752ee"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "40d952ba-c4b7-5ca3-a8c8-5406512aa8c9",
+      "recordId": "40d952ba-c4b7-5ca3-a8c8-5406512aa8c9",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "6306de60-01cb-5e4d-ace5-8506cedf5c87"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "5f2f1feb-1784-5a96-ae2f-d6d3dfdf5938",
+      "recordId": "5f2f1feb-1784-5a96-ae2f-d6d3dfdf5938",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "79c7b982-fbd7-5949-ab2a-fc48618bf238"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3c8d8bad-6bd8-5d6b-a68e-a4412d921810",
+      "recordId": "3c8d8bad-6bd8-5d6b-a68e-a4412d921810",
+      "name": "秦始皇陵及兵马俑坑",
+      "regionIds": [
+        "6ca2c1e0-534a-5479-a502-09e877bf71db"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e1d7c9aa-7f68-519a-abdd-eacd6dc1c2d6",
+      "recordId": "e1d7c9aa-7f68-519a-abdd-eacd6dc1c2d6",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "033915ea-608e-59e8-a9d1-ccec34cb2a2c"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "7b392e39-8286-5188-a661-d4eff9bd2312",
+      "recordId": "7b392e39-8286-5188-a661-d4eff9bd2312",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "2f671125-1bbf-5f16-a082-3164b6a34f53"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "6d772016-55d2-5a04-a1e7-419fd6359102",
+      "recordId": "6d772016-55d2-5a04-a1e7-419fd6359102",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "ce20afcd-073a-5a45-aabd-b9e49ed0e21c"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "4999bff4-d0d3-5540-a039-867b7817d512",
+      "recordId": "4999bff4-d0d3-5540-a039-867b7817d512",
+      "name": "长城",
+      "regionIds": [
+        "e4ef67ad-3e78-579a-a0e3-13f12ebf888d"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "093cd92b-feea-530f-adab-c1b81eb81530",
+      "recordId": "093cd92b-feea-530f-adab-c1b81eb81530",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "1c803f37-6ab3-5239-aa54-b9b9491599b5"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "09dac808-ba25-5c29-aeae-3f96b7bcd542",
+      "recordId": "09dac808-ba25-5c29-aeae-3f96b7bcd542",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "5c5eab21-3772-5f3e-a640-186894ccfee4"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "26363aa8-f7d5-5d0f-aa13-b4e8e0577b5b",
+      "recordId": "26363aa8-f7d5-5d0f-aa13-b4e8e0577b5b",
+      "name": "莫高窟",
+      "regionIds": [
+        "6a332980-199c-5d91-a256-d86cd8fdd9c9"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "720542e9-a808-5d7b-a4df-1d81b7133fb1",
+      "recordId": "720542e9-a808-5d7b-a4df-1d81b7133fb1",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "6a332980-199c-5d91-a256-d86cd8fdd9c9"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "82ca901c-a62c-5129-af5c-f10e2016c619",
+      "recordId": "82ca901c-a62c-5129-af5c-f10e2016c619",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "d357423d-cb32-5dd9-a44e-fc6bed59bb3f"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "c991e099-1f61-52ec-a10b-0884c5b36e72",
+      "recordId": "c991e099-1f61-52ec-a10b-0884c5b36e72",
+      "name": "青海可可西里",
+      "regionIds": [
+        "bc6f0d6e-dfea-5e17-a32d-99f2439880a8"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "6235f00c-3485-507d-a90d-23c6a78fddfe",
+      "recordId": "6235f00c-3485-507d-a90d-23c6a78fddfe",
+      "name": "青海可可西里",
+      "regionIds": [
+        "940f8889-e66d-5785-ae60-008d4f6ff261"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "ab469378-58f2-5ae8-a067-f2887ef7f8f4",
+      "recordId": "ab469378-58f2-5ae8-a067-f2887ef7f8f4",
+      "name": "西夏陵",
+      "regionIds": [
+        "d14c427c-fd62-51f9-a148-1ae6438859bc"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "5fb0faf3-65e2-589a-aa21-f23fb8dfef11",
+      "recordId": "5fb0faf3-65e2-589a-aa21-f23fb8dfef11",
+      "name": "新疆天山",
+      "regionIds": [
+        "f15ce074-bf6a-541d-a096-27924883df94"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "48da7379-a7df-5374-a78a-45644a539de0",
+      "recordId": "48da7379-a7df-5374-a78a-45644a539de0",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "1da1eb98-f5f3-510d-a346-b27a6c26d1f0"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "41d806fb-c68c-5a8e-ac77-8b2559f0c375",
+      "recordId": "41d806fb-c68c-5a8e-ac77-8b2559f0c375",
+      "name": "新疆天山",
+      "regionIds": [
+        "23c97c16-b428-5087-a1d5-7ce8422e87b2"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "fabd6f85-6677-5e3a-ad16-b41fc7b22544",
+      "recordId": "fabd6f85-6677-5e3a-ad16-b41fc7b22544",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "37ec8054-495b-562a-a740-5a919fd954f7"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "fd96101a-4296-5ca8-a45b-3fc3d60a72d8",
+      "recordId": "fd96101a-4296-5ca8-a45b-3fc3d60a72d8",
+      "name": "新疆天山",
+      "regionIds": [
+        "76589fad-6ffa-5219-a671-5e944e8f26d8"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "2a61b9fa-63a8-5e8f-a824-ac5932f21010",
+      "recordId": "2a61b9fa-63a8-5e8f-a824-ac5932f21010",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "d4c08a45-e14c-52db-a98d-a2c1b5882bbd"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "3ce29ddf-a0fa-5fce-adf7-7b9e2df68725",
+      "recordId": "3ce29ddf-a0fa-5fce-adf7-7b9e2df68725",
+      "name": "新疆天山",
+      "regionIds": [
+        "2561f78b-ddbb-5378-a9d2-97d6e4252ee3"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "32e7d592-b14e-515e-afe6-728241d0b885",
+      "recordId": "32e7d592-b14e-515e-afe6-728241d0b885",
+      "name": "丝绸之路：长安—天山廊道的路网",
+      "regionIds": [
+        "512ac657-725a-582b-ab53-3ef7e91ce927"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "aa44d09b-d275-5fac-a696-e3ec82a133ac",
+      "recordId": "aa44d09b-d275-5fac-a696-e3ec82a133ac",
+      "name": "新疆天山",
+      "regionIds": [
+        "91456f09-50fa-50ea-aa05-59d03b6e149d"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "e3ef3362-8af8-53b1-a8bb-0572aa2091b4",
+      "recordId": "e3ef3362-8af8-53b1-a8bb-0572aa2091b4",
+      "name": "新疆天山",
+      "regionIds": [
+        "e216f9a6-a360-5903-a393-30a994fb2b47"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    },
+    {
+      "entryId": "8e1575f6-d4d2-5463-a4d3-63142126743f",
+      "recordId": "8e1575f6-d4d2-5463-a4d3-63142126743f",
+      "name": "澳门历史城区",
+      "regionIds": [
+        "6e87498f-2f22-5638-aaec-68089a16da39"
+      ],
+      "reason": "original-official-id-missing",
+      "neededEvidence": "将此原国内条目或原表行/成员明确关联至官方UNESCO项目ID的来源或经审计crosswalk；串联项目还需明确project-reference角色，不把父参考位置称作此成员实地坐标。"
+    }
+  ],
+  "policy": {
+    "sameNameMatchingAccepted": false,
+    "visitedInferenceAllowed": false,
+    "recordIdMutationAllowed": false,
+    "catalogCoordinatesMutationAllowed": false,
+    "projectReferenceOnlyAfterStableIdEvidence": true
+  },
+  "conclusion": "现有官方世界点坐标可用，但国内记录缺身份桥接。可靠关联0/245。没有穷尽中国外部官方研究；本次仅穷尽列明的现有本地来源路径。"
+}

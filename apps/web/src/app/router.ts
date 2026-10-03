@@ -1,24 +1,20 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
+import { SCOPE_IDS } from '@fangyu/contracts';
+
 const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: '/map' },
-  { path: '/map', component: () => import('../pages/CatalogPage.vue') },
-  { path: '/map-legacy', component: () => import('../pages/LegacyMapPage.vue') },
-  ...(['china', 'world', 'japan', 'korea'] as const).map((scope) => ({
+  { path: '/', redirect: '/china' },
+  { path: '/malay-region', component: () => import('../pages/MalayRegionPage.vue') },
+  ...SCOPE_IDS.map((scope) => ({
     path: '/' + scope,
-    redirect: (to: { query: Record<string, unknown> }) => ({
-      path: '/map',
-      query: { ...to.query, scope },
-    }),
+    component: () => import('../pages/CatalogPage.vue'),
+    props: { scope },
   })),
-  { path: '/records', redirect: (to) => ({ path: '/map', query: { ...to.query, view: 'list' } }) },
+  { path: '/records', component: () => import('../pages/RecordsPage.vue') },
+  { path: '/maofen', component: () => import('../pages/MaofenPage.vue') },
   { path: '/achievements', component: () => import('../pages/AchievementsPage.vue') },
-  { path: '/manage', component: () => import('../pages/ManagePage.vue') },
-  { path: '/imports', redirect: '/manage' },
-  {
-    path: '/settings',
-    component: () => import('../pages/SettingsPage.vue'),
-    props: { appearanceOnly: true },
-  },
+  { path: '/imports', component: () => import('../pages/ImportsPage.vue') },
+  { path: '/settings', component: () => import('../pages/SettingsPage.vue') },
   { path: '/help', component: () => import('../pages/HelpPage.vue') },
 ];
+
 export const router = createRouter({ history: createWebHashHistory(), routes });

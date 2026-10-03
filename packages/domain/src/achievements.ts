@@ -1,3 +1,4 @@
+import { sortHistoricalAchievements } from './achievement-chronology.js';
 import type { AchievementDefinition, Condition, Region } from '@fangyu/contracts';
 import type { HandbookSession } from './session.js';
 
@@ -45,27 +46,29 @@ export function achievementProgress(session: HandbookSession): AchievementProgre
     ...session.index.catalog.achievements.definitions,
     ...elementAchievements(session),
   ];
-  return definitions.map((definition) => {
-    const targets = definition.targets.map((target) => ({
-      ...target,
-      visited: evaluate(target.condition),
-    }));
-    const count = targets.filter((target) => target.visited).length;
-    const blocked = definition.pending.length > 0;
-    const required = definition.need ?? targets.length;
-    const highest = definition.steps?.at(-1) ?? required;
-    const complete =
-      !blocked && definition.catalogComplete !== false && highest > 0 && count >= highest;
-    return {
-      ...definition,
-      targets,
-      count,
-      total: targets.length,
-      complete,
-      lit: !blocked && (definition.steps?.length ? count >= definition.steps[0]! : complete),
-      next: definition.steps?.find((step) => step > count),
-    };
-  });
+  return sortHistoricalAchievements(
+    definitions.map((definition) => {
+      const targets = definition.targets.map((target) => ({
+        ...target,
+        visited: evaluate(target.condition),
+      }));
+      const count = targets.filter((target) => target.visited).length;
+      const blocked = definition.pending.length > 0;
+      const required = definition.need ?? targets.length;
+      const highest = definition.steps?.at(-1) ?? required;
+      const complete =
+        !blocked && definition.catalogComplete !== false && highest > 0 && count >= highest;
+      return {
+        ...definition,
+        targets,
+        count,
+        total: targets.length,
+        complete,
+        lit: !blocked && (definition.steps?.length ? count >= definition.steps[0]! : complete),
+        next: definition.steps?.find((step) => step > count),
+      };
+    }),
+  );
 }
 
 function elementAchievements(session: HandbookSession): AchievementDefinition[] {

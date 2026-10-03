@@ -15,12 +15,12 @@ onUnmounted(() => previous?.focus());
   <Teleport to="body"
     ><dialog
       ref="panel"
-      class="app-dialog"
+      class="app-dialog achievement-ui"
       :aria-labelledby="titleId"
       @cancel.prevent="emit('close')"
       @click="
         (e) => {
-          if (e.target === panel) emit('close');
+          if (e.target === panel && e.detail === 1) emit('close');
         }
       "
     >
