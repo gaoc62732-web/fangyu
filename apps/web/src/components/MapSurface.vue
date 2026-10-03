@@ -98,7 +98,12 @@ function scene(): MapScene {
     world: props.scope === 'world',
     dark: store.dark,
     features: (simple?.features || [])
-      .filter((f) => f.properties?.level === props.state.level || f.properties?.level === 'border')
+      .filter(
+        (f) =>
+          f.properties?.level === props.state.level ||
+          (f.properties?.level === 'border' &&
+            ['LineString', 'MultiLineString'].includes(f.geometry.type)),
+      )
       .map((f) => ({
         id: String(f.properties?.regionId),
         name: String(f.properties?.name || ''),
@@ -132,6 +137,7 @@ async function useFallback(token: number) {
     if (token !== generation || !host.value) return;
     simple = geometry;
     map?.remove();
+    canvas?.destroy();
     map = undefined;
     loaded = false;
     fallback.value = true;
@@ -168,9 +174,9 @@ async function useFallback(token: number) {
       pendingFit = null;
     }
   } catch (cause) {
-    error.value = String(cause);
+    if (token === generation) error.value = String(cause);
   } finally {
-    loading.value = false;
+    if (token === generation) loading.value = false;
   }
 }
 function data(): GeoJSON.FeatureCollection {
@@ -273,6 +279,9 @@ async function initialize() {
   providerFailed.value = false;
   loaded = false;
   simple = undefined;
+  manifest = undefined;
+  hover.value = '';
+  hoveredRegion = '';
   featureColors.clear();
   map?.remove();
   canvas?.destroy();
@@ -283,8 +292,9 @@ async function initialize() {
       signal: AbortSignal.timeout(15000),
     });
     if (!response.ok) throw Error('地图资源索引加载失败');
-    manifest = await response.json();
+    const nextManifest: MapDataManifest = await response.json();
     if (token !== generation || !host.value) return;
+    manifest = nextManifest;
     const camera = props.state.camera;
     map = new LibreMap({
       container: host.value,
@@ -306,7 +316,7 @@ async function initialize() {
         providerFailed.value = true;
         for (const id of ['basemap', 'labels'])
           if (map?.getLayer(id)) map.setLayoutProperty(id, 'visibility', 'none');
-      } else if (!loaded) error.value = '地图资源暂时无法完整加载，可切换简化地图。';
+      } else error.value = '地图资源暂时无法完整加载，可切换简化地图。';
     });
     map.on('load', () => {
       if (token !== generation || !map) return;

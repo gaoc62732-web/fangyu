@@ -693,7 +693,7 @@ button.text-button:hover {
   overflow: hidden;
   background: #eaf0ed;
 }
-.map-surface {
+.map-surface-frame > .map-surface {
   position: absolute;
   inset: 0;
 }

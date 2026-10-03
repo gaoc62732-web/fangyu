@@ -151,4 +151,15 @@ describe('map lifecycle and selection', () => {
     expect(urls).toContain('/maps/china.json');
     expect(urls.some((url) => url.includes('/geometry/'))).toBe(false);
   });
+  it('reports boundary failures after initial load and keeps recovery reachable', async () => {
+    const { wrapper } = await open();
+    const map = lib.maps[0];
+    map.events.load();
+    map.events.error({ sourceId: 'province', error: new Error('tile unavailable') });
+    await flushPromises();
+    expect(wrapper.text()).toContain('地图资源暂时无法完整加载');
+    expect(wrapper.findAll('button').some((b) => b.text() === '使用简化地图')).toBe(true);
+    expect(wrapper.findAll('button').some((b) => b.text() === '重试地图')).toBe(true);
+    expect(map.remove).not.toHaveBeenCalled();
+  });
 });

@@ -172,6 +172,27 @@ async function setup(component: any, path = '/map') {
   return { wrapper, store, router, workspace: useWorkspace() };
 }
 describe('handbook interaction regression', () => {
+  it('keeps the first catalog category visible when rows initially have no layout height', async () => {
+    let rowHeight = 0;
+    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+      configurable: true,
+      get() {
+        return this.hasAttribute('data-index') ? rowHeight : 600;
+      },
+    });
+    const { wrapper } = await setup(CatalogPage);
+    const list = wrapper.findComponent(CatalogList);
+    const height = () =>
+      parseFloat((list.find('.catalog-scroll > div').element as HTMLElement).style.height);
+    expect(height()).toBeGreaterThan(600);
+    expect(list.find('[data-index="0"]').exists()).toBe(true);
+    rowHeight = 52;
+    list.vm.$forceUpdate();
+    await flushPromises();
+    expect(list.find('[data-index="0"]').exists()).toBe(true);
+    expect((list.element as HTMLElement).scrollTop).toBe(0);
+    expect(height()).toBeGreaterThan(600);
+  });
   it('keeps regional context and the directory alive when inspecting and marking a point', async () => {
     const { wrapper, store, workspace } = await setup(CatalogPage);
     const w = workspace.state.scopes.china;

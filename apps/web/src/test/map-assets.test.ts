@@ -19,7 +19,7 @@ const tileRequire = createRequire(require.resolve('vt-pbf'));
 const { VectorTile } = tileRequire('@mapbox/vector-tile');
 const Pbf = tileRequire('pbf');
 const mapRequire = createRequire(require.resolve('maplibre-gl/package.json'));
-const { validateStyleMin } = mapRequire('@maplibre/maplibre-gl-style-spec');
+const { validateStyleMin, featureFilter } = mapRequire('@maplibre/maplibre-gl-style-spec');
 afterEach(() => vi.restoreAllMocks());
 describe('offline map assets and export', () => {
   it('serves stable region IDs in every MVT layer without requiring full source geometries', () => {
@@ -65,6 +65,29 @@ describe('offline map assets and export', () => {
     const zipped = await decodeCatalogResponse(new Response(new Uint8Array(gzipSync(sample))));
     expect(plain).toEqual(zipped);
     expect(plain.version).toBe('test');
+  });
+  it('excludes coarse legacy province outlines while retaining border line features', () => {
+    const manifest = JSON.parse(readFileSync(resolve(assets, 'map-manifest.json'), 'utf8'));
+    const style = createMapStyle(
+      manifest,
+      'china',
+      '',
+      tianditu('test-public-browser-key'),
+      '/',
+      'http://localhost/',
+    );
+    expect(validateStyleMin(style).map((e: any) => e.message)).toEqual([]);
+    const layer = style.layers.find((l) => l.id === 'border-line') as any;
+    const predicate = featureFilter(layer.filter, 'layers[0].filter').filter;
+    const border = JSON.parse(
+      readFileSync(resolve(root, 'data/catalog/china.geo.json'), 'utf8'),
+    ).filter((f: any) => f.level === 'border');
+    const drawn = border.filter((f: any) =>
+      predicate({ zoom: 8 }, { type: f.geometry.type.includes('Polygon') ? 3 : 2, properties: {} }),
+    );
+    expect(border.filter((f: any) => f.geometry.type.includes('Polygon'))).toHaveLength(34);
+    expect(drawn).toHaveLength(10);
+    expect(drawn.every((f: any) => f.geometry.type.includes('LineString'))).toBe(true);
   });
   it('requires an explicit public provider key and keeps the original achievement metadata', () => {
     expect(tianditu('')).toBeNull();

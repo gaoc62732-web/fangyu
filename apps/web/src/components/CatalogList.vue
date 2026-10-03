@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
-import { useVirtualizer } from '@tanstack/vue-virtual';
+import {
+  measureElement as measureVirtualElement,
+  useVirtualizer,
+  type Virtualizer,
+} from '@tanstack/vue-virtual';
 import type { CatalogQueryResult } from '../features/catalog/query.js';
 import { categoryIcon } from '../features/catalog/categories.js';
 import { useAppStore } from '../app/store.js';
@@ -51,6 +55,18 @@ const virtual = useVirtualizer(
   computed(() => ({
     count: items.value.length,
     getScrollElement: () => scroller.value || null,
+    measureElement: (
+      element: Element,
+      entry: ResizeObserverEntry | undefined,
+      instance: Virtualizer<HTMLElement, Element>,
+    ) => {
+      const height = measureVirtualElement(element, entry, instance);
+      // Rows may be measured before layout or while the workspace is hidden.
+      // Caching zero collapses every row and creates phantom scroll compensation.
+      return height > 0
+        ? height
+        : instance.options.estimateSize(instance.indexFromElement(element));
+    },
     estimateSize: (i: number) => (items.value[i]?.kind === 'category' ? 52 : props.wide ? 64 : 80),
     overscan: 6,
     getItemKey: (i: number) => items.value[i]!.kind + items.value[i]!.id,

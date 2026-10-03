@@ -18,9 +18,17 @@ export function createMapStyle(
       type: 'raster',
       tiles: provider.tiles,
       tileSize: 256,
+      minzoom: 1,
+      maxzoom: 18,
       attribution: provider.attribution,
     };
-    sources.labels = { type: 'raster', tiles: provider.labels, tileSize: 256 };
+    sources.labels = {
+      type: 'raster',
+      tiles: provider.labels,
+      tileSize: 256,
+      minzoom: 1,
+      maxzoom: 18,
+    };
     layers.push(
       { id: 'basemap', source: 'basemap', type: 'raster' },
       { id: 'labels', source: 'labels', type: 'raster' },
@@ -52,6 +60,12 @@ export function createMapStyle(
       type: 'line',
       source: layer.level,
       'source-layer': 'regions',
+      // Legacy "border" also contains coarse province polygons. Drawing those
+      // over the administrative layer creates false gaps and crossing outlines.
+      ...(layer.level === 'border'
+        ? { filter: ['==', ['geometry-type'], 'LineString'] as const }
+        : {}),
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
       paint: {
         'line-color': [
           'case',
