@@ -52,7 +52,11 @@ export default defineConfig({
           ) {
             return next();
           }
-          if (!existsSync(localRecords)) return next();
+          if (!existsSync(localRecords)) {
+            response.statusCode = 404;
+            response.end();
+            return;
+          }
           response.setHeader('Content-Type', 'application/json; charset=utf-8');
           response.setHeader('Cache-Control', 'no-store');
           createReadStream(localRecords).pipe(response);

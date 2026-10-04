@@ -18,18 +18,28 @@
     "create-user": "pnpm --filter @fangyu/api create-user",
     "catalog:stats": "node tools/data/catalog-stats.mjs",
     "catalog:check": "node scripts/verify-catalog.mjs",
-    "prepare:web": "node scripts/prepare-web.mjs"
+    "prepare:web": "node scripts/prepare-web.mjs",
+    "boundaries:china": "node scripts/run-osm-download.mjs",
+    "boundaries:china:apply": "node scripts/run-osm-download.mjs --apply",
+    "boundaries:china:references": "node scripts/run-osm-download.mjs --references",
+    "data:pack": "node scripts/run-data-snapshot.mjs pack",
+    "data:verify": "node scripts/run-data-snapshot.mjs verify",
+    "data:sync": "node scripts/run-data-snapshot.mjs restore",
+    "data:detach": "node scripts/detach-data-snapshot.mjs"
   },
   "devDependencies": {
+    "@turf/simplify": "^7.4.0",
+    "@types/d3-geo": "^3.1.0",
+    "@types/geojson": "^7946.0.16",
+    "@types/node": "^22.18.0",
+    "geojson-vt": "^4.0.3",
+    "opencc-js": "1.0.5",
+    "osmtogeojson": "3.0.0-beta.5",
+    "pmtiles": "4.4.0",
+    "pnpm": "10.15.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
-    "@types/node": "^22.18.0",
-    "@types/geojson": "^7946.0.16",
-    "@types/d3-geo": "^3.1.0",
-    "pnpm": "10.15.0",
-    "geojson-vt": "^4.0.3",
-    "vt-pbf": "^3.1.3",
-    "@turf/simplify": "^7.4.0"
+    "vt-pbf": "^3.1.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

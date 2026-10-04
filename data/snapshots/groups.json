@@ -1,0 +1,5 @@
+{
+  "runtime": ["data/catalog/*.json"],
+  "osm-source": ["data/boundaries/china-osm/*.geojson", "data/boundaries/china-osm/references/*.geojson", "data/boundaries/china-osm/retained-hkmo-counties.json"],
+  "research": ["data/extensions/research/*.json"]
+}

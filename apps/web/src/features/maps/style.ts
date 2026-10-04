@@ -12,8 +12,8 @@ export function boundaryFillOpacity(
   return [
     'case',
     ['boolean', ['feature-state', 'recorded'], false],
-    provider.kind === 'satellite' ? 0.65 : 0.82,
-    provider.kind === 'satellite' ? 0.08 : 0.15,
+    provider.kind === 'satellite' ? 0.65 : 0.32,
+    provider.kind === 'satellite' ? 0.08 : 0,
   ];
 }
 
@@ -30,7 +30,33 @@ export function createMapStyle(
   const layers: StyleSpecification['layers'] = [
     { id: 'background', type: 'background', paint: { 'background-color': '#eef4f3' } },
   ];
-  if (provider) {
+  const labels: StyleSpecification['layers'] = [];
+  if (provider?.style) {
+    const style = structuredClone(provider.style);
+    for (const [id, source] of Object.entries(style.sources)) sources['base-' + id] = source;
+    for (const layer of style.layers) {
+      // China uses the acquired polygon outlines. National borders are omitted
+      // from the custom basemap globally; other scopes may keep its province lines.
+      if (scope === 'china' && 'source-layer' in layer && layer['source-layer'] === 'boundary')
+        continue;
+      // Local names are the default. Only the China map prefers Chinese tags;
+      // apply this to the clone so switching scopes cannot change the base style.
+      if (provider.id === 'openfreemap' && scope === 'china' && layer.type === 'symbol') {
+        const field = layer.layout?.['text-field'];
+        if (Array.isArray(field) && field[0] === 'get' && field[1] === 'name') {
+          layer.layout!['text-field'] = [
+            'coalesce',
+            ['get', 'name:zh-Hans'],
+            ['get', 'name:zh'],
+            ['get', 'name'],
+          ];
+        }
+      }
+      layer.id = 'base-' + layer.id;
+      if ('source' in layer) layer.source = 'base-' + layer.source;
+      (layer.type === 'symbol' ? labels : layers).push(layer);
+    }
+  } else if (provider) {
     sources.basemap = {
       type: 'raster',
       tiles: provider.tiles,
@@ -44,7 +70,9 @@ export function createMapStyle(
   for (const layer of manifest.scopes[scope].layers) {
     sources[layer.level] = {
       type: 'vector',
-      tiles: [mapAssetUrl(base, layer.url, origin)],
+      ...(layer.archive
+        ? { url: 'pmtiles://' + mapAssetUrl(base, layer.url, origin) }
+        : { tiles: [mapAssetUrl(base, layer.url, origin)] }),
       minzoom: 0,
       maxzoom: layer.maxzoom,
       bounds: layer.bounds,
@@ -100,7 +128,8 @@ export function createMapStyle(
       },
     });
   }
-  if (provider) {
+  layers.push(...labels);
+  if (provider && !provider.style) {
     sources.labels = {
       type: 'raster',
       tiles: provider.labels,
@@ -156,5 +185,11 @@ export function createMapStyle(
       },
     },
   );
-  return { version: 8, sources, layers };
+  return {
+    version: 8,
+    ...(provider?.style?.glyphs ? { glyphs: provider.style.glyphs } : {}),
+    ...(provider?.style?.sprite ? { sprite: provider.style.sprite } : {}),
+    sources,
+    layers,
+  };
 }

@@ -7,6 +7,7 @@ import geojsonvt from 'geojson-vt';
 import vtpbf from 'vt-pbf';
 import simplify from '@turf/simplify';
 import ts from 'typescript';
+import { PMTilesWriter } from './lib/pmtiles-writer.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const input = path.join(root, 'data/catalog'),
   output = path.join(root, 'data/generated/web');
@@ -83,6 +84,7 @@ if (
   throw Error('Expected 2375 retained Vietnam display components.');
 }
 const hash = createHash('sha256').update(await fs.readFile(fileURLToPath(import.meta.url)));
+hash.update(await fs.readFile(new URL('./lib/pmtiles-writer.mjs', import.meta.url)));
 hash.update(vietnamMaskBytes);
 hash.update(registrySource);
 hash.update(JSON.stringify(sourceNames));
@@ -109,7 +111,7 @@ await fs.writeFile(
 );
 const regionMap = new Map(catalog.regions.map((r) => [r.id, r]));
 const manifest = {
-  version: catalog.version,
+  version: stamp,
   scopes: {},
   unavailableScopes: SCOPE_IDS.filter((scope) => !scopes.includes(scope)),
 };
@@ -178,15 +180,17 @@ for (const scope of scopes) {
     features: features.map((f) => {
       try {
         const tolerance =
-          scope === 'france' && f.properties.level === 'county'
-            ? 0.0001
-            : scope === 'france' && f.properties.level === 'city'
-              ? 0.001
-              : scope === 'world'
-                ? 0.06
-                : ['singapore', 'brunei'].includes(scope)
-                  ? 0.001
-                  : 0.012;
+          scope === 'china'
+            ? 0.00005
+            : scope === 'france' && f.properties.level === 'county'
+              ? 0.0001
+              : scope === 'france' && f.properties.level === 'city'
+                ? 0.001
+                : scope === 'world'
+                  ? 0.06
+                  : ['singapore', 'brunei'].includes(scope)
+                    ? 0.001
+                    : 0.012;
         return simplify(f, { tolerance, highQuality: true });
       } catch {
         return f;
@@ -208,34 +212,86 @@ for (const scope of scopes) {
   for (const level of [...new Set(display.map((f) => f.level))]) {
     const selected = features.filter((f) => f.properties.level === level);
     const maxzoom =
-      scope === 'france' && level === 'county'
-        ? 12
-        : scope === 'france' && level === 'city'
-          ? 9
-          : scope === 'world'
-            ? 3
-            : scope === 'singapore'
-              ? 10
-              : scope === 'brunei'
-                ? 8
-                : level === 'county'
-                  ? 7
-                  : level === 'city'
-                    ? 6
-                    : 5;
+      scope === 'china'
+        ? 11
+        : scope === 'france' && level === 'county'
+          ? 12
+          : scope === 'france' && level === 'city'
+            ? 9
+            : scope === 'world'
+              ? 3
+              : scope === 'singapore'
+                ? 10
+                : scope === 'brunei'
+                  ? 8
+                  : level === 'county'
+                    ? 7
+                    : level === 'city'
+                      ? 6
+                      : 5;
     const bounds = selected.reduce((b, f) => merge(b, bbox(f.geometry)), null);
     const index = geojsonvt(
       { type: 'FeatureCollection', features: selected },
       {
         maxZoom: maxzoom,
         indexMaxZoom: Math.min(5, maxzoom),
-        tolerance: 2,
-        extent: 4096,
+        tolerance: scope === 'china' ? 1 : 2,
+        extent: scope === 'china' ? 8192 : 4096,
         buffer: 64,
         promoteId: 'regionId',
       },
     );
     let count = 0;
+    if (scope === 'china') {
+      const archivePath = path.join(output, 'tiles', scope, `${level}.pmtiles`);
+      await fs.mkdir(path.dirname(archivePath), { recursive: true });
+      const archive = new PMTilesWriter(archivePath);
+      // Traverse non-empty parents only. Missing tiles are encoded as absent
+      // directory entries; the PMTiles protocol returns an empty tile, not 404.
+      function visit(z, x, y) {
+        const tile = index.getTile(z, x, y);
+        if (!tile?.numPoints) return;
+        if (tile.features.length)
+          archive.add(z, x, y, vtpbf.fromGeojsonVt({ regions: tile }, { extent: 8192 }));
+        if (z < maxzoom)
+          for (let dx = 0; dx < 2; dx++)
+            for (let dy = 0; dy < 2; dy++) visit(z + 1, x * 2 + dx, y * 2 + dy);
+      }
+      visit(0, 0, 0);
+      count = archive.finish({
+        bounds,
+        maxzoom,
+        metadata: {
+          name: `China ${level}`,
+          attribution:
+            '© OpenStreetMap contributors · ODbL 1.0; unmatched legacy boundaries: see source report',
+          vector_layers: [
+            {
+              id: 'regions',
+              fields: { regionId: 'String', level: 'String', name: 'String' },
+              minzoom: 0,
+              maxzoom,
+            },
+          ],
+        },
+      });
+      const obsolete = path.resolve(output, 'tiles/china', level);
+      if (
+        !['province', 'city', 'county', 'border'].includes(level) ||
+        path.dirname(obsolete) !== path.resolve(root, 'data/generated/web/tiles/china')
+      )
+        throw Error('Unexpected obsolete China tile directory');
+      await fs.rm(obsolete, { recursive: true, force: true });
+      layers.push({
+        level,
+        maxzoom,
+        bounds,
+        archive: true,
+        url: `tiles/${scope}/${level}.pmtiles?v=${stamp.slice(0, 16)}`,
+      });
+      console.log(`${scope}/${level}: ${count} tiles in one PMTiles archive`);
+      continue;
+    }
     for (let z = 0; z <= maxzoom; z++) {
       const nw = tileXY(bounds[0], bounds[3], z),
         se = tileXY(bounds[2], bounds[1], z);

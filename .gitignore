@@ -1,6 +1,9 @@
 *.zip
 *.7z
 *.rar
+# Release data archives may also be kept outside data/generated/.
+fangyu-data-*.tar.gz
+fangyu-data-*.tar.gz.*
 Thumbs.db
 Desktop.ini
 *.log
@@ -14,6 +17,12 @@ coverage/
 apps/*/generated/
 data/generated/
 data/tmp/
+# Versioned public data snapshots are transported separately from source code.
+/data/catalog/*.json
+/data/boundaries/china-osm/*.geojson
+/data/boundaries/china-osm/references/*.geojson
+/data/boundaries/china-osm/retained-hkmo-counties.json
+/data/extensions/research/*.json
 .local-records/
 *.local
 .env

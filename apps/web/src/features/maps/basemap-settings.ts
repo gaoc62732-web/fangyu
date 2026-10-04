@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue';
 import { tianditu, type BasemapKind } from './types.js';
+import { libertyBasemap } from './liberty-basemap.js';
 
 // Deliberately separate from records, Pinia snapshots, archives and exports.
 const storageKey = 'fangyu-private-basemap-v1';
@@ -49,14 +50,16 @@ const choice = ref<Choice>(
     },
 );
 const configuredProvider = computed(() =>
-  tianditu(
-    choice.value.mode === 'custom'
-      ? choice.value.key || ''
-      : choice.value.mode === 'environment'
-        ? import.meta.env.VITE_TIANDITU_KEY || ''
-        : '',
-    choice.value.kind,
-  ),
+  choice.value.kind === 'vector'
+    ? libertyBasemap()
+    : tianditu(
+        choice.value.mode === 'custom'
+          ? choice.value.key || ''
+          : choice.value.mode === 'environment'
+            ? import.meta.env.VITE_TIANDITU_KEY || ''
+            : '',
+        choice.value.kind,
+      ),
 );
 export const basemapProvider = computed(() =>
   choice.value.enabled ? configuredProvider.value : null,

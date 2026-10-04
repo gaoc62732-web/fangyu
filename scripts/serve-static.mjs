@@ -29,13 +29,21 @@ const server = http.createServer(async (request, response) => {
   if (!file.startsWith(directory + path.sep)) return response.writeHead(403).end();
   const info = await stat(file).catch(() => null);
   if (!info?.isFile()) return response.writeHead(404).end('Not found');
-  response.writeHead(200, {
+  // PMTiles reads byte ranges instead of downloading the complete archive.
+  const match = /^bytes=(\d+)-(\d*)$/.exec(request.headers.range || '');
+  const start = match ? Number(match[1]) : 0;
+  const end = match && match[2] ? Math.min(Number(match[2]), info.size - 1) : info.size - 1;
+  if (match && (start > end || start >= info.size))
+    return response.writeHead(416, { 'Content-Range': `bytes */${info.size}` }).end();
+  response.writeHead(match ? 206 : 200, {
     'Content-Type': mime[path.extname(file)] || 'application/octet-stream',
-    'Content-Length': info.size,
+    'Content-Length': end - start + 1,
+    'Accept-Ranges': 'bytes',
+    ...(match ? { 'Content-Range': `bytes ${start}-${end}/${info.size}` } : {}),
     'Cache-Control': 'no-cache',
   });
   if (request.method === 'HEAD') return response.end();
-  const stream = createReadStream(file);
+  const stream = createReadStream(file, { start, end });
   stream.on('error', () => response.destroy());
   stream.pipe(response);
 });

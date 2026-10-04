@@ -1,0 +1,13 @@
+{
+  "mappings": [
+    {
+      "province": "350000",
+      "code": "350527",
+      "relation": 3339695,
+      "expectedName": "金门县",
+      "expectedAdminLevel": "4",
+      "expectedIso": "TW-KIN",
+      "reason": "Catalog places Kinmen under Fujian/Quanzhou, while OSM indexes this island county in the Taiwan area. Verified Chinese name, ISO3166-2 and overlap with existing Kinmen island outlines; use its actual county relation without changing catalog identity or hierarchy."
+    }
+  ]
+}

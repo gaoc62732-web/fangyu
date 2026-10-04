@@ -8,8 +8,6 @@
 
 本次已确认 STELE 主要采用 **多份 GeoJSON → Tippecanoe → MBTiles 中的 PBF 矢量瓦片 → 自有瓦片服务 → 自定义 GL Style JSON → Mapbox GL JS 浏览器绘制**。上游 OSM 如何转成这些 GeoJSON，以及具体服务端软件，仍没有足够证据。它的道路样式与开源 OSM Bright 有很强的相似性；适合以 OSM Bright 为本项目的现成起点，但目前不能断言作者就是从该仓库某个版本修改而来。
 
-底图样式与边界精度应分别验收：前者决定道路、颜色、文字和信息密度；后者决定区划位置、共边、点击和到访填色。仅换底图不会提高项目现有边界几何的精度。
-
 ## 二、STELE 实际使用的技术：本次新增证据
 
 本次读取了站点公开的应用脚本、普通/规划样式和 TileJSON 正文，证据已比上一版仅观察请求地址更充分。以下是当前线上版本的结果；截图没有明确拍摄日期和缩放级别，不能保证与截图时刻逐项相同。
@@ -127,9 +125,9 @@ OpenFreeMap [官网](https://openfreemap.org/)当前说明其公共实例无需�
 
 [Tippecanoe](https://github.com/felt/tippecanoe)是已经整理好的 GeoJSON 等要素集合到矢量瓦片的生成器；它不是一键提取全部 OSM 道路、水体、地名并自动设计底图样式的工具。STELE 的定制工作很可能主要集中在 GeoJSON 生成/筛选以及 style JSON 两端，中间切瓦片使用现成工具。前半段具体程序仍未确认。
 
-## 五、本项目现状与边界改造
+## 五、调查开始时的项目现状与边界改造
 
-以下代码和数据现状在本次调查中核对。底图与边界的改造对象已经具备清晰分层。
+以下为改造前核对的代码和数据现状；本次落地结果见第八节。底图与边界的改造对象已经具备清晰分层。
 
 | 现状                                                                                                  | 改造含义                                                                                   |
 | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -187,3 +185,60 @@ OpenFreeMap [官网](https://openfreemap.org/)当前说明其公共实例无需�
 | [geoBoundaries API](https://www.geoboundaries.org/api.html)                                                                                                                                                                                                                                       | 边界来源检索入口；中国高精度面与具体样本仍需验证                                              |
 
 STELE 自有样式是否来自某个特定 OSM Bright 版本、OSM→GeoJSON 的具体处理脚本、实际服务器软件、完整行政区面来源与更新自动化仍未确认。现有证据已经足以选定可复现其底图风格的技术路线。
+
+## 八、2026-10-04 实施记录
+
+根目录提供的 `osm_liberty.json` 已迁移到 `apps/web/src/features/maps/styles/osm-liberty.json`，并保留 Maputnik 的图层、颜色和缩放规则。MapTiler 的 `{key}` 地址已替换为 OpenFreeMap 的公开 OpenMapTiles TileJSON；中文字体改用 OpenFreeMap 的 Noto Sans 字形。地图运行时把 Liberty 样式的 `openmaptiles` 和 `natural_earth` 源前缀化，再叠加项目自己的可点击行政区面和记录状态。
+
+中国边界采用 PMTiles 发布：县级最高生成级别为 11，浏览器通过 HTTP Range 按需读取，不再为中国范围写入数万个空 PBF 文件。`scripts/prepare-web.mjs` 只在本地生成资产，前端启动不访问 Overpass。服务端预览脚本支持 PMTiles 的 Range 请求。
+
+联网下载已改为 `scripts/fetch-osm-china-boundaries.py`。它沿用旧版 `DownloadOsm.py` 的 HTTP Overpass 地址、POST 查询正文和 Python requests 连接方法，补充 Session、连接/读取超时、重试、失败批次拆分和逐查询缓存。原始响应保存在 `data/tmp/osm-china-python/`；原有有效缓存继续复用，离线转换由 `scripts/lib/prepare-osm-boundaries.mjs` 完成。
+
+匹配必须核对简繁转换后的名称、行政级别与空间位置，行政代码作为辅助证据；不能只凭 OSM 的代码替换，因为实际数据中存在重复或填写错误的 `division_code`。旧粗略轮廓与 OSM 明显不一致时，只有名称、代码、层级及 OSM 显式父子关系同时支持，才允许替换；无旧几何的地区还需核对父区范围。未唯一匹配的目录 ID 保留原几何并写入报告。中国大陆实际使用 OSM 的 4/5/6 级关系对应省/市/县；港澳台按其自己的层级与名称匹配。
+
+下载前准备 Python 环境（本机已配置 `.venv`）：
+
+```powershell
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install -r scripts/requirements-osm.txt
+```
+
+使用方式：
+
+```text
+.venv/Scripts/python.exe scripts/fetch-osm-china-boundaries.py --province 110000 --apply
+.venv/Scripts/python.exe scripts/fetch-osm-china-boundaries.py --all --apply
+.venv/Scripts/python.exe scripts/fetch-osm-china-boundaries.py --references
+.venv/Scripts/python.exe scripts/fetch-osm-china-boundaries.py --all --apply --offline
+node scripts/prepare-web.mjs
+```
+
+`--references` 下载的 `south-tibet`（关系 3202329）和 `aksai-chin`（关系 2713465）只放在 `data/boundaries/china-osm/references/`，不会自动改变地图目录；另记录阿鲁纳恰尔邦关系 2027346 作为上下文，明确它不等同于藏南。所有来源均保留 OSM 关系 URL、抓取时间和 ODbL 署名信息。
+
+两份争议边界参考已实际下载并转换为闭合多边形：藏南 6,269 个顶点、阿克赛钦 4,684 个顶点；上下文阿鲁纳恰尔邦为 10,929 个顶点。原始响应另保留关系版本、源更新时间与 SHA-256。`--offline` 可以重新转换缓存而不请求网络；`--refresh` 才会主动更新快照。
+
+逐省 `.geojson.report.json` 记录下载关系数、匹配、未匹配与不完整关系；`applied.json` 记录真正应用的范围，`python-download-report.json` 逐省更新本次运行进度。Overpass 仍可能返回 429/504，Python 不保证服务端响应速度；本机实测使用旧脚本的 HTTP 原始 POST 方式能取得几何，已成功批次无需重新下载。
+
+底图样式与边界精度应分别验收：前者决定道路、颜色、文字和信息密度；后者决定区划位置、共边、点击和到访填色。仅换底图不会提高项目现有边界几何的精度。
+
+### 实际完成范围
+
+34 个省级范围与国界关系 270056 均已下载并应用。省内完整行政关系共 3,669 条，匹配到原目录 3,237 个地区；目录总计 3,246 个中国地区 ID 保持原身份。其中 2 个现行地区保留原几何：文登区未取得现行 OSM 区面；汉南区的关系 3076294 是包含其他区部分街道的经开区管理范围，不能替代单纯行政区。7 个撤销的历史地区保留原资料。
+
+金门县经核对中文名称、ISO `TW-KIN`、行政层级及岛屿范围，使用 OSM 关系 3339695；项目目录层级保持原样。兴安区旧轮廓偏差较大，但名称、代码、层级与鹤岗市显式下辖关系一致，已安全替换。香港 6 个只有地名 label 节点的 Placeholder 关系被排除；港澳原有分区因共享特别行政区 ID 保留原几何，省/市聚合面使用新来源。
+
+东城区边界现有 525 个顶点，上城区 2,158 个顶点，国界 152,796 个顶点。中国 PMTiles 最高 z11、extent 8192，前端可继续放大到 z15；瓦片几何可更细致地保留源面的曲线。未取得测绘级精度证据，不能把顶点密度等同于源数据完全准确。
+
+已通过目录引用检查、全部前后端生产构建、17 个范围的地图资产检查和 51 个样式校验。实际浏览器读取 OpenFreeMap 矢量、中文字体与 PMTiles Range，验证杭州/上城区、浙江省、东城区近景、记录状态保持、底图开关、无底图 PNG 与底图服务失败回退。截图位于 `data/generated/liberty-map-checks/`。全仓类型检查此前发现的其他模块问题未纳入本轮修复，不能据构建成功宣称全仓类型检查通过。
+
+边界瓦片失败、无 WebGL 和全部地图资源失败后的显式重试也通过。修复了 PMTiles 共享缓存保留失败 Promise 导致重试再次失败的问题；回退时重建该范围的读取器。GPS 空间匹配样本：故宫附近落在东城区，西侧样本落在西城区，杭州城区样本落在上城区；兴安区边缘样本 `(130.36,47.22)` 从旧几何的东山区改为新几何的兴安区，说明更新会实际影响轨迹/GPS 的归属结果。
+
+### 数据运输
+
+大型公共数据拆为固定版本的运行、OSM 源面和研究三个压缩包；代码仓库只需保留清单与同步脚本，按 SHA-256 恢复到本机。当前压缩包已生成并在空数据目录验证恢复，GitHub Release 由用户手工发布。开发者见[获取开发数据](data-download.md)，维护步骤和内容清单见[公共数据快照与同步](data-package-workflow.md)。README 仅保留项目介绍。
+
+### STELE 风格调整
+
+已在内置浏览器打开 STELE，核对杭州区域与街区级别的配色、道路、水系和标签，并读取普通/规划样式。方舆样式已删除底图国界、国名和洲名，水面标签只允许内陆湖泊/河流；城市及其他 place 标签继续关闭。调整陆地、居住区、公园、学校、医院、工业/商业用地和分级道路，建筑采用平面显示。道路名、水系名与少量普通公共设施点按缩放级别分批出现；仅中国地图优先中文字段，其它地图直接使用 OSM 默认名称，并降低水系名字号。项目遗产点与旅行标识保持独立。
+
+完整规则、颜色与缩放门槛见[底图显示规则](basemap-style.md)。样式仍使用 OpenFreeMap 数据源；STELE 的自定义数据覆盖和分类差异不通过复制 JSON 解决。

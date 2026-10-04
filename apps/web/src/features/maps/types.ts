@@ -1,4 +1,5 @@
 import type { Scope } from '@fangyu/contracts';
+import type { StyleSpecification } from 'maplibre-gl';
 export type Bounds = [number, number, number, number];
 export interface MapDataManifest {
   version: string;
@@ -8,7 +9,7 @@ export interface MapDataManifest {
       bounds: Bounds;
       regionBounds: Record<string, Bounds>;
       simplified: string;
-      layers: { level: string; maxzoom: number; bounds: Bounds; url: string }[];
+      layers: { level: string; maxzoom: number; bounds: Bounds; url: string; archive?: boolean }[];
     }
   >;
 }
@@ -19,6 +20,7 @@ export interface BasemapProvider {
   attribution: string;
   tiles: string[];
   labels: string[];
+  style?: StyleSpecification;
 }
 export type BasemapKind = 'vector' | 'satellite';
 export function tianditu(key: string, kind: BasemapKind = 'vector'): BasemapProvider | null {

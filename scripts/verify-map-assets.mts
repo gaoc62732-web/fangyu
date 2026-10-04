@@ -6,6 +6,8 @@ import { gzipSync } from 'node:zlib';
 import { createMapStyle } from '../apps/web/src/features/maps/style.js';
 import { mapAssetUrl, tianditu } from '../apps/web/src/features/maps/types.js';
 import { decodeCatalogResponse } from '../apps/web/src/app/catalog-loader.js';
+import { libertyBasemap } from '../apps/web/src/features/maps/liberty-basemap.js';
+import { PMTiles } from 'pmtiles';
 import { SCOPE_IDS } from '../packages/contracts/src/scopes.js';
 const require = createRequire(import.meta.url);
 const tileRequire = createRequire(require.resolve('vt-pbf'));
@@ -13,7 +15,7 @@ const { VectorTile } = tileRequire('@mapbox/vector-tile');
 const Pbf = tileRequire('pbf');
 const webRequire = createRequire(resolve('apps/web/package.json'));
 const mapRequire = createRequire(webRequire.resolve('maplibre-gl/package.json'));
-const { validateStyleMin } = mapRequire('@maplibre/maplibre-gl-style-spec');
+const { validateStyleMin, expression } = mapRequire('@maplibre/maplibre-gl-style-spec');
 const dir = 'data/generated/web/';
 const manifest = JSON.parse(readFileSync(dir + 'map-manifest.json', 'utf8'));
 let features = 0;
@@ -21,9 +23,11 @@ const detailedFranceCounts = { city: 8, county: 20 } as const;
 const layerChecks: string[] = [];
 const detailedFranceIds = new Set<string>();
 for (const scope of SCOPE_IDS) {
-  assert.deepEqual(
-    readFileSync(dir + `geometry/${scope}.geo.json`),
-    readFileSync(`data/catalog/${scope}.geo.json`),
+  assert(
+    readFileSync(dir + `geometry/${scope}.geo.json`).equals(
+      readFileSync(`data/catalog/${scope}.geo.json`),
+    ),
+    `${scope}: generated raw geometry must match source`,
   );
   const raw = JSON.parse(readFileSync(`data/catalog/${scope}.geo.json`, 'utf8'));
   const ids = new Set(raw.map((f: any) => f.regionId || f.id));
@@ -40,6 +44,24 @@ for (const scope of SCOPE_IDS) {
     }
   }
   for (const layer of manifest.scopes[scope].layers) {
+    let archiveTile: any;
+    if (layer.archive) {
+      const bytes = readFileSync(dir + layer.url.split('?')[0]);
+      const archive = new PMTiles({
+        getKey: () => layer.url,
+        getBytes: async (offset: number, length: number) => ({
+          data: new Uint8Array(bytes.subarray(offset, offset + length)).buffer,
+        }),
+      });
+      const header = await archive.getHeader();
+      assert.equal(header.maxZoom, 11);
+      assert.equal(((await archive.getMetadata()) as any).vector_layers[0].id, 'regions');
+      archiveTile = await archive.getZxy(0, 0, 0);
+      assert(archiveTile, `${layer.level} archive root tile`);
+      // Beijing detail must be readable through leaf directories and retain IDs.
+      const tile = await archive.getZxy(11, 1686, 775);
+      if (tile) assert(new VectorTile(new Pbf(tile.data)).layers.regions.length > 0);
+    }
     const layerIds = new Set<string>(
       raw
         .filter((feature: any) => feature.level === layer.level)
@@ -61,7 +83,13 @@ for (const scope of SCOPE_IDS) {
                 ),
               ),
           )
-      : [new VectorTile(new Pbf(readFileSync(dir + `tiles/${scope}/${layer.level}/0/0/0.pbf`)))];
+      : [
+          new VectorTile(
+            new Pbf(
+              archiveTile?.data || readFileSync(dir + `tiles/${scope}/${layer.level}/0/0/0.pbf`),
+            ),
+          ),
+        ];
     const visibleIds = new Set<string>();
     for (const current of tiles) {
       if (!current.layers.regions) continue;
@@ -95,6 +123,7 @@ for (const scope of SCOPE_IDS) {
   }
   for (const provider of [
     null,
+    libertyBasemap(),
     tianditu('synthetic_test_key'),
     tianditu('synthetic_test_key', 'satellite'),
   ]) {
@@ -107,7 +136,34 @@ for (const scope of SCOPE_IDS) {
       'https://example.invalid/',
     );
     assert.deepEqual(validateStyleMin(style), [], 'MapLibre style schema');
+    if (provider?.id === 'openfreemap') {
+      for (const layer of style.layers) {
+        if (!layer.id.startsWith('base-') || layer.type !== 'symbol') continue;
+        const field = layer.layout?.['text-field'];
+        if (!field) continue;
+        const parsed = expression.createExpression(field, `layers.${layer.id}.layout.text-field`);
+        assert.equal(parsed.result, 'success');
+        // Both tags exist: a foreign map must keep the native name even when
+        // OSM supplies a Chinese translation. China still prefers Chinese.
+        const feature = { properties: { name: 'Châtelet', 'name:zh': '沙特莱' } };
+        assert.equal(
+          parsed.value.evaluate({ zoom: 15 }, feature),
+          scope === 'china' ? '沙特莱' : 'Châtelet',
+          `${scope}/${layer.id}: native versus Chinese name preference`,
+        );
+        assert.equal(
+          parsed.value.evaluate({ zoom: 15 }, { properties: { name: 'Local name' } }),
+          'Local name',
+          `${scope}/${layer.id}: default name when no Chinese tag exists`,
+        );
+      }
+    }
   }
+}
+// Creating the China style must not mutate the shared provider used by other maps.
+for (const layer of libertyBasemap().style!.layers) {
+  if (layer.type === 'symbol' && layer.layout?.['text-field'])
+    assert.deepEqual(layer.layout['text-field'], ['get', 'name']);
 }
 assert.equal(detailedFranceIds.size, 28, 'All 8 French departments and 20 Paris districts survive');
 assert.equal(tianditu(''), null);

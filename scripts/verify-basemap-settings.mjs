@@ -24,6 +24,13 @@ async function verifyUnavailableStorage() {
   )
     .replace("from 'vue'", 'from ' + JSON.stringify(pathToFileURL(require.resolve('vue')).href))
     .replace("from './types.js'", 'from ' + JSON.stringify(types))
+    .replace(
+      "from './liberty-basemap.js'",
+      'from ' +
+        JSON.stringify(
+          toModule("export const libertyBasemap = () => ({ id: 'openfreemap', kind: 'vector' });"),
+        ),
+    )
     .replaceAll('import.meta.env.VITE_TIANDITU_KEY', "'synthetic_build_fallback'");
   globalThis.window = {};
   for (const name of ['localStorage', 'sessionStorage'])
@@ -35,6 +42,8 @@ async function verifyUnavailableStorage() {
   try {
     const settings = await import(toModule(source));
     assert(settings.basemapProvider.value);
+    assert.equal(settings.basemapProvider.value.id, 'openfreemap');
+    settings.setBasemapKind('satellite');
     assert.equal(settings.applyBasemapKey('synthetic_storage_test', false), false);
     assert.equal(settings.setBasemapEnabled(false), false);
     assert.equal(settings.basemapProvider.value, null);
@@ -62,7 +71,10 @@ if (process.env.SETTINGS_STATE_ONLY === '1') {
 const { chromium } = await import(
   process.env.PLAYWRIGHT_MODULE ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : 'playwright'
 );
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({
+  channel: process.env.BROWSER_CHANNEL || 'msedge',
+  headless: true,
+});
 const context = await browser.newContext();
 const helper = await context.newPage();
 const data = await helper.evaluate(() => {
@@ -91,6 +103,7 @@ async function open() {
 try {
   await page.goto((process.env.UI_BASE_URL || 'http://localhost:5190') + '/#/china');
   await open();
+  await page.getByRole('combobox', { name: '底图类型' }).selectOption('satellite');
   const secret = page.locator('input[aria-label="天地图浏览器密钥"]');
   assert.equal(await secret.getAttribute('type'), 'password');
   assert.equal(await page.getByRole('checkbox', { name: '记住此浏览器' }).isChecked(), false);
@@ -99,11 +112,11 @@ try {
   await page.getByRole('button', { name: '测试连接', exact: true }).click();
   stage = 'test success';
   await page.getByText('连接成功，可以应用。', { exact: true }).waitFor();
-  assert(requestedLayers.has('vec_w') && requestedLayers.has('cva_w'));
+  assert(requestedLayers.has('img_w') && requestedLayers.has('cia_w'));
   await page.getByRole('button', { name: '应用底图设置', exact: true }).click();
   assert.equal(await secret.inputValue(), '');
   stage = 'toggle off and resume';
-  const enabled = page.getByRole('checkbox', { name: '启用天地图在线底图' });
+  const enabled = page.getByRole('checkbox', { name: '启用在线底图' });
   await enabled.uncheck();
   assert.equal(await enabled.isChecked(), false);
   assert(
@@ -166,7 +179,7 @@ try {
   await page.getByRole('button', { name: '使用默认密钥', exact: true }).click();
   await page
     .locator('.basemap-settings [role="status"]')
-    .filter({ hasText: /已使用默认密钥|无可用的默认密钥/ })
+    .filter({ hasText: /已恢复默认底图设置|无可用的卫星图密钥/ })
     .waitFor();
   await context.unroute('https://t0.tianditu.gov.cn/**');
   await context.route('https://t0.tianditu.gov.cn/**', (r) =>

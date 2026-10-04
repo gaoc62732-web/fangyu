@@ -54,7 +54,7 @@ function clear() {
   draft.value = '';
   remember.value = false;
   message.value = clearBasemapKey()
-    ? '已清除密钥并关闭在线底图。'
+    ? '已清除卫星图密钥并关闭在线底图。'
     : '本次已禁用，但浏览器存储不可用；下次打开时请再次检查。';
 }
 function toggle(event: Event) {
@@ -84,13 +84,15 @@ function environment() {
   draft.value = '';
   remember.value = false;
   useEnvironmentBasemap();
-  message.value = basemapProvider.value ? '已使用默认密钥。' : '无可用的默认密钥，请填写密钥。';
+  message.value = basemapProvider.value
+    ? '已恢复默认底图设置。'
+    : '无可用的卫星图密钥，请填写密钥。';
 }
 </script>
 <template>
   <details class="basemap-settings">
     <summary>在线底图设置</summary>
-    <p class="note">密钥仅在此浏览器使用，请在天地图控制台限制授权域名。</p>
+    <p class="note">OSM Liberty 使用自定义样式与 OpenFreeMap 数据，无需密钥。</p>
     <div class="toolbar">
       <label
         ><input
@@ -98,7 +100,7 @@ function environment() {
           :checked="basemapEnabled"
           :disabled="!basemapCanEnable"
           @change="toggle"
-        />启用天地图在线底图</label
+        />启用在线底图</label
       >
       <label
         >底图类型
@@ -107,8 +109,8 @@ function environment() {
           aria-label="底图类型"
           @change="changeKind"
         >
-          <option value="vector">政区图</option>
-          <option value="satellite">卫星图</option>
+          <option value="vector">OSM Liberty（自定义）</option>
+          <option value="satellite">天地图卫星图</option>
         </select></label
       >
     </div>
@@ -118,7 +120,11 @@ function environment() {
     >
       请先设置天地图密钥。
     </p>
-    <form @submit.prevent="apply">
+    <form
+      v-if="basemapKind === 'satellite'"
+      @submit.prevent="apply"
+    >
+      <p class="note">卫星图密钥仅在此浏览器使用，请在天地图控制台限制授权域名。</p>
       <label
         >天地图浏览器密钥
         <input

@@ -1,0 +1,398 @@
+{
+  "formatVersion": 1,
+  "version": "osm-20261004",
+  "createdAt": "2026-10-04T13:06:54.327106+00:00",
+  "catalogVersion": "2026-10-03.16",
+  "transportBaseUrl": "https://github.com/gaoc62732-web/fangyu/releases/download/data-osm-20261004",
+  "packages": [
+    {
+      "group": "runtime",
+      "file": "fangyu-data-runtime-osm-20261004.tar.gz",
+      "bytes": 87505596,
+      "sha256": "a9c2e7759cc1fc5cef6876300d4ee7ac336e77d0da795b3d4d9ad62cc4e85b87",
+      "files": [
+        {
+          "path": "data/catalog/brunei.geo.json",
+          "bytes": 69734,
+          "sha256": "fcdf819f58ebec109a6239adbcf7187f4ae63212596248a5a86cdfb56452b92b"
+        },
+        {
+          "path": "data/catalog/catalog.json",
+          "bytes": 36564566,
+          "sha256": "209b2153ebf0154bf22b092103e01d0232d9b653f421190a52d3a01d8d14559e"
+        },
+        {
+          "path": "data/catalog/china.geo.json",
+          "bytes": 224230704,
+          "sha256": "d56d2c537db346dd82fe1b09aac79f1c5c69e480a2085a5d8a798d52a7e8606d"
+        },
+        {
+          "path": "data/catalog/france.geo.json",
+          "bytes": 4623574,
+          "sha256": "5234ba4e1e99565685bd92eb0cf325b6ef7c7c7393715e473a9959daea9c7c27"
+        },
+        {
+          "path": "data/catalog/germany.geo.json",
+          "bytes": 2077781,
+          "sha256": "f74e60fa6054493a649ddcca0efbc8d8a3d1aeb9d735334277e59162e65371b6"
+        },
+        {
+          "path": "data/catalog/indonesia.geo.json",
+          "bytes": 21858924,
+          "sha256": "6b67dde4183bb48cd6a6cecacd2554c282db4d2db12fc4229bac68f14b9ddb76"
+        },
+        {
+          "path": "data/catalog/italy.geo.json",
+          "bytes": 2192097,
+          "sha256": "b1bcbd80ecbc375cb97ff7e136c020a6c4c9d9f83f61e7ad1e322a7f3f58430f"
+        },
+        {
+          "path": "data/catalog/japan.geo.json",
+          "bytes": 1884623,
+          "sha256": "d622e937d42bd7b0e710f0fb2c9ddc0a894844d4afb263742a212fa84df8df9a"
+        },
+        {
+          "path": "data/catalog/korea.geo.json",
+          "bytes": 141535,
+          "sha256": "39141836766bc421a0116a3d38af769d36deafab0e1f58521c8ff94f49938d9b"
+        },
+        {
+          "path": "data/catalog/malaysia.geo.json",
+          "bytes": 1495331,
+          "sha256": "ff3edcc642bc8cd81726d0910ecba1c576b98dc488a60ad16fbc9a8dffd54361"
+        },
+        {
+          "path": "data/catalog/manifest.json",
+          "bytes": 503,
+          "sha256": "77209a0ae7c7360ab848b9f5d34d0ef6a738fc75c1404fde356f54d3e1eebad5"
+        },
+        {
+          "path": "data/catalog/singapore.geo.json",
+          "bytes": 2846945,
+          "sha256": "8ccd0e8a5a738abf3744b703d4c7591454de16233ba535793a851650fb3bb712"
+        },
+        {
+          "path": "data/catalog/spain.geo.json",
+          "bytes": 2515431,
+          "sha256": "bbff6e573ec52f75feb3aba663487098fc30b4d411183ae3099d5a8341873d78"
+        },
+        {
+          "path": "data/catalog/thailand.geo.json",
+          "bytes": 2645365,
+          "sha256": "0f9f8d039f2d377c7d7b24046b50a1b2fd89963002f054d2842f8649cf38fd11"
+        },
+        {
+          "path": "data/catalog/uk.geo.json",
+          "bytes": 6594797,
+          "sha256": "9a54c5c19d9c8fa049f98907fffc6b47d064eeb488c2c88ff3fea77cd8f6e2cb"
+        },
+        {
+          "path": "data/catalog/usa.geo.json",
+          "bytes": 9342105,
+          "sha256": "a2325ceb086d784e8e01228e3f62408e54edb4ab9c21863af37699de8b02ccd4"
+        },
+        {
+          "path": "data/catalog/uzbekistan.geo.json",
+          "bytes": 457440,
+          "sha256": "6d1b4a92ec25a606b7bc59aadaf49661af349ba4b08d754e3c13fc4456f3d3d9"
+        },
+        {
+          "path": "data/catalog/vietnam.geo.json",
+          "bytes": 4074204,
+          "sha256": "33342a5b84195a04eee593972574bd366f8b886e4c07b104a5919301b81a7e28"
+        },
+        {
+          "path": "data/catalog/world.geo.json",
+          "bytes": 12031574,
+          "sha256": "ea25ca19dc4e78b31f3d9c77a649829f7a1766f474e8620ec636044101ae6b00"
+        }
+      ]
+    },
+    {
+      "group": "osm-source",
+      "file": "fangyu-data-osm-source-osm-20261004.tar.gz",
+      "bytes": 76465591,
+      "sha256": "7a8dd035bdff7093392eb93e54caa02dc5d8ed686da6f5203c4bb63acfab604b",
+      "files": [
+        {
+          "path": "data/boundaries/china-osm/110000.geojson",
+          "bytes": 1303724,
+          "sha256": "d390728622dc55255ef08892d5fcd2f86cb5193a07699e0f530d647e00950583"
+        },
+        {
+          "path": "data/boundaries/china-osm/120000.geojson",
+          "bytes": 465879,
+          "sha256": "4ca8e8c42ad5bfec6478bbb264c207a98f3f77401d82444c3cfe0349f3c62eb7"
+        },
+        {
+          "path": "data/boundaries/china-osm/130000.geojson",
+          "bytes": 5356821,
+          "sha256": "e497366cccd0c3be9c2b9940d41663efe29fc84464efb691a4d5ccdb0d6fa824"
+        },
+        {
+          "path": "data/boundaries/china-osm/140000.geojson",
+          "bytes": 6998029,
+          "sha256": "98c177b440b63309e84d2dc7a616a81701d17585f5fc04d53efde42f0010ee40"
+        },
+        {
+          "path": "data/boundaries/china-osm/150000.geojson",
+          "bytes": 5469403,
+          "sha256": "15aacc976b409c28d8a2a532641d5c0a4d8e0fc9a7d05e6cdad05ec0ce1605fe"
+        },
+        {
+          "path": "data/boundaries/china-osm/210000.geojson",
+          "bytes": 6909802,
+          "sha256": "33e97f2f7c23fac8bba285317aa0daf255fae942bcea60e3291d499229d9b123"
+        },
+        {
+          "path": "data/boundaries/china-osm/220000.geojson",
+          "bytes": 3772355,
+          "sha256": "a5060d976e0f5ba771236e5eeac6b95f5255fbf408a42bfe816f9bd6c6723640"
+        },
+        {
+          "path": "data/boundaries/china-osm/230000.geojson",
+          "bytes": 5446162,
+          "sha256": "31f34cde79fcdee960a46064e6e0d52da26e430b405b114b256d8043b2b2dc5f"
+        },
+        {
+          "path": "data/boundaries/china-osm/310000.geojson",
+          "bytes": 606286,
+          "sha256": "40ea93063741aac2e546718f1e24644e35de63cb32ad26b7488a17bb10d09bb8"
+        },
+        {
+          "path": "data/boundaries/china-osm/320000.geojson",
+          "bytes": 6172044,
+          "sha256": "42fe9b7ec29011636ce02b0f4884ce5c2b297bd88edf7b90c2df1a596680a058"
+        },
+        {
+          "path": "data/boundaries/china-osm/330000.geojson",
+          "bytes": 18511669,
+          "sha256": "ae4ae7e6168a15104d9541e80f698fdc32510cedebbae2d5a50f91bcd918ee51"
+        },
+        {
+          "path": "data/boundaries/china-osm/340000.geojson",
+          "bytes": 10744867,
+          "sha256": "109e14384190dfa061cc95f071fceda9168dd581b6f7bfee0cb464ef83fca674"
+        },
+        {
+          "path": "data/boundaries/china-osm/350000.geojson",
+          "bytes": 7642563,
+          "sha256": "b03075dd03f7a7784d641e8c9ae086caad2c52bd71686396494ae608485b6c99"
+        },
+        {
+          "path": "data/boundaries/china-osm/360000.geojson",
+          "bytes": 13473558,
+          "sha256": "562129592cd7f501f2242a3539455812145343eca282e18a89114c81d0c1ea45"
+        },
+        {
+          "path": "data/boundaries/china-osm/370000.geojson",
+          "bytes": 6899121,
+          "sha256": "fc7d37b0135730b9d4f2b2f6870db3f74b216a37c427fce9d4790a5049bd4ada"
+        },
+        {
+          "path": "data/boundaries/china-osm/410000.geojson",
+          "bytes": 9335934,
+          "sha256": "d5617b6a25e7e5f6943232bd33c24e6ec1fe930d7786c24161f188999081e151"
+        },
+        {
+          "path": "data/boundaries/china-osm/420000.geojson",
+          "bytes": 4392010,
+          "sha256": "37203f09fa68eed36e51aa4a6c6a8cc5e1c66ad16f56456e3db934df78878774"
+        },
+        {
+          "path": "data/boundaries/china-osm/430000.geojson",
+          "bytes": 7907962,
+          "sha256": "30af839b9777b647943b1125d55c4a144a94ae1d94878c3a5dfe603ba51405b2"
+        },
+        {
+          "path": "data/boundaries/china-osm/440000.geojson",
+          "bytes": 8130096,
+          "sha256": "7d27048945129889232a8f15b76e2da33223e34289bd65671838d45239a8fa9c"
+        },
+        {
+          "path": "data/boundaries/china-osm/450000.geojson",
+          "bytes": 10956587,
+          "sha256": "3efc6f1ac60336890f6b9430d938f98fb739e1165cae2ae734f3939c2eef7710"
+        },
+        {
+          "path": "data/boundaries/china-osm/460000.geojson",
+          "bytes": 748128,
+          "sha256": "8c96575d0d6b05a70c7049eb840a279bc866c2a2ef81f37bd019e71da1e85ac9"
+        },
+        {
+          "path": "data/boundaries/china-osm/500000.geojson",
+          "bytes": 1697829,
+          "sha256": "491deb6030a1c17c3c0eaa9a09b556b119c5a62493fa79756dae25b6a60e9a11"
+        },
+        {
+          "path": "data/boundaries/china-osm/510000.geojson",
+          "bytes": 9490140,
+          "sha256": "33a43928551b5e59a149840de2455148b659f440ebacc4097cd9fae0421b9f7c"
+        },
+        {
+          "path": "data/boundaries/china-osm/520000.geojson",
+          "bytes": 3363408,
+          "sha256": "268a2b87dd1d3d54de0e8b9426b72f4876ee36c521e53a05a991878d76f9fe5b"
+        },
+        {
+          "path": "data/boundaries/china-osm/530000.geojson",
+          "bytes": 9731949,
+          "sha256": "9281e6e28bc229a43a85c687a587b6ad9f5f750a8ffa066ab99ccbcbcdd6d890"
+        },
+        {
+          "path": "data/boundaries/china-osm/540000.geojson",
+          "bytes": 5110808,
+          "sha256": "7747dd5f7967e0e645cad571962d64428c1fa8bff68beaf68f2db0f544846abd"
+        },
+        {
+          "path": "data/boundaries/china-osm/610000.geojson",
+          "bytes": 5333067,
+          "sha256": "6c6bfe21e7ad229822c93c63277569805290c6fd4a93d10419deaef11eb333b0"
+        },
+        {
+          "path": "data/boundaries/china-osm/620000.geojson",
+          "bytes": 19574515,
+          "sha256": "851b8d7cedfb41ce12c1e9767096f5a871b7b666f6d13ac3629337e0e492bfe9"
+        },
+        {
+          "path": "data/boundaries/china-osm/630000.geojson",
+          "bytes": 4370195,
+          "sha256": "54dd9264d3bb456124a4014175e1106aa3e80f371a4bbfb9555961ffbe025976"
+        },
+        {
+          "path": "data/boundaries/china-osm/640000.geojson",
+          "bytes": 1208499,
+          "sha256": "846acaf521aa224db11269c28f6dc432bea436393d9edbf9a06ff91cbc814130"
+        },
+        {
+          "path": "data/boundaries/china-osm/650000.geojson",
+          "bytes": 16633976,
+          "sha256": "f2a8e2131f163ef6f1600492f0b5898d280ae2d23e311562b3c7f4ab91884575"
+        },
+        {
+          "path": "data/boundaries/china-osm/710000.geojson",
+          "bytes": 14436601,
+          "sha256": "2d0872d5574d0bc4c54093b3d81d720d4acf17f98b10d564d5a21805bf40c8af"
+        },
+        {
+          "path": "data/boundaries/china-osm/810000.geojson",
+          "bytes": 1105258,
+          "sha256": "61b5a6856316f7f4e9935f28d0a44ae1b798e90c8d8f9db339cc5b8c31252961"
+        },
+        {
+          "path": "data/boundaries/china-osm/820000.geojson",
+          "bytes": 118678,
+          "sha256": "77ef67be1e1680bf6efa389145fe3cf498a1a6a43433f3a47e98281aee673386"
+        },
+        {
+          "path": "data/boundaries/china-osm/national.geojson",
+          "bytes": 3654357,
+          "sha256": "73640baf677d5282c29332f0dbd599754777d096ad83509561158d452c882b59"
+        },
+        {
+          "path": "data/boundaries/china-osm/references/aksai-chin.geojson",
+          "bytes": 111697,
+          "sha256": "92bd35545d5b7fa99af37f574a8500e3d73f21a1882e3f5cf9d8967b54aeefe8"
+        },
+        {
+          "path": "data/boundaries/china-osm/references/arunachal-pradesh-context.geojson",
+          "bytes": 261113,
+          "sha256": "7c78c818a126f750436fcdb1bc3ac61fb94307764ae62102905fc72b89c53060"
+        },
+        {
+          "path": "data/boundaries/china-osm/references/south-tibet.geojson",
+          "bytes": 149255,
+          "sha256": "811ab6ec4371f580c859015f21becd0e404150c1caa138d0ed096f2896bf5313"
+        },
+        {
+          "path": "data/boundaries/china-osm/retained-hkmo-counties.json",
+          "bytes": 11602,
+          "sha256": "2566ac994776064cc3dd5d68a8f7fae23fe93f1c7b5180a386569c68db680650"
+        }
+      ]
+    },
+    {
+      "group": "research",
+      "file": "fangyu-data-research-osm-20261004.tar.gz",
+      "bytes": 6806268,
+      "sha256": "8716dedd00ace03ca5a08e2fe0dedbe4603f3ac59cb84b83a9fe58422ea76757",
+      "files": [
+        {
+          "path": "data/extensions/research/chengxiang-temples-2026-10-03.json",
+          "bytes": 14114,
+          "sha256": "48645b0cb998acbaeb4fe0906bdb7ecbd16967ab663e4d23c0afc67610336ff9"
+        },
+        {
+          "path": "data/extensions/research/china-airport-map-associations.json",
+          "bytes": 435355,
+          "sha256": "7860d25797795d31b464f8a884b49a263bf67294592f0984ab702f71597e3385"
+        },
+        {
+          "path": "data/extensions/research/china-heritage-map-association-audit.json",
+          "bytes": 133548,
+          "sha256": "e8380e1537221b2dbe949b5ef6a6036cb862f3366d58b20eca1696ded6f4af37"
+        },
+        {
+          "path": "data/extensions/research/country-boundaries.json",
+          "bytes": 8870412,
+          "sha256": "6a0575b9d4c5d799310471e97803101184e5b408e5ece6e53a02087612206528"
+        },
+        {
+          "path": "data/extensions/research/football-validation.json",
+          "bytes": 1290,
+          "sha256": "b842675b2a94c81e74ba220e072b489ad0307954c31ed85520befe29eeb6b0c1"
+        },
+        {
+          "path": "data/extensions/research/football-venues.json",
+          "bytes": 194849,
+          "sha256": "5cf2e0eb954a013ff71b3a4e5a245b33971d21ff6eaefe69b6e1b37a0c84cae0"
+        },
+        {
+          "path": "data/extensions/research/france-idf-paris-boundaries.json",
+          "bytes": 305228,
+          "sha256": "694befb6fe7e72d84dcaf3c9e9502da3d29c3ddf7f1006ea821bacd3d29fd97a"
+        },
+        {
+          "path": "data/extensions/research/indonesia-open-boundaries.json",
+          "bytes": 39475,
+          "sha256": "6b2f79b6633c7ad03ae01522ab3e641da9dcd3211893efd539708838e9e638b4"
+        },
+        {
+          "path": "data/extensions/research/national-heritage.json",
+          "bytes": 783239,
+          "sha256": "62679db5d303189ee8a97a828be88489ebfd07a325d05db11287cf42b64a17e3"
+        },
+        {
+          "path": "data/extensions/research/sea-country-boundaries.json",
+          "bytes": 9506524,
+          "sha256": "e31205d8742c6830ad1c57e15c6d46680916fb9580bf74cc43aa81bf12b5f0c6"
+        },
+        {
+          "path": "data/extensions/research/sea-unesco-components.json",
+          "bytes": 131035,
+          "sha256": "6fe8cd25eccb2796f716539ad14cf6b1cec6b6cde318817da5518038ff508ccc"
+        },
+        {
+          "path": "data/extensions/research/south-china-sea-interaction-mask.json",
+          "bytes": 679990,
+          "sha256": "d744fee0a7f264b51c28be8ecfd4f100da4526735d98ddceca4e65b8797f1538"
+        },
+        {
+          "path": "data/extensions/research/south-china-sea-interaction-testpoints.json",
+          "bytes": 1036292,
+          "sha256": "80d505143b0fb3d710ba14923bbcc5a964534e4a7e7d8431ff5dadbb7e3d747c"
+        },
+        {
+          "path": "data/extensions/research/south-china-sea-named-island-tests.json",
+          "bytes": 4026,
+          "sha256": "9c52cf05ff87d530239a4289d50c83513bf251040be27bb450b7deec29ac97e0"
+        },
+        {
+          "path": "data/extensions/research/unesco-additional-countries.json",
+          "bytes": 2321858,
+          "sha256": "bb6dccb27b0794251ec33b800b13356fe8552cac4d2c5c6b29d25d6d8d737b8a"
+        }
+      ]
+    }
+  ]
+}

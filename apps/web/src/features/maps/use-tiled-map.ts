@@ -2,9 +2,11 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import {
   Map as LibreMap,
   setWorkerUrl,
+  addProtocol,
   type GeoJSONSource,
   type MapGeoJSONFeature,
 } from 'maplibre-gl';
+import { PMTiles, Protocol } from 'pmtiles';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { VISIT_LABELS, getScopeConfig, type Scope, type MapLevel } from '@fangyu/contracts';
@@ -24,7 +26,7 @@ import {
 } from '@fangyu/map-renderer';
 import { useAppStore } from '../../app/store.js';
 import { download } from '../exports/download.js';
-import { type Bounds, type MapDataManifest } from './types.js';
+import { mapAssetUrl, type Bounds, type MapDataManifest } from './types.js';
 import { basemapProvider } from './basemap-settings.js';
 import { mapAttributions } from './data-attribution.js';
 import { boundaryFillOpacity, createMapStyle, VISITED_MARKER_LAYER_IDS } from './style.js';
@@ -32,6 +34,8 @@ import { regionInteractionPolicy } from './sea-region-interaction.js';
 import airportAssociations from '../../../../../data/extensions/research/china-airport-map-associations.json';
 
 setWorkerUrl(workerUrl);
+const pmtiles = new Protocol();
+addProtocol('pmtiles', pmtiles.tile);
 export interface TiledMapProps {
   scope: Scope;
   selected: string;
@@ -460,13 +464,15 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       const b = id ? scopeData.regionBounds[id] : scopeData.bounds;
       const overviewZoom = props.scope === 'singapore' ? 11 : props.scope === 'brunei' ? 8 : 6;
       const detailZoom =
-        props.scope === 'france' && level.value === 'county'
+        props.scope === 'china' && level.value === 'county'
           ? 14
-          : props.scope === 'france' && level.value === 'city'
-            ? 11
-            : props.scope === 'singapore'
-              ? 12
-              : 9;
+          : props.scope === 'france' && level.value === 'county'
+            ? 14
+            : props.scope === 'france' && level.value === 'city'
+              ? 11
+              : props.scope === 'singapore'
+                ? 12
+                : 9;
       if (b)
         map.fitBounds(b, { padding: 45, maxZoom: id ? detailZoom : overviewZoom, duration: 0 });
     }
@@ -624,7 +630,10 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         if (token === generation && current === map) addVisitedImage(current, id);
       });
       timer = setTimeout(() => {
-        if (token === generation && loading.value) void useFallback(token);
+        if (token !== generation || !loading.value) return;
+        // Online labels may arrive slowly; a ready vector map remains usable.
+        if (ready) loading.value = false;
+        else void useFallback(token);
       }, 15000);
       current.on('style.load', () => {
         if (token !== generation || current !== map) return;
@@ -651,12 +660,24 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       current.on('error', (e) => {
         if (token !== generation || current !== map) return;
         const sourceId = (e as { sourceId?: string }).sourceId;
-        if (sourceId === 'basemap' || sourceId === 'labels') {
+        if (sourceId === 'basemap' || sourceId === 'labels' || sourceId?.startsWith('base-')) {
           providerFailed.value = true;
-          for (const id of ['basemap', 'labels']) if (current.getLayer(id)) current.removeLayer(id);
-          for (const id of ['basemap', 'labels'])
+          for (const layer of current.getStyle().layers)
+            if (['basemap', 'labels'].includes(layer.id) || layer.id.startsWith('base-'))
+              current.removeLayer(layer.id);
+          for (const id of Object.keys(current.getStyle().sources).filter(
+            (id) => ['basemap', 'labels'].includes(id) || id.startsWith('base-'),
+          ))
             if (current.getSource(id)) current.removeSource(id);
           appearance();
+        } else if (sourceId && scopeData.layers.some((layer) => layer.level === sourceId)) {
+          // SharedPromiseCache retains failed header/directory promises. Several
+          // sources may fail together, while only the first error reaches this
+          // handler before fallback removes the map. Renew this scope's readers.
+          for (const failed of scopeData.layers)
+            if (failed.archive)
+              pmtiles.add(new PMTiles(mapAssetUrl(base, failed.url, location.href)));
+          void useFallback(token);
         } else if (ready) {
           mapError.value = '地图资源暂时无法完整加载，可切换简化地图。';
           loading.value = false;

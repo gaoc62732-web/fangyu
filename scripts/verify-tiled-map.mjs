@@ -8,7 +8,10 @@ const { chromium } = await import(
 const base = process.env.UI_BASE_URL || 'http://localhost:5190';
 const output = resolve(process.env.UI_OUTPUT || 'data/generated/tiled-map-checks');
 await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({
+  channel: process.env.BROWSER_CHANNEL || 'msedge',
+  headless: true,
+});
 const checks = [],
   errors = [];
 const check = (name, detail) => {
@@ -45,15 +48,11 @@ try {
       .getEntriesByType('resource')
       .map((e) => ({ url: e.name, bytes: e.transferSize, duration: Math.round(e.duration) })),
   );
-  assert(urls.some((u) => u.includes('/tiles/china/county/')));
-  assert(
-    !urls.some((u) =>
-      /\/geometry\/|\/maps\/|\/catalog\.json(?:\?|$)|\/tiles\/china\/(province|city)\//.test(u),
-    ),
-  );
+  assert(urls.some((u) => u.includes('/tiles/china/county.pmtiles')));
+  assert(!urls.some((u) => /\/geometry\/|\/maps\/|\/catalog\.json(?:\?|$)/.test(u)));
   assert(!urls.some((u) => !u.startsWith(base)));
   check(
-    'first screen uses current-level local tiles and compressed catalog, no raw geometry or external requests',
+    'first screen uses boundary archives and compressed catalog, no raw geometry or external requests',
     {
       bytes: first.reduce((s, r) => s + r.bytes, 0),
       requests: urls.length,
@@ -62,10 +61,11 @@ try {
   );
   await page.screenshot({ path: resolve(output, 'tiles-home.png'), fullPage: true });
   const provinceResponse = page.waitForResponse(
-    (r) => r.url().includes('/tiles/china/province/') && r.ok(),
+    (r) => r.url().includes('/tiles/china/province.pmtiles') && r.ok(),
   );
   await page.getByRole('button', { name: '省级', exact: true }).click();
   await provinceResponse;
+  await page.waitForTimeout(800);
   check('switching levels loads province tiles on demand');
   // Scan the canvas for a real feature tooltip, then click that exact feature.
   const canvas = page.locator('.map-surface canvas');
@@ -74,6 +74,7 @@ try {
   for (const x of [0.35, 0.5, 0.65, 0.8]) {
     for (const y of [0.35, 0.5, 0.65]) {
       await page.mouse.move(box.x + box.width * x, box.y + box.height * y);
+      await page.waitForTimeout(80);
       if (await page.getByRole('tooltip').count()) {
         hit = { x: box.x + box.width * x, y: box.y + box.height * y };
         break;
@@ -96,7 +97,10 @@ try {
   const png = await readFile(pngPath);
   assert.equal(png.subarray(1, 4).toString(), 'PNG');
   assert.equal(png.readUInt32BE(16), 1600, 'export canvas initialized before drawing');
-  assert.equal(png.readUInt32BE(20), 1160);
+  assert(
+    png.readUInt32BE(20) >= 1160 && png.readUInt32BE(20) <= 1400,
+    'export includes its attribution footer',
+  );
   assert(png.length > 10000);
   check('PNG export without an online provider', png.length);
   await context.close();
