@@ -115,7 +115,7 @@ export function createMapStyle(
           '#cf762b',
           ['boolean', ['feature-state', 'hover'], false],
           '#548774',
-          '#8ca49d',
+          layer.level === 'border' ? '#263f45' : '#8ca49d',
         ],
         'line-width': [
           'case',
@@ -123,7 +123,7 @@ export function createMapStyle(
           2,
           ['boolean', ['feature-state', 'hover'], false],
           1.5,
-          layer.level === 'county' ? 0.5 : 1,
+          layer.level === 'border' ? 2.6 : layer.level === 'county' ? 0.5 : 1,
         ],
       },
     });

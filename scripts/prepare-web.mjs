@@ -110,6 +110,54 @@ await fs.writeFile(
   JSON.stringify({ version: stamp, file: 'catalog.json.gz', encoding: 'gzip' }),
 );
 const regionMap = new Map(catalog.regions.map((r) => [r.id, r]));
+// The outer line comes from these exact district polygons, so it cannot jump
+// across islands when the lower-resolution world outline differs from them.
+const malayBorderScopes = new Set(['malaysia', 'singapore', 'brunei']);
+function countryBorder(rows, scope) {
+  const rings = rows.flatMap((row) => {
+    const geometry = row.geometry;
+    const polygons =
+      geometry.type === 'Polygon'
+        ? [geometry.coordinates]
+        : geometry.type === 'MultiPolygon'
+          ? geometry.coordinates
+          : [];
+    return polygons.flat();
+  });
+  const key = (a, b) => {
+    const point = (p) => `${p[0].toFixed(6)},${p[1].toFixed(6)}`;
+    const left = point(a),
+      right = point(b);
+    return left < right ? `${left}|${right}` : `${right}|${left}`;
+  };
+  const counts = new Map();
+  for (const ring of rings)
+    for (let i = 1; i < ring.length; i++) {
+      const edge = key(ring[i - 1], ring[i]);
+      counts.set(edge, (counts.get(edge) || 0) + 1);
+    }
+  const lines = [];
+  for (const ring of rings) {
+    let line = [];
+    for (let i = 1; i < ring.length; i++) {
+      if (counts.get(key(ring[i - 1], ring[i])) === 1) {
+        if (!line.length) line.push(ring[i - 1]);
+        line.push(ring[i]);
+      } else if (line.length) {
+        lines.push(line);
+        line = [];
+      }
+    }
+    if (line.length) lines.push(line);
+  }
+  if (!lines.length) throw Error(`No exterior border segments for ${scope}.`);
+  return {
+    id: `border-${scope}`,
+    regionId: `border-${scope}`,
+    level: 'border',
+    geometry: { type: 'MultiLineString', coordinates: lines },
+  };
+}
 const manifest = {
   version: stamp,
   scopes: {},
@@ -145,7 +193,12 @@ function tileXY(lon, lat, z) {
 }
 for (const scope of scopes) {
   const raw = JSON.parse(await fs.readFile(path.join(input, scope + '.geo.json'), 'utf8'));
-  const display = scope === 'vietnam' ? vietnamDisplay : raw;
+  const display =
+    scope === 'vietnam'
+      ? vietnamDisplay
+      : malayBorderScopes.has(scope)
+        ? [...raw, countryBorder(raw, scope)]
+        : raw;
   await fs.mkdir(path.join(output, 'geometry'), { recursive: true });
   await fs.copyFile(
     path.join(input, scope + '.geo.json'),

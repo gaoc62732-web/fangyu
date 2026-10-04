@@ -7,9 +7,9 @@ const props = withDefaults(defineProps<{ regionId: string; propagate?: boolean }
   propagate: true,
 });
 const store = useAppStore();
-const city = computed(() => {
+const aggregate = computed(() => {
   const region = store.session!.index.regions.get(props.regionId);
-  return region?.scope === 'china' && region.level === 1;
+  return region?.scope === 'china' && (region.level === 0 || region.level === 1);
 });
 const recorded = computed(() => {
   void store.revision;
@@ -28,7 +28,7 @@ function change(event: Event) {
 
 <template>
   <label class="state-select">
-    {{ city ? '手动旅行状态' : '旅行状态' }}
+    {{ aggregate ? '手动旅行状态' : '旅行状态' }}
     <select
       :key="store.revision"
       :value="recorded"
@@ -43,11 +43,11 @@ function change(event: Event) {
       </option>
     </select>
     <small
-      v-if="city && effective !== recorded"
+      v-if="aggregate && effective !== recorded"
       class="effective-visit-state"
       role="status"
     >
-      地图状态：{{ VISIT_LABELS[effective] }}（含下辖县区居住记录）
+      地图状态：{{ VISIT_LABELS[effective] }}（含下辖记录）
     </small>
   </label>
 </template>

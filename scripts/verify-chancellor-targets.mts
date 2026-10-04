@@ -49,7 +49,7 @@ assert.equal(baseline.version, 1);
 assert(original && current);
 assert.equal(original.id, id);
 assert.equal(baseline.catalogVersion, '2026-10-03.15');
-assert.equal(catalog.version, '2026-10-03.16');
+assert.equal(catalog.version, '2026-10-04.1');
 assert(catalog.compatibleCatalogVersions?.includes(baseline.catalogVersion));
 assert.equal(catalog.entries.length, baseline.counts.entries);
 assert.equal(catalog.regions.length, baseline.counts.regions);
@@ -96,13 +96,12 @@ const {
   ...newRest
 } = current;
 assert.deepEqual(newRest, oldRest, 'No unrelated achievement metadata changes');
-assert.match(current.note, /眉县具体祠庙待核/);
-assert.match(current.note, /不以岐山县/);
+assert.match(current.note, /岐山县五丈原诸葛亮庙/);
 assert.match(current.note, /不代表具体祠庙已到访/);
 
 // Independent fixed administrative codes, not copied from the integration proposal.
 const expected = [
-  { code: '610326', name: '眉县', parentCode: '610300' },
+  { code: '610323', name: '岐山县', parentCode: '610300' },
   { code: '530502', name: '隆阳区', parentCode: '530500' },
   { code: '621226', name: '礼县', parentCode: '621200' },
   { code: '500236', name: '奉节县', parentCode: '500000' },
@@ -192,14 +191,14 @@ for (const county of added) {
   );
   assertCount(substitutions, 0);
 }
-const qishan = regionByCode('610323');
-assert.equal(qishan.name, '岐山县');
-substitutions.transaction(() => substitutions.setRegionState(qishan.id, 'resident'));
+const meixian = regionByCode('610326');
+assert.equal(meixian.name, '眉县');
+substitutions.transaction(() => substitutions.setRegionState(meixian.id, 'resident'));
 assertCount(substitutions, 0);
 assert.equal(
   progress(substitutions).targets[4]!.visited,
   false,
-  'Baoji and neighboring Qishan cannot replace Meixian',
+  'Baoji and neighboring Meixian cannot replace Qishan',
 );
 substitutions.transaction(() => substitutions.setRegionState(added[0]!.id, 'transit', false));
 assertCount(substitutions, 0);
@@ -305,7 +304,7 @@ const result = {
     'four unique exact counties with own-record conditions',
     '0/8 -> 4/8 -> 5/8 -> 6/8 -> 7/8 -> 8/8',
     'clear one/all new targets and undo',
-    'parent city and Qishan cannot substitute for Meixian',
+    'parent city and Meixian cannot substitute for Qishan',
     'transit does not count as arrival',
     '.15 synthetic snapshot migrates only catalogVersion',
     'custom names/notes/aliases/subitems/preferences and original records survive roundtrip and undo',

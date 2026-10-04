@@ -1,15 +1,15 @@
 {
   "formatVersion": 1,
-  "version": "osm-20261004",
-  "createdAt": "2026-10-04T13:06:54.327106+00:00",
-  "catalogVersion": "2026-10-03.16",
+  "version": "osm-20261004-v072",
+  "createdAt": "2026-10-04T15:26:53.511417+00:00",
+  "catalogVersion": "2026-10-04.1",
   "transportBaseUrl": "https://github.com/gaoc62732-web/fangyu/releases/download/data-osm-20261004",
   "packages": [
     {
       "group": "runtime",
-      "file": "fangyu-data-runtime-osm-20261004.tar.gz",
-      "bytes": 87505596,
-      "sha256": "a9c2e7759cc1fc5cef6876300d4ee7ac336e77d0da795b3d4d9ad62cc4e85b87",
+      "file": "fangyu-data-runtime-osm-20261004-v072.tar.gz",
+      "bytes": 87505605,
+      "sha256": "09e0c2f24fc9b6c250d065479bc940a6b98b52e2288482219dfee11dfcd72eb9",
       "files": [
         {
           "path": "data/catalog/brunei.geo.json",
@@ -18,8 +18,8 @@
         },
         {
           "path": "data/catalog/catalog.json",
-          "bytes": 36564566,
-          "sha256": "209b2153ebf0154bf22b092103e01d0232d9b653f421190a52d3a01d8d14559e"
+          "bytes": 36564553,
+          "sha256": "8f6437604e9daeeb0f4c7b5678ad592749fb76bf3f46b774227a8f4268c6e798"
         },
         {
           "path": "data/catalog/china.geo.json",
@@ -63,8 +63,8 @@
         },
         {
           "path": "data/catalog/manifest.json",
-          "bytes": 503,
-          "sha256": "77209a0ae7c7360ab848b9f5d34d0ef6a738fc75c1404fde356f54d3e1eebad5"
+          "bytes": 502,
+          "sha256": "b6fbc9be9faca6e209957c2f5293563dc1bb070e8d2edfad4c96b1751f50e8f4"
         },
         {
           "path": "data/catalog/singapore.geo.json",

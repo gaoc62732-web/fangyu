@@ -8,7 +8,10 @@ const base = process.env.UI_BASE_URL || 'http://localhost:5191';
 const output = resolve('data/generated/sea-topic-checks');
 const catalog = JSON.parse(await readFile('data/catalog/catalog.json', 'utf8'));
 await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({
+  channel: process.env.BROWSER_CHANNEL || 'chrome',
+  headless: true,
+});
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
 await context.addInitScript(() =>
   sessionStorage.setItem('fangyu-private-basemap-v1', JSON.stringify({ mode: 'disabled' })),
@@ -36,9 +39,11 @@ const countryCard = (country) => page.locator('.country-cards [data-country="' +
 try {
   await page.goto(base + '/#/china');
   await ready();
-  assert.match(await page.locator('.app-version').innerText(), /0\.7\.1-dev/);
+  assert.match(await page.locator('.app-version').innerText(), /0\.7\.2/);
+  assert.equal(await page.locator('.site-header nav > a').first().innerText(), '中国手册');
+  assert.equal(await page.locator('.site-header nav > a').nth(1).getAttribute('href'), '#/world');
   const groups = {
-    东亚: ['/china', '/japan', '/korea'],
+    东亚: ['/japan', '/korea'],
     东南亚: ['/vietnam', '/indonesia', '/thailand', '/malay-region'],
     西欧: ['/germany', '/france', '/uk', '/italy', '/spain'],
     其他: ['/uzbekistan', '/usa'],
@@ -119,7 +124,8 @@ try {
     .locator('.heritage-projects > article > details > .entries > .entry')
     .filter({ hasText: temple.name })
     .first();
-  assert((await templeRow.innerText()).includes('未核实入口'));
+  assert(temple.coordinatePrecisionNote?.includes('未核实入口'));
+  assert(!(await templeRow.innerText()).includes('未核实入口'));
   await templeRow.getByRole('button', { name: '定位', exact: true }).click();
   await ready();
   await page.waitForFunction((coordinates) => {
@@ -132,7 +138,7 @@ try {
   }, temple.coordinates);
   await shot('indonesia-temple-focus');
   checks.push(
-    'Verified Borobudur reference point focuses on actual coordinates and retains non-entrance precision note',
+    'Verified Borobudur point focuses on actual coordinates; precision metadata stays in data and its removed UI hint stays absent',
   );
 
   stage = 'three-country statistics';
@@ -162,7 +168,7 @@ try {
   assert.equal(await countryCard('brunei').innerText(), initialBrunei);
   await page.locator('.heritage-projects > summary').click();
   await page.getByRole('searchbox', { name: '搜索世界遗产项目' }).fill('no-match-xyz');
-  await page.getByText('没有符合筛选的遗产项目，可清除搜索后继续查看。').waitFor();
+  await page.getByText('没有匹配的遗产项目。', { exact: true }).waitFor();
   await page.getByRole('searchbox', { name: '搜索世界遗产项目' }).fill('');
   await page.locator('.heritage-projects > article > details > summary').first().click();
   const checkbox = page

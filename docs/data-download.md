@@ -1,6 +1,6 @@
 # 获取开发数据
 
-公共地理数据通过 [GitHub Release](https://github.com/gaoc62732-web/fangyu/releases/tag/data-osm-20261004) 提供。代码中的 `data/snapshots/current.json` 固定所需版本、附件名和 SHA-256；拉取代码后按该清单同步，不使用 GitHub 的 latest。
+公共地理数据通过 [GitHub Release](https://github.com/gaoc62732-web/fangyu/releases/tag/data-osm-20261004) 提供。当前清单版本为 `osm-20261004-v072`，runtime 包包含 0.7.2 的目录修订，边界源包和 research 包沿用原快照。代码中的 `data/snapshots/current.json` 固定所需版本、附件名和 SHA-256；拉取代码后按该清单同步，不使用 GitHub 的 latest。
 
 ## 常规开发
 
@@ -28,7 +28,7 @@ npm run dev:web
 登录有仓库权限的 GitHub 账号，在对应 Release 的 **Assets** 中下载所需 `.tar.gz` 附件到同一目录，保留原文件名，无需手工解压。当前常规开发需要：
 
 ```text
-fangyu-data-runtime-osm-20261004.tar.gz
+fangyu-data-runtime-osm-20261004-v072.tar.gz
 fangyu-data-research-osm-20261004.tar.gz
 ```
 

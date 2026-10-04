@@ -6,6 +6,20 @@ import { zxyToTileId } from 'pmtiles';
 // Small, streaming PMTiles v3 writer for our generated MVTs.
 // Spec: https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md
 // Consumers use the upstream pmtiles reader, including our round-trip check.
+function fileHash(filename) {
+  const digest = createHash('sha256');
+  const descriptor = fs.openSync(filename, 'r');
+  const buffer = Buffer.alloc(1024 * 1024);
+  try {
+    let count;
+    while ((count = fs.readSync(descriptor, buffer, 0, buffer.length, null)))
+      digest.update(buffer.subarray(0, count));
+    return digest.digest('hex');
+  } finally {
+    fs.closeSync(descriptor);
+  }
+}
+
 function directory(entries) {
   const bytes = [];
   function varint(value) {
@@ -124,7 +138,16 @@ export class PMTilesWriter {
       fs.writeSync(out, buffer, 0, count);
     fs.closeSync(input);
     fs.closeSync(out);
-    fs.renameSync(this.filename + '.tmp', this.filename);
+    const temporary = this.filename + '.tmp';
+    // A catalog-only change rebuilds identical boundaries. Keep the existing
+    // archive, which may be open in a Windows map preview, when bytes match.
+    if (
+      fs.existsSync(this.filename) &&
+      fs.statSync(this.filename).size === fs.statSync(temporary).size &&
+      fileHash(this.filename) === fileHash(temporary)
+    )
+      fs.unlinkSync(temporary);
+    else fs.renameSync(temporary, this.filename);
     fs.unlinkSync(this.spool);
     return this.entries.length;
   }

@@ -341,8 +341,15 @@ export class CanvasMapRenderer {
     for (const f of this.shapes) {
       ctx.fillStyle = f.fill;
       ctx.fill(f.path, 'evenodd');
-      ctx.strokeStyle = f.selected ? '#cf762b' : boundaryColor;
-      ctx.lineWidth = (f.selected ? 2 : boundaryWidth) / this.scale;
+      const countryOutline = f.fill === 'transparent' && f.interactive === false;
+      ctx.strokeStyle = countryOutline
+        ? this.scene.dark
+          ? '#e2d7ad'
+          : '#263f45'
+        : f.selected
+          ? '#cf762b'
+          : boundaryColor;
+      ctx.lineWidth = (countryOutline ? 2.6 : f.selected ? 2 : boundaryWidth) / this.scale;
       ctx.stroke(f.path);
     }
     for (const point of this.scene.points.filter((point) => !point.markerKind)) {

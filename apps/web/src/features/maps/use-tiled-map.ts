@@ -422,7 +422,13 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         '#cf762b',
         ['boolean', ['feature-state', 'hover'], false],
         '#548774',
-        store.dark ? '#91b0bb' : '#8ca49d',
+        l.level === 'border'
+          ? store.dark
+            ? '#e2d7ad'
+            : '#263f45'
+          : store.dark
+            ? '#91b0bb'
+            : '#8ca49d',
       ]);
     }
     for (const r of store.session!.index.catalog.regions)

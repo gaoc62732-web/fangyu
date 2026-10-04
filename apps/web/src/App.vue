@@ -105,6 +105,7 @@ watchEffect(() => {
       ref="navigationElement"
       aria-label="主导航"
     >
+      <RouterLink to="/china">中国手册</RouterLink>
       <RouterLink to="/world">世界</RouterLink>
       <details
         v-for="group in topicGroups"

@@ -15,9 +15,13 @@ const status = ref('');
 const railGroup = ref('');
 const selectedRegionId = ref('');
 const index = computed(() => store.session!.index);
-const regions = computed(() => index.value.catalog.regions.filter((region) => region.scope === scope.value));
+const regions = computed(() =>
+  index.value.catalog.regions.filter((region) => region.scope === scope.value),
+);
 const roots = computed(() =>
-  regions.value.filter((region) => !region.parentId || !regions.value.some((parent) => parent.id === region.parentId)),
+  regions.value.filter(
+    (region) => !region.parentId || !regions.value.some((parent) => parent.id === region.parentId),
+  ),
 );
 const selectedPath = computed(() => index.value.ancestors(selectedRegionId.value));
 const firstRegion = computed(() => selectedPath.value[0]?.id || '');
@@ -30,7 +34,11 @@ const thirdOptions = computed(() =>
   regions.value.filter((region) => region.parentId === secondRegion.value),
 );
 const categoryOptions = computed(() => {
-  const ids = new Set(store.rows.filter((entry) => !scope.value || entry.scope === scope.value).map((entry) => entry.categoryId));
+  const ids = new Set(
+    store.rows
+      .filter((entry) => !scope.value || entry.scope === scope.value)
+      .map((entry) => entry.categoryId),
+  );
   return index.value.catalog.categories.filter((item) => ids.has(item.id));
 });
 type GroupedEntry = EntryView & { groupEntryIds?: string[]; regionPaths?: string[] };
@@ -45,18 +53,24 @@ const wideMonuments = computed(() => {
     if (root) group.provinces.add(root.id);
     groups.set(key, group);
   }
-  return new Set([...groups].filter(([, group]) => group.count >= 4 && group.provinces.size >= 3).map(([name]) => name));
+  return new Set(
+    [...groups]
+      .filter(([, group]) => group.count >= 4 && group.provinces.size >= 3)
+      .map(([name]) => name),
+  );
 });
 function groupKey(entry: EntryView) {
   const base = `${entry.scope}:${entry.categoryId}:${entry.name.trim()}`;
-  if (['world-heritage', 'national-park', 'global-geopark'].includes(entry.categoryId)) return base;
+  if (['airport', 'world-heritage', 'national-park', 'global-geopark'].includes(entry.categoryId))
+    return base;
   const path = index.value.ancestors(entry.regionIds[0] || '');
   const province = path[0]?.id || entry.regionIds[0] || '';
   if (entry.categoryId === 'cultural-monument')
     return `${base}:${wideMonuments.value.has(entry.name.trim()) ? 'national' : province}`;
   if (['scenic-area', 'national-geopark', 'five-a-scenic'].includes(entry.categoryId))
     return `${base}:${province}`;
-  if (entry.categoryId === 'urban-rail') return `${base}:${path.find((region) => region.level === 1)?.id || province}`;
+  if (entry.categoryId === 'urban-rail')
+    return `${base}:${path.find((region) => region.level === 1)?.id || province}`;
   return `${entry.scope}:record:${entry.recordId}`;
 }
 const groupedRows = computed<GroupedEntry[]>(() => {
@@ -92,17 +106,19 @@ watch(scope, () => {
   category.value = '';
   railGroup.value = '';
 });
-watch(category, () => { railGroup.value = ''; });
+watch(category, () => {
+  railGroup.value = '';
+});
 const rows = computed(() =>
   groupedRows.value.filter(
     (entry) =>
       (!selectedRegionId.value ||
-        entry.regionIds.some((id) =>
-          index.value.belongsTo(id, selectedRegionId.value),
-        )) &&
+        entry.regionIds.some((id) => index.value.belongsTo(id, selectedRegionId.value))) &&
       (!category.value || entry.categoryId === category.value) &&
       (!railGroup.value ||
-        (railGroup.value === 'jr' ? entry.railTypes?.includes('J') : !entry.railTypes?.includes('J'))) &&
+        (railGroup.value === 'jr'
+          ? entry.railTypes?.includes('J')
+          : !entry.railTypes?.includes('J'))) &&
       (!status.value || entry.visited === (status.value === 'marked')) &&
       (!query.value ||
         [entry.name, entry.path, entry.code, ...entry.aliases]
@@ -113,8 +129,11 @@ const rows = computed(() =>
 );
 
 function locate(entry: EntryView) {
-  store.selectedRegionId = selectedRegionId.value && entry.regionIds.some((id) => index.value.belongsTo(id, selectedRegionId.value))
-    ? selectedRegionId.value : entry.regionIds[0] || '';
+  store.selectedRegionId =
+    selectedRegionId.value &&
+    entry.regionIds.some((id) => index.value.belongsTo(id, selectedRegionId.value))
+      ? selectedRegionId.value
+      : entry.regionIds[0] || '';
   store.category = entry.categoryId;
   void router.push('/' + entry.scope);
 }
@@ -161,7 +180,10 @@ function csv() {
       <option value="japan">日本</option>
       <option value="korea">韩国</option>
     </select>
-    <label v-if="scope" class="records-region-filter">
+    <label
+      v-if="scope"
+      class="records-region-filter"
+    >
       地区
       <select
         :value="firstRegion"
@@ -169,10 +191,19 @@ function csv() {
         @change="selectedRegionId = ($event.target as HTMLSelectElement).value"
       >
         <option value="">全部地区</option>
-        <option v-for="region in roots" :key="region.id" :value="region.id">{{ region.name }}</option>
+        <option
+          v-for="region in roots"
+          :key="region.id"
+          :value="region.id"
+        >
+          {{ region.name }}
+        </option>
       </select>
     </label>
-    <label v-if="firstRegion && secondOptions.length" class="records-region-filter">
+    <label
+      v-if="firstRegion && secondOptions.length"
+      class="records-region-filter"
+    >
       下级地区
       <select
         :value="secondRegion"
@@ -180,10 +211,19 @@ function csv() {
         @change="selectedRegionId = ($event.target as HTMLSelectElement).value || firstRegion"
       >
         <option value="">全部下级地区</option>
-        <option v-for="region in secondOptions" :key="region.id" :value="region.id">{{ region.name }}</option>
+        <option
+          v-for="region in secondOptions"
+          :key="region.id"
+          :value="region.id"
+        >
+          {{ region.name }}
+        </option>
       </select>
     </label>
-    <label v-if="secondRegion && thirdOptions.length" class="records-region-filter">
+    <label
+      v-if="secondRegion && thirdOptions.length"
+      class="records-region-filter"
+    >
       县区
       <select
         :value="thirdRegion"
@@ -191,7 +231,13 @@ function csv() {
         @change="selectedRegionId = ($event.target as HTMLSelectElement).value || secondRegion"
       >
         <option value="">全部县区</option>
-        <option v-for="region in thirdOptions" :key="region.id" :value="region.id">{{ region.name }}</option>
+        <option
+          v-for="region in thirdOptions"
+          :key="region.id"
+          :value="region.id"
+        >
+          {{ region.name }}
+        </option>
       </select>
     </label>
     <select
@@ -226,9 +272,17 @@ function csv() {
     </select>
     <button @click="csv">导出筛选结果 CSV</button>
   </div>
-  <p v-if="selectedRegionId" class="records-region-path">
+  <p
+    v-if="selectedRegionId"
+    class="records-region-path"
+  >
     当前地区：{{ index.paths.get(selectedRegionId) }}
-    <button type="button" @click="selectedRegionId = ''">清除地区</button>
+    <button
+      type="button"
+      @click="selectedRegionId = ''"
+    >
+      清除地区
+    </button>
   </p>
   <section class="card">
     <EntryList

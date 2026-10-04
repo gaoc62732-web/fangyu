@@ -31,6 +31,7 @@ for (const scope of SCOPE_IDS) {
   );
   const raw = JSON.parse(readFileSync(`data/catalog/${scope}.geo.json`, 'utf8'));
   const ids = new Set(raw.map((f: any) => f.regionId || f.id));
+  if (['malaysia', 'singapore', 'brunei'].includes(scope)) ids.add(`border-${scope}`);
   if (scope === 'france') {
     for (const [level, expectedCount] of Object.entries(detailedFranceCounts)) {
       assert(
@@ -62,11 +63,14 @@ for (const scope of SCOPE_IDS) {
       const tile = await archive.getZxy(11, 1686, 775);
       if (tile) assert(new VectorTile(new Pbf(tile.data)).layers.regions.length > 0);
     }
-    const layerIds = new Set<string>(
-      raw
-        .filter((feature: any) => feature.level === layer.level)
-        .map((feature: any) => String(feature.regionId || feature.id)),
-    );
+    const layerIds =
+      layer.level === 'border' && ['malaysia', 'singapore', 'brunei'].includes(scope)
+        ? new Set([`border-${scope}`])
+        : new Set<string>(
+            raw
+              .filter((feature: any) => feature.level === layer.level)
+              .map((feature: any) => String(feature.regionId || feature.id)),
+          );
     const smallCountry = ['singapore', 'brunei'].includes(scope);
     const detailedFrance = scope === 'france' && layer.level in detailedFranceCounts;
     const checkCompleteLayer = smallCountry || detailedFrance;
