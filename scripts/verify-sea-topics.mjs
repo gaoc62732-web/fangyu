@@ -36,9 +36,11 @@ const countryCard = (country) => page.locator('.country-cards [data-country="' +
 try {
   await page.goto(base + '/#/china');
   await ready();
-  assert.match(await page.locator('.app-version').innerText(), /0\.7\.1-dev/);
+  assert.match(await page.locator('.app-version').innerText(), /0\.7\.2/);
+  assert.equal(await page.locator('.site-header nav > a').first().innerText(), '中国手册');
+  assert.equal(await page.locator('.site-header nav > a').nth(1).getAttribute('href'), '#/world');
   const groups = {
-    东亚: ['/china', '/japan', '/korea'],
+    东亚: ['/japan', '/korea'],
     东南亚: ['/vietnam', '/indonesia', '/thailand', '/malay-region'],
     西欧: ['/germany', '/france', '/uk', '/italy', '/spain'],
     其他: ['/uzbekistan', '/usa'],

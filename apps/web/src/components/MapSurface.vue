@@ -146,9 +146,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
     >
       <strong>地图边界说明</strong>
       边界与行政区划图形仅供旅行记录参考，不代表权威或现行的地理边界与行政区划；具体情况请以主管部门公布的资料为准。
-      <span v-if="['vietnam', 'malaysia', 'singapore', 'brunei'].includes(scope)">
-        本专题在西沙、南沙的离散岛礁图形不提供行政区悬停或选择。
-      </span>
     </p>
     <p
       v-if="mapError"

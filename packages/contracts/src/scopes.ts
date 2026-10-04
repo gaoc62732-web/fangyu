@@ -178,7 +178,7 @@ export const MALAY_REGION_TOPIC = {
 
 /** Navigation groups are product groupings, not administrative or statistical regions. */
 export const SCOPE_NAV_GROUPS = [
-  { id: 'east-asia', name: '东亚', topicIds: ['china', 'japan', 'korea'] },
+  { id: 'east-asia', name: '东亚', topicIds: ['japan', 'korea'] },
   {
     id: 'southeast-asia',
     name: '东南亚',

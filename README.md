@@ -1,10 +1,10 @@
 # 方舆旅游手册
 
-方舆用于记录地区到访、景点与交通项目、旅行成就和卯分。当前版本为 **0.7.1**，使用 Vue 3 + TypeScript 前端、NestJS 后端、PostgreSQL/PostGIS 数据库，统一由 pnpm workspace 管理。新增功能、数据边界及升级回退方式见 [0.7.1 更新说明](docs/release-v0.7.1.md)。
+方舆用于记录地区到访、景点与交通项目、旅行成就和卯分。当前版本为 **0.7.2**，使用 Vue 3 + TypeScript 前端、NestJS 后端、PostgreSQL/PostGIS 数据库，统一由 pnpm workspace 管理。本次修订及数据边界见 [0.7.2 更新说明](docs/release-v0.7.2.md)。
 
 当前包含瓦片及 Canvas 地图、本机底图设置、世界与国家专题、已到访机场和世界遗产图层，以及法国法兰西岛和巴黎下钻。此前地图、列表、成就与点卯界面的更新详见 [v0.6.7-dev 修订说明](docs/revision-notes-v0.6.7-dev-2026-09-30.md)。
 
-0.7.1 已进行类型检查、目录引用检查、前后端构建及本地演示模式的地图／成就专项验收；验证范围与限制见 [更新说明](docs/release-v0.7.1.md)。**生产数据库、真实账号及服务端联调仍未验收**。早期迁移历史见 [2026-09-29 检查报告](docs/minimal-verification-2026-09-29.md)、[重构方案](REFACTOR_PLAN.md)和[迁移记录](docs/first-round-migration.md)。
+0.7.1 已进行类型检查、目录引用检查、前后端构建及本地演示模式的地图／成就专项验收；0.7.2 的验证范围见 [本次更新说明](docs/release-v0.7.2.md)。**生产数据库、真实账号及服务端联调仍未验收**。早期迁移历史见 [2026-09-29 检查报告](docs/minimal-verification-2026-09-29.md)、[重构方案](REFACTOR_PLAN.md)和[迁移记录](docs/first-round-migration.md)。
 
 公开包仅保留运行、构建和当前专项验收所需的核实数据，不包含个人配置、记录、研究全文缓存或旧的中间迁移脚本。数据来源、许可、地图加工及缺口见 [数据说明](docs/data-notices.md)。
 

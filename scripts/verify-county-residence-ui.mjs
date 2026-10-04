@@ -8,6 +8,7 @@ const output = resolve('data/generated/county-residence-ui');
 await mkdir(output, { recursive: true });
 const catalog = JSON.parse(await readFile('data/catalog/catalog.json', 'utf8'));
 const city = catalog.regions.find((r) => r.scope === 'china' && r.code === '330100');
+const province = catalog.regions.find((r) => r.scope === 'china' && r.code === '330000');
 const counties = catalog.regions.filter(
   (r) => r.parentId === city.id && r.level === 2 && !r.historical,
 );
@@ -55,6 +56,28 @@ async function cityCount(expected) {
   assert.match(await row.locator('td').nth(2).innerText(), new RegExp('^' + expected + ' /'));
 }
 try {
+  stage = 'county low states at city and province';
+  await open(counties[0]);
+  await state().selectOption('flyover');
+  await open(city);
+  await effective('飞跃');
+  assert.equal(await state().inputValue(), 'unvisited');
+  await open(province);
+  await effective('飞跃');
+  await open(counties[0]);
+  await state().selectOption('transit');
+  await open(city);
+  await effective('途经');
+  await open(province);
+  await effective('途经');
+  await open(counties[0]);
+  await state().selectOption('unvisited');
+  await open(province);
+  await effective('未到达');
+  checks.push(
+    'County flyover/transit colors the city and province without writing parent records; clearing restores both',
+  );
+
   stage = 'single county and map';
   await open(city);
   await state().selectOption('transit');

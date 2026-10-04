@@ -49,7 +49,7 @@ const wideMonuments = computed(() => {
 });
 function groupKey(entry: EntryView) {
   const base = `${entry.scope}:${entry.categoryId}:${entry.name.trim()}`;
-  if (['world-heritage', 'national-park', 'global-geopark'].includes(entry.categoryId)) return base;
+  if (['airport', 'world-heritage', 'national-park', 'global-geopark'].includes(entry.categoryId)) return base;
   const path = index.value.ancestors(entry.regionIds[0] || '');
   const province = path[0]?.id || entry.regionIds[0] || '';
   if (entry.categoryId === 'cultural-monument')

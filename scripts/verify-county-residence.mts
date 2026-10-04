@@ -118,13 +118,15 @@ assert.deepEqual(VISIT_STATES, [
 ]);
 assert(VISIT_RANK.resident > VISIT_RANK.shortstay && VISIT_RANK.shortstay > VISIT_RANK.arrived);
 
-// All manual parent levels remain the floor; only explicit direct county residence raises it.
+// Manual parent states are a floor. County residence raises the city; transit/flyover
+// evidence is visible at both the city and province without writing parent records.
 const states: readonly VisitState[] = VISIT_STATES;
 for (const manual of states)
   for (const child of states) {
     const s = create({ [city]: manual, [countyA]: child, [province]: 'unvisited' });
     const expected: VisitState =
-      ['shortstay', 'resident'].includes(child) && VISIT_RANK[child] > VISIT_RANK[manual]
+      ['flyover', 'transit', 'shortstay', 'resident'].includes(child) &&
+      VISIT_RANK[child] > VISIT_RANK[manual]
         ? child
         : manual;
     const before = s.snapshot();
@@ -139,10 +141,16 @@ for (const manual of states)
       manual,
       'UI can distinguish saved choice from effective state',
     );
+    const provinceEvidence = ([manual, child] as VisitState[])
+      .filter((state) => state === 'flyover' || state === 'transit')
+      .reduce<VisitState>(
+        (best, state) => (VISIT_RANK[state] > VISIT_RANK[best] ? state : best),
+        'unvisited',
+      );
     assert.equal(
       s.visitState(province),
-      'unvisited',
-      'Residence does not aggregate to the province',
+      provinceEvidence,
+      'Only transit/flyover evidence aggregates to the province',
     );
     assert.equal(s.visitState(countyB), 'unvisited', 'Residence does not propagate to siblings');
     assert.equal(s.visitState(town), 'unvisited', 'Residence does not propagate downward');
@@ -163,6 +171,21 @@ assert.equal(
   PALETTES.jade.colors.shortstay,
   'Map color and statistics use the same effective city state',
 );
+const lowStates = create({ [countyA]: 'flyover' });
+assert.equal(lowStates.visitState(city), 'flyover');
+assert.equal(lowStates.visitState(province), 'flyover');
+assert.deepEqual(lowStates.snapshot().regions, { [countyA]: 'flyover' });
+lowStates.transaction(() => lowStates.setRegionState(countyA, 'transit'));
+assert.equal(lowStates.visitState(city), 'transit');
+assert.equal(lowStates.visitState(province), 'transit');
+lowStates.transaction(() => lowStates.setRegionState(cityB, 'flyover'));
+assert.equal(lowStates.visitState(province), 'transit');
+lowStates.transaction(() => lowStates.setRegionState(countyA, 'unvisited'));
+assert.equal(lowStates.visitState(city), 'unvisited');
+assert.equal(lowStates.visitState(province), 'flyover');
+lowStates.transaction(() => lowStates.setRegionState(province, 'arrived', false));
+assert.equal(lowStates.visitState(province), 'arrived');
+assert.equal(lowStates.arrived(cityB), false);
 const explicitLow = create({ [city]: 'transit', [countyA]: 'resident', [province]: 'unvisited' });
 assert(explicitLow.hasExplicitState(city));
 assert.equal(explicitLow.visitState(city), 'resident');

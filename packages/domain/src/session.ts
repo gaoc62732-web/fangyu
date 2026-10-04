@@ -130,18 +130,25 @@ export class HandbookSession {
   visitState(regionId: string): VisitState {
     let effective = this.recordedVisitState(regionId);
     const region = this.index.regions.get(regionId);
-    // County residence describes residence in its immediate Chinese prefecture too.
-    // Derive it on read: clearing/moving a county record restores the parent's own state.
-    // Do not recurse, infer province residence, or persist over a manually chosen parent state.
-    if (region?.scope === 'china' && region.level === 1) {
-      for (const child of this.index.children.get(regionId) || []) {
-        if (child.scope !== 'china' || child.level !== 2) continue;
+    if (region?.scope === 'china' && (region.level === 0 || region.level === 1)) {
+      // Passing through or flying over a county/city also colors its containing city
+      // and province. Derive this on read so clearing a child restores the manual
+      // parent record; residence still only aggregates to the immediate city.
+      const pending = [...(this.index.children.get(regionId) || [])];
+      while (pending.length) {
+        const child = pending.pop()!;
+        if (child.scope !== 'china') continue;
         const state = this.recordedVisitState(child.id);
         if (
-          (state === 'shortstay' || state === 'resident') &&
+          (state === 'transit' ||
+            state === 'flyover' ||
+            (region.level === 1 &&
+              child.level === 2 &&
+              (state === 'shortstay' || state === 'resident'))) &&
           VISIT_RANK[state] > VISIT_RANK[effective]
         )
           effective = state;
+        if (child.level < 2) pending.push(...(this.index.children.get(child.id) || []));
       }
     }
     return effective;
