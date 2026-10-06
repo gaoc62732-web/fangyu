@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"],
+    "paths": {
+      "@fangyu/contracts": ["../packages/contracts/src/index.ts"],
+      "@fangyu/catalog": ["../packages/catalog/src/index.ts"],
+      "@fangyu/domain": ["../packages/domain/src/index.ts"],
+      "@fangyu/map-renderer": ["../packages/map-renderer/src/index.ts"],
+      "@fangyu/import-export": ["../packages/import-export/src/index.ts"]
+    }
+  },
+  "include": ["*.mts"]
+}

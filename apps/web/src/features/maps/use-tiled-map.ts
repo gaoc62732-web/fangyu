@@ -1,94 +1,35 @@
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import {
-  Map as LibreMap,
-  setWorkerUrl,
-  addProtocol,
-  type GeoJSONSource,
-  type MapGeoJSONFeature,
-} from 'maplibre-gl';
-import { PMTiles, Protocol } from 'pmtiles';
-import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
-import 'maplibre-gl/dist/maplibre-gl.css';
-import { VISIT_LABELS, getScopeConfig, type Scope, type MapLevel } from '@fangyu/contracts';
-import {
-  visitedMapMarkers,
-  type EntryView,
-  type VisitedMapMarker,
-  type VerifiedVisitedMapAssociation,
-} from '@fangyu/domain';
-import {
-  CanvasMapRenderer,
-  drawVisitedMarker,
-  drawVisitedCluster,
-  type MapScene,
-  type MapHover,
-  type VisitedMarkerKind,
-} from '@fangyu/map-renderer';
+import { computed, shallowRef, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import type { Map as LibreMap, GeoJSONSource } from 'maplibre-gl';
+import { VISIT_LABELS, getScopeConfig } from '@fangyu/contracts';
+import { CanvasMapRenderer, clusterScreenMarkers } from '@fangyu/map-renderer';
 import { useAppStore } from '../../app/store.js';
 import { download } from '../exports/download.js';
-import { mapAssetUrl, type Bounds, type MapDataManifest } from './types.js';
+import { type Bounds, type MapDataManifest } from './types.js';
 import { basemapProvider } from './basemap-settings.js';
 import { mapAttributions } from './data-attribution.js';
-import { boundaryFillOpacity, createMapStyle, VISITED_MARKER_LAYER_IDS } from './style.js';
-import { regionInteractionPolicy } from './sea-region-interaction.js';
-import airportAssociations from '../../../../../data/extensions/research/china-airport-map-associations.json';
-
-setWorkerUrl(workerUrl);
-const pmtiles = new Protocol();
-addProtocol('pmtiles', pmtiles.tile);
-export interface TiledMapProps {
-  scope: Scope;
-  selected: string;
-  level: MapLevel;
-  category: string;
-  points?: EntryView[] | undefined;
-  focus?: [number, number] | null | undefined;
-}
-
+import { boundaryFillOpacity, createMapStyle } from './style.js';
+import type { TiledMapProps } from './types.js';
+import { validCoordinates } from './map-coordinates.js';
+import { useMapScene } from './use-map-scene.js';
+import { useMapInteractions } from './use-map-interactions.js';
 export function useTiledMap(props: TiledMapProps, select: (id: string, point: boolean) => void) {
   const store = useAppStore();
   const host = ref<HTMLElement>(),
     mapHost = ref<HTMLElement>();
-  const hovered = ref<MapHover>();
   const mapError = ref(''),
     loading = ref(true),
     fallback = ref(false),
     providerFailed = ref(false),
     missingBoundary = ref(false);
-  const showPoints = ref(true);
   const mapZoom = ref(0);
   const mapCenter = ref<[number, number] | null>(null);
-  const visitedLayers = computed(() => {
-    void store.revision;
-    return (
-      store.session!.preferences.mapLayers || {
-        visitedAirports: false,
-        visitedWorldHeritage: false,
-      }
-    );
-  });
-  const visitedResult = computed(() => {
-    void store.revision;
-    return visitedMapMarkers(store.session!, {
-      scope: props.scope,
-      selectedRegionId: props.selected,
-      layers: visitedLayers.value,
-      associations: airportAssociations.associations as VerifiedVisitedMapAssociation[],
-    });
-  });
-  const visitedById = computed(
-    () => new Map(visitedResult.value.markers.map((marker) => [marker.id, marker])),
-  );
-  const selectedVisitedIds = ref<string[]>([]);
-  const selectedVisitedMarkers = computed(() =>
-    selectedVisitedIds.value
-      .map((id) => visitedById.value.get(id))
-      .filter((marker): marker is VisitedMapMarker => Boolean(marker)),
-  );
   const base = import.meta.env.BASE_URL;
-  const provider = basemapProvider;
+  // Point mode keeps the basemap already in use when entering the page.
+  const existingBasemap = basemapProvider.value;
+  const provider = computed(() => (props.pointMode ? existingBasemap : basemapProvider.value));
   let map: LibreMap | undefined, canvas: CanvasMapRenderer | undefined;
-  let manifest: MapDataManifest | undefined, simple: GeoJSON.FeatureCollection | undefined;
+  const manifest = shallowRef<MapDataManifest>();
+  const simple = shallowRef<GeoJSON.FeatureCollection>();
   let generation = 0,
     ready = false,
     fallingBack = false;
@@ -96,264 +37,139 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
   let controller: AbortController | undefined;
   type Camera = { center: [number, number]; zoom: number };
   let pendingProviderCamera: Camera | undefined;
-  let lastVisitedResult: typeof visitedResult.value | undefined;
-  let visitedSelectionRequest = 0;
+  const viewportRevision = ref(0);
+  let initialPointsChecked = false;
+  function captureView() {
+    const camera =
+      map && ready
+        ? { center: map.getCenter().toArray(), zoom: map.getZoom() }
+        : canvas?.camera?.();
+    if (camera) {
+      mapZoom.value = camera.zoom;
+      mapCenter.value = camera.center;
+    }
+    viewportRevision.value++;
+    if (!props.pointMode)
+      store.regionalMap = {
+        scope: props.scope,
+        selected: props.selected,
+        level: props.level,
+        ...(camera ? { camera } : {}),
+      };
+  }
+  function projectPoint(coordinates: [number, number]): [number, number] | undefined {
+    if (map && ready) {
+      const p = map.project(coordinates);
+      return [p.x, p.y];
+    }
+    return canvas?.projectPoint?.(coordinates);
+  }
+  const pointGroups = computed(() => {
+    void viewportRevision.value;
+    if (!props.pointMode) return [];
+    const width = mapHost.value?.clientWidth || 0,
+      height = mapHost.value?.clientHeight || 0;
+    return clusterScreenMarkers(
+      visiblePoints.value.flatMap((entry) => {
+        const p = projectPoint(entry.coordinates!);
+        return p && p[0] >= -24 && p[0] <= width + 24 && p[1] >= -24 && p[1] <= height + 24
+          ? [{ id: entry.id, x: p[0], y: p[1], value: entry }]
+          : [];
+      }),
+      32,
+    );
+  });
+  function revealInitialPoints() {
+    if (!props.pointMode || initialPointsChecked) return;
+    initialPointsChecked = true;
+    const points = visiblePoints.value;
+    if (!points.length || pointGroups.value.length) return;
+    const center = mapCenter.value;
+    const local = points.filter(
+      (e) =>
+        props.selected &&
+        store
+          .session!.index.entryRegions(e, props.scope)
+          .some((id) => store.session!.index.belongsTo(id, props.selected)),
+    );
+    const candidates = local.length ? local : points;
+    const target = center
+      ? candidates.reduce((a, b) => {
+          const distance = (e: typeof a) =>
+            Math.hypot(e.coordinates![0] - center[0], e.coordinates![1] - center[1]);
+          return distance(a) <= distance(b) ? a : b;
+        })
+      : candidates[0]!;
+    if (map && ready)
+      map.easeTo({
+        center: target.coordinates!,
+        zoom: Math.max(7, Math.min(map.getZoom(), 11)),
+        duration: 650,
+      });
+    else if (canvas) canvas.setCamera({ center: target.coordinates!, zoom: 8 });
+  }
+  function expandCluster(ids: string[]) {
+    const members = visiblePoints.value.filter((e) => ids.includes(e.id));
+    if (!members.length) return;
+    const center: [number, number] = [
+      members.reduce((sum, e) => sum + e.coordinates![0], 0) / members.length,
+      members.reduce((sum, e) => sum + e.coordinates![1], 0) / members.length,
+    ];
+    if (map && ready)
+      map.easeTo({ center, zoom: Math.min(15, map.getZoom() + 1.5), duration: 250 });
+    else if (canvas) canvas.setCamera({ center, zoom: Math.min(15, mapZoom.value + 1.5) });
+  }
   const level = computed(() =>
     props.scope === 'china' || props.scope === 'france'
       ? props.level
-      : manifest?.scopes[props.scope]?.layers.find((l) => l.level !== 'border')?.level ||
+      : manifest.value?.scopes[props.scope]?.layers.find((l) => l.level !== 'border')?.level ||
         getScopeConfig(props.scope).defaultLevel,
   );
-  const visiblePoints = computed(() =>
-    showPoints.value
-      ? (props.points || []).filter(
-          (e) =>
-            validCoordinates(e.coordinates) &&
-            !visitedById.value.has(e.recordId) &&
-            !e.coordinateStatus?.includes('representative') &&
-            (e.visited || mapZoom.value >= 7 || props.category || props.selected || props.focus),
-        )
-      : [],
+  const drawing = useMapScene(props, host, mapZoom, level, simple);
+  const {
+    hovered,
+    showPoints,
+    visitedLayers,
+    visitedResult,
+    visiblePoints,
+    visiblePointCount,
+    categoryRegions,
+    fill,
+    selected,
+    previewIds,
+    hoverInfo,
+    hoverStyle,
+    scene,
+    pointData,
+    visitedPointData,
+  } = drawing;
+  const {
+    selectedVisitedMarkers,
+    selectVisitedMarker,
+    closeVisitedSelection,
+    selectCanvasMarkers,
+    addVisitedImage,
+    bindInteractions,
+  } = useMapInteractions(
+    props,
+    level,
+    drawing,
+    {
+      map: () => map,
+      canvas: () => canvas,
+      ready: () => ready,
+    },
+    select,
   );
-  function validCoordinates(value: unknown): value is [number, number] {
-    return (
-      Array.isArray(value) &&
-      value.length === 2 &&
-      value.every((n) => typeof n === 'number' && Number.isFinite(n)) &&
-      Math.abs(value[0]) <= 180 &&
-      Math.abs(value[1]) <= 90
-    );
-  }
-  const visiblePointCount = computed(() => visiblePoints.value.length);
-  const categoryRegions = computed(() => {
-    void store.revision;
-    const ids = new Set<string>();
-    if (props.category && props.scope === 'china')
-      for (const entry of store.rows) {
-        if (entry.categoryId !== props.category || !entry.visited) continue;
-        for (const id of entry.regionIds)
-          for (const r of store.session!.index.ancestors(id)) ids.add(r.id);
-      }
-    return ids;
-  });
-  function fill(id: string) {
-    const region = store.session!.index.regions.get(id);
-    return region
-      ? store.colors[
-          props.category && props.scope === 'china'
-            ? categoryRegions.value.has(id)
-              ? 'arrived'
-              : 'unvisited'
-            : store.session!.visitState(id)
-        ]
-      : store.colors.unmapped;
-  }
-  const selected = (id: string) =>
-    Boolean(props.selected && store.session!.index.belongsTo(id, props.selected));
-  const hoverInfo = computed(() => {
-    const hit = hovered.value;
-    if (!hit) return;
-    if ((hit.markerCount || 0) > 1)
-      return {
-        title: `${hit.markerCount} 个已到访地点`,
-        detail: '点击查看成员列表；可继续选择单个地点。',
-        state: '到访标记聚合',
-      };
-    if (hit.markerIds?.length) {
-      const marker = visitedById.value.get(hit.markerIds[0]!);
-      if (!marker) return;
-      return {
-        title: marker.name,
-        detail:
-          marker.kind === 'airport'
-            ? '已到访机场'
-            : marker.kind === 'project-reference'
-              ? '世遗项目代表位置，不表示组成地点全部到访。'
-              : '已到访世界遗产地点',
-        state: marker.partial ? '部分子项已到访' : '已到访',
-      };
-    }
-    if (hit.point) {
-      const e = (props.points || []).find((e) => e.id === hit.id);
-      if (!e) return;
-      return {
-        title: e.name,
-        detail: `${store.session!.index.catalog.categories.find((c) => c.id === e.categoryId)?.name || '内容项目'} · ${e.path}`,
-        state: e.visited ? '已标记' : '未标记',
-      };
-    }
-    const r = store.session!.index.regions.get(hit.id);
-    return r
-      ? {
-          title: r.name,
-          detail:
-            props.scope === 'world'
-              ? r.aliases[0] || ''
-              : store.session!.index.paths.get(r.id) || '',
-          state: VISIT_LABELS[store.session!.visitState(r.id)],
-        }
-      : undefined;
-  });
-  const hoverStyle = computed(() => ({
-    left: `${Math.max(8, Math.min((host.value?.clientWidth || 800) - 270, (hovered.value?.x || 0) + 16))}px`,
-    top: `${Math.max(8, Math.min((host.value?.clientHeight || 560) - 100, (hovered.value?.y || 0) + 16))}px`,
-  }));
-  function scene(): MapScene {
-    return {
-      world: props.scope === 'world',
-      dark: store.dark,
-      allowsRegionHit: regionInteractionPolicy(props.scope),
-      detailLevel: props.scope === 'china' && props.level !== 'country' ? props.level : undefined,
-      features: (simple?.features || [])
-        .filter(
-          (f) =>
-            f.properties?.level === level.value ||
-            (f.properties?.level === 'border' &&
-              ['LineString', 'MultiLineString'].includes(f.geometry.type)),
-        )
-        .map((f) => {
-          const id = String(f.properties?.regionId || f.id);
-          return {
-            id,
-            name: String(f.properties?.name || ''),
-            geometry: f.geometry,
-            fill: f.properties?.level === 'border' ? 'transparent' : fill(id),
-            selected: selected(id),
-            interactive: store.session!.index.regions.has(id),
-          };
-        }),
-      points: [
-        ...visiblePoints.value.map((e) => ({
-          id: e.id,
-          name: e.name,
-          coords: e.coordinates!,
-          marked: e.visited,
-        })),
-        ...visitedResult.value.markers.map((marker) => ({
-          id: marker.id,
-          name: marker.name,
-          coords: marker.coordinates,
-          marked: true,
-          markerKind: marker.kind,
-        })),
-      ],
-    };
-  }
-  function pointData(): GeoJSON.FeatureCollection {
-    return {
-      type: 'FeatureCollection',
-      features: visiblePoints.value.map((e) => ({
-        type: 'Feature',
-        id: e.id,
-        geometry: { type: 'Point', coordinates: e.coordinates! },
-        properties: { id: e.id, name: e.name, marked: e.visited },
-      })),
-    };
-  }
-  function visitedPointData(): GeoJSON.FeatureCollection {
-    return {
-      type: 'FeatureCollection',
-      features: visitedResult.value.markers.map((marker) => ({
-        type: 'Feature',
-        id: marker.id,
-        geometry: { type: 'Point', coordinates: marker.coordinates },
-        properties: { id: marker.id, name: marker.name, kind: marker.kind },
-      })),
-    };
-  }
-  function closeVisitedSelection() {
-    visitedSelectionRequest++;
-    selectedVisitedIds.value = [];
-  }
-  function showVisitedSelection(ids: readonly string[]) {
-    selectedVisitedIds.value = [...new Set(ids)].filter((id) => visitedById.value.has(id));
-    hovered.value = undefined;
-  }
-  function selectVisitedMarker(id: string) {
-    const marker = visitedById.value.get(id);
-    if (!marker) return;
-    visitedSelectionRequest++;
-    showVisitedSelection([id]);
-    if (map && ready)
-      map.easeTo({
-        center: marker.coordinates,
-        zoom: marker.kind === 'project-reference' ? 7 : 14,
-        duration: 250,
-      });
-    canvas?.focusPoints([id], marker.kind === 'project-reference' ? 2 : 24);
-  }
-  function selectCanvasMarkers(ids: string[]) {
-    visitedSelectionRequest++;
-    showVisitedSelection(ids);
-    if (selectedVisitedMarkers.value.length)
-      canvas?.focusPoints(
-        ids,
-        selectedVisitedMarkers.value.every((marker) => marker.kind === 'project-reference')
-          ? 2
-          : 24,
-      );
-  }
-  function addVisitedImage(current: LibreMap, id: string) {
-    if (current.hasImage(id)) return;
-    const kind = id.replace(/^visited-/, '') as VisitedMarkerKind;
-    const countMatch = /^visited-cluster-(\d+)$/.exec(id);
-    if (!countMatch && !['airport', 'world-heritage', 'project-reference'].includes(kind)) return;
-    const size = countMatch ? 40 : 34;
-    const image = document.createElement('canvas');
-    image.width = image.height = size * 2;
-    const context = image.getContext('2d');
-    if (!context) return;
-    context.scale(2, 2);
-    if (countMatch) drawVisitedCluster(context, Number(countMatch[1]), size / 2, size / 2);
-    else drawVisitedMarker(context, kind, size / 2, size / 2);
-    current.addImage(id, context.getImageData(0, 0, image.width, image.height), { pixelRatio: 2 });
-  }
-  async function selectTileMarker(current: LibreMap, feature: MapGeoJSONFeature) {
-    if (!feature.properties.cluster) {
-      selectVisitedMarker(String(feature.properties.id));
-      return;
-    }
-    const token = generation;
-    const request = ++visitedSelectionRequest;
-    const source = current.getSource('visited-markers') as GeoJSONSource;
-    try {
-      const leaves = await source.getClusterLeaves(
-        Number(feature.properties.cluster_id),
-        Number(feature.properties.point_count),
-        0,
-      );
-      if (token !== generation || current !== map || request !== visitedSelectionRequest) return;
-      showVisitedSelection(leaves.map((leaf) => String(leaf.properties?.id)));
-      const markers = selectedVisitedMarkers.value;
-      if (!markers.length || feature.geometry.type !== 'Point') return;
-      const samePoint = markers.every((marker) =>
-        marker.coordinates.every(
-          (value, i) => Math.abs(value - markers[0]!.coordinates[i]!) < 1e-8,
-        ),
-      );
-      const maxZoom = markers.every((marker) => marker.kind === 'project-reference') ? 7 : 15;
-      const expansion = samePoint
-        ? Math.min(14, maxZoom)
-        : Math.min(
-            maxZoom,
-            await source.getClusterExpansionZoom(Number(feature.properties.cluster_id)),
-          );
-      if (token !== generation || current !== map || request !== visitedSelectionRequest) return;
-      if (expansion > current.getZoom() + 0.25)
-        current.easeTo({
-          center: feature.geometry.coordinates as [number, number],
-          zoom: expansion,
-          duration: 250,
-        });
-    } catch {
-      // A record toggle or scope switch can replace the worker's cluster index.
-      // The next click uses the current index; do not fall back or change records.
-    }
-  }
-  async function loadSimple(scope = props.scope) {
-    if (manifest && !manifest.scopes[scope]) throw Error('No published boundary for this topic');
+  let lastVisitedResult: typeof visitedResult.value | undefined;
+  async function loadSimple(scope = props.scope, exportLevel?: string) {
+    if (manifest.value && !manifest.value.scopes[scope])
+      throw Error('No published boundary for this topic');
     const response = await fetch(
-      base + (manifest?.scopes[scope]?.simplified || `maps/${scope}.json`),
+      base +
+        ((exportLevel && manifest.value?.scopes[scope]?.simplifiedLevels?.[exportLevel]) ||
+          manifest.value?.scopes[scope]?.simplified ||
+          `maps/${scope}.json`),
       {
         signal: controller
           ? AbortSignal.any([controller.signal, AbortSignal.timeout(15000)])
@@ -366,6 +182,11 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
   async function useFallback(token = generation) {
     if (token !== generation || fallingBack || canvas || missingBoundary.value) return;
     fallingBack = true;
+    const camera = props.pointMode
+      ? map && ready
+        ? { center: map.getCenter().toArray(), zoom: map.getZoom() }
+        : pendingProviderCamera || props.initialCamera
+      : undefined;
     clearTimeout(timer);
     map?.remove();
     map = undefined;
@@ -374,15 +195,25 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     try {
       const geometry = await loadSimple();
       if (token !== generation || !mapHost.value) return;
-      simple = geometry;
+      simple.value = geometry;
       fallback.value = true;
       canvas = new CanvasMapRenderer(
         mapHost.value,
-        (id, point, markerIds) => (markerIds ? selectCanvasMarkers(markerIds) : select(id, point)),
-        (hit) => (hovered.value = hit),
+        (id, point, markerIds) => {
+          if (token === generation && (!props.pointMode || point))
+            markerIds ? selectCanvasMarkers(markerIds) : select(id, point);
+        },
+        (hit) => {
+          if (token === generation)
+            hovered.value = props.pointMode && !hit?.point ? undefined : hit;
+        },
+        captureView,
       );
       canvas.setScene(scene(), true);
       fitSelection();
+      if (camera) canvas.setCamera(camera);
+      captureView();
+      revealInitialPoints();
       mapError.value = '';
     } catch {
       if (token === generation)
@@ -399,7 +230,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       canvas.setScene(scene());
       return;
     }
-    const scopeData = manifest?.scopes[props.scope];
+    const scopeData = manifest.value?.scopes[props.scope];
     if (!map || !ready || !scopeData) return;
     for (const l of scopeData.layers) {
       for (const suffix of ['fill', 'line'])
@@ -414,8 +245,17 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         map.setPaintProperty(
           l.level + '-fill',
           'fill-opacity',
-          boundaryFillOpacity(providerFailed.value ? null : provider.value),
+          props.pointMode ? 0 : boundaryFillOpacity(providerFailed.value ? null : provider.value),
         );
+      if (props.pointMode) {
+        if (l.level !== 'border') {
+          const highlight = l.level + '-point-highlight';
+          const ids = previewIds(l.level);
+          map.setFilter(highlight, ['in', ['get', 'regionId'], ['literal', ids]]);
+          map.setLayoutProperty(highlight, 'visibility', ids.length ? 'visible' : 'none');
+        }
+        continue;
+      }
       map.setPaintProperty(l.level + '-line', 'line-color', [
         'case',
         ['boolean', ['feature-state', 'selected'], false],
@@ -441,7 +281,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
                 fill: fill(r.id),
                 selected: selected(r.id),
                 recorded:
-                  props.category && props.scope === 'china'
+                  !props.pointMode && props.category && props.scope === 'china'
                     ? categoryRegions.value.has(r.id)
                     : store.session!.visitState(r.id) !== 'unvisited',
               },
@@ -465,7 +305,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         props.scope === 'china' && store.session!.index.regions.get(id)?.level === 2 ? 0.82 : 1,
       );
     }
-    const scopeData = manifest?.scopes[props.scope];
+    const scopeData = manifest.value?.scopes[props.scope];
     if (map && ready && scopeData) {
       const b = id ? scopeData.regionBounds[id] : scopeData.bounds;
       const overviewZoom = props.scope === 'singapore' ? 11 : props.scope === 'brunei' ? 8 : 6;
@@ -501,7 +341,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       .map((region) => region.id);
     if (!ids.length) return;
     if (canvas) canvas.fit(ids);
-    const scopeData = manifest?.scopes.france;
+    const scopeData = manifest.value?.scopes.france;
     if (!map || !ready || !scopeData) return;
     const boxes = ids
       .map((id) => scopeData.regionBounds[id])
@@ -520,57 +360,59 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
   }
   function zoom(factor: number) {
     canvas?.zoom(factor);
-    if (canvas) mapZoom.value += Math.log2(factor);
     if (map && ready) map.zoomTo(map.getZoom() + Math.log2(factor), { duration: 180 });
   }
   async function exportPng() {
     // Export only our own geometry, independent of provider licensing or raster failures.
     const token = generation;
+    const previousGeometry = simple.value;
     let renderer: CanvasMapRenderer | undefined, holder: HTMLElement | undefined;
     try {
-      const geometry = simple || (await loadSimple());
+      const geometry = simple.value || (await loadSimple(props.scope, level.value));
       if (token !== generation) return;
-      simple = geometry;
+      simple.value = geometry;
       holder = document.createElement('div');
       holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:1600px;height:1000px';
       document.body.append(holder);
       renderer = new CanvasMapRenderer(holder, () => {});
       await new Promise(requestAnimationFrame);
-      renderer.setScene(scene(), true);
+      if (token !== generation) return;
+      renderer.setScene(scene(true), true);
       if (props.selected)
         renderer.fit(
           scene()
             .features.filter((f) => selected(f.id))
             .map((f) => f.id),
         );
-      download(
-        await renderer.png(
-          '方舆旅行地图',
-          Object.entries(VISIT_LABELS).map(([state, label]) => ({
-            label,
-            color: store.colors[state as keyof typeof VISIT_LABELS],
-          })),
-          mapAttributions(props.scope, visitedLayers.value.visitedWorldHeritage).map(
-            (credit) => `${credit.label} · ${credit.url}`,
-          ),
+      const image = await renderer.png(
+        '方舆旅行地图',
+        Object.entries(VISIT_LABELS).map(([state, label]) => ({
+          label,
+          color: store.colors[state as keyof typeof VISIT_LABELS],
+        })),
+        mapAttributions(props.scope, visitedLayers.value.visitedWorldHeritage).map(
+          (credit) => `${credit.label} · ${credit.url}`,
         ),
-        '方舆地图.png',
       );
+      if (token === generation) download(image, '方舆地图.png');
     } catch {
-      mapError.value = '地图图片暂时无法生成，请重试。';
+      if (token === generation) mapError.value = '地图图片暂时无法生成，请重试。';
     } finally {
+      if (token === generation) simple.value = previousGeometry;
       renderer?.destroy();
       holder?.remove();
     }
   }
   function initialize() {
     pendingProviderCamera = undefined;
-    return initializeMap();
+    initialPointsChecked = false;
+    return initializeMap(props.initialCamera);
   }
   function changeProvider() {
     // Switching the visual background must not reset a manually chosen viewport.
     if (map && ready)
       pendingProviderCamera = { center: map.getCenter().toArray(), zoom: map.getZoom() };
+    else if (canvas && props.pointMode) pendingProviderCamera = canvas.camera();
     return initializeMap(pendingProviderCamera);
   }
   async function initializeMap(camera?: Camera) {
@@ -582,9 +424,10 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     canvas?.destroy();
     map = undefined;
     canvas = undefined;
-    simple = undefined;
+    simple.value = undefined;
     lastVisitedResult = undefined;
-    manifest = undefined;
+    closeVisitedSelection();
+    manifest.value = undefined;
     ready = false;
     fallingBack = false;
     loading.value = true;
@@ -602,23 +445,26 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       if (!response.ok) throw Error('Map manifest unavailable');
       const nextManifest = (await response.json()) as MapDataManifest;
       if (token !== generation || !mapHost.value) return;
-      manifest = nextManifest;
-      const scopeData = manifest.scopes[props.scope];
+      manifest.value = nextManifest;
+      const scopeData = manifest.value.scopes[props.scope];
       if (!scopeData) {
         missingBoundary.value = true;
         loading.value = false;
         mapError.value = '该专题尚无已发布的边界地图，地点列表与已有记录仍可使用。';
         return;
       }
-      map = new LibreMap({
+      const runtime = await import('./tile-runtime.js');
+      if (token !== generation || !mapHost.value) return;
+      map = new runtime.LibreMap({
         container: mapHost.value,
         style: createMapStyle(
-          manifest,
+          manifest.value,
           props.scope,
           level.value,
           provider.value,
           base,
           location.href,
+          Boolean(props.pointMode),
         ),
         bounds: scopeData.bounds,
         fitBoundsOptions: { padding: 45 },
@@ -651,11 +497,17 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         if (camera) current.jumpTo(camera);
         mapZoom.value = current.getZoom();
         mapCenter.value = current.getCenter().toArray();
+        captureView();
+        revealInitialPoints();
+      });
+      current.on('move', () => {
+        if (props.pointMode) captureView();
       });
       current.on('moveend', () => {
         if (token === generation && current === map) {
           mapZoom.value = current.getZoom();
           mapCenter.value = current.getCenter().toArray();
+          captureView();
         }
       });
       current.on('idle', () => {
@@ -681,8 +533,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
           // sources may fail together, while only the first error reaches this
           // handler before fallback removes the map. Renew this scope's readers.
           for (const failed of scopeData.layers)
-            if (failed.archive)
-              pmtiles.add(new PMTiles(mapAssetUrl(base, failed.url, location.href)));
+            if (failed.archive) runtime.renewArchive(base, failed.url, location.href);
           void useFallback(token);
         } else if (ready) {
           mapError.value = '地图资源暂时无法完整加载，可切换简化地图。';
@@ -693,74 +544,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       current.on('webglcontextlost', () => {
         if (token === generation) void useFallback(token);
       });
-      current.on('click', (e) => {
-        if (!ready || current !== map) return;
-        const visited = current.queryRenderedFeatures(e.point, {
-          layers: VISITED_MARKER_LAYER_IDS.filter((id) => current.getLayer(id)),
-        })[0];
-        if (visited) {
-          void selectTileMarker(current, visited);
-          return;
-        }
-        const point = current.queryRenderedFeatures(e.point, { layers: ['points'] })[0];
-        if (point) {
-          select(String(point.properties.id), true);
-          return;
-        }
-        const layer = level.value + '-fill';
-        if (!current.getLayer(layer)) return;
-        const f = current
-          .queryRenderedFeatures(e.point, { layers: [layer] })
-          .find((f) => store.session!.index.regions.has(String(f.properties.regionId)));
-        if (f) {
-          const allowed = regionInteractionPolicy(props.scope);
-          if (allowed && !allowed([e.lngLat.lng, e.lngLat.lat], f.geometry)) {
-            hovered.value = undefined;
-            current.getCanvas().style.cursor = '';
-            return;
-          }
-          select(String(f.properties.regionId), false);
-        }
-      });
-      current.on('mousemove', (e) => {
-        if (!ready || current !== map) return;
-        const visited = current.queryRenderedFeatures(e.point, {
-          layers: VISITED_MARKER_LAYER_IDS.filter((id) => current.getLayer(id)),
-        })[0];
-        if (visited) {
-          hovered.value = {
-            id: String(visited.properties.id || visited.properties.cluster_id),
-            name: String(visited.properties.name || ''),
-            point: true,
-            x: e.point.x,
-            y: e.point.y,
-            markerCount: Number(visited.properties.point_count || 1),
-            ...(visited.properties.cluster ? {} : { markerIds: [String(visited.properties.id)] }),
-          };
-          current.getCanvas().style.cursor = 'pointer';
-          return;
-        }
-        const layers = ['points', level.value + '-fill'].filter((id) => current.getLayer(id));
-        const f = current
-          .queryRenderedFeatures(e.point, { layers })
-          .find(
-            (f) =>
-              f.layer.id === 'points' ||
-              (store.session!.index.regions.has(String(f.properties.regionId)) &&
-                (regionInteractionPolicy(props.scope)?.([e.lngLat.lng, e.lngLat.lat], f.geometry) ??
-                  true)),
-          );
-        hovered.value = f
-          ? {
-              id: String(f.properties.regionId || f.properties.id),
-              name: String(f.properties.name || ''),
-              point: f.layer.id === 'points',
-              x: e.point.x,
-              y: e.point.y,
-            }
-          : undefined;
-        current.getCanvas().style.cursor = f ? 'pointer' : '';
-      });
+      bindInteractions(current);
       current.getCanvas().addEventListener('mouseleave', () => (hovered.value = undefined), {
         signal: controller.signal,
       });
@@ -771,33 +555,45 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
   onMounted(() => {
     observer = new ResizeObserver(() => {
       if (mapHost.value?.clientWidth && mapHost.value?.clientHeight) map?.resize();
+      captureView();
     });
     if (mapHost.value) observer.observe(mapHost.value);
     void initialize();
   });
   onBeforeUnmount(() => {
+    captureView();
     generation++;
     controller?.abort();
     clearTimeout(timer);
     observer?.disconnect();
     map?.remove();
     canvas?.destroy();
+    map = undefined;
+    canvas = undefined;
+    ready = false;
+    closeVisitedSelection();
   });
   watch(() => props.scope, initialize);
   watch(provider, changeProvider);
   watch(
-    () => [store.revision, store.dark, props.category, props.level, props.selected],
+    () => [
+      store.revision,
+      store.dark,
+      props.category,
+      props.level,
+      props.selected,
+      props.previewRegions,
+    ],
     appearance,
   );
-  watch(() => [props.selected, props.level, props.focus], fitSelection);
+  watch(
+    () => [props.selected, props.level, props.focus],
+    () => {
+      if (!props.pointMode) fitSelection();
+    },
+  );
   watch(visiblePoints, appearance);
-  watch(visitedResult, () => {
-    visitedSelectionRequest++;
-    selectedVisitedIds.value = selectedVisitedIds.value.filter((id) => visitedById.value.has(id));
-    if (hovered.value?.markerIds || hovered.value?.markerCount) hovered.value = undefined;
-    appearance();
-  });
-  watch(() => props.scope, closeVisitedSelection);
+  watch(visitedResult, appearance);
   return {
     store,
     host,
@@ -808,12 +604,13 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     mapError,
     loading,
     fallback,
-    provider,
     providerFailed,
     missingBoundary,
     mapZoom,
     mapCenter,
     visiblePointCount,
+    pointGroups,
+    expandCluster,
     visitedResult,
     visitedLayers,
     selectedVisitedMarkers,
@@ -821,7 +618,6 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     closeVisitedSelection,
     initialize,
     useFallback: () => useFallback(),
-    generation,
     zoom,
     fitRegion,
     fitSelection,

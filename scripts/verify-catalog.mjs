@@ -93,6 +93,9 @@ for (const scope of ['china', 'world', 'japan', 'korea']) {
       failures.push(scope + '：未知几何层级 ' + feature.level);
     }
     if (feature.regionId) requireRegions([feature.regionId], '地图 ' + scope);
+    if (scope === 'china' && regions.get(feature.regionId)?.historical) {
+      failures.push('现行中国边界包含历史几何：' + regions.get(feature.regionId).name);
+    }
   }
 }
 

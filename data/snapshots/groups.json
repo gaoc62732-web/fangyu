@@ -1,5 +1,35 @@
 {
-  "runtime": ["data/catalog/*.json"],
-  "osm-source": ["data/boundaries/china-osm/*.geojson", "data/boundaries/china-osm/references/*.geojson", "data/boundaries/china-osm/retained-hkmo-counties.json"],
-  "research": ["data/extensions/research/*.json"]
+  "runtime": [
+    "data/catalog/*.json"
+  ],
+  "osm-source": [
+    "data/boundaries/china-osm/*.geojson",
+    "data/boundaries/china-osm/references/*.geojson",
+    "data/boundaries/china-osm/retained-hkmo-counties.json"
+  ],
+  "research": [
+    "data/extensions/research/*.json",
+    "data/boundaries/china-policy/applied.json",
+    "data/boundaries/china-policy/audit.json",
+    "data/boundaries/china-policy/evidence.json",
+    "data/boundaries/china-policy/decisions.json",
+    "data/boundaries/china-policy/historical-removal.json",
+    "data/boundaries/china-policy/coastal-mask-report.json",
+    "data/boundaries/china-policy/reviewed-patches.json",
+    "data/boundaries/china-policy/published-overrides.json",
+    "data/boundaries/china-policy/references/*.json",
+    "data/boundaries/china-policy/sources/*.json",
+    "data/boundaries/china-policy/sources/*.geojson",
+    "data/boundaries/china-policy/land-mask.geojson",
+    "data/boundaries/china-policy/south-china-sea-lines.geojson",
+    "data/boundaries/china-policy/sources/*.bin",
+    "data/boundaries/china-policy/sources/*.shp",
+    "data/boundaries/china-policy/sources/*.prj",
+    "data/boundaries/china-policy/osm-land-outlines.geojson",
+    "data/boundaries/china-policy/coastal-pending-edges.geojson",
+    "data/boundaries/china-policy/frontend-coastal-acceptance.json",
+    "data/boundaries/china-policy/coastal-coverage-review.json",
+    "data/boundaries/china-policy/coastal-unassigned-land.geojson",
+    "data/boundaries/china-policy/coastal-tile-precision.json"
+  ]
 }

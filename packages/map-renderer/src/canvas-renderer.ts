@@ -3,6 +3,7 @@ import type { MapScene, RenderFeature, RenderPoint } from './types.js';
 import { projectionGeometry } from './projection-geometry.js';
 import { clusterScreenMarkers, type ScreenMarkerCluster } from './marker-clusters.js';
 import { drawVisitedCluster, drawVisitedMarker } from './visited-marker-icons.js';
+import { POINT_MAP_APPEARANCE } from './point-map-appearance.js';
 
 type Bounds = [number, number, number, number];
 type Shape = RenderFeature & { path: Path2D; bounds: Bounds };
@@ -52,6 +53,7 @@ export class CanvasMapRenderer {
     host: HTMLElement,
     private select: (id: string, point: boolean, markerIds?: string[]) => void,
     private hover: (item: MapHover | undefined) => void = () => {},
+    private viewChanged: () => void = () => {},
   ) {
     this.canvas = document.createElement('canvas');
     this.canvas.setAttribute('aria-label', '可拖动和缩放的旅行地图；也可通过旁边的列表选择地点');
@@ -248,13 +250,36 @@ export class CanvasMapRenderer {
   }
   zoom(factor: number, x = this.width / 2, y = this.height / 2) {
     const next = Math.max(
-      this.fullScale * 0.75,
-      Math.min(this.fullScale * (this.scene.world ? 20 : 36), this.scale * factor),
+      this.scene.pointExploration ? 512 / 360 : this.fullScale * 0.75,
+      Math.min(
+        this.scene.pointExploration
+          ? (512 * Math.pow(2, 15)) / 360
+          : this.fullScale * (this.scene.world ? 20 : 36),
+        this.scale * factor,
+      ),
     );
     const scaleRatio = next / this.scale;
     this.x = x - (x - this.x) * scaleRatio;
     this.y = y - (y - this.y) * scaleRatio;
     this.scale = next;
+    this.draw();
+  }
+  projectPoint(coordinates: [number, number]): [number, number] {
+    const [x, y] = this.project(coordinates);
+    return [x * this.scale + this.x, y * this.scale + this.y];
+  }
+  camera() {
+    const center = this.unproject([
+      (this.width / 2 - this.x) / this.scale,
+      (this.height / 2 - this.y) / this.scale,
+    ]);
+    return center ? { center, zoom: Math.log2((this.scale * 360) / 512) } : undefined;
+  }
+  setCamera(camera: { center: [number, number]; zoom: number }) {
+    this.scale = (512 * Math.pow(2, camera.zoom)) / 360;
+    const [x, y] = this.project(camera.center);
+    this.x = this.width / 2 - x * this.scale;
+    this.y = this.height / 2 - y * this.scale;
     this.draw();
   }
   focusPoints(ids: readonly string[], maxRelativeZoom = 24) {
@@ -298,6 +323,7 @@ export class CanvasMapRenderer {
       if (Math.hypot(p[0] * this.scale + this.x - x, p[1] * this.scale + this.y - y) < 7)
         return { id: point.id, name: point.name, point: true };
     }
+    if (this.scene.pointExploration) return;
     const px = (x - this.x) / this.scale;
     const py = (y - this.y) / this.scale;
     const coordinates = this.scene.allowsRegionHit ? this.unproject([px, py]) : null;
@@ -338,10 +364,38 @@ export class CanvasMapRenderer {
       : this.scene.detailLevel === 'county'
         ? '#8ca49d'
         : '#57726b';
+    if (this.scene.pointExploration) {
+      // Mute only the background; highlights and points are painted afterwards.
+      ctx.save();
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.fillStyle = POINT_MAP_APPEARANCE.maskColor;
+      ctx.globalAlpha = POINT_MAP_APPEARANCE.maskOpacity;
+      ctx.fillRect(0, 0, this.width, this.height);
+      ctx.restore();
+      ctx.save();
+      ctx.fillStyle = POINT_MAP_APPEARANCE.highlightColor;
+      ctx.globalAlpha = POINT_MAP_APPEARANCE.highlightOpacity;
+      for (const f of this.shapes)
+        if (f.selected && f.geometry.type.includes('Polygon')) ctx.fill(f.path, 'evenodd');
+      ctx.restore();
+    }
     for (const f of this.shapes) {
-      ctx.fillStyle = f.fill;
-      ctx.fill(f.path, 'evenodd');
-      const countryOutline = f.fill === 'transparent' && f.interactive === false;
+      if (f.boundary === false) continue;
+      if (!this.scene.pointExploration) {
+        ctx.fillStyle = f.fill;
+        ctx.fill(f.path, 'evenodd');
+      }
+      const countryOutline = ['LineString', 'MultiLineString'].includes(f.geometry.type);
+      if (this.scene.pointExploration) {
+        ctx.strokeStyle = countryOutline
+          ? POINT_MAP_APPEARANCE.borderColor
+          : POINT_MAP_APPEARANCE.boundaryColor;
+        ctx.globalAlpha = POINT_MAP_APPEARANCE.boundaryOpacity;
+        ctx.lineWidth = (countryOutline ? 1.4 : boundaryWidth) / this.scale;
+        ctx.stroke(f.path);
+        ctx.globalAlpha = 1;
+        continue;
+      }
       ctx.strokeStyle = countryOutline
         ? this.scene.dark
           ? '#e2d7ad'
@@ -382,6 +436,7 @@ export class CanvasMapRenderer {
       if (group.members.length > 1) drawVisitedCluster(ctx, group.members.length, group.x, group.y);
       else drawVisitedMarker(ctx, group.members[0]!.markerKind!, group.x, group.y);
     }
+    this.viewChanged();
   }
   async png(
     title: string,

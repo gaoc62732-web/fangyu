@@ -15,9 +15,6 @@ const sha = (b: Uint8Array) => createHash('sha256').update(b).digest('hex');
 const rawPath = path.join(root, 'data/catalog/vietnam.geo.json');
 const rawBytes = await fs.readFile(rawPath);
 const raw = JSON.parse(rawBytes.toString('utf8'));
-const mask = await read(
-  path.join(root, 'data/extensions/research/south-china-sea-interaction-mask.json'),
-);
 const manifest = await read(path.join(output, 'map-manifest.json'));
 
 async function otherScopeState() {

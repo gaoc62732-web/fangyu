@@ -65,6 +65,17 @@ export const mapLayersSchema = z
   .strict();
 export type MapLayers = z.infer<typeof mapLayersSchema>;
 
+export const pointLinkPolicySchema = z.enum(['ask', 'auto', 'never']);
+export type PointLinkPolicy = z.infer<typeof pointLinkPolicySchema>;
+export const pointCheckinPreferencesSchema = z
+  .object({
+    children: pointLinkPolicySchema.default('ask'),
+    identities: pointLinkPolicySchema.default('ask'),
+    regions: pointLinkPolicySchema.default('ask'),
+  })
+  .strict();
+export type PointCheckinPreferences = z.infer<typeof pointCheckinPreferencesSchema>;
+
 export const preferencesSchema = z
   .object({
     palette: z.enum(['jade', 'ink', 'autumn', 'ocean', 'contrast', 'custom']).default('jade'),
@@ -73,6 +84,7 @@ export const preferencesSchema = z
       .optional(),
     mapLevel: z.enum(['province', 'city', 'county']).default('county'),
     mapLayers: mapLayersSchema.optional(),
+    pointCheckin: pointCheckinPreferencesSchema.optional(),
   })
   .strict();
 

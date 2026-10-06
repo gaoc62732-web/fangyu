@@ -49,7 +49,7 @@ class ArchivesController {
       throw new BadRequestException('存档格式或 ID 无效');
     const archive = parsed.data;
     try {
-      new HandbookSession(await this.catalog.index()).validate(archive.snapshot);
+      archive.snapshot = new HandbookSession(await this.catalog.index()).validate(archive.snapshot);
     } catch (error) {
       throw new BadRequestException(String(error));
     }
@@ -63,7 +63,7 @@ class ArchivesController {
   @Delete(':id')
   @HttpCode(204)
   async remove(@Req() request: AuthenticatedRequest, @Param('id') id: string) {
-    if (!/^[0-9a-f-]{36}$/i.test(id)) throw new BadRequestException('无效存档 ID');
+    if (!archiveSchema.shape.id.safeParse(id).success) throw new BadRequestException('无效存档 ID');
     await this.database.pool.query('DELETE FROM archives WHERE user_id = $1 AND id = $2', [
       request.user.id,
       id,

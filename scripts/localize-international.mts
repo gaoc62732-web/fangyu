@@ -29,7 +29,7 @@ export function localizeInternational(catalog: Catalog, sources: Row[], resoluti
       } else names.set(key, row);
     }
   }
-  const targets: Record<string, Map<string, any>> = {
+  const targets = {
     region: new Map(catalog.regions.map((row) => [row.id, row])),
     entry: new Map(catalog.entries.map((row) => [row.id, row])),
     project: new Map((catalog.heritageProjects || []).map((row) => [row.unescoId, row])),
@@ -44,11 +44,11 @@ export function localizeInternational(catalog: Catalog, sources: Row[], resoluti
   };
   const counts: Record<string, number> = {};
   for (const [identity, row] of names) {
-    const target = targets[row.kind]?.get(row.key);
+    const target = targets[row.kind as keyof typeof targets]?.get(row.key);
     assert(target, `Translated identity missing from catalogue: ${identity}`);
     target.name ||= row.original || row.en;
     // Preserve existing Chinese wording rather than replacing a valid established label.
-    const keptChinese = /\p{Script=Han}/u.test(target.name) && !target.nameZh;
+    const keptChinese = /\p{Script=Han}/u.test(target.name || '') && !target.nameZh;
     applyBilingualName(target, keptChinese ? { ...row, zh: target.name } : row, identity);
     counts[row.kind] = (counts[row.kind] || 0) + 1;
   }
@@ -77,7 +77,7 @@ export function localizeInternational(catalog: Catalog, sources: Row[], resoluti
             ? [club.name, club.nameZh, club.nameEn, club.originalName, ...(club.aliases || [])]
             : [];
         })
-        .filter(Boolean);
+        .filter((name): name is string => typeof name === 'string' && Boolean(name));
       if (entry) entry.aliases = [...new Set([...entry.aliases, ...clubNames])];
       venue.aliases = [...new Set([...venue.aliases, ...clubNames])];
     }

@@ -10,6 +10,7 @@ const routes: RouteRecordRaw[] = [
     props: { scope },
   })),
   { path: '/records', component: () => import('../pages/RecordsPage.vue') },
+  { path: '/points', component: () => import('../pages/PointsPage.vue') },
   { path: '/maofen', component: () => import('../pages/MaofenPage.vue') },
   { path: '/achievements', component: () => import('../pages/AchievementsPage.vue') },
   { path: '/imports', component: () => import('../pages/ImportsPage.vue') },

@@ -2,8 +2,12 @@
 import { computed, onActivated, onDeactivated, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { achievementChronology } from '@fangyu/domain';
-import type { AchievementProgress, quantityProgress, maofenProgress } from '@fangyu/domain';
+import type { AchievementProgress } from '@fangyu/domain';
 import { AchievementWorker } from '../features/achievements/client.js';
+import type {
+  AchievementBadgeSummary as Badge,
+  AchievementSummary as Summary,
+} from '../features/achievements/protocol.js';
 import { useAppStore } from '../app/store.js';
 import {
   SERIES,
@@ -18,12 +22,6 @@ import AchievementBadge from '../components/AchievementBadge.vue';
 import VirtualGrid from '../components/VirtualGrid.vue';
 import AppDialog from '../components/AppDialog.vue';
 import { exportCsv } from '../features/exports/download.js';
-type Badge = Omit<AchievementProgress, 'targets'> & { regionIds: string[] };
-type Summary = {
-  badges: Badge[];
-  quantity: ReturnType<typeof quantityProgress>;
-  score: ReturnType<typeof maofenProgress>;
-};
 const store = useAppStore(),
   router = useRouter();
 const worker = new AchievementWorker(store.session!.index.catalog, store.session!.snapshot());
@@ -136,7 +134,7 @@ async function loadDetail() {
   const ticket = ++detailSerial;
   if (!selected.value) return;
   try {
-    const result = await worker.request<AchievementProgress>('achievement', selected.value);
+    const result = await worker.request('achievement', selected.value);
     if (ticket === detailSerial) detail.value = result;
   } catch (cause) {
     if (ticket === detailSerial) error.value = String(cause);
@@ -201,7 +199,7 @@ watch(
     error.value = '';
     try {
       await worker.request('sync', store.session!.snapshot());
-      const result = await worker.request<Summary>('achievements');
+      const result = await worker.request('achievements');
       if (ticket === revisionSerial) {
         summary.value = result;
         if (selected.value) void loadDetail();

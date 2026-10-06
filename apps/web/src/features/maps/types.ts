@@ -1,4 +1,5 @@
-import type { Scope } from '@fangyu/contracts';
+import type { EntryView } from '@fangyu/domain';
+import type { Scope, MapLevel } from '@fangyu/contracts';
 import type { StyleSpecification } from 'maplibre-gl';
 export type Bounds = [number, number, number, number];
 export interface MapDataManifest {
@@ -9,6 +10,7 @@ export interface MapDataManifest {
       bounds: Bounds;
       regionBounds: Record<string, Bounds>;
       simplified: string;
+      simplifiedLevels?: Record<string, string>;
       layers: { level: string; maxzoom: number; bounds: Bounds; url: string; archive?: boolean }[];
     }
   >;
@@ -43,4 +45,16 @@ export function tianditu(key: string, kind: BasemapKind = 'vector'): BasemapProv
 // Resolve only the prefix: URL() escapes the {z}/{x}/{y} placeholders MapLibre needs.
 export function mapAssetUrl(base: string, resource: string, origin: string) {
   return new URL(base, origin).href + resource;
+}
+
+export interface TiledMapProps {
+  scope: Scope;
+  selected: string;
+  level: MapLevel;
+  category: string;
+  points?: EntryView[] | undefined;
+  focus?: [number, number] | null | undefined;
+  pointMode?: boolean;
+  initialCamera?: { center: [number, number]; zoom: number } | undefined;
+  previewRegions?: string[] | undefined;
 }

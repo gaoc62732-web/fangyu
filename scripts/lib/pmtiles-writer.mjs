@@ -147,7 +147,19 @@ export class PMTilesWriter {
       fileHash(this.filename) === fileHash(temporary)
     )
       fs.unlinkSync(temporary);
-    else fs.renameSync(temporary, this.filename);
+    else {
+      // Windows indexing/preview readers can briefly retain the old archive.
+      // Keep both files intact until an atomic replacement succeeds.
+      for (let attempt = 0; ; attempt++) {
+        try {
+          fs.renameSync(temporary, this.filename);
+          break;
+        } catch (error) {
+          if (!['EPERM', 'EBUSY'].includes(error.code) || attempt >= 10) throw error;
+          Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 300);
+        }
+      }
+    }
     fs.unlinkSync(this.spool);
     return this.entries.length;
   }

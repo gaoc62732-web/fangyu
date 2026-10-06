@@ -9,6 +9,10 @@ const osm: MapAttribution = {
   url: 'https://www.openstreetmap.org/copyright',
 };
 const boundaries: Partial<Record<Scope, MapAttribution>> = {
+  china: {
+    label: '中国边界校订及南海断续线：天地图；陆地海岸：OpenStreetMap',
+    url: 'https://cloudcenter.tianditu.gov.cn/administrativeDivision/',
+  },
   indonesia: {
     label: '印尼边界：Natural Earth 1:10m · Public Domain',
     url: 'https://www.naturalearthdata.com/about/terms-of-use/',

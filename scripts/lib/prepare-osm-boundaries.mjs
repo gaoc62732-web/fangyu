@@ -6,6 +6,11 @@ import { createHash } from 'node:crypto';
 import { setTimeout as pause } from 'node:timers/promises';
 import osmtogeojson from 'osmtogeojson';
 import { Converter } from 'opencc-js';
+import {
+  removeHistoricalGeometry,
+  retainReviewedChinaGeometry,
+  recordReviewedChinaReimport,
+} from './china-boundary-policy.mjs';
 const toSimplified = Converter({ from: 'tw', to: 'cn' });
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const read = async (filename) => JSON.parse(await fs.readFile(filename, 'utf8'));
@@ -138,7 +143,7 @@ if (job.kind === 'province') {
     unmatched = [],
     replacements = new Map();
   const codeOf = (f) => f.properties['ref:admin:CN'] || f.properties.division_code;
-  for (const r of regions.filter((r) => provinceOf(r) === province.id)) {
+  for (const r of regions.filter((r) => !r.historical && provinceOf(r) === province.id)) {
     const previous = legacy.filter((g) => g.regionId === r.id && g.level !== 'border');
     const candidateNames = new Set([r.name, ...r.aliases].map(toSimplified));
     const parent = regionMap.get(r.parentId);
@@ -249,7 +254,7 @@ if (job.kind === 'province') {
         : preservedById.get(r.id) || r,
     );
     const seen = new Set();
-    const output = replacedRows.filter((r) => {
+    const output = removeHistoricalGeometry(replacedRows, regions).filter((r) => {
       if (!replacements.has(r.regionId) || r.level === 'border' || preservedById.has(r.id))
         return true;
       const key = r.regionId + '/' + r.level;
@@ -268,13 +273,15 @@ if (job.kind === 'province') {
         geometry: f.geometry,
       });
     }
-    report.geometrySha256 = await write(geometryFile, output);
+    const reviewedOutput = await retainReviewedChinaGeometry(output, regions);
+    report.geometrySha256 = await write(geometryFile, reviewedOutput);
+    await recordReviewedChinaReimport(report.geometrySha256);
     report.applied = true;
   }
 } else if (job.kind === 'national' && job.apply) {
   const national = features.find((f) => f.id === 'relation/270056');
   if (!national) throw Error('Missing national polygon');
-  const output = legacy.filter((r) => r.level !== 'border');
+  const output = removeHistoricalGeometry(legacy, regions).filter((r) => r.level !== 'border');
   output.push({
     id: 'osm-national-270056',
     regionId: null,
@@ -287,7 +294,9 @@ if (job.kind === 'province') {
       ).flat(),
     },
   });
-  report.geometrySha256 = await write(geometryFile, output);
+  const reviewedOutput = await retainReviewedChinaGeometry(output, regions);
+  report.geometrySha256 = await write(geometryFile, reviewedOutput);
+  await recordReviewedChinaReimport(report.geometrySha256);
   report.applied = true;
 } else if (job.kind === 'reference') {
   report.purpose =

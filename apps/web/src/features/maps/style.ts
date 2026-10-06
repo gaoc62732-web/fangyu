@@ -1,5 +1,6 @@
 import type { ExpressionSpecification, StyleSpecification } from 'maplibre-gl';
 import type { Scope } from '@fangyu/contracts';
+import { POINT_MAP_APPEARANCE } from '@fangyu/map-renderer';
 import { mapAssetUrl, type MapDataManifest, type BasemapProvider } from './types.js';
 import { mapAttributions } from './data-attribution.js';
 
@@ -25,6 +26,7 @@ export function createMapStyle(
   provider: BasemapProvider | null,
   base: string,
   origin: string,
+  pointMode = false,
 ): StyleSpecification {
   const sources: StyleSpecification['sources'] = {};
   const layers: StyleSpecification['layers'] = [
@@ -67,6 +69,26 @@ export function createMapStyle(
     };
     layers.push({ id: 'basemap', source: 'basemap', type: 'raster' });
   }
+  if (provider && !provider.style) {
+    sources.labels = {
+      type: 'raster',
+      tiles: provider.labels,
+      tileSize: 256,
+      minzoom: 1,
+      maxzoom: 18,
+    };
+    labels.push({ id: 'labels', source: 'labels', type: 'raster' });
+  }
+  if (pointMode) {
+    layers.push(...labels, {
+      id: 'point-basemap-mask',
+      type: 'background',
+      paint: {
+        'background-color': POINT_MAP_APPEARANCE.maskColor,
+        'background-opacity': POINT_MAP_APPEARANCE.maskOpacity,
+      },
+    });
+  }
   for (const layer of manifest.scopes[scope].layers) {
     sources[layer.level] = {
       type: 'vector',
@@ -94,7 +116,7 @@ export function createMapStyle(
         layout: { visibility },
         paint: {
           'fill-color': ['coalesce', ['feature-state', 'fill'], '#f5f8f3'],
-          'fill-opacity': boundaryFillOpacity(provider),
+          'fill-opacity': pointMode ? 0 : boundaryFillOpacity(provider),
         },
       });
     layers.push({
@@ -105,40 +127,67 @@ export function createMapStyle(
       // Legacy border data also contains coarse province polygons. Only draw
       // independent border lines over the administrative boundary layers.
       ...(layer.level === 'border'
-        ? { filter: ['==', ['geometry-type'], 'LineString'] as const }
+        ? {
+            filter:
+              scope === 'china'
+                ? [
+                    'all',
+                    ['==', ['geometry-type'], 'LineString'],
+                    ['in', ['get', 'boundaryKind'], ['literal', ['land', 'maritime-dash']]],
+                  ]
+                : ['==', ['geometry-type'], 'LineString'],
+          }
         : {}),
       layout: { visibility, 'line-join': 'round', 'line-cap': 'round' },
       paint: {
-        'line-color': [
-          'case',
-          ['boolean', ['feature-state', 'selected'], false],
-          '#cf762b',
-          ['boolean', ['feature-state', 'hover'], false],
-          '#548774',
-          layer.level === 'border' ? '#263f45' : '#8ca49d',
-        ],
-        'line-width': [
-          'case',
-          ['boolean', ['feature-state', 'selected'], false],
-          2,
-          ['boolean', ['feature-state', 'hover'], false],
-          1.5,
-          layer.level === 'border' ? 2.6 : layer.level === 'county' ? 0.5 : 1,
-        ],
+        'line-color': pointMode
+          ? layer.level === 'border'
+            ? POINT_MAP_APPEARANCE.borderColor
+            : POINT_MAP_APPEARANCE.boundaryColor
+          : [
+              'case',
+              ['boolean', ['feature-state', 'selected'], false],
+              '#cf762b',
+              ['boolean', ['feature-state', 'hover'], false],
+              '#548774',
+              layer.level === 'border' ? '#263f45' : '#8ca49d',
+            ],
+        'line-opacity': pointMode ? POINT_MAP_APPEARANCE.boundaryOpacity : 1,
+        'line-width': pointMode
+          ? layer.level === 'border'
+            ? 1.4
+            : layer.level === 'county'
+              ? 0.5
+              : 1
+          : [
+              'case',
+              ['boolean', ['feature-state', 'selected'], false],
+              2,
+              ['boolean', ['feature-state', 'hover'], false],
+              1.5,
+              layer.level === 'border' ? 2.6 : layer.level === 'county' ? 0.5 : 1,
+            ],
       },
     });
   }
-  layers.push(...labels);
-  if (provider && !provider.style) {
-    sources.labels = {
-      type: 'raster',
-      tiles: provider.labels,
-      tileSize: 256,
-      minzoom: 1,
-      maxzoom: 18,
-    };
-    layers.push({ id: 'labels', source: 'labels', type: 'raster' });
-  }
+  if (pointMode) {
+    // Separate from the boundary level: county associations stay county-sized
+    // even while the user is viewing province outlines.
+    for (const layer of manifest.scopes[scope].layers.filter((l) => l.level !== 'border'))
+      layers.push({
+        id: layer.level + '-point-highlight',
+        type: 'fill',
+        source: layer.level,
+        'source-layer': 'regions',
+        filter: ['in', ['get', 'regionId'], ['literal', []]],
+        layout: { visibility: 'none' },
+        paint: {
+          'fill-color': POINT_MAP_APPEARANCE.highlightColor,
+          'fill-opacity': POINT_MAP_APPEARANCE.highlightOpacity,
+          'fill-antialias': false,
+        },
+      });
+  } else layers.push(...labels);
   sources.points = { type: 'geojson', data: { type: 'FeatureCollection', features: [] } };
   layers.push({
     id: 'points',

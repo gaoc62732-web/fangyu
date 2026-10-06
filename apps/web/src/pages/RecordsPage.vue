@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { SCOPE_CONFIGS } from '@fangyu/contracts';
 import type { EntryView } from '@fangyu/domain';
+import type { GroupedEntryView } from '../features/catalog/grouped-entry.js';
 import { useAppStore } from '../app/store.js';
 import EntryList from '../components/EntryList.vue';
 import { exportCsv } from '../features/exports/download.js';
@@ -18,11 +20,10 @@ const index = computed(() => store.session!.index);
 const regions = computed(() =>
   index.value.catalog.regions.filter((region) => region.scope === scope.value),
 );
-const roots = computed(() =>
-  regions.value.filter(
-    (region) => !region.parentId || !regions.value.some((parent) => parent.id === region.parentId),
-  ),
-);
+const roots = computed(() => {
+  const ids = new Set(regions.value.map((region) => region.id));
+  return regions.value.filter((region) => !region.parentId || !ids.has(region.parentId));
+});
 const selectedPath = computed(() => index.value.ancestors(selectedRegionId.value));
 const firstRegion = computed(() => selectedPath.value[0]?.id || '');
 const secondRegion = computed(() => selectedPath.value[1]?.id || '');
@@ -41,7 +42,6 @@ const categoryOptions = computed(() => {
   );
   return index.value.catalog.categories.filter((item) => ids.has(item.id));
 });
-type GroupedEntry = EntryView & { groupEntryIds?: string[]; regionPaths?: string[] };
 const wideMonuments = computed(() => {
   const groups = new Map<string, { count: number; provinces: Set<string> }>();
   for (const entry of store.rows) {
@@ -73,7 +73,7 @@ function groupKey(entry: EntryView) {
     return `${base}:${path.find((region) => region.level === 1)?.id || province}`;
   return `${entry.scope}:record:${entry.recordId}`;
 }
-const groupedRows = computed<GroupedEntry[]>(() => {
+const groupedRows = computed<GroupedEntryView[]>(() => {
   const groups = new Map<string, EntryView[]>();
   for (const entry of store.rows) {
     if (scope.value && entry.scope !== scope.value) continue;
@@ -175,10 +175,13 @@ function csv() {
       aria-label="范围"
     >
       <option value="">全部范围</option>
-      <option value="china">中国</option>
-      <option value="world">世界</option>
-      <option value="japan">日本</option>
-      <option value="korea">韩国</option>
+      <option
+        v-for="item in SCOPE_CONFIGS"
+        :key="item.id"
+        :value="item.id"
+      >
+        {{ item.name }}
+      </option>
     </select>
     <label
       v-if="scope"

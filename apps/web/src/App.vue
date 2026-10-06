@@ -18,6 +18,7 @@ const topicGroups = SCOPE_NAV_GROUPS.map((group) => ({
   ),
 }));
 const navigation: [string, string][] = [
+  ['/points', '点位点卯'],
   ['/maofen', '点卯计算器'],
   ['/records', '要素列表'],
   ['/achievements', '旅行成就'],
@@ -92,7 +93,10 @@ watchEffect(() => {
 </script>
 
 <template>
-  <header class="site-header">
+  <header
+    v-if="route.path !== '/points'"
+    class="site-header"
+  >
     <div class="brand">
       <span class="logo">方</span>
       <div>
@@ -184,7 +188,10 @@ watchEffect(() => {
       <span>{{ store.dark ? '日间' : '夜间' }}</span>
     </button>
   </header>
-  <main class="page-shell">
+  <main
+    class="page-shell"
+    :class="{ 'point-module-shell': route.path === '/points' }"
+  >
     <p
       v-if="store.loading"
       role="status"
@@ -220,7 +227,10 @@ watchEffect(() => {
       </RouterView>
     </template>
   </main>
-  <footer class="site-footer">
+  <footer
+    v-if="route.path !== '/points'"
+    class="site-footer"
+  >
     <span role="status">{{ store.saveStatus }}</span>
     <button
       :disabled="!store.canUndo"
@@ -232,6 +242,11 @@ watchEffect(() => {
 </template>
 
 <style scoped>
+.point-module-shell {
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
 .site-header nav {
   min-width: 0;
 }

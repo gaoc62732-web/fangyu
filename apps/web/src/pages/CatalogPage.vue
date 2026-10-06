@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { VISIT_LABELS, getScopeConfig, type MapLevel, type Scope } from '@fangyu/contracts';
-import type { EntryView } from '@fangyu/domain';
+import { computed, ref, toRef } from 'vue';
+import { useRoute } from 'vue-router';
+import { VISIT_LABELS, getScopeConfig, type Scope } from '@fangyu/contracts';
 import { useAppStore } from '../app/store.js';
 import MapSurface from '../components/MapSurface.vue';
 import VisitStateSelect from '../components/VisitStateSelect.vue';
@@ -12,19 +11,13 @@ import TopicCoverage from '../components/TopicCoverage.vue';
 import FootballGrounds from '../components/FootballGrounds.vue';
 import NationalHeritage from '../components/NationalHeritage.vue';
 import { exportCsv } from '../features/exports/download.js';
-import { searchText } from '../features/search-text.js';
+import { useCatalogNavigation } from '../features/catalog/use-catalog-navigation.js';
+import { useCatalogEntries } from '../features/catalog/use-catalog-entries.js';
 
 const props = defineProps<{ scope: Scope }>();
 const store = useAppStore();
 const route = useRoute();
-const router = useRouter();
-const query = ref('');
-const status = ref('');
-const descendants = ref(true);
-const showAllChildren = ref(false);
-const focusedEntry = ref('');
 const customName = ref('');
-const railType = ref('');
 const localImportMessage = ref('');
 const localImportBusy = ref(false);
 const localMode = location.hostname === '127.0.0.1';
@@ -47,198 +40,44 @@ const title = computed(() =>
       ? '世界旅游手册'
       : getScopeConfig(props.scope).title,
 );
-const regions = computed(() =>
-  index.value.catalog.regions.filter((region) => region.scope === props.scope),
-);
-const availableCategories = computed(() => {
-  const ids = new Set(
-    index.value.catalog.entries
-      .filter((entry) => index.value.entryRegions(entry, props.scope).length)
-      .map((entry) => entry.categoryId),
-  );
-  return index.value.catalog.categories.filter((category) => ids.has(category.id));
-});
-const selected = computed(() => index.value.regions.get(store.selectedRegionId));
-const childRegions = computed(() => index.value.children.get(store.selectedRegionId) || []);
-const visibleChildren = computed(() =>
-  props.scope === 'france' || showAllChildren.value
-    ? childRegions.value
-    : childRegions.value.slice(0, 18),
-);
-const roots = computed(() =>
-  regions.value.filter((region) =>
-    props.scope === 'china'
-      ? region.level === 0
-      : props.scope === 'france'
-        ? region.level === 1
-        : true,
-  ),
-);
-const regionGroups = computed(() => {
-  const groups = new Map<string, typeof roots.value>();
-  for (const region of roots.value) {
-    const label =
-      props.scope === 'france'
-        ? region.kind?.startsWith('metropolitan-')
-          ? '法国本土（13）'
-          : '海外地区层级（5）'
-        : props.scope === 'usa'
-          ? region.kind === 'state'
-            ? '州（50）'
-            : '哥伦比亚特区（1）'
-          : props.scope === 'spain'
-            ? region.kind === 'autonomous-community'
-              ? '自治社区（17）'
-              : '自治市（2）'
-            : props.scope === 'uk'
-              ? region.constituentCountry || '历史郡'
-              : props.scope === 'malaysia'
-                ? region.kind === 'state'
-                  ? '州（13） · States'
-                  : '联邦直辖区（3） · Federal territories'
-                : props.scope === 'thailand'
-                  ? region.kind === 'special-administrative-area'
-                    ? '曼谷 · Bangkok'
-                    : '府（76） · Provinces'
-                  : getScopeConfig(props.scope).boundaryLabel;
-    groups.set(label, [...(groups.get(label) || []), region]);
-  }
-  return [...groups].map(([label, items]) => ({ label, items }));
-});
-const path = computed(() => index.value.ancestors(store.selectedRegionId));
-const francePath = computed(() => path.value.filter((region) => region.scope === 'france'));
-const franceRoot = computed(() => francePath.value.find((region) => region.level === 1));
-const franceDepartment = computed(() => francePath.value.find((region) => region.level === 2));
-const franceDepartments = computed(() => regions.value.filter((region) => region.level === 2));
-const franceArrondissements = computed(() => regions.value.filter((region) => region.level === 3));
-const inIleDeFrance = computed(() => franceRoot.value?.code === 'FR-IDF');
-const inParis = computed(() => franceDepartment.value?.sourceCode === '75');
-const franceStatistics = computed(() => {
-  void store.revision;
-  return [
-    { label: '法国大区', items: roots.value },
-    { label: '法兰西岛省级单位', items: franceDepartments.value },
-    { label: '巴黎市区', items: franceArrondissements.value },
-  ].map(({ label, items }) => ({
-    label,
-    total: items.length,
-    count: items.filter((region) => session.value.arrived(region.id)).length,
-  }));
-});
-function franceBack() {
-  select(francePath.value.at(-2)?.id || '');
-}
-const province = computed(
-  () => path.value.find((region) => region.scope === 'china' && region.level === 0)?.id || '',
-);
-const city = computed(
-  () => path.value.find((region) => region.scope === 'china' && region.level === 1)?.id || '',
-);
-const cities = computed(() =>
-  regions.value.filter((region) => region.parentId === province.value && region.level === 1),
-);
-const counties = computed(() =>
-  regions.value.filter(
-    (region) =>
-      region.level === 2 &&
-      province.value &&
-      index.value.belongsTo(region.id, city.value || province.value),
-  ),
-);
-const level = computed({
-  get: () => {
-    void store.revision;
-    if (props.scope === 'france')
-      return inParis.value ? 'county' : inIleDeFrance.value ? 'city' : 'province';
-    return session.value.preferences.mapLevel;
-  },
-  set: (value) => {
-    store.commit((current) => current.updatePreferences({ mapLevel: value }));
-  },
-});
-function changeLevel(value: Exclude<MapLevel, 'country'>) {
-  level.value = value;
-}
-const rows = computed(() =>
-  store.rows.filter((entry) => {
-    const owners = index.value.entryRegions(entry, props.scope);
-    const within =
-      !store.selectedRegionId ||
-      owners.some((id) =>
-        descendants.value
-          ? index.value.belongsTo(id, store.selectedRegionId)
-          : id === store.selectedRegionId,
-      );
-    const text = searchText(
-      [
-        entry.name,
-        entry.path,
-        entry.code,
-        entry.description,
-        ...entry.aliases,
-        ...(entry.lines || []),
-        ...(entry.operators || []),
-      ].join(' '),
-    );
-    return (
-      owners.length &&
-      within &&
-      (!store.category || entry.categoryId === store.category) &&
-      (!status.value || entry.visited === (status.value === 'visited')) &&
-      (!focusedEntry.value || entry.id === focusedEntry.value) &&
-      (!railType.value ||
-        (railType.value === 'J'
-          ? entry.railTypes?.includes('J')
-          : entry.categoryId === 'railway-station' && !entry.railTypes?.includes('J'))) &&
-      (!query.value || text.includes(searchText(query.value.trim())))
-    );
-  }),
-);
-const searchRegions = computed(() =>
-  query.value.trim()
-    ? regions.value
-        .filter((region) =>
-          searchText([region.name, region.code, ...region.aliases].join(' ')).includes(
-            searchText(query.value.trim()),
-          ),
-        )
-        .slice(0, 40)
-    : [],
-);
-const mapPoints = computed(() =>
-  (props.scope === 'china' || store.category
-    ? rows.value
-    : rows.value.filter((entry) =>
-        ['world-heritage-component', 'football-stadium', 'vn-national-special-component'].includes(
-          entry.categoryId,
-        ),
-      )
-  ).filter((entry) => !entry.coordinateReferenceOnly && entry.ordinaryPointEligible !== false),
-);
-const focusCoordinates = computed(() => {
-  const entry = index.value.entries.get(focusedEntry.value);
-  return entry?.coordinateReferenceOnly ||
-    entry?.ordinaryPointEligible === false ||
-    entry?.coordinateStatus?.includes('representative')
-    ? null
-    : entry?.coordinates || null;
-});
-
-function select(id: string) {
-  store.selectedRegionId = id;
-  focusedEntry.value = '';
-  showAllChildren.value = false;
-  if (props.scope === 'france' && (route.query.region || '') !== id) {
-    void router.push({ query: { ...route.query, region: id || undefined } });
-  }
-}
-
-function locate(entry: EntryView) {
-  const owner = index.value.entryRegions(entry, props.scope)[0];
-  if (owner) store.selectedRegionId = owner;
-  focusedEntry.value = entry.id;
-  showAllChildren.value = false;
-}
+const scope = toRef(props, 'scope');
+const {
+  regions,
+  selected,
+  childRegions,
+  visibleChildren,
+  regionGroups,
+  francePath,
+  franceRoot,
+  franceDepartment,
+  franceDepartments,
+  franceArrondissements,
+  inIleDeFrance,
+  inParis,
+  franceStatistics,
+  franceBack,
+  province,
+  city,
+  cities,
+  counties,
+  level,
+  changeLevel,
+  focusedEntry,
+  showAllChildren,
+  select,
+  locate,
+} = useCatalogNavigation(scope);
+const {
+  query,
+  status,
+  descendants,
+  railType,
+  availableCategories,
+  rows,
+  searchRegions,
+  mapPoints,
+  focusCoordinates,
+} = useCatalogEntries(scope, focusedEntry, regions);
 
 function locatePoint(id: string) {
   const entry = store.rows.find((item) => item.id === id);
@@ -288,32 +127,6 @@ async function importLocalRecords() {
     localImportBusy.value = false;
   }
 }
-
-watch(
-  () => props.scope,
-  () => {
-    if (selected.value?.scope !== props.scope) store.selectedRegionId = '';
-    focusedEntry.value = '';
-    query.value = '';
-    status.value = '';
-    store.category = '';
-    railType.value = '';
-  },
-  { immediate: true },
-);
-watch(
-  [() => route.query.region, () => props.scope],
-  ([id]) => {
-    if (typeof id === 'string' && index.value.regions.get(id)?.scope === props.scope) {
-      store.selectedRegionId = id;
-      focusedEntry.value = '';
-    } else if (props.scope === 'france') {
-      store.selectedRegionId = '';
-      focusedEntry.value = '';
-    }
-  },
-  { immediate: true },
-);
 </script>
 
 <template>

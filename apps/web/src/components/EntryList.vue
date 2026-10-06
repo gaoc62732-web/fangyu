@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import type { EntryView } from '@fangyu/domain';
+import type { GroupedEntryView } from '../features/catalog/grouped-entry.js';
 import type { StadiumExperience } from '@fangyu/contracts';
 import { useAppStore } from '../app/store.js';
 
 const props = withDefaults(
   defineProps<{
-    rows: EntryView[];
+    rows: GroupedEntryView[];
     selectedRegionId?: string | undefined;
     pageSize?: number;
   }>(),
@@ -20,9 +21,8 @@ const editing = ref('');
 const editingIds = ref<string[]>([]);
 const name = ref('');
 const note = ref('');
-type GroupedEntry = EntryView & { groupEntryIds?: string[]; regionPaths?: string[] };
-const groupIds = (entry: EntryView) => (entry as GroupedEntry).groupEntryIds || [entry.id];
-const regionPaths = (entry: EntryView) => (entry as GroupedEntry).regionPaths || [];
+const groupIds = (entry: GroupedEntryView) => entry.groupEntryIds || [entry.id];
+const regionPaths = (entry: GroupedEntryView) => entry.regionPaths || [];
 const visible = computed(() =>
   props.rows.slice(page.value * props.pageSize, (page.value + 1) * props.pageSize),
 );
@@ -35,7 +35,7 @@ watch(
   },
 );
 
-function mark(entry: EntryView, event: Event) {
+function mark(entry: GroupedEntryView, event: Event) {
   const visited = (event.target as HTMLInputElement).checked;
   store.commit((session) => {
     for (const id of groupIds(entry)) session.markEntry(id, visited, props.selectedRegionId);
@@ -54,7 +54,7 @@ function markStadiumExperience(entry: EntryView, type: StadiumExperience, event:
   store.commit((session) => session.markStadiumExperience(entry.id, type, checked));
 }
 
-function edit(entry: EntryView) {
+function edit(entry: GroupedEntryView) {
   editing.value = entry.id;
   editingIds.value = groupIds(entry);
   name.value = entry.name;

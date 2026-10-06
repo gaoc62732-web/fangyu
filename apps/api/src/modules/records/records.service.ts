@@ -22,9 +22,10 @@ export class RecordsService {
   async save(userId: string, input: unknown): Promise<void> {
     const parsed = saveRecordsSchema.safeParse(input);
     if (!parsed.success) throw new BadRequestException(parsed.error.flatten());
-    const { expectedRevision, snapshot } = parsed.data;
+    const { expectedRevision } = parsed.data;
+    let snapshot: RecordSnapshot;
     try {
-      new HandbookSession(await this.catalog.index()).validate(snapshot);
+      snapshot = new HandbookSession(await this.catalog.index()).validate(parsed.data.snapshot);
     } catch (error) {
       throw new BadRequestException(String(error));
     }

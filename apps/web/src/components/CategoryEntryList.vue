@@ -9,6 +9,12 @@ const props = defineProps<{ rows: EntryView[]; selectedRegionId?: string; scope?
 const emit = defineEmits<{ locate: [entry: EntryView] }>();
 const store = useAppStore();
 const activeCategory = ref('');
+const categoriesById = computed(
+  () =>
+    new Map(
+      store.session!.index.catalog.categories.map((category) => [category.id, category.name]),
+    ),
+);
 
 const families = [
   {
@@ -63,16 +69,29 @@ const grouped = computed(() => {
           const rows = byCategory.get(id) || [];
           if (props.scope === 'japan' && id === 'railway-station') {
             return [
-              { id: 'railway-station-jr', name: 'JR 车站', rows: rows.filter((row) => row.railTypes?.includes('J')) },
-              { id: 'railway-station-other', name: '其他铁道车站', rows: rows.filter((row) => !row.railTypes?.includes('J')) },
-            ].map((group) => ({ ...group, visited: group.rows.filter((row) => row.visited).length }));
+              {
+                id: 'railway-station-jr',
+                name: 'JR 车站',
+                rows: rows.filter((row) => row.railTypes?.includes('J')),
+              },
+              {
+                id: 'railway-station-other',
+                name: '其他铁道车站',
+                rows: rows.filter((row) => !row.railTypes?.includes('J')),
+              },
+            ].map((group) => ({
+              ...group,
+              visited: group.rows.filter((row) => row.visited).length,
+            }));
           }
-          return [{
-            id,
-            name: catalogCategories.find((category) => category.id === id)?.name || id,
-            rows,
-            visited: rows.filter((row) => row.visited).length,
-          }];
+          return [
+            {
+              id,
+              name: categoriesById.value.get(id) || id,
+              rows,
+              visited: rows.filter((row) => row.visited).length,
+            },
+          ];
         })
         .filter((category) => category.rows.length);
       return {
@@ -97,9 +116,12 @@ watch(
   (rows) => {
     if (rows.length === 1) {
       const row = rows[0]!;
-      activeCategory.value = props.scope === 'japan' && row.categoryId === 'railway-station'
-        ? row.railTypes?.includes('J') ? 'railway-station-jr' : 'railway-station-other'
-        : row.categoryId;
+      activeCategory.value =
+        props.scope === 'japan' && row.categoryId === 'railway-station'
+          ? row.railTypes?.includes('J')
+            ? 'railway-station-jr'
+            : 'railway-station-other'
+          : row.categoryId;
     }
   },
 );

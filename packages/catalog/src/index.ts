@@ -5,8 +5,8 @@ export class CatalogIndex {
   readonly entries: Map<string, CatalogEntry>;
   readonly children = new Map<string | null, Region[]>();
   readonly paths = new Map<string, string>();
-  readonly byRegion = new Map<string, CatalogEntry[]>();
   readonly byRecord = new Map<string, CatalogEntry[]>();
+  private readonly ancestorIds = new Map<string, Set<string>>();
 
   constructor(readonly catalog: Catalog) {
     this.regions = new Map(catalog.regions.map((region) => [region.id, region]));
@@ -18,23 +18,14 @@ export class CatalogIndex {
       this.children.set(region.parentId, siblings);
     }
     for (const region of catalog.regions) {
-      this.paths.set(
-        region.id,
-        this.ancestors(region.id)
-          .map((item) => item.name)
-          .join(' / '),
-      );
+      const ancestors = this.ancestors(region.id);
+      this.ancestorIds.set(region.id, new Set(ancestors.map((item) => item.id)));
+      this.paths.set(region.id, ancestors.map((item) => item.name).join(' / '));
     }
     for (const entry of catalog.entries) {
       const linkedEntries = this.byRecord.get(entry.recordId) || [];
       linkedEntries.push(entry);
       this.byRecord.set(entry.recordId, linkedEntries);
-      const ids = new Set([...entry.regionIds, ...Object.values(entry.topicRegions || {}).flat()]);
-      for (const regionId of ids) {
-        const group = this.byRegion.get(regionId) || [];
-        group.push(entry);
-        this.byRegion.set(regionId, group);
-      }
     }
   }
 
@@ -51,18 +42,12 @@ export class CatalogIndex {
   }
 
   belongsTo(id: string, parentId: string): boolean {
-    return this.ancestors(id).some((region) => region.id === parentId);
+    return this.ancestorIds.get(id)?.has(parentId) || false;
   }
 
   entryRegions(entry: CatalogEntry, scope: Scope): string[] {
     return entry.topicRegions?.[scope] || (entry.scope === scope ? entry.regionIds : []);
   }
-}
-
-export async function loadCatalog(baseUrl: string): Promise<Catalog> {
-  const response = await fetch(baseUrl + 'catalog.json');
-  if (!response.ok) throw Error('无法加载目录：' + response.status);
-  return response.json() as Promise<Catalog>;
 }
 
 export async function loadGeometry(baseUrl: string, scope: Scope): Promise<GeometryFeature[]> {

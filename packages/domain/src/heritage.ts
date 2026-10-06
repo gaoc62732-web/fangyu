@@ -1,5 +1,4 @@
-import type { Catalog, CatalogEntry } from '@fangyu/contracts';
-import type { HeritageProject, HeritageProgress } from '../../contracts/src/heritage.js';
+import type { Catalog, CatalogEntry, HeritageProject, HeritageProgress } from '@fangyu/contracts';
 import type { HandbookSession } from './session.js';
 
 type CompatibleCatalog = Catalog & { compatibleCatalogVersions?: readonly string[] };

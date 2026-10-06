@@ -2,7 +2,7 @@ import type { VisitState } from '@fangyu/contracts';
 
 export type MapColors = Record<VisitState | 'unmapped', string>;
 
-export function blendHex(color: string, target: string, weight: number): string {
+function blendHex(color: string, target: string, weight: number): string {
   const channel = (value: string, position: number) =>
     Number.parseInt(value.slice(position, position + 2), 16);
   const channels = [1, 3, 5].map((position) => {

@@ -9,8 +9,13 @@
   "scripts": {
     "dev:web": "pnpm --filter @fangyu/web dev",
     "dev:api": "pnpm --filter @fangyu/api dev",
-    "build": "pnpm -r build",
+    "build": "pnpm -r build && pnpm check:bundle",
     "typecheck": "pnpm -r typecheck",
+    "test": "pnpm --filter @fangyu/web test",
+    "check:source": "node scripts/check-source-usage.mjs",
+    "check:scripts": "tsc -p scripts/tsconfig.json",
+    "check:bundle": "node scripts/check-web-bundle.mjs",
+    "check": "pnpm check:source && pnpm typecheck && pnpm check:scripts && pnpm test",
     "install:deps": "node scripts/install.mjs",
     "format": "prettier --write apps packages scripts tools infra docs *.json *.yaml *.md",
     "format:check": "prettier --check apps packages scripts tools infra docs *.json *.yaml *.md",
@@ -22,6 +27,7 @@
     "boundaries:china": "node scripts/run-osm-download.mjs",
     "boundaries:china:apply": "node scripts/run-osm-download.mjs --apply",
     "boundaries:china:references": "node scripts/run-osm-download.mjs --references",
+    "boundaries:china:policy": "node scripts/run-china-boundary-policy.mjs",
     "data:pack": "node scripts/run-data-snapshot.mjs pack",
     "data:verify": "node scripts/run-data-snapshot.mjs verify",
     "data:sync": "node scripts/run-data-snapshot.mjs restore",
@@ -40,10 +46,5 @@
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
     "vt-pbf": "^3.1.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }

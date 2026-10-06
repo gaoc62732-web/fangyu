@@ -7,6 +7,8 @@ export interface RenderFeature {
   fill: string;
   selected?: boolean;
   interactive?: boolean;
+  /** Preview geometry from another administrative level may fill without adding boundaries. */
+  boundary?: boolean;
 }
 
 export interface RenderPoint {
@@ -20,6 +22,8 @@ export interface RenderPoint {
 export interface MapScene {
   features: RenderFeature[];
   points: RenderPoint[];
+  /** Point exploration uses the same detailed zoom range as the tile map. */
+  pointExploration?: boolean;
   /** Optional geographic hit policy for administrative polygons only; points remain selectable. */
   allowsRegionHit?:
     ((coordinates: [number, number], renderedGeometry?: GeoJSON.Geometry) => boolean) | undefined;

@@ -67,5 +67,5 @@ export default defineConfig({
   publicDir: fileURLToPath(new URL('../../data/generated/web', import.meta.url)),
   base: process.env.VITE_PAGES_BASE || '/',
   server: { proxy: { '/api': 'http://127.0.0.1:3000' } },
-  build: { sourcemap: false },
+  build: { sourcemap: false, manifest: true },
 });

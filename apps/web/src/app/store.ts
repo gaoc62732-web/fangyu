@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { loadWebCatalog } from './catalog-loader.js';
 import { CatalogIndex, loadGeometry } from '@fangyu/catalog';
 import { HandbookSession, PALETTES, darkColors, type MapColors } from '@fangyu/domain';
-import type { ArchiveDocument, GeometryFeature, Scope } from '@fangyu/contracts';
+import type { ArchiveDocument, GeometryFeature, Scope, MapLevel } from '@fangyu/contracts';
 import type { HandbookStorage } from '@fangyu/data-access';
 import { createAppDataAccess } from './data-access.js';
 import { appMode } from './mode.js';
@@ -17,6 +17,12 @@ export const useAppStore = defineStore('app', () => {
   const saveStatus = ref('');
   const selectedRegionId = ref('');
   const category = ref('');
+  const regionalMap = shallowRef<{
+    scope: Scope;
+    selected: string;
+    level: MapLevel;
+    camera?: { center: [number, number]; zoom: number };
+  }>();
   const archives = ref<ArchiveDocument[]>([]);
   const dark = ref(localStorage.getItem('fangyu-theme') === 'dark');
   const geometry = shallowRef<Partial<Record<Scope, GeometryFeature[]>>>({});
@@ -109,9 +115,15 @@ export const useAppStore = defineStore('app', () => {
   }
 
   function undo() {
+    if (!session.value?.canUndo) return;
     session.value!.undo();
     revision.value++;
     void persist();
+  }
+
+  async function flush() {
+    await saveQueue;
+    if (saveFailure) throw saveFailure;
   }
 
   async function saveArchive(name: string, snapshot = session.value!.snapshot()) {
@@ -132,8 +144,7 @@ export const useAppStore = defineStore('app', () => {
     await saveArchive('恢复前自动备份');
     if (session.value!.revision !== before) throw Error('备份期间记录已变化，请重新恢复。');
     if (!commit((current) => current.replace(validated))) throw Error(error.value);
-    await saveQueue;
-    if (saveFailure) throw saveFailure;
+    await flush();
   }
 
   async function renameArchive(archive: ArchiveDocument, name: string) {
@@ -179,11 +190,13 @@ export const useAppStore = defineStore('app', () => {
     saveStatus,
     selectedRegionId,
     category,
+    regionalMap,
     archives,
     dark,
     load,
     commit,
     undo,
+    flush,
     saveArchive,
     restore,
     renameArchive,

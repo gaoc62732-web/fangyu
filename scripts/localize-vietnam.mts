@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import type { Catalog } from '../packages/contracts/src/index.js';
 type Row = Record<string, any>;
 interface Named {
-  name: string;
+  name?: string;
   nameZh?: string;
   nameEn?: string;
   nameTranslationNote?: string;
@@ -29,7 +29,8 @@ function indexed(rows: Row[], key: (row: Row) => string) {
 }
 export function applyBilingualName(target: Named, translation: Row | undefined, identity: string) {
   assert(translation, `Untranslated Vietnamese display name: ${identity}`);
-  const previous = target.name;
+  const previous =
+    target.name || translation.originalName || translation.original || translation.en;
   target.originalName ||= translation.originalName || translation.original || previous;
   target.nameZh = translation.zh.trim();
   target.nameEn = translation.en.trim();

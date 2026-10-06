@@ -1,9 +1,9 @@
-import ExcelJS from 'exceljs';
 import type { ImportPlan, ImportRow } from '@fangyu/contracts';
 import { VISIT_LABELS, VISIT_STATES } from '@fangyu/contracts';
 import type { HandbookSession } from '@fangyu/domain';
 
 export async function exportWorkbook(session: HandbookSession): Promise<Uint8Array> {
+  const { default: ExcelJS } = await import('exceljs');
   const workbook = new ExcelJS.Workbook();
   workbook.creator = '方舆';
   const regions = workbook.addWorksheet('地区记录');
@@ -57,6 +57,7 @@ export async function workbookPlan(
   data: ArrayBuffer,
   source: string,
 ): Promise<ImportPlan> {
+  const { default: ExcelJS } = await import('exceljs');
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.load(data);
   const rows: ImportRow[] = [];

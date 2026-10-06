@@ -72,6 +72,7 @@ const session = new HandbookSession(new CatalogIndex(current), snapshot);
 for (const id of samples) {
   const entry: any = byId.get(id);
   const old = snapshot.entries[entry.recordId];
+  assert(old, `Missing sample record: ${entry.recordId}`);
   assert.equal(session.view(entry).name, old.name);
   assert.equal(session.view(entry).note, old.note);
   assert(session.view(entry).visited);

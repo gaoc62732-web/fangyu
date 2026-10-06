@@ -6,9 +6,14 @@ import {
   quantityProgress,
   maofenProgress,
 } from '@fangyu/domain';
+import type {
+  AchievementRequest,
+  AchievementResponse,
+  AchievementResults,
+} from '../features/achievements/protocol.js';
 let session: HandbookSession;
 let progress: ReturnType<typeof achievementProgress> | undefined;
-self.onmessage = (event) => {
+self.onmessage = (event: MessageEvent<AchievementRequest>) => {
   const { id, type, payload } = event.data;
   try {
     if (type === 'init') {
@@ -18,7 +23,7 @@ self.onmessage = (event) => {
       session = new HandbookSession(session.index, payload);
       progress = undefined;
     }
-    let result: unknown = null;
+    let result: AchievementResults[keyof AchievementResults] = null;
     if (type === 'achievements') {
       progress ||= achievementProgress(session);
       result = {
@@ -34,8 +39,8 @@ self.onmessage = (event) => {
       progress ||= achievementProgress(session);
       result = progress.find((p) => p.id === payload);
     }
-    self.postMessage({ id, result });
+    self.postMessage({ id, result } satisfies AchievementResponse);
   } catch (error) {
-    self.postMessage({ id, error: String(error) });
+    self.postMessage({ id, error: String(error) } satisfies AchievementResponse);
   }
 };

@@ -2,7 +2,6 @@ import {
   emptySnapshot,
   snapshotSchema,
   stadiumExperienceSchema,
-  VISIT_LABELS,
   VISIT_RANK,
   type CatalogEntry,
   type RecordSnapshot,
@@ -247,6 +246,28 @@ export class HandbookSession {
     if (visited) this.markEntryRegions(entry, selectedRegionId);
   }
 
+  /** Independent point writes deliberately leave regional visits untouched. */
+  markPointEntry(entryId: string, visited: boolean): void {
+    const entry = this.entry(entryId);
+    if (
+      new Set((this.index.byRecord.get(entry.recordId) || [entry]).map((e) => e.categoryId)).size >
+      1
+    )
+      throw Error('该地点的旧跨类别共用记录尚未拆分，暂不能在点位页修改。');
+    const record = this.record(entry);
+    record.visited = visited;
+    if (!visited) record.subitemIds = [];
+  }
+
+  setPointSubitems(entryId: string, ids: string[]): void {
+    const entry = this.entry(entryId);
+    const canonical = this.entry(entry.recordId);
+    if (ids.some((id) => !canonical.subitems.some((item) => item.id === id)))
+      throw Error('组成项目不存在。');
+    this.markPointEntry(entryId, false);
+    this.record(entry).subitemIds = [...new Set(ids)];
+  }
+
   private stadiumEntry(entryId: string, type: StadiumExperience): CatalogEntry {
     if (!stadiumExperienceSchema.safeParse(type).success) throw Error('未知球场体验类型。');
     const entry = this.entry(entryId);
@@ -354,5 +375,3 @@ export class HandbookSession {
     }
   }
 }
-
-export { VISIT_LABELS, VISIT_RANK };

@@ -152,6 +152,7 @@ async function apply() {
       row.result = results.get(row.id) || row.result;
     }
     current.applied = true;
+    await store.flush();
     message.value = '已应用，可通过撤销或存档恢复。';
   });
 }

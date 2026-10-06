@@ -133,6 +133,8 @@ export interface GeometryFeature {
   id: string;
   regionId: string | null;
   level: MapLevel | 'border';
+  /** Independent display lines; coasts remain ordinary administrative outlines. */
+  boundaryKind?: 'land' | 'maritime-dash';
   geometry: Geometry;
 }
 
@@ -321,6 +323,12 @@ export interface Catalog {
   topicCoverage?: TopicCoverage[];
   football?: FootballCatalog;
   nationalHeritage?: NationalHeritageCatalog;
+  /** Reviewed relationships only; overlapping footprints never imply a complete visit. */
+  entryRelations?: {
+    fromEntryId: string;
+    toEntryId: string;
+    kind: 'same-place' | 'contains' | 'overlaps';
+  }[];
   categories: { id: string; name: string }[];
   regions: Region[];
   entries: CatalogEntry[];

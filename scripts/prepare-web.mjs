@@ -9,6 +9,21 @@ import simplify from '@turf/simplify';
 import ts from 'typescript';
 import { PMTilesWriter } from './lib/pmtiles-writer.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
+const chinaPolicy = await fs
+  .readFile(path.join(root, 'data/boundaries/china-policy/applied.json'), 'utf8')
+  .catch((error) => {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  });
+if (chinaPolicy) {
+  const policy = JSON.parse(chinaPolicy);
+  const bytes = await fs.readFile(path.join(root, 'data/catalog/china.geo.json'));
+  if (createHash('sha256').update(bytes).digest('hex') !== policy.geometrySha256) {
+    throw Error(
+      'China reviewed geometry changed: re-audit the China boundary policy before rebuilding maps.',
+    );
+  }
+}
 const input = path.join(root, 'data/catalog'),
   output = path.join(root, 'data/generated/web');
 // Keep the registry as the only source of scope IDs. Transpile this dependency-free
@@ -223,6 +238,7 @@ for (const scope of scopes) {
       properties: {
         regionId: f.regionId || f.id,
         level: f.level,
+        ...(f.boundaryKind ? { boundaryKind: f.boundaryKind } : {}),
         name: regionMap.get(f.regionId)?.name || '',
       },
       geometry: f.geometry,
@@ -234,7 +250,7 @@ for (const scope of scopes) {
       try {
         const tolerance =
           scope === 'china'
-            ? 0.00005
+            ? 0.000002
             : scope === 'france' && f.properties.level === 'county'
               ? 0.0001
               : scope === 'france' && f.properties.level === 'city'
@@ -252,6 +268,20 @@ for (const scope of scopes) {
   };
   await fs.mkdir(path.join(output, 'maps'), { recursive: true });
   await fs.writeFile(path.join(output, 'maps', scope + '.json'), JSON.stringify(simple));
+  const simplifiedLevels = {};
+  if (scope === 'china') {
+    // Export only needs the selected administrative level. Keep original
+    // detail without asking the browser to parse every county for a province PNG.
+    for (const level of ['province', 'city', 'county']) {
+      const filename = `maps/china-${level}.json`;
+      await fs.writeFile(path.join(output, filename), JSON.stringify({
+        type: 'FeatureCollection',
+        features: simple.features.filter((f) =>
+          f.properties.level === level || f.properties.level === 'border'),
+      }));
+      simplifiedLevels[level] = filename;
+    }
+  }
   if (scope === 'vietnam') {
     // Remove stale offshore tiles from earlier generations, including tiles outside
     // the new bounds. The fixed, resolved target is confined to generated VN tiles.
@@ -266,7 +296,7 @@ for (const scope of scopes) {
     const selected = features.filter((f) => f.properties.level === level);
     const maxzoom =
       scope === 'china'
-        ? 11
+        ? 12
         : scope === 'france' && level === 'county'
           ? 12
           : scope === 'france' && level === 'city'
@@ -296,7 +326,10 @@ for (const scope of scopes) {
     );
     let count = 0;
     if (scope === 'china') {
-      const archivePath = path.join(output, 'tiles', scope, `${level}.pmtiles`);
+      // An active Windows map can retain a read handle to the previous archive.
+      // Publish under its content version so fresh coastlines never reuse it.
+      const archiveName = `${level}-${stamp.slice(0, 16)}.pmtiles`;
+      const archivePath = path.join(output, 'tiles', scope, archiveName);
       await fs.mkdir(path.dirname(archivePath), { recursive: true });
       const archive = new PMTilesWriter(archivePath);
       // Traverse non-empty parents only. Missing tiles are encoded as absent
@@ -317,7 +350,7 @@ for (const scope of scopes) {
         metadata: {
           name: `China ${level}`,
           attribution:
-            '© OpenStreetMap contributors · ODbL 1.0; unmatched legacy boundaries: see source report',
+            '© OpenStreetMap contributors · ODbL 1.0; land coastline: original OSM natural=coastline; reviewed edges and maritime dashes: TianDiTu; see China boundary review report',
           vector_layers: [
             {
               id: 'regions',
@@ -340,7 +373,7 @@ for (const scope of scopes) {
         maxzoom,
         bounds,
         archive: true,
-        url: `tiles/${scope}/${level}.pmtiles?v=${stamp.slice(0, 16)}`,
+        url: `tiles/${scope}/${archiveName}`,
       });
       console.log(`${scope}/${level}: ${count} tiles in one PMTiles archive`);
       continue;
@@ -372,6 +405,7 @@ for (const scope of scopes) {
     regionBounds,
     layers,
     simplified: 'maps/' + scope + '.json',
+    ...(scope === 'china' ? { simplifiedLevels } : {}),
   };
 }
 await fs.writeFile(path.join(output, 'map-manifest.json'), JSON.stringify(manifest));

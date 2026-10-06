@@ -21,7 +21,7 @@ data/tmp/
 /data/catalog/*.json
 /data/boundaries/china-osm/*.geojson
 /data/boundaries/china-osm/references/*.geojson
-/data/boundaries/china-osm/retained-hkmo-counties.json
+/data/boundaries
 /data/extensions/research/*.json
 .local-records/
 *.local
