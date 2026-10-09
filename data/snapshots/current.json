@@ -1,15 +1,15 @@
 {
   "formatVersion": 1,
-  "version": "osm-20261004-v072",
-  "createdAt": "2026-10-04T15:26:53.511417+00:00",
+  "version": "osm-20261009-v073",
+  "createdAt": "2026-10-09T15:47:58.478104+00:00",
   "catalogVersion": "2026-10-04.1",
-  "transportBaseUrl": "https://github.com/gaoc62732-web/fangyu/releases/download/data-osm-20261004",
+  "transportBaseUrl": "https://github.com/gaoc62732-web/fangyu/releases/download/data-osm-20261009",
   "packages": [
     {
       "group": "runtime",
-      "file": "fangyu-data-runtime-osm-20261004-v072.tar.gz",
-      "bytes": 87505605,
-      "sha256": "09e0c2f24fc9b6c250d065479bc940a6b98b52e2288482219dfee11dfcd72eb9",
+      "file": "fangyu-data-runtime-osm-20261009-v073.tar.gz",
+      "bytes": 122356504,
+      "sha256": "cc0c28b439b523933b2cac3609abacfdf1e746fef948077f10ee633a844c7a86",
       "files": [
         {
           "path": "data/catalog/brunei.geo.json",
@@ -18,13 +18,18 @@
         },
         {
           "path": "data/catalog/catalog.json",
-          "bytes": 36564553,
-          "sha256": "8f6437604e9daeeb0f4c7b5678ad592749fb76bf3f46b774227a8f4268c6e798"
+          "bytes": 25916088,
+          "sha256": "a61170cd0949ca27d05f41f9aabccff6414cf1474edc53502c1aee3d8a22d6d1"
+        },
+        {
+          "path": "data/catalog/china-boundary-options.json",
+          "bytes": 54638669,
+          "sha256": "0afec1d4c9bbab9581e16b1bc835ddd71904052aa0658314d8b3b38c71e4b763"
         },
         {
           "path": "data/catalog/china.geo.json",
-          "bytes": 224230704,
-          "sha256": "d56d2c537db346dd82fe1b09aac79f1c5c69e480a2085a5d8a798d52a7e8606d"
+          "bytes": 287436755,
+          "sha256": "1ac3d9252004bf1c18f025189517d9d6acddf16ae3f9ca54b62ce732cd1b8d8b"
         },
         {
           "path": "data/catalog/france.geo.json",
@@ -63,8 +68,8 @@
         },
         {
           "path": "data/catalog/manifest.json",
-          "bytes": 502,
-          "sha256": "b6fbc9be9faca6e209957c2f5293563dc1bb070e8d2edfad4c96b1751f50e8f4"
+          "bytes": 423,
+          "sha256": "112351ce69b1cca788e4bb83da1eccb6ad98e79a02f9def1fb1be261335a2eb4"
         },
         {
           "path": "data/catalog/singapore.geo.json",
@@ -110,9 +115,9 @@
     },
     {
       "group": "osm-source",
-      "file": "fangyu-data-osm-source-osm-20261004.tar.gz",
-      "bytes": 76465591,
-      "sha256": "7a8dd035bdff7093392eb93e54caa02dc5d8ed686da6f5203c4bb63acfab604b",
+      "file": "fangyu-data-osm-source-osm-20261009-v073.tar.gz",
+      "bytes": 148937944,
+      "sha256": "c664a530019a24bd84d69dbf34a08915248f48c9c28cd2b302142df4f015d1bf",
       "files": [
         {
           "path": "data/boundaries/china-osm/110000.geojson",
@@ -290,6 +295,2156 @@
           "sha256": "73640baf677d5282c29332f0dbd599754777d096ad83509561158d452c882b59"
         },
         {
+          "path": "data/boundaries/china-osm/raw/children-110000.json",
+          "bytes": 14325,
+          "sha256": "b5f987c7f8994f357665c0489dcf779dca65885e0a3f6311f33f18077194cc87"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/children-110000.meta.json",
+          "bytes": 261,
+          "sha256": "1c00ef73823da04fb88ba44a60d6ae64c48175aba2bb74b6e37785bb03912a86"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10313744.json",
+          "bytes": 1267,
+          "sha256": "7f49553bbf3d6bfdf12ac9aab4f819beb911c54077c834cc5fca1c83e023a849"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10313744.meta.json",
+          "bytes": 396,
+          "sha256": "6d7952067fe54f044a408c6fc0d9fe044bbaa654f8e59596400ee9cd96152cc3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10316935.json",
+          "bytes": 1354,
+          "sha256": "5fbbdb3db605f43490c58a3d4cfcc9d68d2d1d5800099a061a1b996f2bba6ca9"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10316935.meta.json",
+          "bytes": 396,
+          "sha256": "9ba393b6fe47860a3a059e0fb85beffcfd1ffad979d779f52a8d10227cbfa79d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10317115.json",
+          "bytes": 1395,
+          "sha256": "919bce381377b510ee56cd1599e84b6a3205dea4b418d3a3d13822af13aa4e2f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10317115.meta.json",
+          "bytes": 398,
+          "sha256": "5efb4722cd715e860525972e52c81996bc86b95eaab1f5fb0b0ee42b31286519"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10320682.json",
+          "bytes": 1283,
+          "sha256": "6eaf3ca143b9f64b2971a5700caaaa754f984e0067080c2fb7c861d58d8f29b0"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10320682.meta.json",
+          "bytes": 396,
+          "sha256": "f688ccd2b236af58d26b75179ba2d548f6b180aaf7a82609c22a69b3b178617f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10323971.json",
+          "bytes": 1283,
+          "sha256": "8533f636e3789dd0a7eee42377ae0c02e0283d327f3da747056df10e7c4b0bf6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10323971.meta.json",
+          "bytes": 398,
+          "sha256": "6241c2c7fb976a978d62906dcee0d7df5c8078edd3d2a01a7398e3230f6ac8b7"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10324331.json",
+          "bytes": 1337,
+          "sha256": "eb5374a4ab71e31d45f51aa01d0b02edd34982e3f0b83832fd984a1d893f0326"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/full-relation-10324331.meta.json",
+          "bytes": 398,
+          "sha256": "efd2bbb47a0f064aeb3d5aa13dca671b8da87d7bb23b345aab3a9344be427cff"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/gap-wendeng-tags.json",
+          "bytes": 609,
+          "sha256": "567bfe815512b9f566e6b80b6489d143112d9c23f735baa67256b62061cabfa1"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/gap-wendeng-tags.meta.json",
+          "bytes": 390,
+          "sha256": "3a022c6ae6807339dbc34a3d904007b1a20b79362f10fd4bff9d781ff279dec3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/geom-110000-0000.json",
+          "bytes": 2014039,
+          "sha256": "6bd4703974dcd24282e1f0efc8f3c210a2c3bef5a42d7f0f830cd66e61f36f68"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/geom-110000-0000.meta.json",
+          "bytes": 262,
+          "sha256": "9152bb0e269f432ad745659f65bb461ae8c6a12aa66efe2c56e21cb19b67f7ab"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-110000-2026-10-03T14-51-02Z.json",
+          "bytes": 17038,
+          "sha256": "dc8574fc514005ab6d893d7a9cb9178e285df2f1659a5fec4c7224256b00ab76"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-110000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "747a2478c83730c9827c18c0000705bd5473d890614a709bc6c47af5cebf1cdc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-120000-2026-10-03T14-51-02Z.json",
+          "bytes": 10406,
+          "sha256": "b7b542306f3a26e2d23892ee0726ea2b26b1a809b9caa568f3c9e7d7efe610c9"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-120000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "bbebaf80a11f9750ecef98b63025a1f268e70595a7b53eea65abb72135494052"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-130000-2026-10-03T14-51-02Z.json",
+          "bytes": 85997,
+          "sha256": "ecae438156755f7d8e9c737c369e38405c5d8cfcd7c9befd8ea150e3b6138500"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-130000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "ae7f58e2c70496dcbf147c7fbb753ada5bf9d472c8e2323b01e93b22215ceedf"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-140000-2026-10-03T14-51-02Z.json",
+          "bytes": 67936,
+          "sha256": "869ce16608d0dfe1ff666224466e22490ecc87321a610787423464e5131d9954"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-140000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "a6ff5f20749839ca69a4c87514c6092c512335d33c5f240b24e1e15f5e7c2c57"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-150000-2026-10-03T14-51-02Z.json",
+          "bytes": 95512,
+          "sha256": "e9493275c6c200581c0f93b6ab57e29af1809975d24a205e434d3d55649504d6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-150000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "fae976eab9eeb2ed60afa45856f8d8cc75b51f6135f80cc9f8183206a73dcd6e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-210000-2026-10-03T14-51-02Z.json",
+          "bytes": 60577,
+          "sha256": "b357613acf8e8bdf778bcbf6275a117abdd9cb0b49f8c13ef36728c008b1bd73"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-210000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "603d41af0e3865d445afed07bdfcff94d721e744af55ea1aaed4bf6a2b223042"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-220000-2026-10-03T14-51-02Z.json",
+          "bytes": 45895,
+          "sha256": "e824ef97371ab1273e55ab3a288a4acd96d916140bf1c6702aa3d1c733a47603"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-220000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "02d2699fd6b79fb70a8caa91825bf4b605325d871709f3af5353457b9d5655b0"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-230000-2026-10-03T14-51-02Z.json",
+          "bytes": 78467,
+          "sha256": "9c2debc2c5ade25f7e060ac7fb523fe648d91195cee32ee7a71aaa72e87c0c0d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-230000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "d07c77b1df7b7eb8b352b32086a9e54432997240c3c35b4dcd215012f355d887"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-310000-2026-10-03T14-51-02Z.json",
+          "bytes": 23164,
+          "sha256": "e922574a12353629f1c1ede9091c29122264fdfcd914e9fab371ba2b050307f5"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-310000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "17942469aad2177de33139a3b582701f8327d95e5105f3339d65d5e450d3f8b1"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-320000-2026-10-03T14-51-02Z.json",
+          "bytes": 101103,
+          "sha256": "1b06c9a7c8469f9714748b0f4a0b95b76cd181eaab0d29568fc8f181fd4ece35"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-320000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "9f4c65bbfb1f2168aad71113ffbc69f8ea4a26d2f0ec2e51e68559746517db80"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-330000-2026-10-03T14-51-02Z.json",
+          "bytes": 86674,
+          "sha256": "a3228a992b016f7b363581d517cbc35a51dd5f9cd9b1c7b84a510b23f0353974"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-330000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 279,
+          "sha256": "f956e599749aa83ceece50df4674f587af7894aba83748af0b11dfb2e778538f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-340000-2026-10-03T14-51-02Z.json",
+          "bytes": 85047,
+          "sha256": "3d199afdbc0c46f9b8a4bfcf80f619331484270e6f4473cf19f4efcd01cc4f28"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-340000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "5eb7bb5ba90b57d451d11f2d2406cdb1d5da9f18e5759ddd3f2af555c1a8e88d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-350000-2026-10-03T14-51-02Z.json",
+          "bytes": 87627,
+          "sha256": "2ee5e9d28849e61ae03d0dd5a9114eb81b12fd5475f6b8e5420a385de0c71edb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-350000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "cad6aa603f1c25409cac047b5010954956c84b2340b4bd5c2768fc30a2f5d34a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-360000-2026-10-03T14-51-02Z.json",
+          "bytes": 101801,
+          "sha256": "3752a11d20bf30dc4b0f66fa7de70ea1652e81a30f79b6db0df5ab553bcee235"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-360000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "f5093a7ba64c819e8fb5445663a1af011b9e4dbf1a578ff4bb2f22324cf732ab"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-370000-2026-10-03T14-51-02Z.json",
+          "bytes": 68782,
+          "sha256": "1332193eefc008be2f1659d4b37eddfa317ff3e560d9976f8ac4f821967cab16"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-370000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "b89cee3034d33c03d3c7b7c776b777527fe1758f68da44527153d36d7ad0a61e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-410000-2026-10-03T14-51-02Z.json",
+          "bytes": 89559,
+          "sha256": "7b57695bf01afcbfb2e2c9fed1b7258b36cae648ebacdcf05cc133de34e0ec73"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-410000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "1d3eb2191da84527d2e0cdff95d2c637619d275487a4b6c69ca813c06f3aba67"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-420000-2026-10-03T14-51-02Z.json",
+          "bytes": 86961,
+          "sha256": "78241ae1bbe5d678fcb05d2c60c82adbf0da14b0aec1818a958eb22143459093"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-420000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "51ea580bf133500f6d5736a1387b1fc989d3673a77e01d01c2b42bd8d48d7243"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-430000-2026-10-03T14-51-02Z.json",
+          "bytes": 118407,
+          "sha256": "da516e0e53aae22d3b173be0548d5fb080c08e5518764e5ae95be54a271e7dde"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-430000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 409,
+          "sha256": "bf47d48767884f69cda7ac687892908ac875315051f25318ebbb6e61f07a2f9a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-440000-2026-10-03T14-51-02Z.json",
+          "bytes": 152627,
+          "sha256": "4ef4cc502ed0365d8fc7acc67aff9b0900907c028b1b8f0501581a4aca8c1633"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-440000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 409,
+          "sha256": "67b372f9d2baa88ee4d9de7d225b5894634476eb245ace7d4cc2c97e1c505026"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-450000-2026-10-03T14-51-02Z.json",
+          "bytes": 93047,
+          "sha256": "e4eb91db03f8d842ab305276064274b048e0448cd3814fc82516f90fccd52f54"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-450000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 409,
+          "sha256": "d29e36598a3f0159bc1f98dd83c56bc655ba3e5bd01b388935328f4ac09e4447"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-460000-2026-10-03T14-51-02Z.json",
+          "bytes": 34115,
+          "sha256": "1220a43fe8613fc2705233e7f14df7f83b63107146718dc385e6162a8f9ffdfc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-460000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 409,
+          "sha256": "59d1246567ed0a26304618ef5a9908a6f401555eebcedd28549fbab38be3d212"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-500000-2026-10-03T14-51-02Z.json",
+          "bytes": 26191,
+          "sha256": "37261499f336dc8d1957eaeda70f27c6d643163a087a8f2f86b6432b541d9948"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-500000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "9231d7be8e9e98bd514398c760f03abf8ecf10a653f87990ec491164be1b9ece"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-510000-2026-10-03T14-51-02Z.json",
+          "bytes": 132893,
+          "sha256": "a2a6287d63e47db40b64d843abcfae09d1820444f461dbf008d9d9ede62e914d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-510000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "f17a1c5975502aec64d6d7f80b4e5d4a4a883ea9191b7864151f090a6fc0d76a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-520000-2026-10-03T14-51-02Z.json",
+          "bytes": 52550,
+          "sha256": "c7a84be28c30a0449fd496594798ec7e9cbfea4b30b2b0028ebf0901e567a0d2"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-520000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "2f451c46b1ccdd45ad7c84c85c8ce9c97b4c6b3d5251a942dd3891b01ccff54e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-530000-2026-10-03T14-51-02Z.json",
+          "bytes": 78651,
+          "sha256": "2c9679a584af1021fbb5e23b3fb80f89139dc18bb29090e35d46bdee317a8bf8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-530000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "291dc6689c2ad506f145624d9512460f28e330e7fe1c3f7f637951c834bbdc2c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-540000-2026-10-03T14-51-02Z.json",
+          "bytes": 77204,
+          "sha256": "c2ac333fbd00473a8e1ad29a6d1e71bd8ba3ff37296fe8b42ca5ed03f0acc5f5"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-540000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "32c874f3a3a5c9bf6665bc80d64be281665f61464d86e6059bd49e11fe5ca558"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-540000-2026-10-08T07-41-09Z.json",
+          "bytes": 80519,
+          "sha256": "e432e3587614ba58b309e489678349ebb26784c3fcede9bde6f929dd601ebdab"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-540000-2026-10-08T07-41-09Z.meta.json",
+          "bytes": 408,
+          "sha256": "08781de35e1a2098058a4364d9bd5f6afd6b69866fb2f23fc8bff42a72e62088"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-610000-2026-10-03T14-51-02Z.json",
+          "bytes": 53538,
+          "sha256": "7f6a2c140ac05ded4722c387e7f0478996a002f0d3daf5e8694e00d01e29608c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-610000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "a549ead5668ffcd693a7551eb960ce30c469f6990355941e6836eef49d3aa417"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-620000-2026-10-03T14-51-02Z.json",
+          "bytes": 62194,
+          "sha256": "ad64a11d26c739f5d239d11935c5b3d1958c9e8423afcde7f3c02afe9678bde3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-620000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "a09e9cf652aa7f72b07ab060c6082f57c9bfe3c67982930a69a2cc2e9babafa3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-630000-2026-10-03T14-51-02Z.json",
+          "bytes": 46056,
+          "sha256": "aba459b0cee87d9c5aa14a2f6e5c8a9f5fbc90c82234e88fba797bffc04f48ce"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-630000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 409,
+          "sha256": "da3402dc94f5adb9945186a9ef946de64536cd55c7b130853cc552386c959067"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-640000-2026-10-03T14-51-02Z.json",
+          "bytes": 17691,
+          "sha256": "3eecc04a73833d4e4e42b511205925deb9be692e6d24c3fb461e1c7121c22747"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-640000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "2c0dd43f355f001f138d18892c3d3340e01b7367d77fbd2c4dfc8bec3a71122e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-650000-2026-10-03T14-51-02Z.json",
+          "bytes": 108920,
+          "sha256": "255e868851744017567cd5337a9d8c3be0fd211d5c695e71c7a25c89caa7210b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-650000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 407,
+          "sha256": "465fa31eabe672e48667ee97ddbaaa35e1ddfa39e6dd5f0f689d5e56e246626b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-710000-2026-10-03T14-51-02Z.json",
+          "bytes": 284250,
+          "sha256": "09f50bfd9fd768340739df28097dfde343b5c63892cf9795dc7e293190ca05f4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-710000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 409,
+          "sha256": "55623a999dd9dff14d8ccc0237855325c3df355d7a8c8e3285ea95a123cba629"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-810000-2026-10-03T14-51-02Z.json",
+          "bytes": 35318,
+          "sha256": "259c9d4a085949723ca05671df570c38985a45f9f7361bd9c5836d655646f487"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-810000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 409,
+          "sha256": "594200aef5b860e12fc40ed0a7f7ea678c3ee00357d3b6480e11ff14a624f43b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-820000-2026-10-03T14-51-02Z.json",
+          "bytes": 10193,
+          "sha256": "3827937a782b5fc7d2306666e468d011aa7d538ff90632794136b1cfbeaf2ee4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/index-820000-2026-10-03T14-51-02Z.meta.json",
+          "bytes": 409,
+          "sha256": "6431f6430ff0da5f34cacd6084d518a56ba11ee04d99016af3893667788572dc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/province-110000.json",
+          "bytes": 5083,
+          "sha256": "8e62aee197f28e896ec208c9ac30abb479733574f2e3ea49400371bc0c54e419"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/province-110000.meta.json",
+          "bytes": 261,
+          "sha256": "df328e3d55334a97cb8c63953a9c087b071abdf3d28a8bf4d9ec5240b72f7631"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/province-index.json",
+          "bytes": 153635,
+          "sha256": "3baf7f34b60a3671c318c507b44683c56ed7fc090bcbe505cfbc4e5c70da6739"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/province-index.meta.json",
+          "bytes": 389,
+          "sha256": "8cb4f67e7fde526a40ff9f5ae137d56de373fef377e382b8820ee6f80e7593d2"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/reference-2027346.json",
+          "bytes": 457567,
+          "sha256": "5e14c6758236c2f4655951978831d2b357f1c70c618a70b325ec9cc3cc625e13"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/reference-2027346.meta.json",
+          "bytes": 263,
+          "sha256": "c06faa9dd4a7e3e2aa24654e51511f1d9fd87641a6a08e71642661571b42108b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/reference-2713465.json",
+          "bytes": 192706,
+          "sha256": "45274d660407052e532beac126a96104e98912f1ac02406983825ba3c2d105ad"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/reference-2713465.meta.json",
+          "bytes": 263,
+          "sha256": "eca1e91a1ffb7046b1e92dc4f95b008f6a7e0c78eddd8a07abb813fc8d57b65d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/reference-3202329.json",
+          "bytes": 260749,
+          "sha256": "52ee98ceaab35dd6558d5a32b18e104020254d6404b61cb54152c24e2207f022"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/reference-3202329.meta.json",
+          "bytes": 263,
+          "sha256": "04403ecf2ec64699ca4dc3cfcbf48aa3c72bf3163d9d99a8006947ed958f934a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-003576f7749d70b3fd7e.json",
+          "bytes": 1061094,
+          "sha256": "5a73b01644f326a4dea8659f198bae315064fb371511a442cb812eceb77e2be6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-003576f7749d70b3fd7e.meta.json",
+          "bytes": 406,
+          "sha256": "49dceafd2d18223377123c90b24503fbddb87cd899d4358a16650284e598eb05"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-01c52b97e54f60358fd6.json",
+          "bytes": 843156,
+          "sha256": "5b3ffc0371c515ad73589ebfc4e359cd958eb97edbad84d7d1c9e5408129f55e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-01c52b97e54f60358fd6.meta.json",
+          "bytes": 404,
+          "sha256": "83869162c0132879c759263d7e66465039fd2db65654da21e10de430eae2e484"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0508e3e744ecace40e43.json",
+          "bytes": 8229955,
+          "sha256": "47e286f21446138b763baf05afe89d6120be9d477e85e02d056d028abe39b392"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0508e3e744ecace40e43.meta.json",
+          "bytes": 404,
+          "sha256": "4de9e5e43f6067a7dda4259831e025a1548d5ee1d360ec820ae06615778aef88"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-06aeb5761cde40dd2afe.json",
+          "bytes": 2032347,
+          "sha256": "b7394b5b2658e8c2d60bd87912f358e80bf9f9055123905896ace365330abc0d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-06aeb5761cde40dd2afe.meta.json",
+          "bytes": 404,
+          "sha256": "a8d631bc3fd5e93f41d981f8a42a11689b15e347dfaebdc3fd44e268a9b7df83"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-06f275f467cdacc8c83d.json",
+          "bytes": 3370268,
+          "sha256": "c02698a94425b756b255b4c8fe7f26ec887878d197ef7128d70c757d8e2b1719"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-06f275f467cdacc8c83d.meta.json",
+          "bytes": 404,
+          "sha256": "185441332b2941f9dad341e7f4a29c364e537817481e5a8f01c9985fe3edda74"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-073f07edc31c026e50ba.json",
+          "bytes": 2035554,
+          "sha256": "8bec242e1dae550bf3f8f5938dfaa4f9dade446089ae2b0b32382b4e58d00592"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-073f07edc31c026e50ba.meta.json",
+          "bytes": 404,
+          "sha256": "126ec07a4e8f21ed40d23416c7c2b623188aa04646fc796d13ef993d39595984"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-077107ada5c11a75578c.json",
+          "bytes": 923254,
+          "sha256": "82e60e6728c7ce6a1ede0d5b8dbfb240ab3b89fa4550bf791415c38ebcc719d2"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-077107ada5c11a75578c.meta.json",
+          "bytes": 404,
+          "sha256": "4e9293ac749e025f7a05465bc8705046778e8651c7e224d945aabdf113d23781"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-08393acfe24846d858fb.json",
+          "bytes": 1322780,
+          "sha256": "3ec5fe39b54f4a7e1c976037fded49f3283ecd09b123d8adb546752d8d3f67b8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-08393acfe24846d858fb.meta.json",
+          "bytes": 406,
+          "sha256": "49b16ecb8f3d8f15375d643c3891725770f72aafe5560ad6f0e446d6d693f406"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-08f9b3c2efbb75fa9c33.json",
+          "bytes": 1223119,
+          "sha256": "1d92b838ddf8d0add349d5e83ca4e4e37848c563a21581f4ec88c68f38023d50"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-08f9b3c2efbb75fa9c33.meta.json",
+          "bytes": 404,
+          "sha256": "d67d2c19f984e58ead600c4360350d7e1bc032bc0bf8c8e83fd398c3d3fb2a18"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0a13c274b5735a188b9e.json",
+          "bytes": 1469649,
+          "sha256": "031f7142dedd69ead41671cc8cdc2fbc8f017bc222a69b7dd1345b91d78425bd"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0a13c274b5735a188b9e.meta.json",
+          "bytes": 406,
+          "sha256": "38c0b971933ffbcbd0f5795f146b41a268e5d1c17bbe4a75d8f63fed64a65931"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0b2af01cd755167830c7.json",
+          "bytes": 1755199,
+          "sha256": "be86feb1a50471867987af9a99404fb519b89b0618265b0b8db9e56eb20f2a8b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0b2af01cd755167830c7.meta.json",
+          "bytes": 404,
+          "sha256": "97a08cc74f74726326dd954e1c5d777b24d935624227c6ba14ee8e11fc9954fc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0b6dc93b37d9985a487f.json",
+          "bytes": 2266882,
+          "sha256": "a7c5508fe8d9bf6edb8502ce2eb9f21df7269b1ab5629e18afb18aa13cbd35bd"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0b6dc93b37d9985a487f.meta.json",
+          "bytes": 404,
+          "sha256": "a7108e62152b35e1361fa40e6d046d46f162cc09aaa5768bbe61d2bf26bdcfb9"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0dcd9fb5e437c7cd639e.json",
+          "bytes": 954144,
+          "sha256": "842a3127b92ecdb504d6592b5ab1d7427c38c1bc59f3add9193fda558e488d38"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0dcd9fb5e437c7cd639e.meta.json",
+          "bytes": 406,
+          "sha256": "a690e4a7d5ac9259de861eaae7f208804def6ea723adb2f0aabdf434ecc765b0"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0eb50ef66abd23ad7a0d.json",
+          "bytes": 4545400,
+          "sha256": "c9b0bf0f9a67890029c41eb1ccf8442551d2250c10c56f8ab479534ac853a292"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-0eb50ef66abd23ad7a0d.meta.json",
+          "bytes": 404,
+          "sha256": "668e16caadb0c6f5ab7919e06667f83fce73f64453210288e8e0b28b5c0cd071"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-12056917c4c268b71187.json",
+          "bytes": 2801307,
+          "sha256": "5d4e4d4fd8b317029d00f3e4c3a3ce9fa3e16f9d0e1fdb849ddbc85e6cee555d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-12056917c4c268b71187.meta.json",
+          "bytes": 406,
+          "sha256": "b110efe4ab111e9cceb377e36b125ecb4276de099ebe823107d229e0bea05415"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-13eb3139e37d59eb5f19.json",
+          "bytes": 2341557,
+          "sha256": "12b0b6f7419b740e4928a762ebabf07c7d7f46d238b1f0c1de6021d119e0390b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-13eb3139e37d59eb5f19.meta.json",
+          "bytes": 404,
+          "sha256": "fbab7b26f74456e2e514891411e471d29c5a2b008f16c18176e37a3f275e54de"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-174e240717efd79e26e6.json",
+          "bytes": 1070248,
+          "sha256": "ffceb8a8536e847969f54ec3e1fc2aad2f497ac17e4928b1c474a16a798966d8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-174e240717efd79e26e6.meta.json",
+          "bytes": 404,
+          "sha256": "f1baef9841a92ecf2c42b4cf7ddb0beae15b9a66acd5979225c38af4d11e5e60"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-180429495becb10892b4.json",
+          "bytes": 1999812,
+          "sha256": "12a01e7360542492c0e7d92c0a00296ac0681eaf1bc3d78fd5c6166351cac334"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-180429495becb10892b4.meta.json",
+          "bytes": 406,
+          "sha256": "13451f0969b500cacfcfc780bdbb70903ba22eb670b52e5712fe474fad1b34d1"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-190a80b36d623a23cab9.json",
+          "bytes": 2927916,
+          "sha256": "0fdf3f6f9cbbaa4ec431fb5e3ccfd6b6476f70e3f9af15876e29b4a6b6eae314"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-190a80b36d623a23cab9.meta.json",
+          "bytes": 406,
+          "sha256": "0d2377923de262967f20ba9f74fc7469f5d8fb6664bceea4835cf58ab53222ff"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-1b553f8ba16e5efb6145.json",
+          "bytes": 668195,
+          "sha256": "574ba4582d97928cd85b5fa530651a6989a9d8e88b2ce818b28a0f8fb2606224"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-1b553f8ba16e5efb6145.meta.json",
+          "bytes": 406,
+          "sha256": "fc40d755b15901da798fcc5796506b931e2d4fa3c4bde09503b89c917ed0523a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-1d66e6dd11abaf879b96.json",
+          "bytes": 4415751,
+          "sha256": "4737d1e109e65979b0c76bd8739adcd13952957c1f7441a75bf1a7fd4294bbd0"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-1d66e6dd11abaf879b96.meta.json",
+          "bytes": 406,
+          "sha256": "2f0f45ca7e08757465d8991176323d1fc172ec3318c340f468bed42eb52f5228"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-1ea1e089b02a195e8944.json",
+          "bytes": 1556323,
+          "sha256": "c13d13b9233b7774108b1ec59fc8193b6976264fc015fdcbf2dc10e9bfbdd20c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-1ea1e089b02a195e8944.meta.json",
+          "bytes": 406,
+          "sha256": "47a75f4d51592360885f6d5726b539ae60a5cd648b4f0257a632effaf8a0395a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-20fba178d0048fb2c20d.json",
+          "bytes": 6276794,
+          "sha256": "1aa0b3eec17ab2f29fe374bb1bcd1ec55846005671724cce6ee47256a424ad48"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-20fba178d0048fb2c20d.meta.json",
+          "bytes": 404,
+          "sha256": "68870d81b5a20b2f2d1def6f2765b7edb4aad79c24d666027e069f69c652d213"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-22cabc6beeea85f11e97.json",
+          "bytes": 926397,
+          "sha256": "78945a55f3ed45bea5b113bc716db3bd77908445e7543a1e7d08e60afb4d3554"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-22cabc6beeea85f11e97.meta.json",
+          "bytes": 406,
+          "sha256": "d6d78519ef31e8545fbfb396397efb1210f375eaf35c01d322a3a80431aeefeb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-255da41a38db0892b608.json",
+          "bytes": 3261860,
+          "sha256": "81b06a252df700f1d31199c60eb6f325f93eab31ff45b77d6bc1817b606b480f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-255da41a38db0892b608.meta.json",
+          "bytes": 404,
+          "sha256": "8c47ae5a10f61f4534c3e7665816a1be1d42abcbf57d7cc79fe1be25503a6c4f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-27495a45f4adbe1a738e.json",
+          "bytes": 2101373,
+          "sha256": "1c2a341f55fd1538f61bc9bd431cff3c0ced83fe842bb1e85864cd2e513ae4ec"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-27495a45f4adbe1a738e.meta.json",
+          "bytes": 404,
+          "sha256": "d1f41232278ba7bd6fd82b0da8d43efa09aa5b291bdbe1411afde5495f752584"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-2abcd98e8f58c207e878.json",
+          "bytes": 1826857,
+          "sha256": "01070fd76493867116d333d18814b7dcb21c92ac3b17010484ce7df46f15c277"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-2abcd98e8f58c207e878.meta.json",
+          "bytes": 406,
+          "sha256": "7d36d15aeb0ebebafb96379ce3553e31d68035125311d015bdef371a1c1f06ca"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-2ad74d46d93b8922ce72.json",
+          "bytes": 1735415,
+          "sha256": "e0821ee54aa6ff83c835df6e0c475f2feb15f74b370c546864dd1367281c8ab4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-2ad74d46d93b8922ce72.meta.json",
+          "bytes": 404,
+          "sha256": "bbbc830f9ee8d21a6870f850a9a5542f0192bd4497c426daad222d476262ba5c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-2b27db5f7dc46499587f.json",
+          "bytes": 3134797,
+          "sha256": "9e4f9efc8204924c5d39fddce6bc934ae49283511d17bdd34db9d2e5f2db89bb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-2b27db5f7dc46499587f.meta.json",
+          "bytes": 406,
+          "sha256": "a3af4ed4ddb314d9c4eef77a97cc6fff3424b4e7f53867873d0ac51cacd2a318"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-309a1cdbc0457ac4f3d3.json",
+          "bytes": 1448588,
+          "sha256": "77f14380c5f6d8ae6dfc8adc49742027eb9e652ef4c689a23f4433a0ab3c5d8f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-309a1cdbc0457ac4f3d3.meta.json",
+          "bytes": 404,
+          "sha256": "1e96dcecadcf15183bf36864f193ff3c850069d2e9fe52dd27a88b59526faf5a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-346d079c6f14c21e4a7d.json",
+          "bytes": 1552339,
+          "sha256": "37d0d32dda598d4b5354da524fb2f077089780c5b6d9dceb433f945096c717cb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-346d079c6f14c21e4a7d.meta.json",
+          "bytes": 404,
+          "sha256": "8e4edd7eb4502e51c8d0ad2cc1880125986cdd602f8ee99d695d9ecc31fe45a4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-37071cb8a31b1c5f885d.json",
+          "bytes": 1673975,
+          "sha256": "b4f44d286e1ded513254d604ada7a42e69446cf6ff5dc83e0a378ac3e8706a6e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-37071cb8a31b1c5f885d.meta.json",
+          "bytes": 406,
+          "sha256": "1603c378bf35c7f30d09e65bb6ce9dd6612d0b861edf69cbf6f0f44eda9c1ee3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-3b33b3b95f9af50f9084.json",
+          "bytes": 783302,
+          "sha256": "15b8fc4edb5665496394692030850a6e9afc847aa447a9cc526e73e114997908"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-3b33b3b95f9af50f9084.meta.json",
+          "bytes": 404,
+          "sha256": "b98339845a945de77a3857dc9471dedc12beb5986dcbf7e362892233988608de"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-3df618547ff1715cdb91.json",
+          "bytes": 2591313,
+          "sha256": "6fbd1347c50dcea559adbb43f91af496e6f6f016626fda87d935c37904439d89"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-3df618547ff1715cdb91.meta.json",
+          "bytes": 404,
+          "sha256": "0d0ee2d8c948917e1f5af8317fd8fa70ac2a5636ea01a4e41b137225b31fc6e7"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-3e5dbcd5dbb9338e7dfb.json",
+          "bytes": 900067,
+          "sha256": "f8cc00e368f709273101102bc96297f29d354d33b600573b832605dd5d07ddcf"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-3e5dbcd5dbb9338e7dfb.meta.json",
+          "bytes": 404,
+          "sha256": "aed0ea8d2d5b418523128f7d6fd5a4bb96be54167f956b0e5fb956ecfc932e23"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-406abcb3a6babe588117.json",
+          "bytes": 1148502,
+          "sha256": "0fbd35415fee6a39b8039c78d3a9d1752562208a429ed2541afa5a2b82bcc59b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-406abcb3a6babe588117.meta.json",
+          "bytes": 406,
+          "sha256": "db0f576fa70b07a38be22e1b061aa6fff74f9c09d3b7bde80e2ef0cdc067268f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-41f240d1f2371c7730fa.json",
+          "bytes": 3658970,
+          "sha256": "5a93c375a7533780c5f87d5c17fe814946f85939580c7df4ea8f3b7089135a42"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-41f240d1f2371c7730fa.meta.json",
+          "bytes": 404,
+          "sha256": "86ddeed1833b678d5094b40b0d3b1a59776b856b34ec856938186c1437c9520f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-432f80c03e930653de6e.json",
+          "bytes": 1080092,
+          "sha256": "228853d4d1ee02e2037abcbc56c8f9d2f956a15bd127dbc5fa35ebcaf72b5b5b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-432f80c03e930653de6e.meta.json",
+          "bytes": 406,
+          "sha256": "06e5a834afa2f5e0df608f25f725c662ddd0512f870088fa9338f3800c4b4422"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-43deb4c81ddbc04e63af.json",
+          "bytes": 4310411,
+          "sha256": "856bbbbc8041993656836fee54afc3f416fc94326fcbaf403683d1ffe679b1f9"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-43deb4c81ddbc04e63af.meta.json",
+          "bytes": 406,
+          "sha256": "731ee0003ce4b55c1d445e904e6963db744a508b5c4af35c7449648b4fda3a86"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-47d4a14aa306d258c2a5.json",
+          "bytes": 1228073,
+          "sha256": "41b0b110e5984ba905b3b10870cac32ba5c68d11b2ab26b95e099cefda53867e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-47d4a14aa306d258c2a5.meta.json",
+          "bytes": 406,
+          "sha256": "2a3f69c9aa747a841c22040ca8a0556b1326b836eacfd868be1806d2cc61a024"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-48ea444fe794317c3cec.json",
+          "bytes": 1002768,
+          "sha256": "3f27804620d52bbd3042303881d17f8e5b82c7619973c0608a4598bc68799a1f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-48ea444fe794317c3cec.meta.json",
+          "bytes": 406,
+          "sha256": "d5f1817fa61eda59158fbd9d1ecc6d411cfe6943dc85808a002adea41075f9ea"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-4bcc64b3a1458ecabc64.json",
+          "bytes": 2785011,
+          "sha256": "eb03db2246179e75b13e6a19af532830546706f52e828f8e305dcbe50fc05e57"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-4bcc64b3a1458ecabc64.meta.json",
+          "bytes": 404,
+          "sha256": "e8cd1cec13df7e20983cf257c692f27db15b948ad46673b0a5ec4863f6ae7045"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-4be034ac1517d239d15b.json",
+          "bytes": 336270,
+          "sha256": "c410266326b8570c7b2734ea6fa801b9d5fced45c15146626c8e520d1dfed3a4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-4be034ac1517d239d15b.meta.json",
+          "bytes": 406,
+          "sha256": "4a459ac735f27a0d91bfcab8aefd24644d99ee8e9f9a6963f7882c108f32f71a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-4c1923ac8e8c2cd46516.json",
+          "bytes": 879158,
+          "sha256": "e203c8a5aeb30e17b7363f7694a46f04dd080c8b284b87a864232397ad98aa70"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-4c1923ac8e8c2cd46516.meta.json",
+          "bytes": 406,
+          "sha256": "77dac4743c90869974cf4ec9d73095fd9d236291c6e2ad2d1d695e6b5af56704"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-52fde0ea6b119d27b1e1.json",
+          "bytes": 2202195,
+          "sha256": "75e302e21e5d8399683b7a83aa6e466e40d02958f89492795cb16f233cb65071"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-52fde0ea6b119d27b1e1.meta.json",
+          "bytes": 404,
+          "sha256": "a098be5af68f1ff512966467343cd9a8a6dbd7431a857761fafa93305eaa8fbe"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-56831fddde5c1f9f594f.json",
+          "bytes": 4126047,
+          "sha256": "e63a81a91dce4e22ab65618a2e8867c0c8e51b593c576f0f7619a2432428a56e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-56831fddde5c1f9f594f.meta.json",
+          "bytes": 404,
+          "sha256": "e1864f7cff1cb4a90de98f277d51b875ab7db84b76207f21b18a48763e89ce9d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-56a10db9610a0fd4c3fe.json",
+          "bytes": 1083596,
+          "sha256": "c45a498134ba7e06efee4ecde301c3bc7a30b589a25de9cd2151a406e4f49186"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-56a10db9610a0fd4c3fe.meta.json",
+          "bytes": 406,
+          "sha256": "dcb3d3e563e46648f488639a9cedd4a2b9ead757fafa56e1a24e1a7cd9b677cb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-56d4d1615e1c235705d8.json",
+          "bytes": 1824056,
+          "sha256": "3cfca667cbd8b7094c582aa3b4b2f4a652108c796942ae0b4dbe176aa4566295"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-56d4d1615e1c235705d8.meta.json",
+          "bytes": 404,
+          "sha256": "569be5550c7de66e03f4a1b36cd9de92801cc16a4916b777db20842cf6dd62d7"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-57088124e8c50955007f.json",
+          "bytes": 783746,
+          "sha256": "3785793a460097cb8a9c2cd5dc6ebe339954bcb46c20d37ea35df78269d1a0d6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-57088124e8c50955007f.meta.json",
+          "bytes": 404,
+          "sha256": "aff358bfc064dd4bb969dadf3bbf53677a19761fbeaa6e7e2398f7ced47b0296"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-57895d6a5c8c9a7f1490.json",
+          "bytes": 1141859,
+          "sha256": "c489847c75c697eed40e312ebc09da3a97ab7df24792a440df69cacc9ee30a63"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-57895d6a5c8c9a7f1490.meta.json",
+          "bytes": 404,
+          "sha256": "c58f8ae41d9627ca5b7c38db1dbcf09deb5e880b9133ade41e2f5fef268752c4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-58ba61b630478b0cf1e5.json",
+          "bytes": 845252,
+          "sha256": "37f716c186db9ea24fa1e89829e7b88f432aca94806cc13f557ea409aa41dc7b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-58ba61b630478b0cf1e5.meta.json",
+          "bytes": 406,
+          "sha256": "7135b7e9acba7a7ae147713f342bf1fee8576b5e8c0a656868faca4e6fc649ca"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-59f4cbf134e4548735fa.json",
+          "bytes": 523492,
+          "sha256": "ed095420dd64c66a71b500043cd1664b45d378c3928971b9721291110b00527c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-59f4cbf134e4548735fa.meta.json",
+          "bytes": 404,
+          "sha256": "b5c06e11d3d4da592a8679f22623117887730758629eb7982c8d77068b9b73c6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5b4a1b61e3e34ca9aef3.json",
+          "bytes": 1813929,
+          "sha256": "154c4582d0fbca74d6956126817173fa70ce7754eb790973b0a97249eb5f846f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5b4a1b61e3e34ca9aef3.meta.json",
+          "bytes": 406,
+          "sha256": "0553935e5ab89fd42311d93007bd966f44ce20b93279776a8e2d6b2269c88894"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5d0ca7a679515aa94a16.json",
+          "bytes": 1654730,
+          "sha256": "cbd6380d3f1052d7d76c651d2260c3ccae32dde88704882f185a3db52ce72f1a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5d0ca7a679515aa94a16.meta.json",
+          "bytes": 406,
+          "sha256": "cef8d06947dd5f10dadbe40bf51128422a254febb93267d16fb57bd39cdfec10"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5e6b2db146cee6741eae.json",
+          "bytes": 1198670,
+          "sha256": "0df06651a70230478d6be68ffc1ad93f203e06f04c80bd3045a76c49dce055bf"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5e6b2db146cee6741eae.meta.json",
+          "bytes": 404,
+          "sha256": "e83d6f1dd7eb2103a1f2f5b98356c984eed21ec321f9f9764c44de29f9b2a53c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5e872afbc392efdaf121.json",
+          "bytes": 1204817,
+          "sha256": "950f09dd8fc07a3748c01cf3c69840817ea92c218a22b89dc5b6a2631fea2385"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5e872afbc392efdaf121.meta.json",
+          "bytes": 406,
+          "sha256": "d15ca3484dae348796cf30eccc2cbeef14fa44a8fbcdb71bb90ec784ead47977"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5f61dd735e57677117ff.json",
+          "bytes": 507519,
+          "sha256": "ff6a44f42f8bc3282fbb5698b7feb91975f69872db8c688058dc7302013fe3fb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5f61dd735e57677117ff.meta.json",
+          "bytes": 406,
+          "sha256": "84e642e3f01d82ae60a730abae9521b9d0352d3f41e2d4a3e50ac740c0d1c041"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5f86cec97534ab1066b7.json",
+          "bytes": 1311614,
+          "sha256": "24f15dcd6bbdbfaf8978af17cd2cf07a7dec8514e456e56738b342dfa49265a4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-5f86cec97534ab1066b7.meta.json",
+          "bytes": 404,
+          "sha256": "341544764a38638d2d52961d2339fa61b593e6350f7ea5e6e3fe2d77849b2332"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6051dc3ec9d57a4ab75d.json",
+          "bytes": 1020661,
+          "sha256": "ad036bb04db2bc93cb61a7b026847bf03158ab4faedba4c42be2212bdec8b4fb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6051dc3ec9d57a4ab75d.meta.json",
+          "bytes": 404,
+          "sha256": "3e49ab9c7e589577d7b4edad0b5d36ad27ce330595a352b7fe52b2baf359cbc0"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-661eaff2bd5c518ca687.json",
+          "bytes": 1397209,
+          "sha256": "79bf8f9a8d743e0bf6d7f9e2b826ba11672bd4cc74b9cb4c3c77a38e5483b60c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-661eaff2bd5c518ca687.meta.json",
+          "bytes": 404,
+          "sha256": "9d260b93b3af956479b143372ada9375ee00caca97df990d097b036d1ea8a3e2"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-665ee0062526346e9721.json",
+          "bytes": 693249,
+          "sha256": "5bf705846d23824e4123ed1f5e0f411fb59743f667c450408aefc0f2e2a2e921"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-665ee0062526346e9721.meta.json",
+          "bytes": 406,
+          "sha256": "0ad24640f3571f206b3915219fcb51d273943627d1cbf4fc19b3d58a624f3589"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-68a32ae4452702cc26b3.json",
+          "bytes": 2093786,
+          "sha256": "aa35356d3e1255c5af0fc711cc53bb2695afa1c5bffb4d98fd7d303366eb565f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-68a32ae4452702cc26b3.meta.json",
+          "bytes": 404,
+          "sha256": "dfe60caace9455c57d917f7cb5a036faa05c75b19ed7393defd9f1e799fc2aff"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-69049ed795c5c504ee3d.json",
+          "bytes": 748362,
+          "sha256": "ffc2a33cf926f1dec67275606fc0d649d420c98c3a0e8588ddfbea11469d78c0"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-69049ed795c5c504ee3d.meta.json",
+          "bytes": 406,
+          "sha256": "20c6cf4a84c572cf2437c11de899a9b9b56301011ab8acdfb2b0dc78d45c18b8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6a4c99fdf3dc47b7cb1e.json",
+          "bytes": 1630047,
+          "sha256": "d229258c4c49be8f5e8754c2eed76a42d1518583503aba6c65d937e40edb95c1"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6a4c99fdf3dc47b7cb1e.meta.json",
+          "bytes": 406,
+          "sha256": "f37b82ffea6e17912bcd0cf0c126875f90c02f8cca5fc71f7fb05bdcf155932a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6b3924cdf918a7839182.json",
+          "bytes": 1716479,
+          "sha256": "aa4e699d2233b8eea20851fba1bfb57601558f19f40758b6cb73d02596a35351"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6b3924cdf918a7839182.meta.json",
+          "bytes": 406,
+          "sha256": "0dcc4c6b7f4100d3b30161a289eeceb4ae44d24b27cc51698b5a21ab689af81e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6c9be675ce1e78890670.json",
+          "bytes": 1880339,
+          "sha256": "73a621f1d6dae2c71b3112ce5a4a698fe6941259b769d95f4bcad71011f5210d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6c9be675ce1e78890670.meta.json",
+          "bytes": 406,
+          "sha256": "25d998db70574a22cd1d1a9ee5f88e338801a31958e1f58f510e61055a3404b2"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6d16bb88994e9bcbcb43.json",
+          "bytes": 810835,
+          "sha256": "b1203db76a9b31e2320147aafe686dd81d005234dde1df072ca9fffec47a3653"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-6d16bb88994e9bcbcb43.meta.json",
+          "bytes": 404,
+          "sha256": "4407e28b79de792d72a89b689858af211691a547326a57c9d1caf368c554e3a5"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-7078995e08798d58ab70.json",
+          "bytes": 1725694,
+          "sha256": "3a813e1ffaf79c9e34d5712300c01e49656eb644e57805794016f1e2f2549db5"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-7078995e08798d58ab70.meta.json",
+          "bytes": 406,
+          "sha256": "94bdae6cc323e2e6d2412d2e59d4dc9b25d71e3cff5d22a4cc6bc0e30cba58b5"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-72f0e6bcd5f94e93da9d.json",
+          "bytes": 2627562,
+          "sha256": "6e2377e8121abf53e5e501460110dc97cbaf4ff2c8626735da3d74b0727c7424"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-72f0e6bcd5f94e93da9d.meta.json",
+          "bytes": 404,
+          "sha256": "ffb774ff88054cb31bf0dd053a97e829c7079b655f701030092573dba9fe8120"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-760938afc04d8f356190.json",
+          "bytes": 2363598,
+          "sha256": "c3228ebb471b8860528be763c52a94590444805acc85e4cefe5cf66b4e2ed709"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-760938afc04d8f356190.meta.json",
+          "bytes": 404,
+          "sha256": "bd6a27e9cfb0092076155326ed154c3b085f2fb356918b2b32ea4a8688c2f031"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-7682507c0395c2269a98.json",
+          "bytes": 302087,
+          "sha256": "07fe90bc7da9f113eb7aa981bc5a7b9c073b7d1b9b27b9f9a660637eb5d43d65"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-7682507c0395c2269a98.meta.json",
+          "bytes": 404,
+          "sha256": "73c35384b19333b32c890d083cec850c0ad91435582e921b3736fb6ee0c1a90b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-7e37a404cd82cd22c026.json",
+          "bytes": 7086589,
+          "sha256": "ce9a07f61be747e79b54bc9b18d39cba37ba62a6a755b3fdb735e4c517c5b9ce"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-7e37a404cd82cd22c026.meta.json",
+          "bytes": 404,
+          "sha256": "92f3a24b76e68d61558c3b0c46f7b06cd95b0d0817178ea3238c58335c81d989"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-801925d1434f546d6c9e.json",
+          "bytes": 2765927,
+          "sha256": "e8f0a92a663914cc195caf0792015ce5e0cd220baf3502a22cc74f416a6dbf2a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-801925d1434f546d6c9e.meta.json",
+          "bytes": 404,
+          "sha256": "12952bf05ccae0d5045f8863b96afe8dca732602e0ba1eb92f882267281ab25b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-82ec1b965fb9fb3f7aad.json",
+          "bytes": 1024686,
+          "sha256": "872f1209258e0473ffb842071b62dee90a408eda19cbdda84d598051daeda5af"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-82ec1b965fb9fb3f7aad.meta.json",
+          "bytes": 404,
+          "sha256": "2946ec022458a0f17cf9929d58feab53dbdd4781c2e94e877b2293a8568c0ff3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-837b8214a2904b3e5b5c.json",
+          "bytes": 3870036,
+          "sha256": "5f2f4b616c0a0351c274ed622ac7f818ead294e312e199ee4c52d1e99bf2f9f4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-837b8214a2904b3e5b5c.meta.json",
+          "bytes": 406,
+          "sha256": "d921d668cfc7d610cf558665293f96ea5a98bfd6d59270fdbf6a4c03f35c4beb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-861a6682ccaf4e89f5a5.json",
+          "bytes": 2289611,
+          "sha256": "e6c80900a3d18bb1cccd758cb113d89635e089730c0f6d2681988df7877ca554"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-861a6682ccaf4e89f5a5.meta.json",
+          "bytes": 404,
+          "sha256": "c5f3eb74f5c89256556304336ba049ae05e4895fab582070eff19a241419e8fc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-86a3802835385098b5ca.json",
+          "bytes": 2193398,
+          "sha256": "669eba841a3c17e435ee38b5bcd63a9364bcfc93065569c194efca953e9a6724"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-86a3802835385098b5ca.meta.json",
+          "bytes": 404,
+          "sha256": "5a984952b10cd7707e1f3c073a3f675421bb293570f1a4a975e941f81b2f2178"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-884238b6661aa13b8e67.json",
+          "bytes": 878165,
+          "sha256": "ac302f71c1aaf98108cf0e48f606786b747ed111bb3ae99936e0ca37870b58b9"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-884238b6661aa13b8e67.meta.json",
+          "bytes": 404,
+          "sha256": "199d43e29828780d2d0c2f90fa740c95a9204d0b6bdc99bc908c9084e158cea8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-8901dabbcd2b5d6a5562.json",
+          "bytes": 1784957,
+          "sha256": "a08cd8dbc2cb68cab72932c23cc4cb0ed36c161959d477a61e5d55ced9b18e12"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-8901dabbcd2b5d6a5562.meta.json",
+          "bytes": 404,
+          "sha256": "039e21451d0101f34408a2dd7e79a9afa4a9221549e2b8670c6a620625502cfb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-8a667b54ead1f33df57e.json",
+          "bytes": 1884292,
+          "sha256": "5951170bc90bf92698f2806c952162681b045ab2cad9dae4cce3d4c9d0075927"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-8a667b54ead1f33df57e.meta.json",
+          "bytes": 406,
+          "sha256": "13a55400bc77f005a8b1592b6cdfdc983f630871edbd8c7897ab4942c6703998"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-8a97a16c5b252d1a2ca7.json",
+          "bytes": 3109651,
+          "sha256": "301d44f7e2884cae387c07af2bbabba99c03fc0b0261ec0f4f3d2dd13deae7b4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-8a97a16c5b252d1a2ca7.meta.json",
+          "bytes": 404,
+          "sha256": "2afcff48cfa878bb230d49c3cbfa5da20a594d3245b11ad8fa81000d3ef0df13"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-8b00971a8585c6ce81a6.json",
+          "bytes": 1207322,
+          "sha256": "6d9b60fb5cc68a5cee6755c0238dd3c778911f44a7cfad080ce53665dc30675b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-8b00971a8585c6ce81a6.meta.json",
+          "bytes": 404,
+          "sha256": "b041707b556cbbcfdf2843ecfdcb4a4b5331ea3b5e74547836cc65e665c8231a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-911dd82f65cf3272a2d3.json",
+          "bytes": 8768600,
+          "sha256": "98843d2b646a93ffb88c98afed42397387b3639d23fca44b87b9cf43294c375b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-911dd82f65cf3272a2d3.meta.json",
+          "bytes": 404,
+          "sha256": "8b70ebe37dcd2572dfba26c4dbd41e736be74e6e8ce7991ea5efc6efcfece614"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9165ba5ce119f3157796.json",
+          "bytes": 1760891,
+          "sha256": "0b995c2ae7e2421e17a0af3e0935d6a94b9ca7ca014218e45f8f8bf43578094c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9165ba5ce119f3157796.meta.json",
+          "bytes": 404,
+          "sha256": "8a8d4a73c6a564876e164a57e67dd084c8654c06019d527e54c735205e32e63b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-92acd71111dcf543e771.json",
+          "bytes": 5325096,
+          "sha256": "583a11970b8e2f8d6ef57aaad300bb48a657851ea2df386cdbfacb937a2a4bf6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-92acd71111dcf543e771.meta.json",
+          "bytes": 404,
+          "sha256": "9877f032dab3e5a4a7bbc42633c3ff539846dc6dca6b626414903d074542546c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-93c34ba6e6273d2436a2.json",
+          "bytes": 1609234,
+          "sha256": "7ff917514b2eecfdfbb5c4db38e3770e2b04f642592101842dd058af20fe6f63"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-93c34ba6e6273d2436a2.meta.json",
+          "bytes": 404,
+          "sha256": "ec6eb0f161fa115d4b24e2bd26d9d23a376b6c22d1c098e866c9eeacec8529e4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-94f24c0e5b12db835552.json",
+          "bytes": 1556138,
+          "sha256": "61181fe034eaf93259b2a2c32d0aad18463887eff333df98a74d9e5e456f680c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-94f24c0e5b12db835552.meta.json",
+          "bytes": 406,
+          "sha256": "4570962d49df2158781f795eb1ba1f87c679d7195effc8027cb56157bc99a13f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9a286ddba33083a5828e.json",
+          "bytes": 661978,
+          "sha256": "2d9b41e9f0b47d28e3d43be992b38cdd8cf54bf5d5c67229d45295f1e5334ab8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9a286ddba33083a5828e.meta.json",
+          "bytes": 406,
+          "sha256": "12782169d316f4aa9346b1a8cebff44ea9a44a4b1546229a1fef7178a47155ee"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9ac15872141ea47b169e.json",
+          "bytes": 2087177,
+          "sha256": "3f141bd40aa39f915be679f4cb5519613b8af745dc206210d0384af81768ea46"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9ac15872141ea47b169e.meta.json",
+          "bytes": 404,
+          "sha256": "788763b5d91d552b5580560d46a59a619c4f1b318faeafef2a0ce194139776a8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9b4a4dba05a77b3793ae.json",
+          "bytes": 1375234,
+          "sha256": "2603a50229ce390000ebec4b9db1c26ad56d3ba7bccd49240dc97e14fbce4ee3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9b4a4dba05a77b3793ae.meta.json",
+          "bytes": 406,
+          "sha256": "c55e6c36feb1e071ad71bfe8878d183322fbecfa6ad9f3ef49e2ac878d486f82"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9c64e3c8dfd7efcf045e.json",
+          "bytes": 1221852,
+          "sha256": "056faa22ebd3ce782af1f45326c3e998395bded71dc3933a7f8c2650a180d0d6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9c64e3c8dfd7efcf045e.meta.json",
+          "bytes": 404,
+          "sha256": "7b8dd8f62175ce39ea4c388c1842ef5dc31b79e4e9789231848e1c7d27b9b0f8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9e9da30203ec19e64769.json",
+          "bytes": 1271701,
+          "sha256": "3984934e9156d7f20c918eee5134f079fa829c429a40616db0bb2b3b599eb86e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9e9da30203ec19e64769.meta.json",
+          "bytes": 406,
+          "sha256": "ec0e2d3ccab8a67e7b4d5409dc70de7ec63bd8211f3e7a9c432c123be0839df6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9ebddb490d9e864ae3f8.json",
+          "bytes": 3307632,
+          "sha256": "13801cd2b4238dda39a9427c45841db34ebc8ab7471a74f116970275313e5e13"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9ebddb490d9e864ae3f8.meta.json",
+          "bytes": 404,
+          "sha256": "17eaaeaee96f23b23224d95c0a1987775b1f666cd467153eaa4082f9b877537e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9f6a8947cb43ceea2e09.json",
+          "bytes": 1836365,
+          "sha256": "c6051861f661c3864a71c2b1c4578255f5e466b4ec48d21585dfdcb78917896b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-9f6a8947cb43ceea2e09.meta.json",
+          "bytes": 404,
+          "sha256": "646656f5f0af24d944e73f5ef55d90bc1f4c74c12fbc739b0ea631eb5c85938c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a128f919387c8c8123ab.json",
+          "bytes": 1932021,
+          "sha256": "dc2a4bf657d5129213004083ffe2818c127e332cce305314c60207309510d950"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a128f919387c8c8123ab.meta.json",
+          "bytes": 406,
+          "sha256": "94f9cbc59be10f7e10167250b5e9ef90f8aace8dee32052fc83bc62b476043bc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a46992bd6faab3d28206.json",
+          "bytes": 880414,
+          "sha256": "a54e5125471063fa69f75f17f3f923f2fde49628dfa1edfb4067335586ad7ccf"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a46992bd6faab3d28206.meta.json",
+          "bytes": 406,
+          "sha256": "59865959760b4430ea2ee2fec043f9ce35779ff084ce1d69813e4d64475f153c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a50bfaa863f451de10d6.json",
+          "bytes": 980536,
+          "sha256": "46dd37ea268708b9de8c4ab6aca185d3cb9f179db830c631360e8286b8a8d50b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a50bfaa863f451de10d6.meta.json",
+          "bytes": 404,
+          "sha256": "df9b203380c55d0bb8950a2d92dfd42456a6cd6e4932ec0f6e0863ea69849a31"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a53c7f5fc9388e6d4272.json",
+          "bytes": 926575,
+          "sha256": "2ae21d3db897c9b561703e320c3041d442941527bbd1dba3ec6f5837c74101b8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a53c7f5fc9388e6d4272.meta.json",
+          "bytes": 406,
+          "sha256": "971f79166e16408f4a6cccac605f395187d1acdccaa146b0f9d18007287f4997"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a550fc09301973141af8.json",
+          "bytes": 1681041,
+          "sha256": "f58c1ef66f6571ed43b90c4d9fb52e46442ae760be4c95bd7c6c5826148f05db"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a550fc09301973141af8.meta.json",
+          "bytes": 406,
+          "sha256": "a96aed06cbce174b3f698955cf76b24f8893213c58e9ac8596fc296772d4214f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a7f902158d6e1b3a8668.json",
+          "bytes": 3881064,
+          "sha256": "f4943a14a073923282159e005c047c5a8afbf319905e65b4b0e8cfa7b98ff004"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-a7f902158d6e1b3a8668.meta.json",
+          "bytes": 406,
+          "sha256": "84b81c2238aa2d59e07b2aac0e268ac6830ba3a95f24b843278f17e333db759c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-aa4e5720f7b969f8179f.json",
+          "bytes": 2493827,
+          "sha256": "788f50638a10c5d852e5bfd59fbf63e6cafc852f8d60b95eee0a6e3ec324d8dd"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-aa4e5720f7b969f8179f.meta.json",
+          "bytes": 406,
+          "sha256": "2ee2004dd85ddda59adfedbf88d2dfe04a8e27f7027b4424d8a46146c41a6c8b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-aa9b2ccabd124da75941.json",
+          "bytes": 463492,
+          "sha256": "adc1eecc60149568b9db997791779368f6565420cff4c82f21150ccf20bbe3a5"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-aa9b2ccabd124da75941.meta.json",
+          "bytes": 404,
+          "sha256": "76337620ea0e8855c7997ca64203b55fb3b3192b88d975e20c2b8f60920b340f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ab8afba264b3c20b8d48.json",
+          "bytes": 4659471,
+          "sha256": "5970f7888fc330e6fc5efba7ada2285e3eab99d7b03773d0dae12a25b9bfc5ee"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ab8afba264b3c20b8d48.meta.json",
+          "bytes": 404,
+          "sha256": "e8c4c0d90d58d6ebe2deed59d00f6b0f74d39d82eaa895232f898c2e64334bb8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ae9058c9176e35ab39ec.json",
+          "bytes": 11121530,
+          "sha256": "70d3ab96bc8eee4b31783640749e35cb2b5cab6b243006520a7f196b4e1ba26e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ae9058c9176e35ab39ec.meta.json",
+          "bytes": 404,
+          "sha256": "a8cdf5427ccdda16414df0d8804a3cf2bcc58903224e2b5fa46f029f773af12d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b00d7fdeff8577c26785.json",
+          "bytes": 246625,
+          "sha256": "89244d8e457923c5945da191a77ac14caa1645d34e2fb40c3664c2e074598261"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b00d7fdeff8577c26785.meta.json",
+          "bytes": 404,
+          "sha256": "0e10768e8c9507515a3677cd29d20779fed64b98df39c41d4b573aa2d7784830"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b23ad530a86c385a85ab.json",
+          "bytes": 1287866,
+          "sha256": "10c38494a29eb54371a1d5e0ea4e710369eda948b474cd56e1118a7087b2da35"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b23ad530a86c385a85ab.meta.json",
+          "bytes": 406,
+          "sha256": "96f66bc6be6cf0dc2191f7fa0c72af8fecbcb888d8bf98f9cf07e3fb6e8a7531"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b2b54544170aa3286117.json",
+          "bytes": 893668,
+          "sha256": "f631240769d1f54c8afd797db7999fd538e6b8983af52b630a77216dc57fbc57"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b2b54544170aa3286117.meta.json",
+          "bytes": 406,
+          "sha256": "753107b62cf69a0b8e21d99c12e2bcd9f13190f3daa5a0bdfc7af843bf89b964"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b5cb9153e5f494e0fcd2.json",
+          "bytes": 4530623,
+          "sha256": "731ebfa3a7b5b0e4788d9d81189162c042875ef12d9b2a489298c305f41d1e2c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b5cb9153e5f494e0fcd2.meta.json",
+          "bytes": 404,
+          "sha256": "d5b828e8fd1f45b3ffa0da4f9f7fd4eb836cc43ceeca577bddf30e02188b9f07"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b6ddd0de784021cf9004.json",
+          "bytes": 365052,
+          "sha256": "f5306fdd99417a5c72b358288757fc100241851e0946c3011532e2f1895ce15e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b6ddd0de784021cf9004.meta.json",
+          "bytes": 404,
+          "sha256": "e45a7e6249f28a7c16b4c40be0d92f8c4a3fbd503ab8bf7a87bdcbbb70128d2b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b746513f17232a314e1f.json",
+          "bytes": 3123285,
+          "sha256": "d4a6b2864594acf8cdb4b63730f99d3b3510e85b098031b239b50f1213ccacda"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b746513f17232a314e1f.meta.json",
+          "bytes": 404,
+          "sha256": "e90467709556737cd4fb5f4b25545e02dde1eeee2b75ff23a9d55eb0dfbe4156"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b9e5eaf50ded0280b47d.json",
+          "bytes": 197969,
+          "sha256": "405b2d6d2ff4c634671afe7ee22b8e4c829d1cfc3016ab26349c174ea09f6ca3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-b9e5eaf50ded0280b47d.meta.json",
+          "bytes": 404,
+          "sha256": "456b9c5e8580bb831da69ba714f950ddf6e223ca23bd5b7ae406b53d4dcfe0fd"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-baa9342413768bdeb980.json",
+          "bytes": 1126253,
+          "sha256": "532a8a5c76d3d98931ddfa389549ea46f7f415f9bca0359028f45df3384095ed"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-baa9342413768bdeb980.meta.json",
+          "bytes": 406,
+          "sha256": "2146bc018b869900b37fe93ca7ac8c0b682762333160cbdde823244802990d81"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-bacb55bc1c5095fa4c8b.json",
+          "bytes": 1296482,
+          "sha256": "56b29e15cf78c3bd92aa2a30a94c035f6e08cae2db46f6676c129251b8cec511"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-bacb55bc1c5095fa4c8b.meta.json",
+          "bytes": 406,
+          "sha256": "e7398c055b738fa3db2350b25e413c8d74863b906f30bb6b16ca028ac6f296a3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-bbb98d88a90316e3268d.json",
+          "bytes": 6103151,
+          "sha256": "6e0fc107d88f2a1156160ee1b63697eba28e5556bab67f4a0df48e35bd893992"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-bbb98d88a90316e3268d.meta.json",
+          "bytes": 404,
+          "sha256": "da8c9927b5df790cde154e715151ede4636d66e439ef577afc636012b68b3111"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-bd64de3f6d7357e148f4.json",
+          "bytes": 1604724,
+          "sha256": "8751e68d26055bcc8dbdc7e1536148f7c1ab95149a84026292295187a0105f7a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-bd64de3f6d7357e148f4.meta.json",
+          "bytes": 404,
+          "sha256": "b4e1a123d2601936806261a9f0d8cb31604feac75c7eb45d8d525cd036ab1519"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-c10bd5c0ffbdb3bbca19.json",
+          "bytes": 1840182,
+          "sha256": "0f272d05bdb17080aca1a29bff4ab99c953136082cdb29a34884f53740d91ec6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-c10bd5c0ffbdb3bbca19.meta.json",
+          "bytes": 404,
+          "sha256": "118b5359df059bcb96f2bb7b6e42db7d882305de2828056964c3d06659e5dacb"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-c34c100e8e517e865128.json",
+          "bytes": 1942229,
+          "sha256": "1c426a4361293b889221c22095744faaad3de55aa4d654a46257a423cd9d4106"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-c34c100e8e517e865128.meta.json",
+          "bytes": 404,
+          "sha256": "f2ce1cb0720dc6f852e38fc7239bb5b1e6f92b33f65f0ecedf7e3c423c10da20"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-c381bd3b45b38df809de.json",
+          "bytes": 579276,
+          "sha256": "a85408c33dc02aad558dff12d192d6d11e2642984f496535ad8243b442bf2218"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-c381bd3b45b38df809de.meta.json",
+          "bytes": 404,
+          "sha256": "da7d3f51aee887ae3f621d180b9227614685c4363503aad6e5688845adc31db8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ca643e8bacc08e5cf9d3.json",
+          "bytes": 1277977,
+          "sha256": "d57cc0eddcb96730ff97e068d5bfe408af35f58274055c8be607ff7086c9f341"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ca643e8bacc08e5cf9d3.meta.json",
+          "bytes": 404,
+          "sha256": "228a58e24675e234c7e6b9e7523d668755acc2bca979add2aeb556e8caf0f091"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-caf88c4e1c736bd83469.json",
+          "bytes": 2075155,
+          "sha256": "ddea614c6d7eaf63084e42bf043c490330bf7679d2cb9b3a3163331ce67ac4d3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-caf88c4e1c736bd83469.meta.json",
+          "bytes": 404,
+          "sha256": "707ec7df95fd14659e62ee3e0877c9a0d591f59d928df8d75dbd4d75fbf11528"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-cb1f60d428acede372e4.json",
+          "bytes": 2657587,
+          "sha256": "4f90931f7eaf8412f0c0e1868741610f0644d26e0634bda78cec1b3253d88c2e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-cb1f60d428acede372e4.meta.json",
+          "bytes": 406,
+          "sha256": "d8ab97baf99ade7d9aa13a6a0b4d98d35e5f5ae73c132c561c3535d15987ca7f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-cc67cb9c2359f7e9dd46.json",
+          "bytes": 1508927,
+          "sha256": "378d91b37913306207b758298d4ab60749ff6febc18c3abfb7da0fb83c78e30e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-cc67cb9c2359f7e9dd46.meta.json",
+          "bytes": 406,
+          "sha256": "4fcd87b5c98ae008e9f8e90278314b843b2a241df56df95cb7c79a3d889ad851"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ccd20e605caeaa0ce627.json",
+          "bytes": 525450,
+          "sha256": "fda09df1dd2d59ed9a9531e90a68197b55a9adf26cf1ac78695aaedb07f6d478"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ccd20e605caeaa0ce627.meta.json",
+          "bytes": 404,
+          "sha256": "94129f2deb59896550f7dcc765eb5efe937e21c15a2d6378e4ec49b76eb7e8e3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-cd053f84a8b4860e6e20.json",
+          "bytes": 2145040,
+          "sha256": "c5b5a37720a0b08d933deb0bd9577b8c31cbb27202f785434ff1787213d26afc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-cd053f84a8b4860e6e20.meta.json",
+          "bytes": 404,
+          "sha256": "50895580db78559855a0dd4983f12c6df20e4551e45d25e844b98502650cc157"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-cdd5f9f904154e0c9e94.json",
+          "bytes": 1669060,
+          "sha256": "eb5a40c3c7d27ae07b0344d7948d418d97e9415b9d31f3b7868c62c42d94c29f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-cdd5f9f904154e0c9e94.meta.json",
+          "bytes": 404,
+          "sha256": "13e31fd74f1adb8418e9956cb162b5f874aa4448eae15f4acf7df5750d9e5fb2"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d0fed4e62f8eabe8b896.json",
+          "bytes": 746931,
+          "sha256": "f16093814f3e6d87cd50375a88e04097d3957ddf7c156a393936020ba90aa439"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d0fed4e62f8eabe8b896.meta.json",
+          "bytes": 404,
+          "sha256": "aff73213907f65dadf483724232e27c8431af9c1441769e7c6d36d42529b9a8f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d1a256a8d80649dd2a84.json",
+          "bytes": 2331708,
+          "sha256": "186b2ccedccad55584dae3a90be3063ece2c2980bf8138ff6db0f5b127786bba"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d1a256a8d80649dd2a84.meta.json",
+          "bytes": 406,
+          "sha256": "8cfea016b7dd9fae7429ebe131024781cacde038d58e4c96e6557ffacfb66b82"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d20622a5cde8a27083a8.json",
+          "bytes": 1609132,
+          "sha256": "b54cbceb3e971fbb11c40394686741abb352a2c7a0caba4af6d7df3619564965"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d20622a5cde8a27083a8.meta.json",
+          "bytes": 406,
+          "sha256": "d3bb8835e6899e126be7eefe5e9dd4609ab2e1a39680ad29cb998f64abed9f50"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d5bdc98619b343eea150.json",
+          "bytes": 2464391,
+          "sha256": "7fd78b101f9a8c82b1418b009d3e9f9a0446c19cc9b05a4c77702e6d4b452289"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d5bdc98619b343eea150.meta.json",
+          "bytes": 406,
+          "sha256": "4021bbdc0c8ee857dc56bb8b648f5640bf12be5c22305b6fd3626373eb40ea0c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d896ed228faf8a179f51.json",
+          "bytes": 5192159,
+          "sha256": "a267dc8dbe427456628ae185a15b77b111cf1ee996bb7ba5a6ed86d6b27b54cd"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d896ed228faf8a179f51.meta.json",
+          "bytes": 404,
+          "sha256": "1166a0b2c309fcc198e8278910a06d159730b31e0335c90eb3861028c032119f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d9f37b8e27bfcab2c454.json",
+          "bytes": 1115483,
+          "sha256": "73359ba663aefc9360a23cfbff154d44c0ebd4c116b2fae5180e07c59743eefe"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-d9f37b8e27bfcab2c454.meta.json",
+          "bytes": 406,
+          "sha256": "adc5db17d9beba0f4d429e02d40bc91756262c7ca7ffec5553944db3d03363cc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-db8e66333d160389797e.json",
+          "bytes": 3876190,
+          "sha256": "12d143148212f7ef6c9f6b659cfd043a531de5e60ef83fa25540b82a3a4591f7"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-db8e66333d160389797e.meta.json",
+          "bytes": 404,
+          "sha256": "3360e34b31e1a67f45b34359ead62c6542ee26366932e456f42fd2ba6eb007b0"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-dc50dcfb8348cafc5a5a.json",
+          "bytes": 3734770,
+          "sha256": "b8375c7a8bb441ace9764e00183255824003548a97303c6fb52d20960731c5f1"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-dc50dcfb8348cafc5a5a.meta.json",
+          "bytes": 406,
+          "sha256": "510152905e241b53c10c237321551a0f57cc089ac0cf4e2ef85de511608f6ad3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-de6f906b4f51a6081138.json",
+          "bytes": 2625299,
+          "sha256": "a20969a93102ca42cd5cca7fa9949a7d603a1aba242052c4030123f0b875d009"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-de6f906b4f51a6081138.meta.json",
+          "bytes": 406,
+          "sha256": "6b4801c941d5097d34c5c420b0e62a36f0033fc89c3074a6ad97b5102a85865c"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-de853295d9e40e5c14f3.json",
+          "bytes": 1180168,
+          "sha256": "995d173ae9f0571d0be9b034ddce91aaa6519f78a1f5a2ef2825a2bb3179b625"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-de853295d9e40e5c14f3.meta.json",
+          "bytes": 404,
+          "sha256": "baa41b9132da3a261bc42c0f0945d3fd9f3f8a5d369abd290c0acfcdb6706d99"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-df0b307abc7a83e0f0e0.json",
+          "bytes": 5034565,
+          "sha256": "8ca8f1ede891a8a3ca7d5b59b86983243ee3f91662602f9229ca10a00bb36fca"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-df0b307abc7a83e0f0e0.meta.json",
+          "bytes": 404,
+          "sha256": "6058e8c22a4d6c18f49faed2043c53e13f1be7c14f44d4204c128fdac58f3277"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e0995b5b0bf49b4ab658.json",
+          "bytes": 1904581,
+          "sha256": "899ef1a128f6cab38f932ee6b7fdc0251f7b61380280fc83e5917c423857f57e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e0995b5b0bf49b4ab658.meta.json",
+          "bytes": 404,
+          "sha256": "4d0446de9721708356a30fbc530cc41b6e8b6c3c0929927bf26f4a67a97ba7b9"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e1910cec35b8bcf3a3b1.json",
+          "bytes": 217423,
+          "sha256": "2af7d248d4159963e5f8fce6a07ff52fcd179b44678798252823fd724fdd0a61"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e1910cec35b8bcf3a3b1.meta.json",
+          "bytes": 406,
+          "sha256": "fda8bfe630e3f9aeb2e7598a58ec9c8f8a747843aaecfd4cf90bc25a752e28a3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e1b460ef44d784682d60.json",
+          "bytes": 1739754,
+          "sha256": "9647da7e05c1d9a1305fb6ef6715fdfb2da06fb261a8704133ff2ed6a3ce059f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e1b460ef44d784682d60.meta.json",
+          "bytes": 404,
+          "sha256": "72e4e67fe82427b268543027f8c7847652c2206494dd6397214fc2e48f3278fc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e1db8cf8a7fe3ccfeecb.json",
+          "bytes": 4518468,
+          "sha256": "a2f4f45a3a366ff6353ba02997e2c0c789d1fe059eb195427ad3f56cd057276d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e1db8cf8a7fe3ccfeecb.meta.json",
+          "bytes": 404,
+          "sha256": "ce2205a0fd1b1bfcea8d2b9a3e3efd2bf047b17104304f3a680ec0146e8a4999"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e23d251ba8029471b9f9.json",
+          "bytes": 985440,
+          "sha256": "ccd1dead248a2592aded8d97bce55528a4bea3f0912f192fb6ed0ae7295ee2fa"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e23d251ba8029471b9f9.meta.json",
+          "bytes": 404,
+          "sha256": "34c55e4592e7fea7260bfc4146127a2b814237d47ddcace7f2a67e24ea0cc241"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e282489f9d9e47b00261.json",
+          "bytes": 1769322,
+          "sha256": "d4534d5bf63d772e50e7004ee4a0db9736dd95dfa577ed6c00dea54189b6b0ec"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e282489f9d9e47b00261.meta.json",
+          "bytes": 406,
+          "sha256": "96884e9f51eb0695a9455b2ee55d311411eedd6f815240c82a7f693aa3b40804"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e3833e38f0658bed338c.json",
+          "bytes": 201146,
+          "sha256": "e761885861b2868ae2664f420d410b0a94096b18e8ac619639fc2737998d9895"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e3833e38f0658bed338c.meta.json",
+          "bytes": 404,
+          "sha256": "b3c20e148189622f70e17cbf46d79b7e9742c45c94a17efb2d67e992ffd2d927"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e4dd2cd3ee5ac4effc78.json",
+          "bytes": 870198,
+          "sha256": "d75fca5254447ed39944cf845ea3fd78c72a505aca37a06dfeadc7a18aafd0c5"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e4dd2cd3ee5ac4effc78.meta.json",
+          "bytes": 404,
+          "sha256": "ba9aac2934b2207de0efc52b5d26b34bc2473bfff0bab3141cf790f26e08a414"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e6ea57e2fa2da0ee36c1.json",
+          "bytes": 2197502,
+          "sha256": "2d9c52b8b74f950f0e7ea3a40d9746ac0db4a61b4e5c4b6cd4938da76025bffc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e6ea57e2fa2da0ee36c1.meta.json",
+          "bytes": 406,
+          "sha256": "6efba1b4d6227364d2240848a8612a7dfc9fadf8acd5fab8ad8c4fcfeee2e5d8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e75b8130e3f83c659fd9.json",
+          "bytes": 1868901,
+          "sha256": "6610d4d27b7aa3dfa7b6c5fd144857271d4a366354299c950aa687d4cad2c2a6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e75b8130e3f83c659fd9.meta.json",
+          "bytes": 404,
+          "sha256": "f565e15d9f326b12bc68a75db08667142d576e7c4b7dfe5eeddb8f0caaa22915"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e8089fac35d3721e5467.json",
+          "bytes": 161269,
+          "sha256": "09d2b4cace73037f2f1bc819abbfc9def4426e7e7185b39fc4cda3735cac992a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e8089fac35d3721e5467.meta.json",
+          "bytes": 404,
+          "sha256": "3bf2fb8b3ce4a98c31ad105f25c60090dca6558cea4bbc1b5c4bd7c139500ff8"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e81583b3ae4404d0bfa9.json",
+          "bytes": 4072601,
+          "sha256": "1b634d0ded8506bd4be86c4b708bec800c1cd10113c2f2974420e198f38a4f85"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e81583b3ae4404d0bfa9.meta.json",
+          "bytes": 404,
+          "sha256": "26f7686d92ba7145f5bb1512c9eb74f4798a6716ff6c39a0f691b15f75f552a7"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e82708d22154600dea11.json",
+          "bytes": 3444615,
+          "sha256": "61a36ea2b7189a00e5041f77c2d56dbd6a3e227d5da92183e910ef6f68b4f03f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e82708d22154600dea11.meta.json",
+          "bytes": 404,
+          "sha256": "22fb5aa07d76f7a60a3dc3b574a30fc7f7004e616a839638da76cffe66b4f573"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e8ff984b0a1fe1769720.json",
+          "bytes": 4083048,
+          "sha256": "7e28e537a7a9abcd73b08d40f3c863d8799380cd7eda784b70faad9fbf8e17dc"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-e8ff984b0a1fe1769720.meta.json",
+          "bytes": 404,
+          "sha256": "7265c5748457190eb310650cb5ca028dc6baaa177aa43190aaafc5043e52f044"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ebcefdef3e24badb59bf.json",
+          "bytes": 1100958,
+          "sha256": "31a9cfc19777d064cb8de9db141ef3426f56e5cdc0e4b9237ab979a77afc29df"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ebcefdef3e24badb59bf.meta.json",
+          "bytes": 404,
+          "sha256": "09bf406e1bb0a2dffe128dcd1e3dccd05d59e904085943682cd882f6868c04f9"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ec97169cf90648bb9298.json",
+          "bytes": 3314483,
+          "sha256": "6ea56c9c6f0fe190de183d53b50b902dfcdceacc16fcb6a56ab00968f63915a0"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ec97169cf90648bb9298.meta.json",
+          "bytes": 406,
+          "sha256": "4631bcfe26ef92d5406b339e7956eae7ae917e61d867b561259ed88a7a6a1dce"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ed40ec9950bb79f57f50.json",
+          "bytes": 4633431,
+          "sha256": "d50b95a3400e4a9982a9a04200d117eec15f2b18a4c08f92e0852f0ae805660f"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-ed40ec9950bb79f57f50.meta.json",
+          "bytes": 406,
+          "sha256": "c3e7fac4c15f6b1314d62b7f7965efc37bde88462f607559bb0b0c777e3afa3b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f2839e9f5fecefc9d39b.json",
+          "bytes": 1653672,
+          "sha256": "7df8ad950e54cc3a929e50ec4ab4514c6fc2c4e271766da50fa8e792aaa94f1e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f2839e9f5fecefc9d39b.meta.json",
+          "bytes": 404,
+          "sha256": "fb6244d1c7a65832a06909d4e059e3c968d8f5b0c4c3cb7ad32f7b858f2c0cde"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f405818cd3e4e72ed8b1.json",
+          "bytes": 651384,
+          "sha256": "d18b70fcf28aabc5238437a4ab1b3b6ab01be83c8a10c70e05c8c5eddd76f8bf"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f405818cd3e4e72ed8b1.meta.json",
+          "bytes": 404,
+          "sha256": "d62dfdf91c5b12d9ae5dbf54bf9907769b727a7801b3ef61fb69e05e5ee7ce3a"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f5e2f48c5fef3ad97736.json",
+          "bytes": 10248896,
+          "sha256": "f2bf3b9f003434703f64751e77ec2e59a588637acb965754e133c73d9733ec0b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f5e2f48c5fef3ad97736.meta.json",
+          "bytes": 404,
+          "sha256": "7afa9b859956d74ce046e1993ff273501e663c02bba76cdf074ce37a79a2c5b4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f6bcd1aec56e9cbc5dd5.json",
+          "bytes": 92142,
+          "sha256": "7baca87667b6e7be2627ed9a7133d262c9ac01563bddfed93ba11add58a9d649"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f6bcd1aec56e9cbc5dd5.meta.json",
+          "bytes": 404,
+          "sha256": "e6bb3848f32e20aad1f1d486e2b42f07d8a0f8c8b09b93b3aac41e90f112f1c4"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f91aeb5290de988ba214.json",
+          "bytes": 2879516,
+          "sha256": "3e4028d46095fc10b36d0d0911a26b4f48dc3908c1ed9da75385b9f961308b56"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f91aeb5290de988ba214.meta.json",
+          "bytes": 404,
+          "sha256": "4262b83709d2401ccd15bef35f4306b5c097bf9ae302994d28907eb1e93b894e"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f9c49854bcc0d208dc9a.json",
+          "bytes": 245991,
+          "sha256": "aa8b363ca7adba1fbc0e680ed8724cf1fc9d9e9b2473b1c0ad09f372c3a13b35"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-f9c49854bcc0d208dc9a.meta.json",
+          "bytes": 406,
+          "sha256": "66d433dcd9b5d961ea643faa9c94a95626c85fc223936cfa0d0867599e624930"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-fb9e442169ba2a84e010.json",
+          "bytes": 1736640,
+          "sha256": "e8ed706b224e0a710c083a2355c3dc8ea8cae7e6ed250e62991e589e99934bab"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-fb9e442169ba2a84e010.meta.json",
+          "bytes": 404,
+          "sha256": "64fc5fec1ae19dbcfa3fadb74f0584968a55da9d29783547177df1487daec310"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-fc1909604f3681092fa3.json",
+          "bytes": 2056316,
+          "sha256": "f98d794c219733062451d6fbe1ba6c20584a340c2140184764962e70d9ef52f6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-fc1909604f3681092fa3.meta.json",
+          "bytes": 406,
+          "sha256": "f7d2f77aa2cedbb1667d35fafad75579129cbe8f17ae97d566a9957efde397d3"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-fc4e73c8b44bed5c4ba9.json",
+          "bytes": 2001291,
+          "sha256": "58c51ea9bd0df5cee1a4378b03bff1403bbf8a4c81be0da4bd6e831af3178a75"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-fc4e73c8b44bed5c4ba9.meta.json",
+          "bytes": 406,
+          "sha256": "61b51b39fba398e3b981c8052a0e4c53cb2d2ed09a2a68650ae15a4ea671ca8b"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-fe8b739976fcae99b4a9.json",
+          "bytes": 1478132,
+          "sha256": "1a9fa658bf2c5a49de8b3a79a8297fc4acdd3aab0a2a4eacab982d55824ec28d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/relations-fe8b739976fcae99b4a9.meta.json",
+          "bytes": 406,
+          "sha256": "24484bea14f31c79635e19345565a61cad829c5fd997f7359941ae13f0f03b63"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/tanggula-anduo-ziduo-refresh.json",
+          "bytes": 1023992,
+          "sha256": "b1dc3b453a870d2207aff09264a1cd3edea64f55ccc9a6b982d6a5c3448de6d0"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/tanggula-anduo-ziduo-refresh.meta.json",
+          "bytes": 391,
+          "sha256": "67007024cefc745e0f4388a4e93fec37ce58851c012ed8b452ae18ea5c8a87c6"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/tanggula-qinghai-seam-refresh.json",
+          "bytes": 255625,
+          "sha256": "60acf72d12eee2687c740d2c5342c272ddccd3b2b614991614d5005c521f2a78"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/tanggula-qinghai-seam-refresh.meta.json",
+          "bytes": 392,
+          "sha256": "892b031ffb85079093d53061de12dc5b4981c60ec7fa6d604613aa7adb2eb91d"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/tanggula-qumalai-refresh.json",
+          "bytes": 127761,
+          "sha256": "7afcd582a20167b98233df6a1176a34b70bff100100ab7426d4f94640396e647"
+        },
+        {
+          "path": "data/boundaries/china-osm/raw/tanggula-qumalai-refresh.meta.json",
+          "bytes": 270,
+          "sha256": "e172a81fa67beefca579711cbb37bb256c40f277c5d66e30e3e064cc7dc574da"
+        },
+        {
           "path": "data/boundaries/china-osm/references/aksai-chin.geojson",
           "bytes": 111697,
           "sha256": "92bd35545d5b7fa99af37f574a8500e3d73f21a1882e3f5cf9d8967b54aeefe8"
@@ -313,10 +2468,675 @@
     },
     {
       "group": "research",
-      "file": "fangyu-data-research-osm-20261004.tar.gz",
-      "bytes": 6806268,
-      "sha256": "8716dedd00ace03ca5a08e2fe0dedbe4603f3ac59cb84b83a9fe58422ea76757",
+      "file": "fangyu-data-research-osm-20261009-v073.tar.gz",
+      "bytes": 427685907,
+      "sha256": "8935e118d5eb319d0911fca8f8560c5f4463528f4488e150844aad9702c19ad8",
       "files": [
+        {
+          "path": "data/boundaries/china-policy/admin-options-audit.json",
+          "bytes": 3377,
+          "sha256": "af8001a18dd203c01594992062046685faab90d004cf459204a222de7ff8661f"
+        },
+        {
+          "path": "data/boundaries/china-policy/applied.json",
+          "bytes": 41729,
+          "sha256": "c3f3fcf60ce9bf443ecdfcf5f27079a84a625fe6f4154428050716d07d36e519"
+        },
+        {
+          "path": "data/boundaries/china-policy/audit.json",
+          "bytes": 41594,
+          "sha256": "4b500be9563a2f9950d36b605301466c251749832f9382894585b50382d32f8d"
+        },
+        {
+          "path": "data/boundaries/china-policy/coastal-coverage-review.json",
+          "bytes": 9832,
+          "sha256": "d7d922bd603cc60a340693d3081a43fdcba663e1a00238c9e4bb90b950d0d646"
+        },
+        {
+          "path": "data/boundaries/china-policy/coastal-mask-report.json",
+          "bytes": 30814,
+          "sha256": "241eb806059db10abc9aa35e8a7aad522e903e3bd8a6939c9942930d1f54077f"
+        },
+        {
+          "path": "data/boundaries/china-policy/coastal-pending-edges.geojson",
+          "bytes": 2826,
+          "sha256": "855a5ebc0254e872972a3545346a39832f288d25ccf6400d1be43ced5de3234f"
+        },
+        {
+          "path": "data/boundaries/china-policy/coastal-tile-precision.json",
+          "bytes": 393,
+          "sha256": "9596c2ecc93ae1a3647f1c2c8f33ba2184daed18e2ca317e2c4500fcc2056855"
+        },
+        {
+          "path": "data/boundaries/china-policy/coastal-unassigned-land.geojson",
+          "bytes": 98552,
+          "sha256": "a8bb6de4e7f476d45f629448376f95d07584b2fcc3c94b9d69b332b3744a9dec"
+        },
+        {
+          "path": "data/boundaries/china-policy/decisions.json",
+          "bytes": 1405,
+          "sha256": "ebc5a88d3045f84eab68e37e60484d52afa5bed647a0083774b1570112ce2387"
+        },
+        {
+          "path": "data/boundaries/china-policy/evidence.json",
+          "bytes": 37999,
+          "sha256": "276a34430a51a2c690ae766750da73ffddd8147d91952a1b6a45ba2435ca5177"
+        },
+        {
+          "path": "data/boundaries/china-policy/frontend-coastal-acceptance.json",
+          "bytes": 15128,
+          "sha256": "eec51bc8935a650e88b293d5d0add2d85fb5efb1ba6bb5411b7acd33abf3bfa9"
+        },
+        {
+          "path": "data/boundaries/china-policy/historical-removal.json",
+          "bytes": 776,
+          "sha256": "c190363f40786deec56acead8a8ef12898d48d689e71862e46a606ff32f4bb5a"
+        },
+        {
+          "path": "data/boundaries/china-policy/land-mask.geojson",
+          "bytes": 26690154,
+          "sha256": "3dcb03ef68d9cbdb6aac1b7877bb9c5c74f4910b1f4cc4b9cdf1bb3804238ea8"
+        },
+        {
+          "path": "data/boundaries/china-policy/osm-land-outlines.geojson",
+          "bytes": 26835863,
+          "sha256": "d3a0e8f2526411a107e9afb1cae0dd0375c00c04834571bc56d51c75877bb07f"
+        },
+        {
+          "path": "data/boundaries/china-policy/published-overrides.json",
+          "bytes": 101849286,
+          "sha256": "fe869c2d1be5b35a403ccfce0ef34e35d0dcc4371e7a418898d24e916448c04b"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/admin-options-base.json",
+          "bytes": 289743942,
+          "sha256": "dd101132b9528f6e104a454386e732946ac7c1ee1719c1d461f6f44339bfd79c"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/approved-targets-before-20261006.json",
+          "bytes": 2976519,
+          "sha256": "5234b117bc79a9ae3242ca4e23e16e8ebae2640191e859759dc6b5f3b31cd21e"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/coastal-before-parent-repair.json",
+          "bytes": 289766306,
+          "sha256": "f8a800a19397a3f1f48f80fe2130786005e5523b885c67204e8d98cdf906dcdd"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/coastal-before-parent-repair.report.json",
+          "bytes": 41142,
+          "sha256": "7fce684d8886cdc90dca62dca1933e215ad28ab4c38b5e0168a8d7bd337e36b6"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/coastal-previous-20261006.json",
+          "bytes": 267230739,
+          "sha256": "c3abbbbe55d373885d617d68af49193c63e899f7400c611bb897e0c3ad507e38"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/coastal-previous-20261006.report.json",
+          "bytes": 38172,
+          "sha256": "c8d4aa80e1fa70d573a9223ba403cb5bf487ab7e1ec69a23635ce8b571180fc5"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/coastal-previous-mask.json",
+          "bytes": 14198818,
+          "sha256": "42e2eabfa403965bf9b502594be70f851d7013727317d4a664aeab59b9d0f304"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/coastal-previous-mask.report.json",
+          "bytes": 1254,
+          "sha256": "a76f5ef9ae4a31b4bc470b05c7616e01cdb64bbb8d6f12ebe43361eb52624160"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/policy-before-20261006.json",
+          "bytes": 9729821,
+          "sha256": "568d905d1053f3e1ecc4196230ecc794d881694d2d67f9ff181a22d78161bb93"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/pre-coastal-base.json",
+          "bytes": 224229506,
+          "sha256": "00f076dee1557ae8c211cf25ce32e2b90e10ec48a4847c9c0951f0840f7003f9"
+        },
+        {
+          "path": "data/boundaries/china-policy/references/tanggula-before-20261006.json",
+          "bytes": 2863659,
+          "sha256": "28c58007dafa3d4af6ccac3ca62ae20cbc38efd36df976f8bb08412800ce926d"
+        },
+        {
+          "path": "data/boundaries/china-policy/reviewed-patches.json",
+          "bytes": 9585219,
+          "sha256": "716c83c60d67cae1eca084d021d93a525dd54d6f05b67f56c04b960685e9df2f"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/archipelago-member-bounds.json",
+          "bytes": 235379,
+          "sha256": "878736fbf4f301f6ecee94ad69ac5c86a5d25f706e45b19fee3ede787df146cd"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/archipelago-members.json",
+          "bytes": 85865,
+          "sha256": "67756359991609882cb2e45ee111aaaba8c5510dd08f820c2ad55ab1549dda33"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/caidian-streets.geojson",
+          "bytes": 26531,
+          "sha256": "bb72749d4918e2d94acd853804db51aa7e326c8587d7419cd701fee909383fbc"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-bohai.json",
+          "bytes": 4537289,
+          "sha256": "2f5e957e01c4678f0f1e5cc6bf78c32d8060a5be6aab72c3b32c93a854ab6ab0"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-fujian-north.json",
+          "bytes": 7603354,
+          "sha256": "746d094e0024f255082067117491b97fb991f98e47a1089b69a8ad47015d8b31"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-fujian-south.json",
+          "bytes": 8021558,
+          "sha256": "898c336190b311860cb56e6fb55697d5e4889b8d073059e87ce5c8a3f32a217c"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-green-island.json",
+          "bytes": 100917,
+          "sha256": "5acc611b901ac579f69945ecef78dbb17be6fce8d222f4a927e3d2a5ca429ba5"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-guangdong-east-slice-3.json",
+          "bytes": 160363,
+          "sha256": "59405cf517b1229b812f80a7bb1220af77f1c466534dc34399ac3aeab30ad64d"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-guangdong-east.json",
+          "bytes": 14806457,
+          "sha256": "6a54d22d6378d0f67ab5d2402a364290430fc548f784e20174b7441e9f412256"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-guangdong-west.json",
+          "bytes": 9621428,
+          "sha256": "6bdd5efe463631422ca9aa3a0297698f702a4b73a5d052ab2cb6c509a105f313"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-guangxi.json",
+          "bytes": 4341189,
+          "sha256": "2e96db621fdb735118f99eb50498ef153f54f85d05d33ad68965e0082b1d14d4"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-hainan-north.json",
+          "bytes": 1542112,
+          "sha256": "bdd85c2b8b6933a7eb6b70097069af8539c631c22a729ec24ac76728977d69ce"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-hainan-slice-0.json",
+          "bytes": 672538,
+          "sha256": "bc677738505019658d010217d1e9d30a747b83d6de04c5faff43e6fe7f9b4281"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-hainan-slice-1.json",
+          "bytes": 258629,
+          "sha256": "118b418c974df8c252547bd05c9ca0a5bc7eb99853b51cd5066e7962b36c3019"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-hainan-slice-2.json",
+          "bytes": 736577,
+          "sha256": "f220c9f0fb7ee8cd66de1ceffdc3d69de7e2ced19ae5c04feab97b1fe8c6e5ce"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-hangzhou-bay-slice-0.json",
+          "bytes": 3306949,
+          "sha256": "0e385ebaf91080f009037b21b0d87df802d79ad6b53d0207c9f6ae25e2206aef"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-hangzhou-bay-slice-1.json",
+          "bytes": 1938689,
+          "sha256": "87fb3b4967c4c1d9b4e1bd27806bd22b371b4a47cd220aa7cbd4e77fe5a2cf3c"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-hangzhou-bay-slice-2.json",
+          "bytes": 427932,
+          "sha256": "b32ea83560fa1fd826b5ef51e8dbe2503e707a49d323ac154d04cba63dd16a6c"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-jiangsu-gap.json",
+          "bytes": 108070,
+          "sha256": "7de484906e78f0b99b488fd7507582e932f0eed33700708363b48924a3b9d0e4"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-jiangsu-slice-0.json",
+          "bytes": 825506,
+          "sha256": "1f620553e4a24faee3f477acb5dd5c050b2fbbb5967c4c912a1bd07f0f767c2b"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-jiangsu-slice-1.json",
+          "bytes": 237176,
+          "sha256": "c566cf8fe08b57d42387400a0540e01e1324c4fae02f480f1694408cce36a7b8"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-jiangsu-slice-3.json",
+          "bytes": 45577,
+          "sha256": "4188e7b8517b2e3cd975e98669f65119853b9add20c1571f94a22ac7e5165751"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-jiangsu-slice-4.json",
+          "bytes": 102560,
+          "sha256": "94ed87bf5f17dad3a807cf7182f356c4f7dc686c6122dbe64b3ed157cb6312b2"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-jiangsu-slice-5.json",
+          "bytes": 142936,
+          "sha256": "07f6ee8e907f69b93fde0a93204cb03ee334e078d4e80c896b2473fad034fbbf"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-liaoning.json",
+          "bytes": 6973743,
+          "sha256": "455345c98aeb4fec13aa96c0aa830fb66ddc06e79f6da3ee4c6e58d0d5367a8f"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-penghu.json",
+          "bytes": 1051284,
+          "sha256": "9a48a08b7b5ca517c2da5b4629abbdcbd99cf4c49590ecd7184b573dcf75dc4e"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-shandong-slice-2.json",
+          "bytes": 1343013,
+          "sha256": "1c1bc90bf7a10a9b92e4ba54747f88124303ceb972f22c51f224cd8833823513"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-shandong-slice-3.json",
+          "bytes": 1790730,
+          "sha256": "271ddbed500fa9e12e5e1d3e59a873882a6d693d2763fd6e38fde96ad9e7d83c"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-shandong.json",
+          "bytes": 6459418,
+          "sha256": "5e38c0b0d28d79a99620ea05126181e75728063e6937a8e39e721db281282f39"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-taiwan-middle-gap.json",
+          "bytes": 258386,
+          "sha256": "95f3d05ebc95fa422c9541f5827fa4721639652262190ca26f0c7ccfbb623d40"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-taiwan-north-islands.json",
+          "bytes": 38342,
+          "sha256": "588abf95875ad6ab36ac91f324421e093632035c5c0ec88b95e3591924234ad1"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-taiwan-slice-0.json",
+          "bytes": 368553,
+          "sha256": "9baf8d16748b61c75d0579051260987e216a5f04c831e62c438ccac03f43000f"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-taiwan-slice-2.json",
+          "bytes": 602918,
+          "sha256": "e841bec254bef135848a87508da020414c092b902463911d7953d11b98e49f1e"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-taiwan-slice-4.json",
+          "bytes": 293706,
+          "sha256": "baaebe1feb61175492173cfe567ec217ea415b416353494ba5b15e877336be79"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-taiwan-slice-5.json",
+          "bytes": 1399115,
+          "sha256": "fd6c3d09960a35e309de3d637c375b33616bd0559cd39f8868e34ea72789842c"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-taiwan-south-gap.json",
+          "bytes": 570938,
+          "sha256": "adcc6cf4f260368acfd9f0dea3f722c1b1ce15cb54039593b8acd41710f1f14b"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-zhejiang-offshore.json",
+          "bytes": 104353,
+          "sha256": "250605bac97967cfeea251aea36983bda4278feb61d34c61cbffe8ed66824918"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-zhejiang-slice-4.json",
+          "bytes": 2998820,
+          "sha256": "86f91b6e1ae2b71f33bd7bff0c7d5a56b7171fdffd0458d19c38ac61f5d4f407"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/coast-zhejiang.json",
+          "bytes": 11579072,
+          "sha256": "387909373e8c690787ba476c50145385ae7f7a483068097d2013e5e7fca99ca4"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/disputed-geometries.geojson",
+          "bytes": 329427,
+          "sha256": "218dc3b6ec7beceacdac817698d14ef2aec39ee8784d02b5d816cd65fd36606f"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/disputed-geometries.json",
+          "bytes": 749195,
+          "sha256": "250c6cd60e8c9f833a2b312aeff78d73ba341d5a14bbf70b5880f1475a6d2082"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/heixiazi-rivers.json",
+          "bytes": 537207,
+          "sha256": "577b9faf32e32784edc01ed7efb25e47af7232f6c198e0cfc49bdb1c79fa22bb"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/islands-diaoyu.json",
+          "bytes": 536255,
+          "sha256": "5970f28bb182268a3ff1036eef4294599815534d3015d96b072a1751995a1de5"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/islands-dongding.json",
+          "bytes": 17716,
+          "sha256": "3f059624fcd5b575148aef4863ff99b97f77cb0f620cf704335c06f79eac9708"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/islands-mazu.json",
+          "bytes": 603767,
+          "sha256": "bdea52eb3bb281b592536f20cb5d9a76a26259894cfdda72deafb75ebdd82afa"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/islands-pratas.json",
+          "bytes": 30160,
+          "sha256": "5531ef52ac820ea40d4650da9d3cc0fe05ee4a2ccba6a099677343ffadac05f3"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/islands-wuqiu.json",
+          "bytes": 59398,
+          "sha256": "13a7ea921a17d2e54a57629e83b30dd399972b9ded9e401549cfc24c9f2fed3c"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/mazu-geographic-extent.geojson",
+          "bytes": 5743,
+          "sha256": "822bfeb54aa7f892e176d12ed2b290593b6c1972a94452a400f4d531d392dbe2"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/osm-full-17345597.geojson",
+          "bytes": 17284,
+          "sha256": "07c80ae8f7730af34e5e7dfee15c45ddd43e71c5914b52ac8ddbde903451f053"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/osm-full-17345598.geojson",
+          "bytes": 7088,
+          "sha256": "7f872fb34b1f231cec5162bb85843822e8bd304c45507c7104d051ce45d99589"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/osm-full-17345599.geojson",
+          "bytes": 3581,
+          "sha256": "014373368a700ab5d1e2e0a6b9c47163078da9717cf630554715b3bb5f429ef2"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/osm-full-17544813.geojson",
+          "bytes": 5149,
+          "sha256": "741e9c3f39023c941f0197fa13be81f78de4627d4f5331c986c3af6e9c14e974"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/osm-full-17544814.geojson",
+          "bytes": 28979,
+          "sha256": "9f717efcbe9e24dfdb84fc6a581d37745c798e2d5e4d1cfc55246d4412b214b4"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/osm-full-17544815.geojson",
+          "bytes": 6377,
+          "sha256": "4801a9856dca7aa58d639371f4346e1dd995398fa40c1a5efcbdf3dba2fd6752"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/osm-full-17544816.geojson",
+          "bytes": 7320,
+          "sha256": "05b608b3bd9d36283c4514bb181cb482320a38a0cdb8796bd24990591d26029b"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/osm-full-17544819.geojson",
+          "bytes": 9340,
+          "sha256": "625750acc44aa67e059bf46e37b374e2e9c4804f94322cd4af6a4ef8f05229a8"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/osm-full-8667530.geojson",
+          "bytes": 3509,
+          "sha256": "9362c1a4a17542a5f1dfb77b75c0ccd6d9889fd0f24fdb746e9407f0c5348bf8"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/paracel-coastlines.json",
+          "bytes": 182781,
+          "sha256": "3184ad64a4aae92634a1a0fe1621d2af193919ac7c01775223bf2861912883df"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/spratly-coastlines.json",
+          "bytes": 1463739,
+          "sha256": "fed0d4ad0f1e8914c8199bb65e11ea03360c537034ed103c181429719243f536"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/spratly-missing-coastlines.json",
+          "bytes": 7533,
+          "sha256": "d9f40a6d1c60c3e234ad458365e24f07200e87bdfe26ef2a115853eaf157fd05"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/statgis-coastline.shp",
+          "bytes": 1413912,
+          "sha256": "c3fdb4aa67b07407164907e3cb9bea99ca3112694593e740ecaa73bcc24478ee"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/suzhou-park-streets.geojson",
+          "bytes": 38853,
+          "sha256": "f7a3f09517428542956370662a14bd5834d22fe89051da40be4049abffae84e5"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/suzhou-park-streets.json",
+          "bytes": 157496,
+          "sha256": "1cbc44900143ce431bdbb09439d1a25901dad33e594dd4e6de64c6c984b71404"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/suzhou-park-streets.json.source.json",
+          "bytes": 970,
+          "sha256": "a261fd3708b1c4c418883e7fcd43456481830e9b9233fe1a223d27d3b287e377"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tanggula-anduo-ziduo-2026-10-08.geojson",
+          "bytes": 600435,
+          "sha256": "26eeba6dd8960ed1c41c6c4923722dc7bffb2a55d93c46e0e00b07f22c2ca43a"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tanggula-anduo-ziduo-2026-10-08.geojson.report.json",
+          "bytes": 1523,
+          "sha256": "6850f76a84400e97ab8d4c37fc297c931a1ae441c8933a9bbd7341ece76928f3"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tanggula-anduo-ziduo-refresh.json",
+          "bytes": 1023992,
+          "sha256": "b1dc3b453a870d2207aff09264a1cd3edea64f55ccc9a6b982d6a5c3448de6d0"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tanggula-boundary-seam-2026-10-08.geojson",
+          "bytes": 748389,
+          "sha256": "2a7d18330def60491a71079b451a1cdc9d9cfa33f6af912a40d7640c7307644c"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tanggula-boundary-seam-2026-10-08.geojson.report.json",
+          "bytes": 2327,
+          "sha256": "be10d603adcc6aee73b0abbfc6b877065224a54aeb2347711b20af0e4952a5b1"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tanggula-latest-refresh.geojson",
+          "bytes": 806815,
+          "sha256": "e9b867153962664629a849f284d49ae89757b75ad681ff3d260b6a29358a549b"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tanggula-latest-refresh.json",
+          "bytes": 1784392,
+          "sha256": "651993390d4a55f8d5a387e520a09122f3891beecbff0379e1747071f183f205"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tanggula-qinghai-seam-refresh.json",
+          "bytes": 255625,
+          "sha256": "60acf72d12eee2687c740d2c5342c272ddccd3b2b614991614d5005c521f2a78"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tanggula-qumalai-refresh.geojson",
+          "bytes": 58360,
+          "sha256": "8b48d9a6daccc0d1c9d9ebabb60b58dc824a446d5524b6401d2207304d98cd64"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540100.bin",
+          "bytes": 15257,
+          "sha256": "1f232e12cb8943b795808bba81a2952cde1e783c2931e868d47cc3da72321cf0"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540100.bin.source.json",
+          "bytes": 349,
+          "sha256": "a85fec52efc96cb06a29ced57b2bc38ab682ade127a17e97261d93b06f31f97d"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540100.geojson",
+          "bytes": 30137,
+          "sha256": "00d8bdc0473492aa3dc551745120b56a65825610b16d5d217ee67407f82620f5"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540200.bin",
+          "bytes": 78838,
+          "sha256": "30875c06c2f523cb06387fd6be5faabc5022e8387d7d0649a2340fc6ac52e660"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540200.geojson",
+          "bytes": 155154,
+          "sha256": "07bce26c0f4fbd6925d9b95c390019458959e14ebbf73af28172fbc310a52a47"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540300.bin",
+          "bytes": 39074,
+          "sha256": "263ed0b887cf4a3fe2b1f5779c5bfce26edbf2594dc73883c71fa798779b7658"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540300.bin.source.json",
+          "bytes": 349,
+          "sha256": "bd9926a1159ce5f88ae2fd489669bb450f96a5bbd8d2f5eb1212f7d09328c5ed"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540300.geojson",
+          "bytes": 75201,
+          "sha256": "bae07085a6654c8bd098a2bb988c5831fb63fb82984b23240eb9ae867c7ac7b4"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540400.bin",
+          "bytes": 36653,
+          "sha256": "a5bc758935e732006b21ee3bf00f176176f4bf0c8af5170e6886ca09a4bba100"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540400.geojson",
+          "bytes": 70502,
+          "sha256": "da616073ea6c4de40d08966ce1cc11d49580e9078c59c6368e416f543f32c6f3"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540600.bin",
+          "bytes": 60151,
+          "sha256": "87b1094d0f1e6d2790b1c334c1f2de40eb267ba4ce3bd0818f0af8939e739ac0"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-540600.geojson",
+          "bytes": 114549,
+          "sha256": "b1ce6ffadbb3eea7e618eb1f9346fb493a11460701f26a3135e931c57261f51a"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-542500.bin",
+          "bytes": 56740,
+          "sha256": "dd55c43c3321bfa92841052e08c4b37881295d1f181848af8a093bc8dba4e797"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-542500.geojson",
+          "bytes": 109667,
+          "sha256": "b92602c14d20042b65086282fcd2d986e303fb653dcadbc6ef48a04b70dfb087"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-653100.bin",
+          "bytes": 37684,
+          "sha256": "249c1aa8d4873345478be5f0ce1adc66ceb430b179cbad6aa9e39914db909934"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-counties-653100.geojson",
+          "bytes": 75021,
+          "sha256": "2c03793cff902b302a328a21ad50679281833a4aa9d123bfd8cf7ce48e1f2455"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-fuyuan-counties.bin",
+          "bytes": 20718,
+          "sha256": "a1fe137dfcc2dcc924d675ff6f82df89b4e93b42cabafe6016040a32429a338a"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-fuyuan-counties.geojson",
+          "bytes": 42483,
+          "sha256": "59a6e53474a88d882d8ad625f85b1ef20d3b7cfed16c6db91cf907edc761988e"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-haixi-counties-retry.bin",
+          "bytes": 35090,
+          "sha256": "6f2a2fcc2c66df9ab6b6f775131825c1067125deaf9baada3cc66365545567cb"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-haixi-counties-retry.geojson",
+          "bytes": 66036,
+          "sha256": "2577ed246120578e3de087dfcb8bfff208a939c3a8db95bd954a87d8725bc11a"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-hotan-counties-retry.bin",
+          "bytes": 29679,
+          "sha256": "ea3a831126992d0fec6c8813eea1e80e7cfb9b78619391aea1be6058c662b74a"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-hotan-counties-retry.geojson",
+          "bytes": 57551,
+          "sha256": "0941f2fb531d4b1db7f7144c826c88972ade98199551a0d68714781842551e6b"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-provinces.bin",
+          "bytes": 830761,
+          "sha256": "b21fafa0e17a610eaf237aa26ea8e64f937e266e744f1288db5d1bf430282024"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-provinces.geojson",
+          "bytes": 1699641,
+          "sha256": "ff1bf948305188ecb5634bad9cf404085b005f13064d64164543a5b0b2a3308e"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-shannan-counties-retry.bin",
+          "bytes": 29911,
+          "sha256": "7dda0256c564fc4163b20a50767470c0de8c1e0c1683b144b17a39c5fd965d75"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-shannan-counties-retry.geojson",
+          "bytes": 58606,
+          "sha256": "828bf9bc6f5611c389f0a3b5fd1502f68509f236820bea258f20617507f73154"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-tibet-cities.bin",
+          "bytes": 145689,
+          "sha256": "630ee8f6b958b2ca4b57ffb927d891d2ac084ad98140eb172ddd4d44c3b71bba"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-tibet-cities.geojson",
+          "bytes": 289383,
+          "sha256": "8fe09e387d533ae5a7c2d0ce7286e42d92517c0b8d437ed70e263dd90dc389d6"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-yushu-counties.bin",
+          "bytes": 39472,
+          "sha256": "9bdc88e73e9dfc71775c0ecd6fe2ab1829d5d4177236b99bb0bc5b2701a89d2c"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/tdt-yushu-counties.geojson",
+          "bytes": 75210,
+          "sha256": "1c6a1eb788ef82db5d006fd55efbeabf7228c26c885cf10afa0e92c6e337b9fb"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/wendeng-middle.geojson",
+          "bytes": 54630,
+          "sha256": "9f2a6ed6f8d05159cc2b8dd6ff27ca8ba6c601655bca79c9fca1291da068f10f"
+        },
+        {
+          "path": "data/boundaries/china-policy/sources/wendeng-north.geojson",
+          "bytes": 45539,
+          "sha256": "cfa47906ce4629f6143664d639697f0a498c2003892f4049468fc1211bd04189"
+        },
+        {
+          "path": "data/boundaries/china-policy/south-china-sea-lines.geojson",
+          "bytes": 12136,
+          "sha256": "6841f3672670ae0755648d27de2e3b5a681787c3c44fed0f14c26c88d9eae1f2"
+        },
         {
           "path": "data/extensions/research/chengxiang-temples-2026-10-03.json",
           "bytes": 14114,

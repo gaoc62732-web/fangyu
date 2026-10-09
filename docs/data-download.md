@@ -1,6 +1,6 @@
 # 获取开发数据
 
-公共地理数据通过 [GitHub Release](https://github.com/gaoc62732-web/fangyu/releases/tag/data-osm-20261004) 提供。当前清单版本为 `osm-20261004-v072`，runtime 包包含 0.7.2 的目录修订，边界源包和 research 包沿用原快照。代码中的 `data/snapshots/current.json` 固定所需版本、附件名和 SHA-256；拉取代码后按该清单同步，不使用 GitHub 的 latest。
+公共地理数据通过 [GitHub Release](https://github.com/gaoc62732-web/fangyu/releases/tag/data-osm-20261009) 提供。当前清单版本为 `osm-20261009-v073`，包含当前目录、边界、OSM 原始留档和研究规则。代码中的 `data/snapshots/current.json` 固定所需版本、附件名和 SHA-256；拉取代码后按该清单同步，不使用 GitHub 的 latest。
 
 ## 常规开发
 
@@ -15,11 +15,11 @@ npm run dev:web
 
 `data:sync` 自动下载、校验并恢复数据；`prepare:web` 在本机生成前端地图资源。若 Python 命令不可用，可将环境变量 `FANGYU_PYTHON` 设为 Python 可执行文件的完整路径。
 
-| 数据包     | 压缩大小 | 内容与用途                                             |
-| ---------- | -------: | ------------------------------------------------------ |
-| runtime    | 83.5 MiB | 公共目录、各地图范围的运行边界；常规开发必需           |
-| research   |  6.5 MiB | 机场/遗产关联、海域显示规则等；当前构建必需            |
-| osm-source | 72.9 MiB | OSM 行政区源面、国界与独立参考范围；重新处理边界时需要 |
+| 数据包     |  压缩大小 | 内容与用途                                                   |
+| ---------- | --------: | ------------------------------------------------------------ |
+| runtime    | 116.7 MiB | 公共目录、各地图范围的运行边界；常规开发必需                 |
+| research   | 407.9 MiB | 机场/遗产关联、海域显示规则、研究与校订输入；当前构建必需    |
+| osm-source | 142.0 MiB | OSM 行政区源面、国界、参考范围和原始响应；重新处理边界时需要 |
 
 需要边界源数据时额外执行 `npm run data:sync -- --group osm-source`。
 
@@ -28,8 +28,8 @@ npm run dev:web
 登录有仓库权限的 GitHub 账号，在对应 Release 的 **Assets** 中下载所需 `.tar.gz` 附件到同一目录，保留原文件名，无需手工解压。当前常规开发需要：
 
 ```text
-fangyu-data-runtime-osm-20261004-v072.tar.gz
-fangyu-data-research-osm-20261004.tar.gz
+fangyu-data-runtime-osm-20261009-v073.tar.gz
+fangyu-data-research-osm-20261009-v073.tar.gz
 ```
 
 以 Windows 下载目录为例：

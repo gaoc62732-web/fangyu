@@ -141,9 +141,15 @@ def restore(args):
                 print(f'Download {name}', flush=True)
                 request = urllib.request.Request(url, headers={'User-Agent': 'FangyuDataSnapshot/1.0'})
                 partial = archive.with_suffix(archive.suffix + '.download')
-                with urllib.request.urlopen(request, timeout=180) as response, partial.open('wb') as stream:
-                    shutil.copyfileobj(response, stream)
-                partial.replace(archive)
+                try:
+                    with urllib.request.urlopen(request, timeout=180) as response, partial.open('wb') as stream:
+                        shutil.copyfileobj(response, stream)
+                    if partial.stat().st_size != package['bytes'] or sha256(partial) != package['sha256']:
+                        raise ValueError(f'Download checksum mismatch: {name}')
+                    partial.replace(archive)
+                finally:
+                    if partial.exists():
+                        partial.unlink()
             if archive.stat().st_size != package['bytes'] or sha256(archive) != package['sha256']:
                 raise ValueError(f'Archive checksum mismatch: {archive}')
             expected = {f['path']: f for f in package['files']}
