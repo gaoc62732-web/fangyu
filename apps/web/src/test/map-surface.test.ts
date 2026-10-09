@@ -3,9 +3,12 @@ import { flushPromises, mount } from '@vue/test-utils';
 import type { Feature, FeatureCollection } from 'geojson';
 import type { MapGeoJSONFeature } from 'maplibre-gl';
 import { useAppStore } from '../app/store.js';
-import { airport, beijing } from './fixtures.js';
+import { airport, beijing, city, dongcheng } from './fixtures.js';
 import { manifest } from './map-fixtures.js';
+import type { ChinaBoundaryData } from '../features/maps/china-boundaries.js';
 import { setBasemapEnabled } from '../features/maps/basemap-settings.js';
+import { snapshotSchema } from '@fangyu/contracts';
+import { HandbookSession } from '@fangyu/domain';
 import VisitedMapLayers from '../components/VisitedMapLayers.vue';
 
 const lib = vi.hoisted(() => {
@@ -13,20 +16,25 @@ const lib = vi.hoisted(() => {
     events: Record<string, (event?: unknown) => void> = {};
     source = {
       setData: vi.fn<(data: FeatureCollection) => void>(),
+      updateData: vi.fn<(diff: unknown) => Promise<void>>(async () => {}),
       getClusterLeaves: vi.fn<() => Promise<Feature[]>>(async () => []),
     };
+    sources = new Map<string, typeof this.source>();
     canvas = document.createElement('canvas');
     hasImage = () => true;
     addImage = vi.fn();
     setMissingStyleImageResolver = vi.fn();
     getLayer = (id: string) => ({ id });
+    getStyle = () => ({ layers: [] });
     setLayoutProperty = vi.fn();
     setPaintProperty = vi.fn();
     setFeatureState = vi.fn();
+    removeFeatureState = vi.fn();
     setFilter = vi.fn();
     fitBounds = vi.fn();
     jumpTo = vi.fn();
     easeTo = vi.fn();
+    stop = vi.fn();
     remove = vi.fn();
     resize = vi.fn();
     queryRenderedFeatures = vi.fn<() => MapGeoJSONFeature[]>(() => []);
@@ -35,7 +43,19 @@ const lib = vi.hoisted(() => {
     zoomTo = vi.fn();
     getCenter = () => ({ toArray: () => [116.4, 39.9] });
     getCanvas = () => this.canvas;
-    getSource = () => this.source;
+    getSource = (id?: string) => {
+      if (!id?.startsWith('china-options-')) return this.source;
+      let source = this.sources.get(id);
+      if (!source) {
+        source = {
+          setData: vi.fn<(data: FeatureCollection) => void>(),
+          updateData: vi.fn<(diff: unknown) => Promise<void>>(async () => {}),
+          getClusterLeaves: vi.fn<() => Promise<Feature[]>>(async () => []),
+        };
+        this.sources.set(id, source);
+      }
+      return source;
+    };
     on(name: string, callback: (event?: unknown) => void) {
       this.events[name] = callback;
     }
@@ -48,14 +68,22 @@ const lib = vi.hoisted(() => {
   return state;
 });
 vi.mock('maplibre-gl', () => ({ Map: lib.MockMap, setWorkerUrl: vi.fn(), addProtocol: vi.fn() }));
+const canvasView = vi.hoisted(() => ({
+  camera: undefined as { center: [number, number]; zoom: number } | undefined,
+  notify: () => {},
+}));
 vi.mock('@fangyu/map-renderer', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@fangyu/map-renderer')>()),
   CanvasMapRenderer: class {
-    setScene = vi.fn();
+    constructor(_host: unknown, _select: unknown, _hover: unknown, viewChanged: () => void) {
+      canvasView.notify = viewChanged;
+    }
+    setScene = vi.fn(() => canvasView.notify());
     fit = vi.fn();
     destroy = vi.fn();
-    camera = () => undefined;
+    camera = () => canvasView.camera;
     setCamera = vi.fn();
+    stop = vi.fn();
     projectPoint = () => [0, 0];
   },
 }));
@@ -64,6 +92,7 @@ let wrapper: ReturnType<typeof mount> | undefined;
 beforeEach(async () => {
   lib.maps = [];
   lib.fail = false;
+  canvasView.camera = undefined;
   setBasemapEnabled(true);
   await useAppStore().load();
   vi.stubGlobal(
@@ -95,6 +124,219 @@ async function open() {
 }
 
 describe('current map lifecycle', () => {
+  it('does not republish an unchanged canvas camera when parent updates redraw the scene', async () => {
+    lib.fail = true;
+    canvasView.camera = { center: [116.4, 39.9], zoom: 8 };
+    wrapper = mount(MapSurface, { props: { scope: 'china', regionMode: true, points: [] } });
+    await vi.dynamicImportSettled();
+    await flushPromises();
+    const store = useAppStore();
+    const previous = store.regionalMap;
+    await wrapper.setProps({ points: [] });
+    expect(store.regionalMap).toBe(previous);
+    await wrapper.setProps({ selected: beijing });
+    expect(store.regionalMap!.selected).toBe(beijing);
+    const selected = store.regionalMap;
+    await wrapper.setProps({ points: [] });
+    expect(store.regionalMap).toBe(selected);
+  });
+  it('animates regional selection from the current camera to the selected bounds', async () => {
+    wrapper = mount(MapSurface, { props: { scope: 'china', regionMode: true, points: [] } });
+    await vi.dynamicImportSettled();
+    await flushPromises();
+    const map = lib.maps[0]!;
+    map.events['style.load']!();
+    map.fitBounds.mockClear();
+    map.jumpTo.mockClear();
+    await wrapper.setProps({ selected: beijing });
+    expect(map.fitBounds).toHaveBeenCalledWith(
+      manifest.scopes.china.regionBounds[beijing],
+      expect.objectContaining({ duration: 650, padding: 45 }),
+    );
+    expect(map.jumpTo).not.toHaveBeenCalled();
+  });
+  it('updates only changed feature state on the region matching its vector layer', async () => {
+    const current = await open();
+    const map = lib.maps[0]!;
+    map.events['style.load']!();
+    map.setFeatureState.mockClear();
+    const store = useAppStore();
+    store.commit((session) => session.upgradeRegion(dongcheng, 'transit'));
+    await flushPromises();
+    expect(map.setFeatureState).toHaveBeenCalledTimes(3);
+    expect(map.setFeatureState).toHaveBeenCalledWith(
+      { source: 'county', sourceLayer: 'regions', id: dongcheng },
+      { fill: expect.any(String), recorded: true },
+    );
+    expect(map.setFeatureState).toHaveBeenCalledWith(
+      { source: 'city', sourceLayer: 'regions', id: city },
+      { fill: expect.any(String), recorded: true },
+    );
+    expect(map.setFeatureState).toHaveBeenCalledWith(
+      { source: 'province', sourceLayer: 'regions', id: beijing },
+      { fill: expect.any(String), recorded: true },
+    );
+    expect(current.exists()).toBe(true);
+  });
+  it('updates only changed boundary features without reconfiguring unrelated map layers', async () => {
+    const scope = manifest.scopes.china;
+    const previousOptions = scope.boundaryOptions;
+    const previousGroupCount = scope.boundaryOptionGroups;
+    scope.boundaryOptions = 'maps/china-boundary-options.json.gz';
+    scope.boundaryOptionGroups = 2;
+    const polygon = (offset: number) => ({
+      type: 'Polygon' as const,
+      coordinates: [
+        [
+          [116 + offset, 39],
+          [117 + offset, 39],
+          [117 + offset, 40],
+          [116 + offset, 40],
+          [116 + offset, 39],
+        ],
+      ],
+    });
+    const boundaryData = {
+      geometries: { before: polygon(0), after: polygon(0.1), stable: polygon(1) },
+      groups: [
+        {
+          keys: ['shenshan'],
+          regionIds: [dongcheng],
+          variants: {
+            '0': [
+              {
+                regionId: dongcheng,
+                level: 'county',
+                name: '东城区',
+                geometry: 'before',
+                bounds: [116, 39, 117, 40],
+              },
+            ],
+            '1': [
+              {
+                regionId: dongcheng,
+                level: 'county',
+                name: '东城区',
+                geometry: 'after',
+                bounds: [116.1, 39, 117.1, 40],
+              },
+            ],
+          },
+        },
+        {
+          keys: ['lianjiang'],
+          regionIds: [beijing],
+          variants: {
+            '0': [
+              {
+                regionId: beijing,
+                level: 'province',
+                name: '北京市',
+                geometry: 'stable',
+                bounds: [117, 39, 118, 40],
+              },
+            ],
+            '1': [
+              {
+                regionId: beijing,
+                level: 'province',
+                name: '北京市',
+                geometry: 'stable',
+                bounds: [117, 39, 118, 40],
+              },
+            ],
+          },
+        },
+      ],
+      lineGroups: [],
+    } satisfies ChinaBoundaryData;
+    const store = useAppStore();
+    store.chinaBoundaryData = boundaryData;
+    try {
+      const current = await open();
+      const map = lib.maps[0]!;
+      map.events['style.load']!();
+      await flushPromises();
+      map.source.setData.mockClear();
+      map.sources.get('china-options-0')!.updateData.mockClear();
+      map.sources.get('china-options-1')!.updateData.mockClear();
+      map.sources.get('china-options-lines')!.setData.mockClear();
+      map.setLayoutProperty.mockClear();
+      map.setPaintProperty.mockClear();
+      map.setFilter.mockClear();
+      map.setFeatureState.mockClear();
+      map.removeFeatureState.mockClear();
+      store.commit((session) =>
+        session.updatePreferences({
+          chinaBoundaries: { ...store.chinaBoundarySettings, shenshan: false },
+        }),
+      );
+      await flushPromises();
+      expect(map.sources.get('china-options-0')!.updateData).toHaveBeenCalledOnce();
+      expect(map.sources.get('china-options-0')!.updateData.mock.calls[0]![0]).toEqual(
+        expect.objectContaining({
+          update: [
+            expect.objectContaining({ id: dongcheng, newGeometry: boundaryData.geometries.before }),
+          ],
+        }),
+      );
+      expect(map.source.setData).not.toHaveBeenCalled();
+      expect(map.sources.get('china-options-1')!.updateData).not.toHaveBeenCalled();
+      expect(map.sources.get('china-options-lines')!.setData).not.toHaveBeenCalled();
+      expect(map.setLayoutProperty).not.toHaveBeenCalled();
+      expect(map.setPaintProperty).not.toHaveBeenCalled();
+      expect(map.setFilter).not.toHaveBeenCalled();
+      expect(
+        map.setFeatureState.mock.calls.every(([target]) => target.source === 'china-options-0'),
+      ).toBe(true);
+      expect(map.removeFeatureState).not.toHaveBeenCalled();
+      expect(current.exists()).toBe(true);
+    } finally {
+      store.chinaBoundaryData = undefined;
+      if (previousOptions === undefined) delete scope.boundaryOptions;
+      else scope.boundaryOptions = previousOptions;
+      if (previousGroupCount === undefined) delete scope.boundaryOptionGroups;
+      else scope.boundaryOptionGroups = previousGroupCount;
+    }
+  });
+  it('persists disabled automatic focus and keeps selection and layer changes from moving the camera', async () => {
+    wrapper = mount(MapSurface, { props: { scope: 'china', regionMode: true, points: [] } });
+    await vi.dynamicImportSettled();
+    await flushPromises();
+    const map = lib.maps[0]!;
+    map.events['style.load']!();
+    const toggle = wrapper.find('[aria-label="选区自动缩放"]');
+    expect((toggle.element as HTMLInputElement).checked).toBe(true);
+    await toggle.setValue(false);
+    const store = useAppStore();
+    await store.flush();
+    const restored = new HandbookSession(
+      store.session!.index,
+      snapshotSchema.parse(store.session!.snapshot()),
+    );
+    expect(restored.preferences.regionAutoFocus).toBe(false);
+    expect(map.stop).toHaveBeenCalledOnce();
+    map.fitBounds.mockClear();
+    map.jumpTo.mockClear();
+    await wrapper.setProps({ selected: beijing, level: 'province' });
+    expect(map.fitBounds).not.toHaveBeenCalled();
+    expect(map.jumpTo).not.toHaveBeenCalled();
+    expect(map.setFeatureState).toHaveBeenCalledWith(
+      { source: 'province', sourceLayer: 'regions', id: beijing },
+      expect.objectContaining({ selected: true }),
+    );
+    expect(store.regionalMap!.selected).toBe(beijing);
+    await wrapper
+      .findAll('.region-map-tools-body button')
+      .find((button) => button.text() === '定位当前地区')!
+      .trigger('click');
+    expect(map.fitBounds).toHaveBeenCalledOnce();
+    map.fitBounds.mockClear();
+    await toggle.setValue(true);
+    expect(map.fitBounds).not.toHaveBeenCalled();
+    await wrapper.setProps({ selected: '' });
+    expect(map.fitBounds).toHaveBeenCalledOnce();
+  });
   it.each([false, true])(
     'handles region clicks and hover only outside point mode (%s)',
     async (pointMode) => {
@@ -123,6 +365,25 @@ describe('current map lifecycle', () => {
       expect(map.canvas.style.cursor).toBe(pointMode ? '' : 'pointer');
     },
   );
+  it('ignores a whole city face in county mode and selects the underlying county', async () => {
+    wrapper = mount(MapSurface, {
+      props: { scope: 'china', level: 'county', regionMode: true, points: [] },
+    });
+    await vi.dynamicImportSettled();
+    await flushPromises();
+    const map = lib.maps[0]!;
+    map.events['style.load']!();
+    const faces = [city, dongcheng].map((id) => ({
+      properties: { regionId: id },
+      layer: { id: 'county-fill' },
+      geometry: { type: 'Polygon', coordinates: [] },
+    })) as unknown as MapGeoJSONFeature[];
+    map.queryRenderedFeatures.mockImplementation((...args: unknown[]) =>
+      (args[1] as { layers: string[] }).layers.includes('county-fill') ? faces : [],
+    );
+    map.events.click!({ point: { x: 10, y: 10 }, lngLat: { lng: 116.4, lat: 39.9 } });
+    expect(wrapper.emitted('select')).toEqual([[dongcheng]]);
+  });
 
   it('uses the existing boundary basemap and offers only point preferences and a separate legend in point mode', async () => {
     wrapper = mount(MapSurface, { props: { scope: 'china', pointMode: true, points: [] } });

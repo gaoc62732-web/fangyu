@@ -32,14 +32,24 @@ export function useCatalogNavigation(scope: Ref<Scope>) {
   const route = useRoute();
   const router = useRouter();
   const session = computed(() => store.session!);
-  const index = computed(() => session.value.index);
-  const regions = computed(() =>
-    index.value.catalog.regions.filter((region) => region.scope === scope.value),
-  );
+  const index = computed(() => {
+    void store.revision;
+    return session.value.index;
+  });
+  const regions = computed(() => {
+    void store.revision;
+    return index.value.catalog.regions.filter((region) => region.scope === scope.value);
+  });
   const focusedEntry = ref('');
   const showAllChildren = ref(false);
-  const selected = computed(() => index.value.regions.get(store.selectedRegionId));
-  const childRegions = computed(() => index.value.children.get(store.selectedRegionId) || []);
+  const selected = computed(() => {
+    void store.revision;
+    return index.value.regions.get(index.value.resolveRegion(store.selectedRegionId));
+  });
+  const childRegions = computed(() => {
+    void store.revision;
+    return index.value.children.get(index.value.resolveRegion(store.selectedRegionId)) || [];
+  });
   const visibleChildren = computed(() =>
     scope.value === 'france' || showAllChildren.value
       ? childRegions.value
@@ -64,7 +74,10 @@ export function useCatalogNavigation(scope: Ref<Scope>) {
     }
     return [...groups].map(([label, items]) => ({ label, items }));
   });
-  const path = computed(() => index.value.ancestors(store.selectedRegionId));
+  const path = computed(() => {
+    void store.revision;
+    return index.value.ancestors(store.selectedRegionId);
+  });
   const francePath = computed(() => path.value.filter((region) => region.scope === 'france'));
   const franceRoot = computed(() => francePath.value.find((region) => region.level === 1));
   const franceDepartment = computed(() => francePath.value.find((region) => region.level === 2));
@@ -122,7 +135,7 @@ export function useCatalogNavigation(scope: Ref<Scope>) {
   }
 
   function select(id: string) {
-    store.selectedRegionId = id;
+    store.selectedRegionId = index.value.resolveRegion(id);
     focusedEntry.value = '';
     showAllChildren.value = false;
     if (scope.value === 'france' && (route.query.region || '') !== id) {

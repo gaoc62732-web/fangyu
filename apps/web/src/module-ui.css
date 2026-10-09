@@ -1,0 +1,447 @@
+:root {
+  --atlas-paper: #fffefa;
+  --atlas-surface: #fffefa;
+  --atlas-soft: #f2f3ed;
+  --atlas-line: #e7e7de;
+  --atlas-ink: #30372e;
+  --atlas-accent: #343d32;
+  --atlas-title-font:
+    'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI Light', 'Microsoft YaHei UI',
+    'Microsoft YaHei', sans-serif;
+  --atlas-font:
+    'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei',
+    sans-serif;
+  font: 400 16px/1.6 var(--atlas-font);
+  color: var(--atlas-ink);
+  background: var(--atlas-paper);
+}
+[data-theme='dark'] {
+  --atlas-paper: #1b2728;
+  --atlas-surface: #223033;
+  --atlas-soft: #2b3b3d;
+  --atlas-line: #435253;
+  --atlas-ink: #e3e7de;
+  --atlas-accent: #d2dac2;
+}
+.atlas-app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--atlas-paper);
+  color: var(--atlas-ink);
+  font: 400 16px/1.6 var(--atlas-font);
+}
+.atlas-content {
+  flex: 1;
+  width: min(1440px, 100%);
+  padding: 40px 48px 56px;
+  margin: 0 auto;
+  min-width: 0;
+}
+.atlas-map-content {
+  width: 100%;
+  padding: 0;
+  max-width: none;
+  position: relative;
+}
+.atlas-map-module {
+  height: 100dvh;
+  min-height: 536px;
+  overflow: hidden;
+}
+.atlas-app .page-heading {
+  margin-bottom: 32px;
+}
+.atlas-app .page-heading h1,
+.atlas-app .page-heading h2 {
+  font: 300 32px/1.45 var(--atlas-title-font);
+  margin: 0;
+}
+.atlas-app .page-heading p {
+  font-size: 16px;
+  color: var(--atlas-ink);
+  margin: 12px 0 0;
+}
+.atlas-app button,
+.atlas-app input,
+.atlas-app select,
+.atlas-app textarea {
+  font-family: inherit;
+}
+.atlas-app button {
+  font-size: 16px;
+  font-weight: 300;
+}
+.atlas-content:not(.atlas-map-content) button {
+  color: var(--atlas-ink);
+  background: var(--atlas-paper);
+  border: 1px solid var(--atlas-line);
+  border-radius: 10px;
+  padding: 9px 14px;
+  box-shadow: none;
+}
+.atlas-content:not(.atlas-map-content) button:hover {
+  background: var(--atlas-soft);
+}
+.atlas-content:not(.atlas-map-content)
+  input:not([type='checkbox']):not([type='radio']):not([type='color']),
+.atlas-content:not(.atlas-map-content) select,
+.atlas-content:not(.atlas-map-content) textarea,
+.region-page input,
+.region-page select {
+  background: var(--atlas-paper);
+  color: var(--atlas-ink);
+  border: 1px solid var(--atlas-line);
+  border-radius: 10px;
+  box-shadow: none;
+  padding: 9px 12px;
+  font-size: 16px;
+  max-width: 100%;
+}
+.atlas-content:not(.atlas-map-content) input::placeholder,
+.atlas-content:not(.atlas-map-content) textarea::placeholder,
+.region-page input::placeholder {
+  color: var(--atlas-ink);
+  opacity: 0.8;
+}
+.atlas-app input[type='checkbox'],
+.atlas-app input[type='radio'] {
+  accent-color: var(--atlas-accent);
+}
+.atlas-app h3,
+.atlas-app h4 {
+  font-weight: 400;
+}
+.atlas-app .note,
+.atlas-app small,
+.atlas-app .records-region-path {
+  font-size: 14px;
+  color: var(--atlas-ink);
+}
+.atlas-content .card,
+.atlas-content .inspector {
+  background: var(--atlas-paper);
+  border-color: var(--atlas-line);
+  border-radius: 12px;
+  box-shadow: none;
+  padding: 26px;
+  margin-bottom: 24px;
+}
+.atlas-content .card h3 {
+  font-size: 20px;
+  font-weight: 300;
+  margin-bottom: 18px;
+}
+.atlas-app table {
+  font-size: 16px;
+}
+.atlas-app th {
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--atlas-ink);
+  background: var(--atlas-soft);
+}
+.atlas-app td,
+.atlas-app th {
+  border-color: var(--atlas-line);
+  padding: 14px 16px;
+}
+.atlas-app .table-scroll,
+.atlas-app .maofen-table-wrap {
+  border-radius: 12px;
+  border: 1px solid var(--atlas-line);
+}
+.atlas-app .toolbar {
+  gap: 12px;
+  margin: 0 0 24px;
+}
+.atlas-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 48px;
+  border-top: 1px solid var(--atlas-line);
+  font-size: 14px;
+  color: var(--atlas-ink);
+}
+.atlas-statusbar button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 14px;
+}
+.atlas-save-error {
+  position: relative;
+  z-index: 15;
+}
+.atlas-map-content > .atlas-save-error {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  background: var(--atlas-paper);
+}
+.atlas-map-content > .loading,
+.atlas-map-content > .error-panel:not(.atlas-save-error) {
+  margin: 32px;
+}
+.atlas-app .achievement-ui {
+  --paper: var(--atlas-paper);
+  --surface: var(--atlas-surface);
+  --soft: var(--atlas-soft);
+  --ink: var(--atlas-ink);
+  --muted: var(--atlas-ink);
+  --line: var(--atlas-line);
+  --accent: var(--atlas-accent);
+  --accent-soft: var(--atlas-soft);
+  --shadow: none;
+  font-family: var(--atlas-font);
+}
+.atlas-app .achievement-ui .achievement-summary {
+  font-size: 14px;
+}
+.atlas-app .achievement-ui .achievement-summary strong {
+  font-weight: 300;
+  font-size: 32px;
+}
+.atlas-app .achievement-ui .series-nav button {
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+}
+.atlas-app .achievement-ui .series-nav button[aria-pressed='true'],
+.atlas-app .achievement-ui .segmented button[aria-pressed='true'] {
+  background: var(--atlas-accent);
+  color: var(--atlas-paper);
+}
+.atlas-app .achievement-ui .series-heading h2 {
+  font-size: 24px;
+  font-weight: 300;
+}
+.atlas-app .achievement-ui .text-button {
+  border: 0;
+}
+.atlas-app .achievement-ui .badge-card,
+.atlas-app .achievement-ui .quantity-hero,
+.atlas-app .achievement-ui .quantity-level {
+  box-shadow: none;
+}
+.atlas-app .maofen-summary strong {
+  font-weight: 300;
+  color: var(--atlas-ink);
+}
+.atlas-app .maofen-summary > div {
+  background: var(--atlas-soft);
+  border-color: var(--atlas-line);
+}
+.atlas-app .archive-row {
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--atlas-line);
+}
+.atlas-app .prose {
+  font-size: 16px;
+  line-height: 1.9;
+}
+.atlas-app .prose h3 {
+  margin-top: 30px;
+}
+.atlas-app .prose h3:first-child {
+  margin-top: 0;
+}
+.transfer-exports {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 0 28px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--atlas-line);
+}
+.transfer-exports h3 {
+  font-size: 20px;
+  font-weight: 300;
+  margin: 0;
+}
+.transfer-exports .toolbar {
+  margin: 0;
+}
+.transfer-imports {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+  margin-bottom: 30px;
+}
+.transfer-imports > .card {
+  margin: 0;
+  min-height: 310px;
+}
+.transfer-imports legend {
+  font-size: 20px;
+  font-weight: 300;
+  padding: 0 6px;
+}
+.transfer-imports label {
+  display: block;
+  font-size: 14px;
+}
+.transfer-imports input[type='file'] {
+  display: block;
+  width: 100%;
+  margin: 12px 0 20px;
+  font-size: 14px;
+}
+.transfer-imports input[type='file']::file-selector-button {
+  background: var(--atlas-soft);
+  border: 1px solid var(--atlas-line);
+  border-radius: 7px;
+  padding: 8px 10px;
+  color: var(--atlas-ink);
+  font: inherit;
+  margin-right: 8px;
+}
+.transfer-imports textarea {
+  display: block;
+  width: 100%;
+  min-height: 125px;
+  margin: 12px 0;
+}
+.transfer-imports > p {
+  grid-column: 1/-1;
+}
+.atlas-app button:disabled {
+  opacity: 0.45;
+}
+.atlas-app a:focus-visible,
+.atlas-app button:focus-visible,
+.atlas-app summary:focus-visible,
+.atlas-app select:focus-visible,
+.atlas-app input:focus-visible,
+.atlas-app textarea:focus-visible {
+  outline: 2px solid #a18b5d;
+  outline-offset: 3px;
+}
+@media (max-width: 1100px) {
+  .transfer-imports {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .transfer-imports > .card:last-of-type {
+    grid-column: 1/-1;
+    min-height: 0;
+  }
+}
+@media (max-width: 760px) {
+  .atlas-content {
+    padding: 28px 20px 40px;
+  }
+  .atlas-map-content {
+    padding: 0;
+  }
+  .atlas-statusbar {
+    padding: 12px 20px;
+  }
+  .atlas-content .card {
+    padding: 22px 20px;
+  }
+  .atlas-app .toolbar {
+    gap: 10px;
+  }
+  .atlas-app table {
+    min-width: 580px;
+  }
+  .atlas-content .page-heading {
+    margin-bottom: 24px;
+  }
+  .transfer-exports {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .transfer-imports {
+    grid-template-columns: 1fr;
+  }
+  .transfer-imports > .card {
+    min-height: 0;
+  }
+}
+.atlas-app .achievement-ui .quantity-hero h2 {
+  font: 300 32px/1.45 var(--atlas-title-font);
+}
+.atlas-app .achievement-ui .quantity-hero p {
+  font-size: 16px;
+}
+.atlas-app .achievement-ui .quantity-hero p strong {
+  font-weight: 300;
+}
+.atlas-app .achievement-ui .quantity-levels > div {
+  font-size: 14px;
+  grid-template-columns: 44px 1fr 60px;
+}
+.atlas-app .achievement-ui .quantity-levels strong {
+  font-weight: 400;
+}
+.atlas-app .achievement-ui .quantity-levels small {
+  font-size: 14px;
+}
+.atlas-app .achievement-ui .eyebrow {
+  font-size: 14px;
+}
+.atlas-app .achievement-ui .achievement-card > strong {
+  font-size: 16px;
+  font-weight: 400;
+}
+.atlas-app .achievement-ui .achievement-card > span:not(.achFlag):not(.world-medal),
+.atlas-app .achievement-ui .achievement-card small,
+.atlas-app .achievement-ui .continue-panel span,
+.atlas-app .achievement-ui .rules {
+  font-size: 14px;
+}
+.atlas-app .achievement-ui .continue-panel h3 {
+  font-size: 16px;
+}
+.atlas-app .achievement-ui table {
+  font-size: 16px;
+}
+.atlas-app .achievement-ui th,
+.atlas-app .achievement-ui td small {
+  font-size: 14px;
+}
+.achievement-ui.app-dialog {
+  --paper: var(--atlas-paper);
+  --surface: var(--atlas-surface);
+  --soft: var(--atlas-soft);
+  --ink: var(--atlas-ink);
+  --muted: var(--atlas-ink);
+  --line: var(--atlas-line);
+  --accent: var(--atlas-accent);
+  font: 400 16px/1.6 var(--atlas-font);
+}
+.achievement-ui.app-dialog .dialog-heading h2 {
+  font: 300 24px/1.45 var(--atlas-title-font);
+}
+.achievement-ui.app-dialog .achievement-target {
+  font-size: 16px;
+}
+.achievement-ui.app-dialog .source-links,
+.achievement-ui.app-dialog .pending-note,
+.achievement-ui.app-dialog small {
+  font-size: 14px;
+  color: var(--atlas-ink);
+}
+.achievement-ui.app-dialog input,
+.achievement-ui.app-dialog select {
+  font: inherit;
+}
+.achievement-ui.app-dialog .achievement-target button {
+  font: 300 16px/1.4 var(--atlas-font);
+  border-radius: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--atlas-line);
+  background: var(--atlas-paper);
+  color: var(--atlas-ink);
+}

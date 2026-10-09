@@ -6,7 +6,8 @@ import { drawVisitedCluster, drawVisitedMarker } from './visited-marker-icons.js
 import { POINT_MAP_APPEARANCE } from './point-map-appearance.js';
 
 type Bounds = [number, number, number, number];
-type Shape = RenderFeature & { path: Path2D; bounds: Bounds };
+type Shape = RenderFeature & { path?: Path2D; bounds: Bounds };
+type ProjectedPoint = { point: RenderPoint; x: number; y: number };
 export type MapHover = {
   id: string;
   name: string;
@@ -29,6 +30,8 @@ export class CanvasMapRenderer {
   private observer: ResizeObserver;
   private scene: MapScene = { features: [], points: [] };
   private shapes: Shape[] = [];
+  private visibleShapes: Shape[] = [];
+  private projectedPoints: ProjectedPoint[] = [];
   private markerGroups: ScreenMarkerCluster<RenderPoint>[] = [];
   private pathCache = new WeakMap<
     GeoJSON.Geometry,
@@ -47,6 +50,10 @@ export class CanvasMapRenderer {
   private y = 0;
   private drag: { x: number; y: number; startX: number; startY: number } | undefined;
   private pendingClick: { id: string; point: boolean; markerIds?: string[] } | undefined;
+  private animationFrame: number | undefined;
+  private drawFrame: number | undefined;
+  private hoverFrame: number | undefined;
+  private pendingHover: { x: number; y: number } | undefined;
   private abort = new AbortController();
 
   constructor(
@@ -66,6 +73,7 @@ export class CanvasMapRenderer {
     this.canvas.addEventListener(
       'pointerdown',
       (event) => {
+        this.stop();
         this.pendingClick = undefined;
         this.drag = {
           x: event.offsetX,
@@ -86,10 +94,18 @@ export class CanvasMapRenderer {
           this.y += event.offsetY - this.drag.y;
           this.drag.x = event.offsetX;
           this.drag.y = event.offsetY;
-          this.draw();
+          this.scheduleDraw();
         } else {
-          const hit = this.hit(event.offsetX, event.offsetY);
-          this.hover(hit ? { ...hit, x: event.offsetX, y: event.offsetY } : undefined);
+          this.pendingHover = { x: event.offsetX, y: event.offsetY };
+          if (this.hoverFrame === undefined)
+            this.hoverFrame = requestAnimationFrame(() => {
+              this.hoverFrame = undefined;
+              const point = this.pendingHover;
+              this.pendingHover = undefined;
+              if (!point) return;
+              const hit = this.hit(point.x, point.y);
+              this.hover(hit ? { ...hit, x: point.x, y: point.y } : undefined);
+            });
         }
       },
       options,
@@ -128,7 +144,16 @@ export class CanvasMapRenderer {
       },
       options,
     );
-    this.canvas.addEventListener('pointerleave', () => this.hover(undefined), options);
+    this.canvas.addEventListener(
+      'pointerleave',
+      () => {
+        this.pendingHover = undefined;
+        if (this.hoverFrame !== undefined) cancelAnimationFrame(this.hoverFrame);
+        this.hoverFrame = undefined;
+        this.hover(undefined);
+      },
+      options,
+    );
     this.canvas.addEventListener(
       'wheel',
       (event) => {
@@ -182,6 +207,16 @@ export class CanvasMapRenderer {
       if (cached && cached.world === Boolean(scene.world)) {
         return { ...feature, path: cached.path, bounds: cached.bounds };
       }
+      if (feature.bounds && !scene.world) {
+        const [, south, , north] = feature.bounds;
+        const bounds: Bounds = [
+          feature.bounds[0],
+          mercator([feature.bounds[0], north])[1],
+          feature.bounds[2],
+          mercator([feature.bounds[2], south])[1],
+        ];
+        return { ...feature, bounds };
+      }
       const bounds: Bounds = [Infinity, Infinity, -Infinity, -Infinity];
       let shape: Path2D;
       if (scene.world) {
@@ -221,10 +256,68 @@ export class CanvasMapRenderer {
       this.pathCache.set(feature.geometry, { world: Boolean(scene.world), path: shape, bounds });
       return { ...feature, path: shape, bounds };
     });
+    this.projectedPoints = scene.points.map((point) => {
+      const [x, y] = this.project(point.coords);
+      return { point, x, y };
+    });
     if (reset || !previous.features.length) this.fit();
     else this.draw();
   }
-  fit(ids?: string[], selectionScale = 1) {
+  private scheduleDraw() {
+    if (this.drawFrame !== undefined) return;
+    this.drawFrame = requestAnimationFrame(() => {
+      this.drawFrame = undefined;
+      this.draw();
+    });
+  }
+  private pathFor(shape: Shape): Path2D {
+    if (shape.path) return shape.path;
+    const world = Boolean(this.scene.world);
+    const cached = this.pathCache.get(shape.geometry);
+    if (cached && cached.world === world) {
+      shape.path = cached.path;
+      return cached.path;
+    }
+    let path: Path2D;
+    if (world) {
+      const projection = geoNaturalEarth1()
+        .scale(180 / Math.PI)
+        .translate([0, 0]);
+      const generator = geoPath(projection);
+      const feature = {
+        type: 'Feature' as const,
+        geometry: projectionGeometry(shape.geometry),
+        properties: {},
+      };
+      path = new Path2D(generator(feature) || '');
+      const bounds = generator.bounds(feature);
+      shape.bounds = [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]];
+    } else {
+      path = new Path2D();
+      const type = shape.geometry.type;
+      const geometry = shape.geometry;
+      const rings =
+        geometry.type === 'MultiPolygon'
+          ? geometry.coordinates.flat()
+          : geometry.type === 'Polygon' || geometry.type === 'MultiLineString'
+            ? geometry.coordinates
+            : geometry.type === 'LineString'
+              ? [geometry.coordinates]
+              : [];
+      for (const ring of rings) {
+        ring.forEach((point: number[], index: number) => {
+          const [x, y] = mercator(point);
+          if (index) path.lineTo(x, y);
+          else path.moveTo(x, y);
+        });
+        if (type.includes('Polygon')) path.closePath();
+      }
+    }
+    shape.path = path;
+    this.pathCache.set(shape.geometry, { world, path, bounds: shape.bounds });
+    return path;
+  }
+  fit(ids?: string[], selectionScale = 1, duration = 0) {
     const selected = ids?.length ? this.shapes.filter((f) => ids.includes(f.id)) : this.shapes;
     if (!selected.length) return;
     const b = selected.reduce<Bounds>(
@@ -238,17 +331,46 @@ export class CanvasMapRenderer {
     );
     if (!Number.isFinite(b[0])) return;
     const targetScale = Math.min(
-      Math.max(1, this.width - 36) / (b[2] - b[0] || 1),
-      Math.max(1, this.height - 36) / (b[3] - b[1] || 1),
+      Math.max(1, (this.canvas.clientWidth || this.width) - 36) / (b[2] - b[0] || 1),
+      Math.max(1, (this.canvas.clientHeight || this.height) - 36) / (b[3] - b[1] || 1),
     );
     if (!ids?.length) this.fullScale = targetScale;
-    this.scale =
+    const scale =
       Math.min(targetScale, this.fullScale * (this.scene.world ? 20 : 36)) * selectionScale;
-    this.x = this.width / 2 - ((b[0] + b[2]) / 2) * this.scale;
-    this.y = this.height / 2 - ((b[1] + b[3]) / 2) * this.scale;
-    this.draw();
+    const center = [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
+    this.stop();
+    if (duration <= 0 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.scale = scale;
+      this.x = this.width / 2 - center[0]! * scale;
+      this.y = this.height / 2 - center[1]! * scale;
+      this.draw();
+      return;
+    }
+    const startScale = this.scale;
+    const startCenter = [
+      (this.width / 2 - this.x) / startScale,
+      (this.height / 2 - this.y) / startScale,
+    ];
+    const startedAt = performance.now();
+    const frame = (now: number) => {
+      const progress = Math.min(1, Math.max(0, (now - startedAt) / duration));
+      const eased = progress * progress * (3 - 2 * progress);
+      this.scale = startScale * Math.pow(scale / startScale, eased);
+      this.x =
+        this.width / 2 - (startCenter[0]! + (center[0]! - startCenter[0]!) * eased) * this.scale;
+      this.y =
+        this.height / 2 - (startCenter[1]! + (center[1]! - startCenter[1]!) * eased) * this.scale;
+      this.draw();
+      this.animationFrame = progress < 1 ? requestAnimationFrame(frame) : undefined;
+    };
+    this.animationFrame = requestAnimationFrame(frame);
+  }
+  stop() {
+    if (this.animationFrame !== undefined) cancelAnimationFrame(this.animationFrame);
+    this.animationFrame = undefined;
   }
   zoom(factor: number, x = this.width / 2, y = this.height / 2) {
+    this.stop();
     const next = Math.max(
       this.scene.pointExploration ? 512 / 360 : this.fullScale * 0.75,
       Math.min(
@@ -262,7 +384,7 @@ export class CanvasMapRenderer {
     this.x = x - (x - this.x) * scaleRatio;
     this.y = y - (y - this.y) * scaleRatio;
     this.scale = next;
-    this.draw();
+    this.scheduleDraw();
   }
   projectPoint(coordinates: [number, number]): [number, number] {
     const [x, y] = this.project(coordinates);
@@ -276,6 +398,7 @@ export class CanvasMapRenderer {
     return center ? { center, zoom: Math.log2((this.scale * 360) / 512) } : undefined;
   }
   setCamera(camera: { center: [number, number]; zoom: number }) {
+    this.stop();
     this.scale = (512 * Math.pow(2, camera.zoom)) / 360;
     const [x, y] = this.project(camera.center);
     this.x = this.width / 2 - x * this.scale;
@@ -283,6 +406,7 @@ export class CanvasMapRenderer {
     this.draw();
   }
   focusPoints(ids: readonly string[], maxRelativeZoom = 24) {
+    this.stop();
     const wanted = new Set(ids);
     const points = this.scene.points.filter((point) => point.markerKind && wanted.has(point.id));
     if (!points.length) return;
@@ -304,7 +428,8 @@ export class CanvasMapRenderer {
     this.draw();
   }
   private hit(x: number, y: number) {
-    for (const group of [...(this.markerGroups || [])].reverse()) {
+    for (let index = this.markerGroups.length - 1; index >= 0; index--) {
+      const group = this.markerGroups[index]!;
       if (Math.hypot(group.x - x, group.y - y) <= (group.members.length > 1 ? 19 : 16)) {
         return {
           id: group.members[0]!.id,
@@ -318,9 +443,12 @@ export class CanvasMapRenderer {
         };
       }
     }
-    for (const point of [...this.scene.points].filter((point) => !point.markerKind).reverse()) {
-      const p = this.project(point.coords);
-      if (Math.hypot(p[0] * this.scale + this.x - x, p[1] * this.scale + this.y - y) < 7)
+    for (let index = this.projectedPoints.length - 1; index >= 0; index--) {
+      const { point, x: px, y: py } = this.projectedPoints[index]!;
+      if (
+        !point.markerKind &&
+        Math.hypot(px * this.scale + this.x - x, py * this.scale + this.y - y) < 7
+      )
         return { id: point.id, name: point.name, point: true };
     }
     if (this.scene.pointExploration) return;
@@ -333,19 +461,23 @@ export class CanvasMapRenderer {
     const ctx = this.context;
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const found = [...this.shapes]
-      .reverse()
-      .find(
-        (f) =>
-          f.interactive !== false &&
-          px >= f.bounds[0] &&
-          px <= f.bounds[2] &&
-          py >= f.bounds[1] &&
-          py <= f.bounds[3] &&
-          ctx.isPointInPath(f.path, px, py, 'evenodd') &&
-          (!this.scene.allowsRegionHit ||
-            (coordinates && this.scene.allowsRegionHit(coordinates, f.geometry))),
-      );
+    let found: Shape | undefined;
+    for (let index = this.shapes.length - 1; index >= 0; index--) {
+      const shape = this.shapes[index]!;
+      if (
+        shape.interactive !== false &&
+        px >= shape.bounds[0] &&
+        px <= shape.bounds[2] &&
+        py >= shape.bounds[1] &&
+        py <= shape.bounds[3] &&
+        ctx.isPointInPath(this.pathFor(shape), px, py, 'evenodd') &&
+        (!this.scene.allowsRegionHit ||
+          (coordinates && this.scene.allowsRegionHit(coordinates, shape.geometry)))
+      ) {
+        found = shape;
+        break;
+      }
+    }
     ctx.restore();
     return found ? { id: found.id, name: found.name, point: false } : undefined;
   }
@@ -357,6 +489,22 @@ export class CanvasMapRenderer {
     ctx.fillRect(0, 0, this.width, this.height);
     ctx.translate(this.x, this.y);
     ctx.scale(this.scale, this.scale);
+    const viewport: Bounds = [
+      -this.x / this.scale,
+      -this.y / this.scale,
+      (this.width - this.x) / this.scale,
+      (this.height - this.y) / this.scale,
+    ];
+    this.visibleShapes.length = 0;
+    for (const shape of this.shapes) {
+      if (
+        shape.bounds[0] <= viewport[2] &&
+        shape.bounds[2] >= viewport[0] &&
+        shape.bounds[1] <= viewport[3] &&
+        shape.bounds[3] >= viewport[1]
+      )
+        this.visibleShapes.push(shape);
+    }
     const boundaryWidth =
       this.scene.detailLevel === 'province' ? 1.4 : this.scene.detailLevel === 'city' ? 0.9 : 0.5;
     const boundaryColor = this.scene.dark
@@ -375,24 +523,25 @@ export class CanvasMapRenderer {
       ctx.save();
       ctx.fillStyle = POINT_MAP_APPEARANCE.highlightColor;
       ctx.globalAlpha = POINT_MAP_APPEARANCE.highlightOpacity;
-      for (const f of this.shapes)
-        if (f.selected && f.geometry.type.includes('Polygon')) ctx.fill(f.path, 'evenodd');
+      for (const f of this.visibleShapes)
+        if (f.selected && f.geometry.type.includes('Polygon')) ctx.fill(this.pathFor(f), 'evenodd');
       ctx.restore();
     }
-    for (const f of this.shapes) {
+    for (const f of this.visibleShapes) {
       if (f.boundary === false) continue;
-      if (!this.scene.pointExploration) {
+      if (!this.scene.pointExploration && f.geometry.type.includes('Polygon')) {
         ctx.fillStyle = f.fill;
-        ctx.fill(f.path, 'evenodd');
+        ctx.fill(this.pathFor(f), 'evenodd');
       }
       const countryOutline = ['LineString', 'MultiLineString'].includes(f.geometry.type);
+      ctx.setLineDash(f.dashed ? [10 / this.scale, 6 / this.scale] : []);
       if (this.scene.pointExploration) {
         ctx.strokeStyle = countryOutline
           ? POINT_MAP_APPEARANCE.borderColor
           : POINT_MAP_APPEARANCE.boundaryColor;
         ctx.globalAlpha = POINT_MAP_APPEARANCE.boundaryOpacity;
         ctx.lineWidth = (countryOutline ? 1.4 : boundaryWidth) / this.scale;
-        ctx.stroke(f.path);
+        ctx.stroke(this.pathFor(f));
         ctx.globalAlpha = 1;
         continue;
       }
@@ -404,31 +553,38 @@ export class CanvasMapRenderer {
           ? '#cf762b'
           : boundaryColor;
       ctx.lineWidth = (countryOutline ? 2.6 : f.selected ? 2 : boundaryWidth) / this.scale;
-      ctx.stroke(f.path);
+      ctx.stroke(this.pathFor(f));
     }
-    for (const point of this.scene.points.filter((point) => !point.markerKind)) {
-      const [x, y] = this.project(point.coords);
-      ctx.beginPath();
-      ctx.arc(x, y, 3.5 / this.scale, 0, Math.PI * 2);
-      ctx.fillStyle = point.marked ? '#d16932' : '#427a9d';
-      ctx.fill();
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 0.7 / this.scale;
-      ctx.stroke();
+    ctx.setLineDash([]);
+    for (const { point, x, y } of this.projectedPoints) {
+      const screenX = x * this.scale + this.x;
+      const screenY = y * this.scale + this.y;
+      if (
+        !point.markerKind &&
+        screenX >= -4 &&
+        screenY >= -4 &&
+        screenX <= this.width + 4 &&
+        screenY <= this.height + 4
+      ) {
+        ctx.beginPath();
+        ctx.arc(x, y, 3.5 / this.scale, 0, Math.PI * 2);
+        ctx.fillStyle = point.marked ? '#d16932' : '#427a9d';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 0.7 / this.scale;
+        ctx.stroke();
+      }
     }
-    this.markerGroups = clusterScreenMarkers(
-      this.scene.points
-        .filter((point) => point.markerKind)
-        .map((point) => {
-          const [x, y] = this.project(point.coords);
-          return {
-            id: point.id,
-            value: point,
-            x: x * this.scale + this.x,
-            y: y * this.scale + this.y,
-          };
-        }),
-    );
+    const screenMarkers = [];
+    for (const { point, x, y } of this.projectedPoints) {
+      if (!point.markerKind) continue;
+      const screenX = x * this.scale + this.x;
+      const screenY = y * this.scale + this.y;
+      if (screenX < -24 || screenY < -24 || screenX > this.width + 24 || screenY > this.height + 24)
+        continue;
+      screenMarkers.push({ id: point.id, value: point, x: screenX, y: screenY });
+    }
+    this.markerGroups = clusterScreenMarkers(screenMarkers);
     // Marker sizes are screen pixels, independent of map projection and zoom.
     // PNG export uses this same path, including the original SVG-derived symbols.
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -509,6 +665,11 @@ export class CanvasMapRenderer {
     );
   }
   destroy() {
+    this.stop();
+    if (this.drawFrame !== undefined) cancelAnimationFrame(this.drawFrame);
+    if (this.hoverFrame !== undefined) cancelAnimationFrame(this.hoverFrame);
+    this.drawFrame = undefined;
+    this.hoverFrame = undefined;
     this.abort.abort();
     this.observer.disconnect();
     this.canvas.remove();

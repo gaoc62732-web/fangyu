@@ -11,6 +11,7 @@ import { validCoordinates } from './map-coordinates.js';
 import { regionInteractionPolicy } from './sea-region-interaction.js';
 import type { TiledMapProps } from './types.js';
 import airportAssociations from '../../../../../data/extensions/research/china-airport-map-associations.json';
+import { applyChinaBoundaries } from './china-boundaries.js';
 
 export function useMapScene(
   props: TiledMapProps,
@@ -18,6 +19,7 @@ export function useMapScene(
   mapZoom: Ref<number>,
   level: Ref<string>,
   simple: Ref<GeoJSON.FeatureCollection | undefined>,
+  featureBounds: (id: string) => [number, number, number, number] | undefined = () => undefined,
 ) {
   const store = useAppStore();
   const hovered = ref<MapHover>();
@@ -36,9 +38,10 @@ export function useMapScene(
     return visitedMapMarkers(store.session!, {
       scope: props.scope,
       selectedRegionId: props.selected,
-      layers: props.pointMode
-        ? { visitedAirports: false, visitedWorldHeritage: false }
-        : visitedLayers.value,
+      layers:
+        props.pointMode || props.regionMode
+          ? { visitedAirports: false, visitedWorldHeritage: false }
+          : visitedLayers.value,
       associations: airportAssociations.associations as VerifiedVisitedMapAssociation[],
     });
   });
@@ -87,9 +90,10 @@ export function useMapScene(
   // Render exact association geometry, including holes and disconnected polygons.
   // A selected parent already covers its children: do not darken overlaps twice.
   const previewTargets = computed(() => {
-    const ids = [...new Set(props.previewRegions || [])].filter(
-      (id) => store.session!.index.regions.get(id)?.scope === props.scope,
-    );
+    void store.revision;
+    const ids = [
+      ...new Set((props.previewRegions || []).map((id) => store.session!.index.resolveRegion(id))),
+    ].filter((id) => store.session!.index.regions.get(id)?.scope === props.scope);
     return ids.filter(
       (id) => !ids.some((parent) => parent !== id && store.session!.index.belongsTo(id, parent)),
     );
@@ -161,13 +165,27 @@ export function useMapScene(
     top: `${Math.max(8, Math.min((host.value?.clientHeight || 560) - 100, (hovered.value?.y || 0) + 16))}px`,
   }));
   function scene(includePointOverlay = false): MapScene {
+    const collection =
+      simple.value && props.scope === 'china' && store.chinaBoundaryData
+        ? applyChinaBoundaries(
+            simple.value,
+            store.chinaBoundaryData,
+            store.chinaBoundarySettings,
+            props.level,
+          )
+        : simple.value;
     return {
       pointExploration: Boolean(props.pointMode),
       world: props.scope === 'world',
       dark: store.dark,
       allowsRegionHit: regionInteractionPolicy(props.scope),
       detailLevel: props.scope === 'china' && props.level !== 'country' ? props.level : undefined,
-      features: (simple.value?.features || [])
+      features: (collection?.features || [])
+        .filter((f) => {
+          if (props.scope !== 'china' || f.properties?.level !== 'county') return true;
+          const region = store.session!.index.regions.get(String(f.properties?.regionId || f.id));
+          return region && (region.level === 2 || ['810000', '820000'].includes(region.code));
+        })
         .filter(
           (f) =>
             f.properties?.level === level.value ||
@@ -178,20 +196,29 @@ export function useMapScene(
             (f.properties?.level === 'border' &&
               ['LineString', 'MultiLineString'].includes(f.geometry.type) &&
               (props.scope !== 'china' ||
-                ['land', 'maritime-dash'].includes(f.properties?.boundaryKind))),
+                ['land', 'maritime-dash', 'tanggula-nominal'].includes(
+                  f.properties?.boundaryKind,
+                ))),
         )
         .map((f) => {
-          const id = String(f.properties?.regionId || f.id);
+          const id = String(
+            f.properties?.level === 'border' ? f.id : f.properties?.regionId || f.id,
+          );
           return {
             id,
             name: String(f.properties?.name || ''),
             geometry: f.geometry,
+            ...(featureBounds(id) ? { bounds: featureBounds(id) } : {}),
             fill: f.properties?.level === 'border' ? 'transparent' : fill(id),
             selected: props.pointMode
               ? selected(id) && f.properties?.level === previewLevel(id)
               : selected(id),
-            interactive: !props.pointMode && store.session!.index.regions.has(id),
+            interactive:
+              !props.pointMode &&
+              f.properties?.level !== 'border' &&
+              store.session!.index.regions.has(id),
             boundary: f.properties?.level === level.value || f.properties?.level === 'border',
+            dashed: f.properties?.boundaryKind === 'tanggula-nominal',
           };
         }),
       points: [

@@ -41,6 +41,13 @@ const { SCOPE_IDS } = await import(
 const availableFiles = new Set(await fs.readdir(input));
 const scopes = SCOPE_IDS.filter((scope) => availableFiles.has(scope + '.geo.json'));
 const sourceNames = ['catalog.json', ...scopes.map((s) => s + '.geo.json')];
+const boundaryOptions = availableFiles.has('china-boundary-options.json')
+  ? await fs.readFile(path.join(input, 'china-boundary-options.json'))
+  : null;
+// The policy asset has five independently rendered rule groups. Keep this
+// count here to avoid parsing its large geometry bank during web preparation.
+const boundaryOptionGroups = boundaryOptions ? 5 : 0;
+if (boundaryOptions) sourceNames.push('china-boundary-options.json');
 const vietnamMaskBytes = await fs.readFile(
   path.join(root, 'data/extensions/research/south-china-sea-interaction-mask.json'),
 );
@@ -274,11 +281,15 @@ for (const scope of scopes) {
     // detail without asking the browser to parse every county for a province PNG.
     for (const level of ['province', 'city', 'county']) {
       const filename = `maps/china-${level}.json`;
-      await fs.writeFile(path.join(output, filename), JSON.stringify({
-        type: 'FeatureCollection',
-        features: simple.features.filter((f) =>
-          f.properties.level === level || f.properties.level === 'border'),
-      }));
+      await fs.writeFile(
+        path.join(output, filename),
+        JSON.stringify({
+          type: 'FeatureCollection',
+          features: simple.features.filter(
+            (f) => f.properties.level === level || f.properties.level === 'border',
+          ),
+        }),
+      );
       simplifiedLevels[level] = filename;
     }
   }
@@ -406,8 +417,19 @@ for (const scope of scopes) {
     layers,
     simplified: 'maps/' + scope + '.json',
     ...(scope === 'china' ? { simplifiedLevels } : {}),
+    ...(scope === 'china' && boundaryOptions
+      ? {
+          boundaryOptions: 'maps/china-boundary-options.json.gz',
+          boundaryOptionGroups,
+        }
+      : {}),
   };
 }
+if (boundaryOptions)
+  await fs.writeFile(
+    path.join(output, 'maps/china-boundary-options.json.gz'),
+    gzipSync(boundaryOptions),
+  );
 await fs.writeFile(path.join(output, 'map-manifest.json'), JSON.stringify(manifest));
 // Older local builds copied a font whose redistribution license was not established.
 // Remove only this generated asset; personal configuration and source archives stay untouched.

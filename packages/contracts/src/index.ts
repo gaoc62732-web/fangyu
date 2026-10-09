@@ -3,3 +3,4 @@ export * from './records.js';
 export * from './imports.js';
 export * from './scopes.js';
 export * from './heritage.js';
+export * from './china-boundaries.js';

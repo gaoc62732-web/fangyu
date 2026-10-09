@@ -3,6 +3,7 @@ import type { Scope } from '@fangyu/contracts';
 import { POINT_MAP_APPEARANCE } from '@fangyu/map-renderer';
 import { mapAssetUrl, type MapDataManifest, type BasemapProvider } from './types.js';
 import { mapAttributions } from './data-attribution.js';
+import { chinaBoundaryLayerId, chinaBoundarySourceId } from './china-boundaries.js';
 
 export const VISITED_MARKER_LAYER_IDS = ['visited-clusters', 'visited-markers'] as const;
 
@@ -188,6 +189,50 @@ export function createMapStyle(
         },
       });
   } else layers.push(...labels);
+  if (scope === 'china' && manifest.scopes.china.boundaryOptions) {
+    const administrativeLayers = layers.filter(
+      (layer) => 'source' in layer && ['province', 'city', 'county'].includes(String(layer.source)),
+    );
+    for (let index = 0; index < (manifest.scopes.china.boundaryOptionGroups || 0); index++) {
+      const sourceId = chinaBoundarySourceId(index);
+      sources[sourceId] = {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
+        promoteId: 'regionId',
+        maxzoom: 15,
+        tolerance: 0,
+      };
+      for (const original of administrativeLayers) {
+        const clone = structuredClone(original);
+        const level = String('source' in original ? original.source : '');
+        clone.id = chinaBoundaryLayerId(index, original.id);
+        if ('source' in clone) clone.source = sourceId;
+        if ('source-layer' in clone) delete clone['source-layer'];
+        if (clone.type === 'fill' || clone.type === 'line')
+          clone.filter = ['==', ['get', 'level'], level];
+        layers.splice(layers.findIndex((layer) => layer.id === original.id) + 1, 0, clone);
+      }
+    }
+    sources['china-options-lines'] = {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: [] },
+      maxzoom: 15,
+      tolerance: 0,
+    };
+    layers.push({
+      id: 'china-options-tanggula-nominal-line',
+      type: 'line',
+      source: 'china-options-lines',
+      filter: ['==', ['get', 'boundaryKind'], 'tanggula-nominal'],
+      layout: { visibility: 'visible', 'line-join': 'round', 'line-cap': 'round' },
+      paint: {
+        'line-color': pointMode ? POINT_MAP_APPEARANCE.boundaryColor : '#8ca49d',
+        'line-opacity': pointMode ? POINT_MAP_APPEARANCE.boundaryOpacity : 1,
+        'line-width': 1,
+        'line-dasharray': [8, 5],
+      },
+    });
+  }
   sources.points = { type: 'geojson', data: { type: 'FeatureCollection', features: [] } };
   layers.push({
     id: 'points',

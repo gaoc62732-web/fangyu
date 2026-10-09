@@ -7,10 +7,9 @@ import type {
 } from '@fangyu/contracts';
 import type { HandbookSession } from '@fangyu/domain';
 import {
-  CountySpatialIndex,
   decodeText,
   docxText,
-  geographicPlan,
+  geographicPlanFromMatches,
   namePlan,
   parseKml,
   parseOsm,
@@ -19,6 +18,7 @@ import {
   railtrackPlan,
   workbookPlan,
 } from '@fangyu/import-export';
+import type { GeographicFileMatches } from '@fangyu/import-export';
 
 export interface SelectedFeature {
   id: string;
@@ -134,13 +134,7 @@ export async function stageGeographicFiles(
   return stage;
 }
 
-export function geographicPreview(
-  session: HandbookSession,
-  spatial: CountySpatialIndex,
-  stage: GeographicStage,
-  state: VisitState,
-): ImportPlan {
-  assertCurrent(session, stage.baseRevision);
+export function selectedGeographicFiles(stage: GeographicStage): GeographicFile[] {
   const files = [...stage.files];
   for (const feature of stage.features.filter((feature) => feature.selected)) {
     files.push({
@@ -153,7 +147,18 @@ export function geographicPreview(
   if (!files.length) throw Error('请先选择 OSM 地图要素。');
   if (files.reduce((total, file) => total + file.vertices, 0) > 250000)
     throw Error('所选坐标超过 250000 个，请缩小范围。');
-  const plan = geographicPlan(session, spatial, files, state);
+  return files;
+}
+
+export function geographicPreview(
+  session: HandbookSession,
+  stage: GeographicStage,
+  matches: GeographicFileMatches[],
+  state: VisitState,
+): ImportPlan {
+  assertCurrent(session, stage.baseRevision);
+  const files = selectedGeographicFiles(stage);
+  const plan = geographicPlanFromMatches(session, files, matches, state);
   plan.notes.push(...stage.notes);
   return plan;
 }
@@ -203,14 +208,15 @@ export function selectedOsmKml(stage: GeographicStage): string {
 
 export async function photoPlan(
   session: HandbookSession,
-  spatial: CountySpatialIndex,
   files: File[],
+  matchPoints: (points: [number, number][]) => Promise<string[][]>,
   onProgress: (message: string) => void,
 ): Promise<ImportPlan> {
   if (files.length > 2000) throw Error('一次最多选择 2000 张照片。');
   const revision = session.revision;
   const rows = new Map<string, ImportRow>();
   const notes: string[] = [];
+  const photos: { file: File; gps: NonNullable<ReturnType<typeof photoMetadata>> }[] = [];
   for (const [index, file] of files.entries()) {
     try {
       limit(file, 80);
@@ -219,37 +225,40 @@ export async function photoPlan(
         notes.push(file.name + '：无内嵌 GPS');
         continue;
       }
-      const ids = [...spatial.pointHits([gps.lon, gps.lat])];
-      const uncertain =
-        ids.length > 1 || Boolean(gps.datum && !/WGS\s*[-_]?\s*84/i.test(gps.datum));
-      if (!ids.length) notes.push(file.name + '：县界外或未匹配');
-      for (const id of ids) {
-        const region = session.index.regions.get(id)!;
-        const existing = rows.get(id);
-        if (existing) {
-          existing.source += '；' + file.name;
-          if (uncertain) {
-            existing.include = false;
-            existing.result = '包含边界或坐标基准歧义';
-          }
-          continue;
-        }
-        rows.set(id, {
-          id: crypto.randomUUID(),
-          source: file.name,
-          input: gps.time || '照片 GPS',
-          kind: 'region',
-          candidates: [{ id, name: region.name, path: session.index.paths.get(id) || '' }],
-          choice: 0,
-          include: !uncertain,
-          state: 'transit',
-          result: uncertain ? '边界或坐标基准待核对' : 'GPS 已匹配',
-        });
-      }
+      photos.push({ file, gps });
     } catch (cause) {
       notes.push(file.name + '：' + String(cause));
     } finally {
       onProgress('已读取照片 ' + (index + 1) + ' / ' + files.length);
+    }
+  }
+  const matches = await matchPoints(photos.map(({ gps }) => [gps.lon, gps.lat]));
+  for (const [index, { file, gps }] of photos.entries()) {
+    const ids = matches[index] || [];
+    const uncertain = ids.length > 1 || Boolean(gps.datum && !/WGS\s*[-_]?\s*84/i.test(gps.datum));
+    if (!ids.length) notes.push(file.name + '：县界外或未匹配');
+    for (const id of ids) {
+      const region = session.index.regions.get(id)!;
+      const existing = rows.get(id);
+      if (existing) {
+        existing.source += '；' + file.name;
+        if (uncertain) {
+          existing.include = false;
+          existing.result = '包含边界或坐标基准歧义';
+        }
+        continue;
+      }
+      rows.set(id, {
+        id: crypto.randomUUID(),
+        source: file.name,
+        input: gps.time || '照片 GPS',
+        kind: 'region',
+        candidates: [{ id, name: region.name, path: session.index.paths.get(id) || '' }],
+        choice: 0,
+        include: !uncertain,
+        state: 'transit',
+        result: uncertain ? '边界或坐标基准待核对' : 'GPS 已匹配',
+      });
     }
   }
   assertCurrent(session, revision);

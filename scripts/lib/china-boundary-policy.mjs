@@ -7,7 +7,16 @@ export function removeHistoricalGeometry(rows, regions) {
   const historicalIds = new Set(
     regions.filter((region) => region.scope === 'china' && region.historical).map((r) => r.id),
   );
-  return rows.filter((row) => !historicalIds.has(row.regionId));
+  const current = new Map(regions.filter((r) => r.scope === 'china').map((r) => [r.id, r]));
+  return rows.filter((row) => {
+    if (row.level === 'border') return true;
+    const region = current.get(row.regionId);
+    return (
+      region &&
+      !historicalIds.has(row.regionId) &&
+      (row.level !== 'county' || region.level === 2 || ['810000', '820000'].includes(region.code))
+    );
+  });
 }
 
 // Once the reviewed dataset is published, a new OSM import must keep the exact

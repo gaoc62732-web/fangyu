@@ -48,3 +48,5 @@ data/extensions/research/german-single-entity-gis-*.js.txt
 data/extensions/research/vn-batch*-evidence/*.pdf
 data/extensions/research/vn-batch*-evidence/*.png
 data/extensions/research/vn-batch*-evidence/*.html
+
+AGENT.md

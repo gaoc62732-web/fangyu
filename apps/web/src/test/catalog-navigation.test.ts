@@ -5,7 +5,6 @@ import { CatalogIndex } from '@fangyu/catalog';
 import { HandbookSession } from '@fangyu/domain';
 import { useAppStore } from '../app/store.js';
 import CatalogPage from '../pages/CatalogPage.vue';
-import CategoryEntryList from '../components/CategoryEntryList.vue';
 import MapSurface from '../components/MapSurface.vue';
 import { beijing } from './fixtures.js';
 import {
@@ -45,6 +44,7 @@ const back = () => wrapper!.findAll('button').find((button) => button.text() ===
 describe('country navigation', () => {
   it('opens France deep links, preserves grouping and follows the map level while going back', async () => {
     const { store, router } = await open();
+    await wrapper!.find('.region-explorer').trigger('pointerenter', { pointerType: 'mouse' });
     expect(store.selectedRegionId).toBe(arrondissement);
     expect(wrapper!.find<HTMLSelectElement>('select[aria-label=地区]').element.value).toBe(
       ileDeFrance,
@@ -70,16 +70,13 @@ describe('country navigation', () => {
     expect(wrapper!.find('select[aria-label=法兰西岛省级单位]').exists()).toBe(false);
   });
 
-  it('clears point focus on navigation and rejects a deep link from another scope', async () => {
+  it('keeps point operations out of regions and rejects a deep link from another scope', async () => {
     const { store, router } = await open();
-    wrapper!
-      .findComponent(CategoryEntryList)
-      .vm.$emit('locate', store.session!.view(store.session!.entry(franceEntry)));
-    await flushPromises();
-    expect(map().props('focus')).toEqual([2.34, 48.86]);
+    expect(map().props('points')).toEqual([]);
+    expect(map().props('focus')).toBeUndefined();
     await back().trigger('click');
     await flushPromises();
-    expect(map().props('focus')).toBeNull();
+    expect(map().props('focus')).toBeUndefined();
     await router.push({ query: { region: beijing } });
     await flushPromises();
     expect(store.selectedRegionId).toBe('');
@@ -88,12 +85,13 @@ describe('country navigation', () => {
 
   it('resets query/category/selection when changing country', async () => {
     const { store } = await open();
-    await wrapper!.find('input[aria-label=搜索目录]').setValue('巴黎');
+    await wrapper!.find('input[aria-label=搜索行政区]').setValue('巴黎');
     store.category = 'airport';
     await wrapper!.setProps({ scope: 'china' });
     expect(store.selectedRegionId).toBe('');
     expect(store.category).toBe('');
-    expect((wrapper!.find('input[aria-label=搜索目录]').element as HTMLInputElement).value).toBe(
+    await wrapper!.find('[aria-label="地区目录"]').trigger('click');
+    expect((wrapper!.find('input[aria-label=搜索行政区]').element as HTMLInputElement).value).toBe(
       '',
     );
     expect(map().props('scope')).toBe('china');

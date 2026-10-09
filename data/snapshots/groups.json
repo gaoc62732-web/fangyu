@@ -11,6 +11,7 @@
     "data/extensions/research/*.json",
     "data/boundaries/china-policy/applied.json",
     "data/boundaries/china-policy/audit.json",
+    "data/boundaries/china-policy/admin-options-audit.json",
     "data/boundaries/china-policy/evidence.json",
     "data/boundaries/china-policy/decisions.json",
     "data/boundaries/china-policy/historical-removal.json",

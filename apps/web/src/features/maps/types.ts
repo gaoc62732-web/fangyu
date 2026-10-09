@@ -11,6 +11,8 @@ export interface MapDataManifest {
       regionBounds: Record<string, Bounds>;
       simplified: string;
       simplifiedLevels?: Record<string, string>;
+      boundaryOptions?: string;
+      boundaryOptionGroups?: number;
       layers: { level: string; maxzoom: number; bounds: Bounds; url: string; archive?: boolean }[];
     }
   >;
@@ -55,6 +57,7 @@ export interface TiledMapProps {
   points?: EntryView[] | undefined;
   focus?: [number, number] | null | undefined;
   pointMode?: boolean;
+  regionMode?: boolean;
   initialCamera?: { center: [number, number]; zoom: number } | undefined;
   previewRegions?: string[] | undefined;
 }

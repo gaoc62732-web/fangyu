@@ -76,6 +76,8 @@ export const pointCheckinPreferencesSchema = z
   .strict();
 export type PointCheckinPreferences = z.infer<typeof pointCheckinPreferencesSchema>;
 
+import { chinaBoundarySettingsSchema } from './china-boundaries.js';
+
 export const preferencesSchema = z
   .object({
     palette: z.enum(['jade', 'ink', 'autumn', 'ocean', 'contrast', 'custom']).default('jade'),
@@ -83,6 +85,8 @@ export const preferencesSchema = z
       .record(z.enum([...VISIT_STATES, 'unmapped']), z.string().regex(/^#[a-f0-9]{6}$/i))
       .optional(),
     mapLevel: z.enum(['province', 'city', 'county']).default('county'),
+    regionAutoFocus: z.boolean().optional(),
+    chinaBoundaries: chinaBoundarySettingsSchema.optional(),
     mapLayers: mapLayersSchema.optional(),
     pointCheckin: pointCheckinPreferencesSchema.optional(),
   })

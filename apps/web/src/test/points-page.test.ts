@@ -8,6 +8,7 @@ import PointsPage from '../pages/PointsPage.vue';
 import SettingsPage from '../pages/SettingsPage.vue';
 import MapSurface from '../components/MapSurface.vue';
 import { airport, station, dongcheng, beijing, catalog } from './fixtures.js';
+import { navigationCatalog, franceEntry } from './navigation-fixtures.js';
 vi.mock('../components/MapSurface.vue', () => ({
   default: {
     name: 'MapSurface',
@@ -27,7 +28,7 @@ vi.mock('../components/MapSurface.vue', () => ({
 }));
 let wrapper: VueWrapper | undefined;
 afterEach(() => wrapper?.unmount());
-async function open(fixture = catalog) {
+async function open(fixture = catalog, path = '/') {
   vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(500);
   vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(310);
   const store = useAppStore();
@@ -48,7 +49,7 @@ async function open(fixture = catalog) {
       { path: '/china', component: { template: '<div />' } },
     ],
   });
-  await router.push('/');
+  await router.push(path);
   await router.isReady();
   wrapper = mount(PointsPage, { global: { plugins: [router] } });
   return store;
@@ -61,6 +62,30 @@ async function select(id = airport) {
   await flushPromises();
 }
 describe('point page interactions', () => {
+  it('opens a record location in its own scope and category when the requested scope is unrelated', async () => {
+    const fixture = structuredClone(navigationCatalog);
+    fixture.entries.find((entry) => entry.id === franceEntry)!.categoryId = 'railway-station';
+    const store = await open(fixture, `/?entry=${franceEntry}&scope=china`);
+    await flushPromises();
+    expect(map().props()).toMatchObject({
+      scope: 'france',
+      category: 'railway-station',
+      initialCamera: { center: [2.34, 48.86], zoom: 14 },
+    });
+    expect(wrapper!.find('.point-panel h3').text()).toBe('法国测试地点');
+    expect(store.session!.snapshot().entries).toEqual({});
+    expect(store.regionalMap!.scope).toBe('china');
+  });
+  it('opens record details without coordinates while preserving the same-scope camera', async () => {
+    const fixture = structuredClone(catalog);
+    fixture.entries.find((entry) => entry.id === station)!.coordinates = null;
+    await open(fixture, `/?entry=${station}&scope=china`);
+    await flushPromises();
+    expect(map().props('category')).toBe('railway-station');
+    expect(map().props('initialCamera')).toEqual({ center: [116.5, 39.8], zoom: 10 });
+    expect(wrapper!.find('.point-panel h3').text()).toBe('测试车站');
+    expect(map().props('points')?.[0]?.coordinates).toBeNull();
+  });
   it('opens just one filter menu on hover and changes category without changing the inherited camera', async () => {
     await open();
     const camera = map().props('initialCamera');

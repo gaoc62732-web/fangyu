@@ -4,11 +4,15 @@ export interface RenderFeature {
   id: string;
   name: string;
   geometry: GeoJSON.Geometry;
+  /** Geographic [west, south, east, north] bounds when supplied by the data manifest. */
+  bounds?: [number, number, number, number] | undefined;
   fill: string;
   selected?: boolean;
   interactive?: boolean;
   /** Preview geometry from another administrative level may fill without adding boundaries. */
   boundary?: boolean;
+  /** Reference boundaries are drawn as noninteractive dashed lines. */
+  dashed?: boolean;
 }
 
 export interface RenderPoint {

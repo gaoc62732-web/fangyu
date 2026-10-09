@@ -3,6 +3,7 @@ import type {
   GeometryFeature,
   ImportPlan,
   ImportRow,
+  Region,
   VisitState,
 } from '@fangyu/contracts';
 import { VISIT_RANK } from '@fangyu/contracts';
@@ -14,6 +15,14 @@ interface CountyGeometry {
   regionId: string;
   polygons: Point[][][];
   bounds: Bounds;
+}
+type SpatialRegion = Pick<Region, 'id' | 'level' | 'historical'>;
+export interface GeographicItemMatches {
+  pointHits: string[][];
+  lineHits: string[][];
+}
+export interface GeographicFileMatches {
+  items: GeographicItemMatches[];
 }
 
 function bounds(points: Point[]): Bounds {
@@ -85,9 +94,13 @@ export class CountySpatialIndex {
   private readonly grid = new Map<string, CountyGeometry[]>();
   private readonly extent: Bounds = [Infinity, Infinity, -Infinity, -Infinity];
 
-  constructor(session: HandbookSession, geometry: GeometryFeature[]) {
+  constructor(regions: readonly SpatialRegion[] | HandbookSession, geometry: GeometryFeature[]) {
+    const regionById =
+      'index' in regions
+        ? regions.index.regions
+        : new Map(regions.map((region) => [region.id, region]));
     for (const feature of geometry) {
-      const region = feature.regionId ? session.index.regions.get(feature.regionId) : undefined;
+      const region = feature.regionId ? regionById.get(feature.regionId) : undefined;
       if (feature.level !== 'county' || !region || region.level !== 2 || region.historical)
         continue;
       if (feature.geometry.type !== 'Polygon' && feature.geometry.type !== 'MultiPolygon') continue;
@@ -172,6 +185,27 @@ export function geographicPlan(
   files: GeographicFile[],
   state: VisitState,
 ): ImportPlan {
+  return geographicPlanFromMatches(session, files, matchGeographicFiles(spatial, files), state);
+}
+
+export function matchGeographicFiles(
+  spatial: CountySpatialIndex,
+  files: GeographicFile[],
+): GeographicFileMatches[] {
+  return files.map((file) => ({
+    items: file.items.map((item) => ({
+      pointHits: item.points.map((point) => [...spatial.pointHits(point)]),
+      lineHits: item.lines.map((line) => [...spatial.lineHits(line)]),
+    })),
+  }));
+}
+
+export function geographicPlanFromMatches(
+  session: HandbookSession,
+  files: GeographicFile[],
+  matches: GeographicFileMatches[],
+  state: VisitState,
+): ImportPlan {
   const rows = new Map<string, ImportRow>();
   const notes: string[] = [];
   const add = (regionId: string, source: string, input: string, ambiguous: boolean) => {
@@ -200,18 +234,19 @@ export function geographicPlan(
     });
   };
 
-  for (const file of files) {
+  for (const [fileIndex, file] of files.entries()) {
     if (file.unsupported)
       notes.push(file.fileName + '：跳过 ' + file.unsupported + ' 个不支持的面或关系。');
-    for (const item of file.items) {
+    for (const [itemIndex, item] of file.items.entries()) {
+      const itemMatches = matches[fileIndex]?.items[itemIndex];
       let matched = false;
-      for (const point of item.points) {
-        const hits = spatial.pointHits(point);
+      for (const hitsList of itemMatches?.pointHits || []) {
+        const hits = new Set(hitsList);
         matched ||= hits.size > 0;
         for (const id of hits) add(id, file.fileName, item.name, hits.size > 1);
       }
-      for (const line of item.lines) {
-        const hits = spatial.lineHits(line);
+      for (const hitsList of itemMatches?.lineHits || []) {
+        const hits = new Set(hitsList);
         matched ||= hits.size > 0;
         for (const id of hits) add(id, file.fileName, item.name, false);
       }

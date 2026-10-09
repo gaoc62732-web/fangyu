@@ -31,6 +31,7 @@ export class HandbookSession {
   ) {
     this.state = emptySnapshot(index.catalog.version);
     if (snapshot) this.replace(snapshot);
+    else this.index.configureChinaBoundaries();
   }
 
   get revision(): number {
@@ -97,6 +98,7 @@ export class HandbookSession {
 
   replace(input: unknown): void {
     this.state = this.validate(input);
+    this.index.configureChinaBoundaries(this.state.preferences.chinaBoundaries);
   }
 
   transaction(update: () => void): void {
@@ -107,6 +109,7 @@ export class HandbookSession {
       this.state.updatedAt = new Date().toISOString();
     } catch (error) {
       this.state = previous;
+      this.index.configureChinaBoundaries(this.state.preferences.chinaBoundaries);
       throw error;
     }
     this.history.push(previous);
@@ -119,6 +122,7 @@ export class HandbookSession {
     previous.revision = this.state.revision + 1;
     previous.updatedAt = new Date().toISOString();
     this.state = previous;
+    this.index.configureChinaBoundaries(this.state.preferences.chinaBoundaries);
   }
 
   /** The saved manual/legacy value, without county residence aggregation. */
@@ -127,7 +131,11 @@ export class HandbookSession {
   }
 
   visitState(regionId: string): VisitState {
-    let effective = this.recordedVisitState(regionId);
+    regionId = this.index.resolveRegion(regionId);
+    let effective = this.index.recordRegionIds(regionId).reduce<VisitState>((best, id) => {
+      const state = this.recordedVisitState(id);
+      return VISIT_RANK[state] > VISIT_RANK[best] ? state : best;
+    }, 'unvisited');
     const region = this.index.regions.get(regionId);
     if (region?.scope === 'china' && (region.level === 0 || region.level === 1)) {
       // Passing through or flying over a county/city also colors its containing city
@@ -137,7 +145,8 @@ export class HandbookSession {
       while (pending.length) {
         const child = pending.pop()!;
         if (child.scope !== 'china') continue;
-        const state = this.recordedVisitState(child.id);
+        const state =
+          child.level === 2 ? this.visitState(child.id) : this.recordedVisitState(child.id);
         if (
           (state === 'transit' ||
             state === 'flyover' ||
@@ -165,7 +174,8 @@ export class HandbookSession {
     if (!this.index.regions.has(regionId) || !(state in VISIT_RANK)) {
       throw Error('无效地区或旅行状态。');
     }
-    this.state.regions[regionId] = state;
+    regionId = this.index.resolveRegion(regionId);
+    for (const id of this.index.recordRegionIds(regionId)) this.state.regions[id] = state;
     if (propagate && this.arrived(regionId)) {
       this.markAncestors(regionId);
     }
@@ -365,6 +375,7 @@ export class HandbookSession {
 
   updatePreferences(preferences: Partial<RecordSnapshot['preferences']>): void {
     this.state.preferences = { ...this.state.preferences, ...preferences };
+    this.index.configureChinaBoundaries(this.state.preferences.chinaBoundaries);
   }
 
   clearVisits(): void {

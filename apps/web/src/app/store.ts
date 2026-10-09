@@ -1,12 +1,18 @@
 import { computed, markRaw, ref, shallowRef } from 'vue';
 import { defineStore } from 'pinia';
 import { loadWebCatalog } from './catalog-loader.js';
-import { CatalogIndex, loadGeometry } from '@fangyu/catalog';
+import { CatalogIndex } from '@fangyu/catalog';
 import { HandbookSession, PALETTES, darkColors, type MapColors } from '@fangyu/domain';
-import type { ArchiveDocument, GeometryFeature, Scope, MapLevel } from '@fangyu/contracts';
+import {
+  DEFAULT_CHINA_BOUNDARIES,
+  type ArchiveDocument,
+  type Scope,
+  type MapLevel,
+} from '@fangyu/contracts';
 import type { HandbookStorage } from '@fangyu/data-access';
 import { createAppDataAccess } from './data-access.js';
 import { appMode } from './mode.js';
+import type { ChinaBoundaryData } from '../features/maps/china-boundaries.js';
 
 export const useAppStore = defineStore('app', () => {
   const session = shallowRef<HandbookSession>();
@@ -25,14 +31,56 @@ export const useAppStore = defineStore('app', () => {
   }>();
   const archives = ref<ArchiveDocument[]>([]);
   const dark = ref(localStorage.getItem('fangyu-theme') === 'dark');
-  const geometry = shallowRef<Partial<Record<Scope, GeometryFeature[]>>>({});
+  const chinaBoundaryData = shallowRef<ChinaBoundaryData>();
+  const chinaBoundarySettings = computed(() => {
+    void revision.value;
+    return session.value?.preferences.chinaBoundaries || DEFAULT_CHINA_BOUNDARIES;
+  });
+  let boundaryRequest: Promise<ChinaBoundaryData> | undefined;
+  let boundaryUsers = 0;
+  async function loadChinaBoundaries() {
+    if (chinaBoundaryData.value) return chinaBoundaryData.value;
+    boundaryRequest ||= (async () => {
+      const response = await fetch(baseUrl + 'maps/china-boundary-options.json.gz');
+      if (!response.ok) throw Error('地区归属边界暂时无法加载。');
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      const data =
+        bytes[0] === 0x1f && bytes[1] === 0x8b
+          ? ((await new Response(
+              new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip')),
+            ).json()) as ChinaBoundaryData)
+          : (JSON.parse(new TextDecoder().decode(bytes)) as ChinaBoundaryData);
+      if (boundaryUsers) chinaBoundaryData.value = markRaw(data);
+      return data;
+    })();
+    try {
+      return await boundaryRequest;
+    } finally {
+      boundaryRequest = undefined;
+    }
+  }
+  async function acquireChinaBoundaries() {
+    boundaryUsers++;
+    let released = false;
+    const release = () => {
+      if (released) return;
+      released = true;
+      boundaryUsers = Math.max(0, boundaryUsers - 1);
+      if (!boundaryUsers) chinaBoundaryData.value = undefined;
+    };
+    try {
+      const data = await loadChinaBoundaries();
+      return { data, release };
+    } catch (cause) {
+      release();
+      throw cause;
+    }
+  }
   const baseUrl = import.meta.env.BASE_URL;
   let storage: HandbookStorage;
   let savedRevision = 0;
   let saveQueue = Promise.resolve();
   let saveFailure: unknown;
-  const geometryRequests = new Map<Scope, Promise<GeometryFeature[]>>();
-
   async function load() {
     loading.value = true;
     loadError.value = '';
@@ -63,23 +111,6 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
-  async function ensureGeometry(scope: Scope) {
-    const existing = geometry.value[scope];
-    if (existing) return existing;
-    let request = geometryRequests.get(scope);
-    if (!request) {
-      request = loadGeometry(baseUrl + 'geometry/', scope);
-      geometryRequests.set(scope, request);
-    }
-    try {
-      const features = await request;
-      geometry.value = { ...geometry.value, [scope]: markRaw(features) };
-      return features;
-    } finally {
-      geometryRequests.delete(scope);
-    }
-  }
-
   function persist() {
     if (saveFailure) {
       saveStatus.value = '保存失败，请导出 JSON 备份';
@@ -105,6 +136,7 @@ export const useAppStore = defineStore('app', () => {
   function commit(update: (current: HandbookSession) => void): boolean {
     try {
       session.value!.transaction(() => update(session.value!));
+      selectedRegionId.value = session.value!.index.resolveRegion(selectedRegionId.value);
       revision.value++;
       void persist();
       return true;
@@ -205,7 +237,8 @@ export const useAppStore = defineStore('app', () => {
     rows,
     canUndo,
     colors,
-    geometry,
-    ensureGeometry,
+    chinaBoundaryData,
+    chinaBoundarySettings,
+    acquireChinaBoundaries,
   };
 });

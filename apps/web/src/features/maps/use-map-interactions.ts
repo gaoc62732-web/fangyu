@@ -27,6 +27,18 @@ export function useMapInteractions(
 ) {
   const store = useAppStore();
   const { hovered, visitedById, visitedResult } = drawing;
+  function selectableRegion(id: string) {
+    const index = store.session!.index;
+    const region = index.regions.get(id);
+    return (
+      region &&
+      index.resolveRegion(id) === id &&
+      (props.scope !== 'china' ||
+        level.value !== 'county' ||
+        region.level === 2 ||
+        ['810000', '820000'].includes(region.code))
+    );
+  }
   let visitedSelectionRequest = 0;
   const selectedVisitedIds = ref<string[]>([]);
   const selectedVisitedMarkers = computed(() =>
@@ -145,9 +157,15 @@ export function useMapInteractions(
       }
       const layer = level.value + '-fill';
       if (!current.getLayer(layer)) return;
+      const optionLayers = current
+        .getStyle()
+        .layers.filter((item) => item.id.startsWith(`china-options-${layer}-`))
+        .map((item) => item.id);
       const f = current
-        .queryRenderedFeatures(e.point, { layers: [layer] })
-        .find((f) => store.session!.index.regions.has(String(f.properties.regionId)));
+        .queryRenderedFeatures(e.point, {
+          layers: [...optionLayers, layer].filter((id) => current.getLayer(id)),
+        })
+        .find((f) => selectableRegion(String(f.properties.regionId)));
       if (f) {
         const allowed = regionInteractionPolicy(props.scope);
         if (allowed && !allowed([e.lngLat.lng, e.lngLat.lat], f.geometry)) {
@@ -181,13 +199,21 @@ export function useMapInteractions(
         current.getCanvas().style.cursor = 'pointer';
         return;
       }
-      const layers = ['points', level.value + '-fill'].filter((id) => current.getLayer(id));
+      const optionLayers = current
+        .getStyle()
+        .layers.filter((item) => item.id.startsWith(`china-options-${level.value}-fill-`))
+        .map((item) => item.id);
+      const layers = [
+        'points',
+        ...optionLayers,
+        level.value + '-fill',
+      ].filter((id) => current.getLayer(id));
       const f = current
         .queryRenderedFeatures(e.point, { layers })
         .find(
           (f) =>
             f.layer.id === 'points' ||
-            (store.session!.index.regions.has(String(f.properties.regionId)) &&
+            (selectableRegion(String(f.properties.regionId)) &&
               (regionInteractionPolicy(props.scope)?.([e.lngLat.lng, e.lngLat.lat], f.geometry) ??
                 true)),
         );

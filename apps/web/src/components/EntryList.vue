@@ -222,7 +222,7 @@ function removePersonalEntry(entry: EntryView) {
           >资料来源</a
         >
         <button @click="emit('locate', entry)">
-          {{ missingPoint(entry) ? '查看所属地区' : '定位' }}
+          {{ missingPoint(entry) ? '查看资料' : '定位' }}
         </button>
         <button @click="edit(entry)">编辑名称与备注</button>
         <button

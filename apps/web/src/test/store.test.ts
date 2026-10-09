@@ -1,9 +1,28 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { useAppStore } from '../app/store.js';
 import { storage } from './setup.js';
 import { airport, dongcheng, station } from './fixtures.js';
 
 describe('record persistence', () => {
+  it('releases shared China boundary data after its final consumer leaves', async () => {
+    const store = useAppStore();
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ geometries: {}, groups: [] }), { status: 200 }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+    const first = await store.acquireChinaBoundaries();
+    const second = await store.acquireChinaBoundaries();
+    expect(store.chinaBoundaryData).toBe(first.data);
+    expect(fetchMock).toHaveBeenCalledOnce();
+
+    first.release();
+    expect(store.chinaBoundaryData).toBe(first.data);
+    second.release();
+    expect(store.chinaBoundaryData).toBeUndefined();
+    second.release();
+    expect(store.chinaBoundaryData).toBeUndefined();
+  });
+
   it('does not save or change the revision when there is nothing to undo', async () => {
     const store = useAppStore();
     await store.load();

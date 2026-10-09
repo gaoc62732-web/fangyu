@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import osmtogeojson from 'osmtogeojson';
 const base = new URL('../data/tmp/china-boundary-review/', import.meta.url);
 const names = (await fs.readdir(base)).filter((name) =>
-  /^(osm-full-\d+|hannan-streets|caidian-streets|wendeng-(north|middle|south)|disputed-geometries)\.json$/.test(
+  /^(osm-full-\d+|hannan-streets|caidian-streets|suzhou-park-streets|wendeng-(north|middle|south)|disputed-geometries)\.json$/.test(
     name,
   ),
 );

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { RouterLink } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useVirtualizer } from '@tanstack/vue-virtual';
 import {
   SCOPE_IDS,
+  isScope,
   getScopeConfig,
   type Scope,
   type MapLevel,
@@ -30,6 +31,7 @@ import PointSelect from '../components/PointSelect.vue';
 import { useAppStore } from '../app/store.js';
 
 const store = useAppStore();
+const route = useRoute();
 const session = computed(() => store.session!);
 const inherited = store.regionalMap;
 const scope = ref<Scope>(inherited?.scope || 'china');
@@ -280,6 +282,28 @@ function choosePoint(id: string) {
   const entry = store.rows.find((e) => e.id === id);
   if (entry) openEntry(entry);
 }
+// Existing record-list location links now open the point module directly.
+watch(
+  () => [route.query.entry, route.query.scope],
+  ([id, requestedScope]) => {
+    if (typeof id !== 'string') return;
+    const entry = store.rows.find((e) => e.id === id);
+    if (!entry) return;
+    const targetScope =
+      typeof requestedScope === 'string' &&
+      isScope(requestedScope) &&
+      session.value.index.entryRegions(entry, requestedScope).length
+        ? requestedScope
+        : entry.scope;
+    if (scope.value !== targetScope) {
+      scope.value = targetScope;
+      switchScope();
+    }
+    if (drawablePoint(entry)) initialCamera.value = { center: entry.coordinates!, zoom: 14 };
+    openEntry(entry);
+  },
+  { immediate: true },
+);
 function openList(ids: string[] = []) {
   if (pending.value) finish();
   clusterIds.value = ids;
@@ -462,23 +486,6 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="point-page">
-    <header class="atlas-header">
-      <div class="atlas-brand">
-        <PointIcon
-          name="compass"
-          :size="27"
-        /><span>方舆</span><i />
-        <h1>点位点卯</h1>
-      </div>
-      <div class="atlas-header-actions">
-        <RouterLink :to="'/' + (inherited?.scope || 'china')"
-          ><PointIcon
-            name="back"
-            :size="16"
-          /><span>区域点卯</span></RouterLink
-        >
-      </div>
-    </header>
     <div
       ref="workspace"
       class="point-workspace"
@@ -1022,7 +1029,7 @@ onBeforeUnmount(() => {
   --point-meta-size: 14px;
   --point-accent: #343d32;
   --point-gold: #9b7c45;
-  height: 100dvh;
+  height: calc(100dvh - 56px);
   min-height: 480px;
   display: flex;
   flex-direction: column;

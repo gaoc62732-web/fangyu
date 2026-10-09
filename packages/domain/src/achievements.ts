@@ -133,7 +133,10 @@ export function maofenProgress(session: HandbookSession) {
     if (region.level === 0) return true;
     const root = session.index.ancestors(region.id)[0];
     if (['710000', '810000', '820000'].includes(root?.code || '')) return false;
-    return region.level === 1 || (region.level === 2 && /^\d{6}$/.test(region.code));
+    return (
+      region.level === 1 ||
+      (region.level === 2 && (/^\d{6}$/.test(region.code) || region.kind === 'management-area'))
+    );
   };
   const groups = active
     .filter((region) => region.level === 0)

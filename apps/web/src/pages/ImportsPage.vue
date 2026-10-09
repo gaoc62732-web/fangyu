@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { VISIT_LABELS, type ImportPlan, type VisitState } from '@fangyu/contracts';
-import { CountySpatialIndex, exportWorkbook, namePlan } from '@fangyu/import-export';
+import { exportWorkbook, namePlan } from '@fangyu/import-export';
 import { useAppStore } from '../app/store.js';
+import { CountySpatialWorker } from '../features/imports/county-spatial-client.js';
 import { download, exportCsv, exportJson } from '../features/exports/download.js';
 import {
   applyRows,
@@ -11,6 +12,7 @@ import {
   parseRecordFile,
   photoPlan,
   selectedOsmKml,
+  selectedGeographicFiles,
   stageGeographicFiles,
   type GeographicStage,
 } from '../features/imports/parse.js';
@@ -18,7 +20,7 @@ import {
 const store = useAppStore();
 const plan = ref<ImportPlan>();
 const stage = ref<GeographicStage>();
-const spatial = shallowRef<CountySpatialIndex>();
+let spatialWorker: CountySpatialWorker | undefined;
 const busy = ref(false);
 const message = ref('');
 const names = ref('');
@@ -66,10 +68,18 @@ async function work(action: () => Promise<void>) {
   }
 }
 
-async function countyIndex() {
-  if (!spatial.value)
-    spatial.value = new CountySpatialIndex(store.session!, await store.ensureGeometry('china'));
-  return spatial.value;
+function countyWorker() {
+  if (!spatialWorker) {
+    const counties = [...store.session!.index.regions.values()]
+      .filter((region) => region.scope === 'china' && region.level === 2)
+      .map(({ id, level, historical }) => ({ id, level, historical }));
+    spatialWorker = new CountySpatialWorker(
+      import.meta.env.BASE_URL,
+      counties,
+      store.chinaBoundarySettings,
+    );
+  }
+  return spatialWorker;
 }
 
 function files(event: Event): File[] {
@@ -119,7 +129,9 @@ async function chooseGeographic(event: Event) {
 
 async function previewGeographic() {
   if (!stage.value) return;
-  plan.value = geographicPreview(store.session!, await countyIndex(), stage.value, state.value);
+  const files = selectedGeographicFiles(stage.value);
+  const matches = await countyWorker().matchGeographic(files);
+  plan.value = geographicPreview(store.session!, stage.value, matches, state.value);
   page.value = 0;
 }
 
@@ -127,12 +139,24 @@ async function choosePhotos(event: Event) {
   const selected = files(event);
   await work(async () => {
     plan.value = undefined;
-    plan.value = await photoPlan(store.session!, await countyIndex(), selected, (text) => {
-      message.value = text;
-    });
+    plan.value = await photoPlan(
+      store.session!,
+      selected,
+      (points) => countyWorker().matchPoints(points),
+      (text) => (message.value = text),
+    );
     page.value = 0;
   });
 }
+
+watch(
+  () => JSON.stringify(store.chinaBoundarySettings),
+  () => {
+    spatialWorker?.destroy();
+    spatialWorker = undefined;
+  },
+);
+onBeforeUnmount(() => spatialWorker?.destroy());
 
 async function apply() {
   await work(async () => {
@@ -197,85 +221,91 @@ function selectFeatures(selected: boolean) {
 
 <template>
   <section class="page-heading">
-    <h2>导入与导出</h2>
+    <h2>导入导出</h2>
+    <p>备份旅行记录，或核对并导入已有资料。</p>
   </section>
-  <div class="toolbar">
-    <button @click="exportJson(store.session!.snapshot())">导出 JSON 备份</button>
-    <button
-      :disabled="busy"
-      @click="excel"
-    >
-      导出 Excel
-    </button>
-  </div>
-  <fieldset
-    :disabled="busy"
-    class="card"
-  >
-    <legend>记录文件</legend>
-    <label
-      >JSON / Excel / Railtrack<input
-        type="file"
-        accept=".json,.xlsx"
-        @change="chooseRecord"
-    /></label>
-  </fieldset>
-  <fieldset
-    :disabled="busy"
-    class="card"
-  >
-    <legend>名称清单</legend>
-    <p>每行一项，同名地点可写为“名称 | 地区”。</p>
-    <select
-      v-model="category"
-      aria-label="名称类别"
-    >
-      <option
-        v-for="item in store.session!.index.catalog.categories"
-        :key="item.id"
-        :value="item.id"
+  <section class="transfer-exports">
+    <h3>导出记录</h3>
+    <div class="toolbar">
+      <button @click="exportJson(store.session!.snapshot())">导出 JSON 备份</button>
+      <button
+        :disabled="busy"
+        @click="excel"
       >
-        {{ item.name }}
-      </option>
-    </select>
-    <textarea
-      v-model="names"
-      aria-label="名称清单"
-    ></textarea>
-    <button @click="previewNames">生成预览</button>
-    <label
-      >或读取文件<input
-        type="file"
-        accept=".txt,.csv,.tsv,.docx"
-        @change="chooseNames"
-    /></label>
-  </fieldset>
-  <fieldset
-    :disabled="busy"
-    class="card"
-  >
-    <legend>轨迹与照片位置</legend>
-    <label
-      >KML / OSM / PBF<input
-        type="file"
-        multiple
-        accept=".kml,.osm,.pbf"
-        @change="chooseGeographic"
-    /></label>
-    <label
-      >照片 GPS<input
-        type="file"
-        multiple
-        accept=".jpg,.jpeg,.png,.tif,.tiff,.heic,.heif"
-        @change="choosePhotos"
-    /></label>
-  </fieldset>
-  <p
-    v-if="busy || message"
-    role="status"
-  >
-    {{ busy ? '正在处理… ' : '' }}{{ message }}
-  </p>
+        导出 Excel
+      </button>
+    </div>
+  </section>
+  <div class="transfer-imports">
+    <fieldset
+      :disabled="busy"
+      class="card"
+    >
+      <legend>记录文件</legend>
+      <label
+        >JSON / Excel / Railtrack<input
+          type="file"
+          accept=".json,.xlsx"
+          @change="chooseRecord"
+      /></label>
+    </fieldset>
+    <fieldset
+      :disabled="busy"
+      class="card"
+    >
+      <legend>名称清单</legend>
+      <p>每行一项，同名地点可写为“名称 | 地区”。</p>
+      <select
+        v-model="category"
+        aria-label="名称类别"
+      >
+        <option
+          v-for="item in store.session!.index.catalog.categories"
+          :key="item.id"
+          :value="item.id"
+        >
+          {{ item.name }}
+        </option>
+      </select>
+      <textarea
+        v-model="names"
+        aria-label="名称清单"
+      ></textarea>
+      <button @click="previewNames">生成预览</button>
+      <label
+        >或读取文件<input
+          type="file"
+          accept=".txt,.csv,.tsv,.docx"
+          @change="chooseNames"
+      /></label>
+    </fieldset>
+    <fieldset
+      :disabled="busy"
+      class="card"
+    >
+      <legend>轨迹与照片位置</legend>
+      <label
+        >KML / OSM / PBF<input
+          type="file"
+          multiple
+          accept=".kml,.osm,.pbf"
+          @change="chooseGeographic"
+      /></label>
+      <label
+        >照片 GPS<input
+          type="file"
+          multiple
+          accept=".jpg,.jpeg,.png,.tif,.tiff,.heic,.heif"
+          @change="choosePhotos"
+      /></label>
+    </fieldset>
+    <p
+      v-if="busy || message"
+      role="status"
+    >
+      {{ busy ? '正在处理… ' : '' }}{{ message }}
+    </p>
+  </div>
 
   <section
     v-if="stage?.features.length"

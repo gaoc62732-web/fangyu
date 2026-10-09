@@ -129,13 +129,11 @@ const rows = computed(() =>
 );
 
 function locate(entry: EntryView) {
-  store.selectedRegionId =
-    selectedRegionId.value &&
-    entry.regionIds.some((id) => index.value.belongsTo(id, selectedRegionId.value))
-      ? selectedRegionId.value
-      : entry.regionIds[0] || '';
   store.category = entry.categoryId;
-  void router.push('/' + entry.scope);
+  void router.push({
+    path: '/points',
+    query: { entry: entry.id, scope: scope.value || entry.scope },
+  });
 }
 
 function csv() {
@@ -161,7 +159,8 @@ function csv() {
 
 <template>
   <section class="page-heading">
-    <h2>要素列表</h2>
+    <h2>记录</h2>
+    <p>查找地区与地点，查看已有旅行记录。</p>
   </section>
   <div class="toolbar">
     <input
