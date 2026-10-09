@@ -17,12 +17,16 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-import requests
+try:
+    import requests
+except ModuleNotFoundError:
+    requests = None
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "data" / "tmp" / "osm-china-python"
 LEGACY = ROOT / "data" / "tmp" / "osm-china"
 OUTPUT = ROOT / "data" / "boundaries" / "china-osm"
+RAW = OUTPUT / "raw"
 DEFAULT_ENDPOINTS = [
     "http://overpass-api.de/api/interpreter",
     "http://z.overpass-api.de/api/interpreter",
@@ -42,14 +46,60 @@ def write_json(path: Path, value) -> None:
     temporary.replace(path)
 
 
+def archive_raw_response(name: str, payload: bytes, response: dict, query: str | None = None,
+                         overwrite: bool = False) -> bool:
+    if Path(name).name != name or not isinstance(response.get("elements"), list):
+        return False
+    RAW.mkdir(parents=True, exist_ok=True)
+    target = RAW / name
+    metadata = target.with_suffix(".meta.json")
+    written = False
+    if overwrite or not target.exists():
+        temporary = target.with_suffix(target.suffix + ".tmp")
+        temporary.write_bytes(payload)
+        temporary.replace(target)
+        written = True
+    acquisition = response.get("fangyuAcquisition", {})
+    if not metadata.exists() or overwrite:
+        write_json(metadata, {
+            "archiveFormatVersion": 1,
+            "sourceFile": name,
+            "sourceTimestamp": response.get("osm3s", {}).get("timestamp_osm_base"),
+            "sha256": hashlib.sha256(payload).hexdigest(),
+            "endpoint": acquisition.get("endpoint"),
+            "retrievedAt": acquisition.get("retrievedAt"),
+            "querySha256": acquisition.get("querySha256"),
+            "query": query,
+        })
+    return written
+
+
+def archive_existing_cache() -> int:
+    archived = 0
+    if not CACHE.exists():
+        return archived
+    for source in sorted(CACHE.glob("*.json")):
+        target = RAW / source.name
+        if target.exists() and target.with_suffix(".meta.json").exists():
+            continue
+        try:
+            response = read_json(source)
+        except (OSError, json.JSONDecodeError):
+            continue
+        if archive_raw_response(source.name, source.read_bytes(), response):
+            archived += 1
+    return archived
+
+
 class Overpass:
     def __init__(self, endpoint: str | None, refresh: bool = False, offline: bool = False):
         self.endpoints = [endpoint] if endpoint else DEFAULT_ENDPOINTS
         self.refresh = refresh
         self.offline = offline
         self.provenance: dict[str, dict] = {}
-        self.session = requests.Session()
-        self.session.headers.update({"User-Agent": USER_AGENT})
+        self.session = requests.Session() if requests else None
+        if self.session:
+            self.session.headers.update({"User-Agent": USER_AGENT})
         self.timestamps: set[str] = set()
         self.geometry_cache: dict[int, Path] | None = None
 
@@ -77,11 +127,16 @@ class Overpass:
             self.timestamps.add(result.get("osm3s", {}).get("timestamp_osm_base", ""))
             if source != cache_file:
                 write_json(cache_file, result)
+            archive_file = RAW / cache_file.name
+            if not archive_file.exists() or not archive_file.with_suffix(".meta.json").exists():
+                archive_raw_response(cache_file.name, source.read_bytes(), result, query=query)
             self.record_provenance(cache_file, result, legacy=source != cache_file)
             print(f"缓存 {name}: {cache_file.name}", flush=True)
             return result
         if self.offline:
             raise RuntimeError(f"离线缓存缺失：{cache_name}")
+        if self.session is None:
+            raise RuntimeError("OSM downloads require requests; install scripts/requirements-osm.txt.")
 
         body = query.strip()
         last_error = None
@@ -103,6 +158,13 @@ class Overpass:
                         "retrievedAt": datetime.now(timezone.utc).isoformat(),
                         "querySha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
                     }
+                    archive_raw_response(
+                        cache_file.name,
+                        response.content,
+                        result,
+                        query=body,
+                        overwrite=True,
+                    )
                     write_json(cache_file, result)
                     self.record_provenance(cache_file, result)
                     self.timestamps.add(result.get("osm3s", {}).get("timestamp_osm_base", ""))
@@ -355,11 +417,18 @@ def main() -> int:
     parser.add_argument("--references", action="store_true", help="download disputed-boundary reference relations")
     parser.add_argument("--refresh", action="store_true")
     parser.add_argument("--endpoint", help="single Overpass endpoint")
+    parser.add_argument("--archive-cache", action="store_true",
+                        help="copy existing raw Overpass responses into the persistent local archive")
     args = parser.parse_args()
-    if not args.province and not args.all and not args.references and not args.national:
-        parser.error("指定 --province CODE、--all、--national 或 --references")
+    if not args.province and not args.all and not args.references and not args.national and not args.archive_cache:
+        parser.error("指定 --province CODE、--all、--national、--references 或 --archive-cache")
     if args.refresh and args.offline:
         parser.error('--refresh and --offline are mutually exclusive')
+    archived = archive_existing_cache()
+    if archived:
+        print(f"已将 {archived} 份原始 Overpass 响应归档到 {RAW}", flush=True)
+    if args.archive_cache:
+        return 0
     client = Overpass(args.endpoint or os.environ.get('OVERPASS_URL'), args.refresh, args.offline)
     failures, completed = [], []
     def save_progress(finished=False):

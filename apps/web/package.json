@@ -4,8 +4,8 @@
   "version": "0.7.2",
   "type": "module",
   "scripts": {
-    "dev": "node ../../scripts/prepare-web.mjs && vite",
-    "build": "node ../../scripts/prepare-web.mjs && vite build",
+    "dev": "node --max-old-space-size=8192 ../../scripts/prepare-web.mjs && vite",
+    "build": "node --max-old-space-size=8192 ../../scripts/prepare-web.mjs && vite build",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run"
   },

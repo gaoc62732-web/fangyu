@@ -43,12 +43,22 @@ try {
   page.on('request', (r) => urls.push(r.url()));
   await page.goto(base + '/#/china');
   await ready(page, 'tiles');
+  const chinaLayerUrls = await page.evaluate(async () => {
+    const response = await fetch('map-manifest.json');
+    if (!response.ok) throw new Error('Unable to read map manifest');
+    const manifest = await response.json();
+    return Object.fromEntries(
+      manifest.scopes.china.layers.map((layer) => [layer.level, layer.url]),
+    );
+  });
+  const archivePath = (level) => new URL(chinaLayerUrls[level], base + '/').pathname;
+  assert(chinaLayerUrls.county && chinaLayerUrls.province);
   const first = await page.evaluate(() =>
     performance
       .getEntriesByType('resource')
       .map((e) => ({ url: e.name, bytes: e.transferSize, duration: Math.round(e.duration) })),
   );
-  assert(urls.some((u) => u.includes('/tiles/china/county.pmtiles')));
+  assert(urls.some((u) => new URL(u).pathname.endsWith('/' + chinaLayerUrls.county)));
   assert(!urls.some((u) => /\/geometry\/|\/maps\/|\/catalog\.json(?:\?|$)/.test(u)));
   assert(!urls.some((u) => !u.startsWith(base)));
   check(
@@ -61,7 +71,7 @@ try {
   );
   await page.screenshot({ path: resolve(output, 'tiles-home.png'), fullPage: true });
   const provinceResponse = page.waitForResponse(
-    (r) => r.url().includes('/tiles/china/province.pmtiles') && r.ok(),
+    (r) => new URL(r.url()).pathname === archivePath('province') && r.ok(),
   );
   await page.getByRole('button', { name: '省级', exact: true }).click();
   await provinceResponse;

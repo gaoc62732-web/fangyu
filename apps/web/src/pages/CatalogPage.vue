@@ -26,18 +26,8 @@ const {
   visibleChildren,
   regionGroups,
   francePath,
-  franceRoot,
-  franceDepartment,
-  franceDepartments,
-  franceArrondissements,
-  inIleDeFrance,
-  inParis,
   franceStatistics,
   franceBack,
-  province,
-  city,
-  cities,
-  counties,
   level,
   changeLevel,
   showAllChildren,
@@ -45,47 +35,84 @@ const {
 } = useCatalogNavigation(scope);
 const workspace = ref<HTMLElement>();
 const panelElement = ref<HTMLElement>();
+const explorerElement = ref<HTMLElement>();
+const explorerInput = ref<HTMLInputElement>();
 const { width, maxWidth, resizing, down, move, up, key } = useResizablePanel(workspace);
 const panelOpen = ref(false);
-const filterOpen = ref(false);
+const explorerSearchOpen = ref(false);
 const scopeMenuOpen = ref(false);
-const explorer = ref<HTMLElement>();
-let explorerHovered = false;
-function closeExplorer() {
-  if (explorer.value?.contains(document.activeElement))
-    explorer.value.querySelector<HTMLButtonElement>('.region-map-button')?.focus();
-  filterOpen.value = false;
-  scopeMenuOpen.value = false;
-}
-function enterExplorer(event: PointerEvent) {
-  if (event.pointerType === 'mouse') {
-    explorerHovered = true;
-    filterOpen.value = true;
-  }
-}
-function leaveExplorer(event: PointerEvent) {
-  if (event.pointerType === 'mouse') {
-    explorerHovered = false;
-    closeExplorer();
-  }
-}
-function clickExplorer(event: MouseEvent) {
-  if (explorerHovered && event.detail > 0) filterOpen.value = true;
-  else if (filterOpen.value) closeExplorer();
-  else filterOpen.value = true;
-}
-function focusOutExplorer(event: FocusEvent) {
-  if (!explorer.value?.contains(event.relatedTarget as Node | null)) closeExplorer();
-}
-function outsideExplorer(event: PointerEvent) {
-  if (filterOpen.value && !explorer.value?.contains(event.target as Node)) closeExplorer();
-}
-onMounted(() => document.addEventListener('pointerdown', outsideExplorer));
-onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplorer));
 const query = ref('');
+const explorerQuery = ref('');
 const status = ref('');
+const draftRegionId = ref('');
+const searchTargetId = ref('');
+const suggestionsOpen = ref(false);
 const camera = computed(() =>
   store.regionalMap?.scope === props.scope ? store.regionalMap.camera : undefined,
+);
+const draftPath = computed(() =>
+  draftRegionId.value
+    ? index.value.ancestors(draftRegionId.value).filter((region) => region.scope === scope.value)
+    : [],
+);
+const draftProvince = computed(
+  () => draftPath.value.find((region) => region.scope === 'china' && region.level === 0)?.id || '',
+);
+const chinaProvinces = computed(() => regions.value.filter((region) => region.level === 0));
+const draftCity = computed(
+  () => draftPath.value.find((region) => region.scope === 'china' && region.level === 1)?.id || '',
+);
+const draftCounty = computed(
+  () => draftPath.value.find((region) => region.scope === 'china' && region.level === 2)?.id || '',
+);
+const chinaTextCanvas = typeof document === 'undefined' ? null : document.createElement('canvas');
+const chinaTextContext = chinaTextCanvas?.getContext('2d');
+function chinaLevelWidthPixels(id: string, placeholder: string) {
+  const label = id ? index.value.regions.get(id)?.name || placeholder : placeholder;
+  let textWidth = Array.from(label).length * 13;
+  if (chinaTextContext && typeof document !== 'undefined') {
+    const fontFamily = getComputedStyle(document.documentElement).getPropertyValue('--atlas-font').trim();
+    chinaTextContext.font = `13px ${fontFamily || 'sans-serif'}`;
+    textWidth = chinaTextContext.measureText(label).width;
+  }
+  return Math.ceil(Math.max(textWidth, 7 * 13) + 88);
+}
+function chinaLevelWidth(id: string, placeholder: string) {
+  return `${chinaLevelWidthPixels(id, placeholder)}px`;
+}
+const chinaLevelsWidth = computed(
+  () =>
+    `${chinaLevelWidthPixels(draftProvince.value, '省') + chinaLevelWidthPixels(draftCity.value, '市') + chinaLevelWidthPixels(draftCounty.value, '县')}px`,
+);
+const draftFranceRoot = computed(() => draftPath.value.find((region) => region.level === 1));
+const draftFranceDepartment = computed(() => draftPath.value.find((region) => region.level === 2));
+const franceDraftLevelCount = computed(() =>
+  draftFranceDepartment.value?.sourceCode === '75'
+    ? 3
+    : draftFranceRoot.value?.code === 'FR-IDF'
+      ? 2
+      : 1,
+);
+const draftFranceDepartments = computed(() =>
+  regions.value.filter(
+    (region) => region.level === 2 && region.parentId === draftFranceRoot.value?.id,
+  ),
+);
+const draftFranceArrondissements = computed(() =>
+  regions.value.filter(
+    (region) => region.level === 3 && region.parentId === draftFranceDepartment.value?.id,
+  ),
+);
+const chinaCities = computed(() =>
+  regions.value.filter((region) => region.level === 1 && region.parentId === draftProvince.value),
+);
+const chinaCounties = computed(() =>
+  regions.value.filter(
+    (region) =>
+      region.level === 2 &&
+      draftProvince.value &&
+      index.value.belongsTo(region.id, draftCity.value || draftProvince.value),
+  ),
 );
 const matching = computed(() => {
   void store.revision;
@@ -99,6 +126,18 @@ const matching = computed(() => {
       (!status.value ||
         (session.value.visitState(region.id) !== 'unvisited') === (status.value === 'visited')),
   );
+});
+const searchSuggestions = computed(() => {
+  const text = searchText(explorerQuery.value.trim());
+  if (!text) return [];
+  const matches = regions.value.filter((region) =>
+    searchText(`${region.name} ${region.aliases.join(' ')} ${region.code}`).includes(text),
+  );
+  const rank = (region: (typeof regions.value)[number]) => {
+    const name = searchText(region.name);
+    return name === text ? 0 : name.startsWith(text) ? 1 : 2;
+  };
+  return matches.sort((a, b) => rank(a) - rank(b)).slice(0, 8);
 });
 const directory = computed(() =>
   query.value || status.value
@@ -120,20 +159,71 @@ watch(
 );
 watch(scope, () => {
   query.value = '';
+  explorerQuery.value = '';
   status.value = '';
+  draftRegionId.value = '';
+  searchTargetId.value = '';
+  suggestionsOpen.value = false;
   scopeMenuOpen.value = false;
   panelOpen.value = false;
 });
+watch(
+  () => selected.value?.id,
+  (id) => {
+    draftRegionId.value = id || '';
+  },
+  { immediate: true },
+);
+function focusOutExplorer(event: FocusEvent) {
+  if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null))
+    suggestionsOpen.value = false;
+}
+function closeExplorerSearch() {
+  explorerSearchOpen.value = false;
+  suggestionsOpen.value = false;
+}
+function outsideExplorer(event: PointerEvent) {
+  if (explorerSearchOpen.value && !explorerElement.value?.contains(event.target as Node))
+    closeExplorerSearch();
+}
+async function openExplorerSearch() {
+  explorerSearchOpen.value = true;
+  await nextTick();
+  explorerInput.value?.focus({ preventScroll: true });
+}
 function choose(id: string) {
   select(id);
   panelOpen.value = true;
+}
+function updateSearchQuery(event: Event) {
+  explorerQuery.value = (event.target as HTMLInputElement).value;
+  searchTargetId.value = '';
+  suggestionsOpen.value = !!explorerQuery.value.trim();
+}
+function chooseDraft(id: string) {
+  draftRegionId.value = id;
+  searchTargetId.value = id;
+  explorerQuery.value = index.value.regions.get(id)?.name || '';
+  suggestionsOpen.value = false;
+}
+function chooseSuggestion(id: string) {
+  chooseDraft(id);
 }
 function chooseSearch(id: string) {
   choose(id);
   query.value = '';
 }
+function submitSearch() {
+  const target = index.value.regions.get(searchTargetId.value);
+  if (!target || target.scope !== scope.value) return;
+  if (target.scope === 'china') {
+    changeLevel(target.level === 0 ? 'province' : target.level === 1 ? 'city' : 'county');
+  }
+  choose(target.id);
+  suggestionsOpen.value = false;
+}
 function switchScope(value: string) {
-  closeExplorer();
+  scopeMenuOpen.value = false;
   void router.push('/regions/' + value);
 }
 async function openPanel() {
@@ -141,6 +231,8 @@ async function openPanel() {
   await nextTick();
   panelElement.value?.focus({ preventScroll: true });
 }
+onMounted(() => document.addEventListener('pointerdown', outsideExplorer));
+onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplorer));
 </script>
 <template>
   <section
@@ -162,129 +254,272 @@ async function openPanel() {
         @overview="choose('')"
       />
       <div
-        ref="explorer"
+        ref="explorerElement"
         class="region-explorer"
-        @pointerenter="enterExplorer"
-        @pointerleave="leaveExplorer"
         @focusout="focusOutExplorer"
-        @keydown.esc="closeExplorer"
       >
-        <button
-          class="region-map-button"
-          aria-label="区域探索筛选"
-          :aria-expanded="filterOpen"
-          @click="clickExplorer"
-        >
-          <PointIcon name="compass" />
-        </button>
         <div
-          v-if="filterOpen"
           class="region-explorer-menu"
+          :class="{ 'is-expanded': explorerSearchOpen }"
         >
-          <PointSelect
-            label="区域点卯范围"
-            :model-value="scope"
-            :options="SCOPE_CONFIGS.map((c) => ({ value: c.id, label: c.name }))"
-            :open="scopeMenuOpen"
-            @update:open="scopeMenuOpen = $event"
-            @update:model-value="switchScope"
-          />
-          <select
-            aria-label="地区"
-            :value="
-              scope === 'china'
-                ? province
-                : scope === 'france'
-                  ? franceRoot?.id || ''
-                  : store.selectedRegionId
-            "
-            @change="choose(($event.target as HTMLSelectElement).value)"
+          <div class="region-explorer-scope">
+            <PointSelect
+              :label="`${config.name}范围`"
+              :model-value="scope"
+              :options="SCOPE_CONFIGS.map((c) => ({ value: c.id, label: c.name }))"
+              :open="scopeMenuOpen"
+              :hover-open="false"
+              @update:open="scopeMenuOpen = $event"
+              @update:model-value="switchScope"
+            />
+          </div>
+          <div
+            class="region-explorer-main"
+            :style="{ '--china-levels-width': scope === 'china' ? chinaLevelsWidth : undefined }"
           >
-            <option value="">全部地区</option>
-            <optgroup
-              v-for="group in regionGroups"
-              :key="group.label"
-              :label="group.label"
+            <button
+              v-if="!explorerSearchOpen"
+              class="region-explorer-toggle"
+              type="button"
+              aria-label="展开地区搜索和选择"
+              :aria-expanded="explorerSearchOpen"
+              @click="openExplorerSearch"
             >
-              <option
-                v-for="region in group.items"
-                :key="region.id"
-                :value="region.id"
+              <PointIcon name="search" />
+            </button>
+            <Transition name="region-explorer-reveal">
+              <div
+                v-if="explorerSearchOpen"
+                class="region-explorer-content"
               >
-                {{ region.name }}
-              </option>
-            </optgroup>
-          </select>
-          <template v-if="scope === 'china'">
-            <select
-              :value="city"
-              aria-label="地市"
-              @change="choose(($event.target as HTMLSelectElement).value || province)"
+            <form
+              class="region-explorer-search"
+              role="search"
+              @submit.prevent="submitSearch"
             >
-              <option value="">全部地市</option>
-              <option
-                v-for="region in cities"
-                :key="region.id"
-                :value="region.id"
+              <input
+                ref="explorerInput"
+                :value="explorerQuery"
+                type="search"
+                aria-label="搜索地区"
+                placeholder="搜索地区"
+                autocomplete="off"
+                @input="updateSearchQuery"
+                @keydown.esc="suggestionsOpen ? (suggestionsOpen = false) : closeExplorerSearch()"
+              />
+              <button
+                type="submit"
+                aria-label="搜索并跳转到所选地区"
+                :disabled="!searchTargetId"
               >
-                {{ region.name }}
-              </option>
-            </select>
-            <select
-              :value="selected?.level === 2 ? selected.id : ''"
-              aria-label="县区"
-              @change="choose(($event.target as HTMLSelectElement).value || city || province)"
+                <PointIcon name="search" />
+              </button>
+            </form>
+            <div
+              v-if="scope === 'china'"
+              class="region-explorer-levels is-china"
             >
-              <option value="">全部县区</option>
-              <option
-                v-for="region in counties"
-                :key="region.id"
-                :value="region.id"
+              <div
+                class="region-explorer-level"
+                :style="{ '--region-level-width': chinaLevelWidth(draftProvince, '省') }"
               >
-                {{ region.name }}
-              </option>
-            </select>
-          </template>
-          <template v-if="scope === 'france' && inIleDeFrance">
-            <select
-              aria-label="法兰西岛省级单位"
-              :value="franceDepartment?.id || ''"
-              @change="choose(($event.target as HTMLSelectElement).value || franceRoot!.id)"
+                <select
+                  :value="draftProvince"
+                  aria-label="省"
+                  required
+                  @change="chooseDraft(($event.target as HTMLSelectElement).value)"
+                >
+                  <option
+                    value=""
+                    disabled
+                    hidden
+                  ></option>
+                  <option
+                    v-for="region in chinaProvinces"
+                    :key="region.id"
+                    :value="region.id"
+                  >
+                    {{ region.name }}
+                  </option>
+                </select>
+                <span
+                  v-if="!draftProvince"
+                  class="region-explorer-placeholder"
+                  aria-hidden="true"
+                  >省</span
+                >
+              </div>
+              <div
+                class="region-explorer-level"
+                :style="{ '--region-level-width': chinaLevelWidth(draftCity, '市') }"
+              >
+                <select
+                  :value="draftCity"
+                  aria-label="市"
+                  :disabled="!draftProvince"
+                  required
+                  @change="chooseDraft(($event.target as HTMLSelectElement).value || draftProvince)"
+                >
+                  <option
+                    value=""
+                    disabled
+                    hidden
+                  ></option>
+                  <option
+                    v-for="region in chinaCities"
+                    :key="region.id"
+                    :value="region.id"
+                  >
+                    {{ region.name }}
+                  </option>
+                </select>
+                <span
+                  v-if="!draftCity"
+                  class="region-explorer-placeholder"
+                  aria-hidden="true"
+                  >市</span
+                >
+              </div>
+              <div
+                class="region-explorer-level"
+                :style="{ '--region-level-width': chinaLevelWidth(draftCounty, '县') }"
+              >
+                <select
+                  :value="draftCounty"
+                  aria-label="县"
+                  :disabled="!draftProvince"
+                  required
+                  @change="chooseDraft(($event.target as HTMLSelectElement).value || draftCity || draftProvince)"
+                >
+                  <option
+                    value=""
+                    disabled
+                    hidden
+                  ></option>
+                  <option
+                    v-for="region in chinaCounties"
+                    :key="region.id"
+                    :value="region.id"
+                  >
+                    {{ region.name }}
+                  </option>
+                </select>
+                <span
+                  v-if="!draftCounty"
+                  class="region-explorer-placeholder"
+                  aria-hidden="true"
+                  >县</span
+                >
+              </div>
+            </div>
+            <div
+              v-else-if="scope === 'france'"
+              class="region-explorer-levels"
+              :class="{
+                'is-single': franceDraftLevelCount === 1,
+                'is-double': franceDraftLevelCount === 2,
+              }"
             >
-              <option value="">全部8个省级单位</option>
-              <option
-                v-for="region in franceDepartments"
-                :key="region.id"
-                :value="region.id"
+              <select
+                :value="draftFranceRoot?.id || ''"
+                aria-label="大区"
+                @change="chooseDraft(($event.target as HTMLSelectElement).value)"
               >
-                {{ region.name }}
-              </option>
-            </select>
-            <select
-              v-if="inParis"
-              aria-label="巴黎市区"
-              :value="selected?.level === 3 ? selected.id : ''"
-              @change="choose(($event.target as HTMLSelectElement).value || franceDepartment!.id)"
+                <option value="">大区</option>
+                <optgroup
+                  v-for="group in regionGroups"
+                  :key="group.label"
+                  :label="group.label"
+                >
+                  <option
+                    v-for="region in group.items"
+                    :key="region.id"
+                    :value="region.id"
+                  >
+                    {{ region.name }}
+                  </option>
+                </optgroup>
+              </select>
+              <select
+                v-if="draftFranceRoot?.code === 'FR-IDF'"
+                :value="draftFranceDepartment?.id || ''"
+                aria-label="省级单位"
+                @change="chooseDraft(($event.target as HTMLSelectElement).value || draftFranceRoot!.id)"
+              >
+                <option value="">省级单位</option>
+                <option
+                  v-for="region in draftFranceDepartments"
+                  :key="region.id"
+                  :value="region.id"
+                >
+                  {{ region.name }}
+                </option>
+              </select>
+              <select
+                v-if="draftFranceDepartment?.sourceCode === '75'"
+                :value="draftPath.find((region) => region.level === 3)?.id || ''"
+                aria-label="市区"
+                @change="chooseDraft(($event.target as HTMLSelectElement).value || draftFranceDepartment!.id)"
+              >
+                <option value="">市区</option>
+                <option
+                  v-for="region in draftFranceArrondissements"
+                  :key="region.id"
+                  :value="region.id"
+                >
+                  {{ region.name }}
+                </option>
+              </select>
+            </div>
+            <div
+              v-else
+              class="region-explorer-levels is-single"
             >
-              <option value="">全部20个市区</option>
-              <option
-                v-for="region in franceArrondissements"
-                :key="region.id"
-                :value="region.id"
+              <select
+                :value="draftRegionId"
+                aria-label="地区"
+                @change="chooseDraft(($event.target as HTMLSelectElement).value)"
               >
-                {{ region.name }}
-              </option>
-            </select>
-          </template>
+                <option value="">地区</option>
+                <optgroup
+                  v-for="group in regionGroups"
+                  :key="group.label"
+                  :label="group.label"
+                >
+                  <option
+                    v-for="region in group.items"
+                    :key="region.id"
+                    :value="region.id"
+                  >
+                    {{ region.name }}
+                  </option>
+                </optgroup>
+              </select>
+            </div>
+              </div>
+            </Transition>
+            <div
+              v-if="suggestionsOpen"
+              class="region-explorer-suggestions"
+              role="listbox"
+              aria-label="地区搜索建议"
+            >
+              <button
+                v-for="region in searchSuggestions"
+                :key="region.id"
+                type="button"
+                role="option"
+                :aria-selected="searchTargetId === region.id"
+                @click="chooseSuggestion(region.id)"
+              >
+                <span>{{ region.name }}</span>
+                <small>{{ index.paths.get(region.id) }}</small>
+              </button>
+              <p v-if="!searchSuggestions.length">没有找到匹配地区</p>
+            </div>
+          </div>
         </div>
       </div>
-      <button
-        class="region-directory-button region-map-button"
-        aria-label="地区目录"
-        @click="openPanel"
-      >
-        <PointIcon name="list" />
-      </button>
       <button
         v-if="selected && !panelOpen"
         class="region-reopen"
@@ -499,53 +734,249 @@ async function openPanel() {
   min-width: 0;
   padding-bottom: 40px;
 }
-.region-map-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--atlas-line);
-  border-radius: 12px;
-  background: var(--atlas-paper);
-  padding: 0;
-}
-.region-map-button:hover {
-  background: var(--atlas-soft);
-}
 .region-explorer {
   position: absolute;
   top: 24px;
-  left: 24px;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  left: 12px;
   z-index: 7;
+  width: max-content;
+  max-width: calc(100% - 24px);
 }
 .region-explorer-menu {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  max-width: calc(100vw - 150px);
-  padding: 4px 8px;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: max-content 56px;
+  grid-template-rows: 48px;
+  width: max-content;
+  max-width: 100%;
+  padding: 0;
   background: var(--atlas-paper);
   border: 1px solid var(--atlas-line);
   border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(20 28 22 / 12%);
+  interpolate-size: allow-keywords;
+  transition: width 240ms ease, grid-template-rows 240ms ease;
 }
-.region-explorer-menu select {
-  width: auto;
-  max-width: 190px;
-  height: 34px;
+.region-explorer-menu.is-expanded {
+  grid-template-columns: max-content max-content;
+  grid-template-rows: 84px;
+  width: max-content;
+  max-width: 100%;
+}
+.region-explorer-scope {
+  display: flex;
+  min-width: max-content;
+  border-right: 1px solid var(--atlas-line);
+}
+.region-explorer-scope :deep(.point-select) {
+  width: max-content;
+}
+.region-explorer-scope :deep(.point-select-trigger) {
+  height: 100%;
+  min-height: 48px;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 14px;
+  text-align: center;
+}
+.region-explorer-scope :deep(.point-select-trigger > span) {
+  flex: none;
+  white-space: normal;
+  line-height: 1.35;
+  text-align: center;
+}
+.region-explorer-main {
+  position: relative;
+  min-width: 0;
+  width: 56px;
+  max-width: 100%;
+  transition: width 240ms ease;
+}
+.region-explorer-menu.is-expanded .region-explorer-main {
+  width: var(--china-levels-width, max-content);
+}
+.region-explorer-toggle {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 0 11px 11px 0;
+  background: transparent;
+}
+.region-explorer-toggle:hover {
+  background: var(--atlas-soft);
+}
+.region-explorer-content {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+.region-explorer-reveal-enter-active,
+.region-explorer-reveal-leave-active {
+  transition: opacity 180ms ease, clip-path 240ms ease;
+}
+.region-explorer-reveal-enter-from,
+.region-explorer-reveal-leave-to {
+  opacity: 0;
+  clip-path: inset(0 100% 100% 0);
+}
+.region-explorer-search {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  gap: 10px;
+  width: 100%;
+  padding: 0 10px 0 16px;
+  border-bottom: 1px solid var(--atlas-line);
+}
+.region-explorer-search input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--atlas-ink);
+  font-size: 14px;
+}
+.region-explorer-search input:focus {
+  outline: none;
+}
+.region-explorer-search button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  padding: 0;
   border: 0;
   background: transparent;
-  padding: 0 6px;
 }
-.region-directory-button {
+.region-explorer-search button:hover:not(:disabled) {
+  background: var(--atlas-soft);
+}
+.region-explorer-levels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-height: 36px;
+}
+.region-explorer-levels.is-china {
+  display: flex;
+  width: max-content;
+  min-width: max-content;
+  max-width: none;
+  overflow: visible;
+}
+.region-explorer-levels.is-china .region-explorer-level {
+  font-size: 13px;
+}
+.region-explorer-levels.is-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+.region-explorer-levels.is-double {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.region-explorer-level {
+  position: relative;
+  width: var(--region-level-width, calc(7em + 88px));
+  min-width: 0;
+  flex: 0 0 var(--region-level-width, calc(7em + 88px));
+  border-right: 1px solid var(--atlas-line);
+  transition: flex-basis 220ms ease, min-width 220ms ease;
+}
+.region-explorer-level:last-child {
+  border-right: 0;
+}
+.region-explorer-levels select {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  padding: 0 12px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.region-explorer-levels.is-china select {
+  padding: 0 48px 0 12px;
+  font-size: 13px;
+}
+.region-explorer-levels.is-china select:focus,
+.region-explorer-levels.is-china select:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.region-explorer-levels > select:not(:last-child) {
+  border-right: 1px solid var(--atlas-line);
+}
+.region-explorer-placeholder {
   position: absolute;
-  left: 24px;
-  top: 80px;
-  z-index: 3;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: var(--atlas-ink);
+  opacity: 0.7;
+  pointer-events: none;
+  font-size: 14px;
+  font-weight: 400;
+}
+.region-explorer-suggestions {
+  position: absolute;
+  z-index: 4;
+  top: 48px;
+  left: 0;
+  right: 0;
+  max-height: min(300px, 48vh);
+  overflow-y: auto;
+  border: 1px solid var(--atlas-line);
+  border-radius: 0 0 10px 10px;
+  background: var(--atlas-paper);
+  box-shadow: 0 8px 24px rgb(20 28 22 / 14%);
+}
+.region-explorer-suggestions button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+}
+.region-explorer-suggestions button:hover,
+.region-explorer-suggestions button[aria-selected='true'] {
+  background: var(--atlas-soft);
+}
+.region-explorer-suggestions button span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.region-explorer-suggestions button small {
+  flex: none;
+  max-width: 58%;
+  overflow: hidden;
+  color: var(--atlas-ink);
+  opacity: 0.7;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.region-explorer-suggestions p {
+  margin: 0;
+  padding: 14px;
+  font-size: 14px;
+}
+.region-explorer-levels select:disabled {
+  opacity: 0.5;
 }
 .region-reopen {
   position: absolute;
@@ -782,13 +1213,55 @@ async function openPanel() {
   .region-explorer {
     top: 16px;
     left: 16px;
-  }
-  .region-directory-button {
-    left: 16px;
-    top: 70px;
+    width: calc(100% - 32px);
+    max-width: none;
   }
   .region-explorer-menu {
-    max-width: calc(100vw - 88px);
+    max-width: 100%;
+  }
+  .region-explorer-menu.is-expanded {
+    grid-template-columns: max-content minmax(0, 1fr);
+    width: 100%;
+  }
+  .region-explorer-menu.is-expanded .region-explorer-main {
+    width: 100%;
+  }
+  .region-explorer-scope :deep(.point-select-trigger) {
+    padding: 8px 10px;
+  }
+  .region-explorer-search {
+    gap: 6px;
+    padding: 0 6px 0 10px;
+  }
+  .region-explorer-search input {
+    font-size: 14px;
+  }
+  .region-explorer-levels.is-china select {
+    padding: 0 40px 0 8px;
+    font-size: 13px;
+  }
+  .region-explorer-menu.is-expanded {
+    grid-template-rows: 156px;
+  }
+  .region-explorer-levels.is-china {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: none;
+    overflow: visible;
+  }
+  .region-explorer-levels.is-china .region-explorer-level {
+    width: 100%;
+    min-width: 0;
+    flex-basis: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--atlas-line);
+  }
+  .region-explorer-levels.is-china .region-explorer-level:last-child {
+    border-bottom: 0;
+  }
+  .region-explorer-placeholder {
+    left: 6px;
   }
   .region-caption {
     padding: 0 16px;

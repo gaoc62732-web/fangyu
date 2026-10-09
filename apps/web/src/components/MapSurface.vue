@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed, nextTick } from 'vue';
+import { nextTick } from 'vue';
 import { VISIT_LABELS, type MapLevel, type Scope } from '@fangyu/contracts';
 import type { EntryView } from '@fangyu/domain';
 import { POINT_MAP_APPEARANCE } from '@fangyu/map-renderer';
 import { useTiledMap } from '../features/maps/use-tiled-map.js';
-import BasemapSettings from './BasemapSettings.vue';
 import PointIcon from './PointIcon.vue';
 import ChinaBoundarySettings from './ChinaBoundarySettings.vue';
 import VisitedMapLayers from './VisitedMapLayers.vue';
@@ -19,7 +18,6 @@ const props = withDefaults(
     focus?: [number, number] | null;
     pointMode?: boolean;
     regionMode?: boolean;
-    pointSettingsOpen?: boolean;
     initialCamera?: { center: [number, number]; zoom: number } | undefined;
     previewRegions?: string[] | undefined;
   }>(),
@@ -31,7 +29,6 @@ const emit = defineEmits<{
   level: [value: Exclude<MapLevel, 'country'>];
   overview: [];
   cluster: [ids: string[]];
-  settings: [];
 }>();
 const {
   store,
@@ -63,15 +60,6 @@ const {
   fitFranceView,
   exportPng,
 } = useTiledMap(props, (id, point) => (point ? emit('point', id) : emit('select', id)));
-const regionAutoFocus = computed({
-  get: () => {
-    void store.revision;
-    return store.session!.preferences.regionAutoFocus !== false;
-  },
-  set: (value: boolean) => {
-    store.commit((current) => current.updatePreferences({ regionAutoFocus: value }));
-  },
-});
 async function overview(group?: 'metropolitan' | 'overseas') {
   if (props.scope === 'france') {
     emit('overview');
@@ -266,45 +254,17 @@ async function overview(group?: 'metropolitan' | 'overseas') {
             </button>
           </div>
         </div>
-        <div
-          v-if="pointMode"
-          class="atlas-map-options"
-        >
-          <button
-            aria-label="点位关联设置"
-            title="点位关联设置"
-            :aria-expanded="pointSettingsOpen"
-            @click="emit('settings')"
-          >
-            <PointIcon name="settings" />
-          </button>
-        </div>
-        <details
+        <ChinaBoundarySettings v-if="scope === 'china' && regionMode" />
+        <button
           v-if="regionMode"
-          class="region-map-tools atlas-map-options"
+          class="atlas-map-export"
+          type="button"
+          aria-label="导出地图图片"
+          title="导出地图图片"
+          @click="exportPng"
         >
-          <summary aria-label="区域地图工具"><PointIcon name="settings" /></summary>
-          <div class="region-map-tools-body">
-            <h4>地图工具</h4>
-            <label class="region-auto-focus">
-              <span>选区自动缩放</span>
-              <input
-                v-model="regionAutoFocus"
-                type="checkbox"
-                role="switch"
-                aria-label="选区自动缩放"
-              />
-            </label>
-            <button @click="fitSelection">定位当前地区</button>
-            <template v-if="scope === 'france'"
-              ><button @click="overview('metropolitan')">法国本土</button
-              ><button @click="overview('overseas')">全部海外地区</button></template
-            >
-            <button @click="exportPng">导出地图图片</button>
-            <BasemapSettings />
-          </div>
-        </details>
-        <ChinaBoundarySettings v-if="scope === 'china'" />
+          <PointIcon name="download" />
+        </button>
         <details
           v-if="fallback"
           class="atlas-map-attribution"
@@ -399,7 +359,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
         使用简化地图
       </button>
     </div>
-    <BasemapSettings v-if="!pointMode && !regionMode" />
     <slot name="content-controls" />
     <div
       v-if="!pointMode && !regionMode"
@@ -523,96 +482,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
   right: 24px;
   z-index: 4;
 }
-.region-map-tools > summary {
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  list-style: none;
-  cursor: pointer;
-  background: var(--atlas-paper, #fffefa);
-  border: 1px solid var(--atlas-line, #e2e3dd);
-  border-radius: 12px;
-}
-.region-map-tools > summary::-webkit-details-marker {
-  display: none;
-}
-.region-map-tools > summary:hover,
-.region-map-tools[open] > summary {
-  background: var(--atlas-soft, #f2f2e9);
-}
-.region-map-tools-body {
-  position: absolute;
-  right: 0;
-  top: 54px;
-  width: min(360px, calc(100vw - 48px));
-  max-height: calc(100dvh - 190px);
-  overflow: auto;
-  padding: 22px;
-  border: 1px solid var(--atlas-line, #e2e3dd);
-  border-radius: 12px;
-  background: var(--atlas-paper, #fffefa);
-  font-size: 14px;
-}
-.region-map-tools-body h4 {
-  font-size: 16px;
-  font-weight: 400;
-  margin: 0 0 14px;
-}
-.region-auto-focus {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 0 16px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid var(--atlas-line, #e2e3dd);
-  font-size: 16px;
-  cursor: pointer;
-}
-.region-auto-focus input {
-  appearance: none;
-  width: 36px;
-  height: 22px;
-  flex: none;
-  margin: 0;
-  border: 1px solid var(--atlas-line, #e2e3dd);
-  border-radius: 20px;
-  background: var(--atlas-soft, #f2f3ed);
-  position: relative;
-  cursor: pointer;
-}
-.region-auto-focus input::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #879181;
-}
-.region-auto-focus input:checked {
-  background: var(--atlas-accent, #343d32);
-  border-color: var(--atlas-accent, #343d32);
-}
-.region-auto-focus input:checked::after {
-  left: 17px;
-  background: var(--atlas-paper, #fffefa);
-}
-.region-map-tools-body > button {
-  justify-content: flex-start;
-  font-size: 16px;
-  padding: 10px 0;
-  width: 100%;
-}
-.region-map-tools-body :deep(.basemap-settings) {
-  margin: 14px 0 0;
-  padding: 0;
-  border: 0;
-}
-.atlas-map-options > button,
 .atlas-map-legend > summary {
   display: flex;
   align-items: center;
@@ -625,9 +494,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
   color: var(--point-ink, #30372e);
   box-shadow: none;
   list-style: none;
-}
-.atlas-map-options > button {
-  width: 42px;
 }
 .atlas-map-legend {
   position: relative;
@@ -645,10 +511,24 @@ async function overview(group?: 'metropolitan' | 'overseas') {
 .atlas-map-attribution > summary::-webkit-details-marker {
   display: none;
 }
-.atlas-map-options > button:hover,
-.atlas-map-options > button[aria-expanded='true'],
 .atlas-map-legend > summary:hover,
 .atlas-map-legend[open] > summary {
+  background: #f2f2e9;
+}
+.atlas-map-export {
+  position: absolute;
+  right: 80px;
+  bottom: 16px;
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  background: #fffefa;
+  border: 1px solid #e2e3dd;
+  border-radius: 12px;
+  color: var(--point-ink, #30372e);
+  box-shadow: none;
+}
+.atlas-map-export:hover {
   background: #f2f2e9;
 }
 .atlas-legend-content {
@@ -799,13 +679,18 @@ async function overview(group?: 'metropolitan' | 'overseas') {
 }
 .tile-map-status {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  left: 50%;
+  right: auto;
+  bottom: 84px;
+  width: max-content;
+  max-width: min(360px, calc(100% - 48px));
+  transform: translateX(-50%);
   padding: 8px 14px;
   background: #ffffffed;
   color: #244d40;
   border-radius: 8px;
   z-index: 2;
+  text-align: center;
 }
 .tile-map-note {
   display: flex;

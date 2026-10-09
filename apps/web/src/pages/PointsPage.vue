@@ -9,11 +9,8 @@ import {
   type Scope,
   type MapLevel,
   type CatalogEntry,
-  type PointCheckinPreferences,
-  type PointLinkPolicy,
 } from '@fangyu/contracts';
 import {
-  DEFAULT_POINT_POLICIES,
   pointGroup,
   pointView,
   childVisited,
@@ -75,8 +72,6 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
 const scopeOptions = SCOPE_IDS.map((id) => ({ value: id, label: getScopeConfig(id).title }));
 const selectedId = ref('');
 const panel = ref<'detail' | 'list' | null>(null);
-const preferencesOpen = ref(false);
-const preferencesElement = ref<HTMLElement>();
 const panelElement = ref<HTMLElement>();
 const panelBody = ref<HTMLElement>();
 const workspace = ref<HTMLElement>();
@@ -129,51 +124,6 @@ const pending = ref<{
   choices: string[];
   options: { id: string; name: string; disabled?: boolean }[];
 }>();
-const policies = computed(() => {
-  void store.revision;
-  return { ...DEFAULT_POINT_POLICIES, ...session.value.preferences.pointCheckin };
-});
-const policyFields = [
-  {
-    key: 'children',
-    title: '组成地点',
-    auto: '全部点亮',
-    never: '仅实际选择',
-  },
-  {
-    key: 'identities',
-    title: '其他类别',
-    auto: '同时点亮',
-    never: '不关联',
-  },
-  {
-    key: 'regions',
-    title: '所在行政区',
-    auto: '同时点亮',
-    never: '不关联',
-  },
-] as const;
-function updatePolicy(key: keyof PointCheckinPreferences, event: Event) {
-  store.commit((current) =>
-    current.updatePreferences({
-      pointCheckin: {
-        ...policies.value,
-        [key]: (event.target as HTMLSelectElement).value as PointLinkPolicy,
-      },
-    }),
-  );
-}
-function openPreferences() {
-  if (pending.value) finish();
-  preferencesOpen.value = true;
-  void nextTick(() => preferencesElement.value?.focus({ preventScroll: true }));
-}
-function closePreferences() {
-  preferencesOpen.value = false;
-  workspace.value
-    ?.querySelector<HTMLButtonElement>('[aria-label="点位关联设置"]')
-    ?.focus({ preventScroll: true });
-}
 const scopeEntries = computed(() =>
   store.rows.filter((e) => session.value.index.entryRegions(e, scope.value).length),
 );
@@ -501,57 +451,11 @@ onBeforeUnmount(() => {
           :points="entries"
           :initial-camera="initialCamera"
           :preview-regions="previewRegions"
-          :point-settings-open="preferencesOpen"
           point-mode
           @point="choosePoint"
           @cluster="openList"
           @level="level = $event"
-          @settings="preferencesOpen ? closePreferences() : openPreferences()"
         />
-        <section
-          v-if="preferencesOpen"
-          ref="preferencesElement"
-          class="point-preferences-popover"
-          aria-label="记录偏好"
-          tabindex="-1"
-          @keydown.esc.stop="closePreferences"
-        >
-          <header class="point-preferences-popover-head">
-            <div>
-              <span>记录偏好</span>
-              <p>点亮后的关联方式</p>
-            </div>
-            <button
-              aria-label="关闭记录偏好"
-              @click="closePreferences"
-            >
-              <PointIcon
-                name="close"
-                :size="18"
-              />
-            </button>
-          </header>
-          <div class="point-preferences-popover-body">
-            <section
-              v-for="field in policyFields"
-              :key="field.key"
-              class="atlas-policy-field"
-            >
-              <div class="atlas-policy-copy">
-                <h4>{{ field.title }}</h4>
-              </div>
-              <select
-                :aria-label="field.title"
-                :value="policies[field.key]"
-                @change="updatePolicy(field.key, $event)"
-              >
-                <option value="ask">每次询问</option>
-                <option value="auto">{{ field.auto }}</option>
-                <option value="never">{{ field.never }}</option>
-              </select>
-            </section>
-          </div>
-        </section>
         <div
           ref="explorer"
           class="point-filters"
@@ -1002,15 +906,6 @@ onBeforeUnmount(() => {
               {{ pending.stage === 'children' ? '返回资料' : '跳过关联' }}
             </button>
           </div>
-          <button
-            class="point-settings-link"
-            @click="openPreferences"
-          >
-            <PointIcon
-              name="settings"
-              :size="13"
-            />调整以后如何确认
-          </button>
         </footer>
       </aside>
     </div>
@@ -1133,72 +1028,6 @@ onBeforeUnmount(() => {
   flex: 1;
   position: relative;
   background: #edf1e9;
-}
-.point-preferences-popover {
-  position: absolute;
-  top: 80px;
-  right: 24px;
-  z-index: 6;
-  width: min(390px, calc(100% - 48px));
-  max-height: min(620px, calc(100% - 48px));
-  overflow: auto;
-  background: var(--point-paper);
-  border: 1px solid #dedfd4;
-  border-radius: 12px;
-  color: var(--point-ink);
-}
-.point-preferences-popover-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 20px 22px 16px;
-  border-bottom: 1px solid var(--point-line);
-}
-.point-preferences-popover-head span {
-  display: block;
-  font-size: 20px;
-  font-weight: 300;
-}
-.point-preferences-popover-head p {
-  margin: 2px 0 0;
-  font-size: var(--point-meta-size);
-  color: var(--point-ink);
-}
-.point-preferences-popover-head button {
-  display: flex;
-  padding: 3px;
-  color: var(--point-ink);
-}
-.point-preferences-popover-body {
-  padding: 0 22px 14px;
-}
-.point-preferences-popover .atlas-policy-field {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 150px;
-  align-items: center;
-  gap: 18px;
-  padding: 16px 0;
-}
-.point-preferences-popover .atlas-policy-field h4 {
-  margin: 0;
-  font-size: var(--point-body-size);
-  font-weight: 400;
-}
-.point-preferences-popover .atlas-policy-field p {
-  margin: 2px 0 0;
-  font-size: var(--point-meta-size);
-  line-height: 1.45;
-  color: var(--point-ink);
-}
-.point-preferences-popover .atlas-policy-field select {
-  width: 100%;
-  min-height: 42px;
-  padding: 7px 9px;
-  border: 1px solid #d9ddd0;
-  border-radius: 8px;
-  background: #f8f8f0;
-  font-size: var(--point-body-size);
 }
 .point-map :deep(.map-card) {
   height: 100%;
@@ -1697,15 +1526,6 @@ onBeforeUnmount(() => {
   font-size: var(--point-body-size);
   color: var(--point-ink);
 }
-.point-page .point-settings-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  margin: 9px auto 0;
-  font-size: var(--point-body-size);
-  color: var(--point-ink);
-}
 .restore-details {
   position: absolute;
   right: 24px;
@@ -1769,16 +1589,6 @@ onBeforeUnmount(() => {
     inset: 0 0 0 auto;
     width: min(350px, 90vw);
     box-shadow: -12px 0 50px #30392a10;
-  }
-  .point-preferences-popover {
-    top: 70px;
-    right: 16px;
-    width: min(360px, calc(100% - 32px));
-    max-height: calc(100% - 32px);
-  }
-  .point-preferences-popover .atlas-policy-field {
-    grid-template-columns: 1fr;
-    gap: 8px;
   }
   .point-panel-resize {
     display: none;

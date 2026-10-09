@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { gzipSync } from 'node:zlib';
@@ -18,6 +18,35 @@ const mapRequire = createRequire(webRequire.resolve('maplibre-gl/package.json'))
 const { validateStyleMin, expression } = mapRequire('@maplibre/maplibre-gl-style-spec');
 const dir = 'data/generated/web/';
 const manifest = JSON.parse(readFileSync(dir + 'map-manifest.json', 'utf8'));
+const tileXY = (longitude: number, latitude: number, zoom: number): [number, number] => {
+  const scale = 2 ** zoom;
+  return [
+    Math.max(0, Math.min(scale - 1, Math.floor(((longitude + 180) / 360) * scale))),
+    Math.max(
+      0,
+      Math.min(
+        scale - 1,
+        Math.floor(((1 - Math.asinh(Math.tan((latitude * Math.PI) / 180)) / Math.PI) / 2) * scale),
+      ),
+    ),
+  ];
+};
+const vectorTileAt = (layer: any, zoom: number, x: number, y: number) => {
+  const url = layer.url
+    .replace('{z}', String(zoom))
+    .replace('{x}', String(x))
+    .replace('{y}', String(y));
+  assert(!url.includes('{'), `Unresolved tile template: ${layer.url}`);
+  return new VectorTile(new Pbf(readFileSync(dir + url)));
+};
+const vectorTilesAtBounds = (layer: any, zoom: number) => {
+  const northwest = tileXY(layer.bounds[0], layer.bounds[3], zoom);
+  const southeast = tileXY(layer.bounds[2], layer.bounds[1], zoom);
+  const tiles = [];
+  for (let x = northwest[0]; x <= southeast[0]; x++)
+    for (let y = northwest[1]; y <= southeast[1]; y++) tiles.push(vectorTileAt(layer, zoom, x, y));
+  return tiles;
+};
 let features = 0;
 const detailedFranceCounts = { city: 8, county: 20 } as const;
 const layerChecks: string[] = [];
@@ -55,12 +84,15 @@ for (const scope of SCOPE_IDS) {
         }),
       });
       const header = await archive.getHeader();
-      assert.equal(header.maxZoom, 11);
+      assert.equal(header.maxZoom, layer.maxzoom, `${scope}/${layer.level} manifest maxzoom`);
       assert.equal(((await archive.getMetadata()) as any).vector_layers[0].id, 'regions');
       archiveTile = await archive.getZxy(0, 0, 0);
       assert(archiveTile, `${layer.level} archive root tile`);
       // Beijing detail must be readable through leaf directories and retain IDs.
-      const tile = await archive.getZxy(11, 1686, 775);
+      const sampleZoom = Number(layer.maxzoom);
+      assert(Number.isInteger(sampleZoom), `${scope}/${layer.level} manifest maxzoom`);
+      const [sampleX, sampleY] = tileXY(116.397, 39.908, sampleZoom);
+      const tile = await archive.getZxy(sampleZoom, sampleX, sampleY);
       if (tile) assert(new VectorTile(new Pbf(tile.data)).layers.regions.length > 0);
     }
     const layerIds =
@@ -76,24 +108,11 @@ for (const scope of SCOPE_IDS) {
     const checkCompleteLayer = smallCountry || detailedFrance;
     // Small polygons can disappear at z0. Read every tile at the layer's generated
     // maximum zoom, then compare unique IDs with this layer, not the whole country.
-    const tiles = checkCompleteLayer
-      ? readdirSync(dir + `tiles/${scope}/${layer.level}/${layer.maxzoom}`, { recursive: true })
-          .filter((file) => String(file).endsWith('.pbf'))
-          .map(
-            (file) =>
-              new VectorTile(
-                new Pbf(
-                  readFileSync(dir + `tiles/${scope}/${layer.level}/${layer.maxzoom}/${file}`),
-                ),
-              ),
-          )
-      : [
-          new VectorTile(
-            new Pbf(
-              archiveTile?.data || readFileSync(dir + `tiles/${scope}/${layer.level}/0/0/0.pbf`),
-            ),
-          ),
-        ];
+    const tiles = layer.archive
+      ? [new VectorTile(new Pbf(archiveTile.data))]
+      : checkCompleteLayer
+        ? vectorTilesAtBounds(layer, Number(layer.maxzoom))
+        : [vectorTileAt(layer, 0, 0, 0)];
     const visibleIds = new Set<string>();
     for (const current of tiles) {
       if (!current.layers.regions) continue;

@@ -5,6 +5,7 @@
   "osm-source": [
     "data/boundaries/china-osm/*.geojson",
     "data/boundaries/china-osm/references/*.geojson",
+    "data/boundaries/china-osm/raw/*.json",
     "data/boundaries/china-osm/retained-hkmo-counties.json"
   ],
   "research": [

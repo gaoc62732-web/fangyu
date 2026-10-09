@@ -1,7 +1,7 @@
 """Versioned public data packages: pack, verify, restore or download.
 
-Uses only Python's standard library. Does not include generated assets, Overpass
-raw caches, credentials or personal records. Publication is a separate action.
+Uses only Python's standard library. Does not include generated assets, temporary
+Overpass caches, credentials or personal records. Publication is a separate action.
 """
 from __future__ import annotations
 

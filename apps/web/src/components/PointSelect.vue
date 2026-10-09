@@ -2,12 +2,13 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId } from 'vue';
 import PointIcon from './PointIcon.vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: string;
   options: { value: string; label: string }[];
   label: string;
   open: boolean;
-}>();
+  hoverOpen?: boolean;
+}>(), { hoverOpen: true });
 const emit = defineEmits<{
   'update:modelValue': [value: string];
   'update:open': [value: boolean];
@@ -34,10 +35,10 @@ async function show(focus = false, last = false) {
   choices[selected < 0 ? (last ? choices.length - 1 : 0) : selected]?.focus();
 }
 function hover(event: PointerEvent) {
-  if (event.pointerType === 'mouse') void show();
+  if (props.hoverOpen && event.pointerType === 'mouse') void show();
 }
 function leave(event: PointerEvent) {
-  if (event.pointerType === 'mouse') close();
+  if (props.hoverOpen && event.pointerType === 'mouse') close();
 }
 function choose(value: string) {
   if (value !== props.modelValue) {

@@ -11,6 +11,7 @@ import { DEFAULT_POINT_POLICIES } from '@fangyu/domain';
 import { useAppStore } from '../app/store.js';
 import { appMode } from '../app/mode.js';
 import { exportJson } from '../features/exports/download.js';
+import BasemapSettings from '../components/BasemapSettings.vue';
 
 const store = useAppStore();
 const mode = appMode();
@@ -93,7 +94,7 @@ async function clear() {
 
 <template>
   <section class="page-heading">
-    <h2>存档与外观</h2>
+    <h2>设置</h2>
   </section>
   <p
     v-if="message"
@@ -195,6 +196,9 @@ async function clear() {
         {{ label }}
       </label>
     </div>
+  </section>
+  <section class="card">
+    <BasemapSettings />
   </section>
   <section class="card">
     <h3>点位点卯 · 关联确认</h3>

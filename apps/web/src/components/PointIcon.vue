@@ -15,6 +15,7 @@ const paths: Record<string, string> = {
   frame: 'M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5',
   compass: 'm15 9-6 6 1.5-4.5L15 9ZM12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18',
   search: 'm16 16 5 5M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14',
+  download: 'M12 3v12m0 0 5-5m-5 5-5-5M5 21h14',
 };
 </script>
 <template>

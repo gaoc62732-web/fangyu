@@ -22,7 +22,6 @@ const links = computed(() => [
 const extra = [
   ['/records', '记录'],
   ['/maofen', '卯分'],
-  ['/settings', '存档与外观'],
   ['/help', '使用说明'],
 ] as const;
 function close() {
@@ -111,6 +110,14 @@ watch(() => route.fullPath, close);
         </button>
       </div>
     </details>
+    <RouterLink
+      class="module-settings-link"
+      to="/settings"
+      aria-label="设置"
+      title="设置"
+    >
+      <PointIcon name="settings" />
+    </RouterLink>
   </header>
 </template>
 <style scoped>
@@ -184,6 +191,20 @@ watch(() => route.fullPath, close);
   position: relative;
   flex: none;
   font-size: 16px;
+}
+.module-settings-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: var(--atlas-ink);
+}
+.module-settings-link:hover,
+.module-settings-link.router-link-active {
+  background: var(--atlas-soft);
 }
 .module-more summary {
   display: flex;

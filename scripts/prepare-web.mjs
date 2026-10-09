@@ -26,6 +26,95 @@ if (chinaPolicy) {
 }
 const input = path.join(root, 'data/catalog'),
   output = path.join(root, 'data/generated/web');
+const tileRoot = path.resolve(output, 'tiles');
+function tileXY(lon, lat, z) {
+  const n = 2 ** z;
+  return [
+    Math.max(0, Math.min(n - 1, Math.floor(((lon + 180) / 360) * n))),
+    Math.max(
+      0,
+      Math.min(
+        n - 1,
+        Math.floor(((1 - Math.asinh(Math.tan((lat * Math.PI) / 180)) / Math.PI) / 2) * n),
+      ),
+    ),
+  ];
+}
+function manifestTileFiles(manifest) {
+  const files = new Set();
+  const add = (url) => {
+    if (typeof url !== 'string' || !url.startsWith('tiles/'))
+      throw Error(`Unexpected tile URL in manifest: ${url}`);
+    const target = path.resolve(output, ...url.split('/'));
+    if (target !== tileRoot && !target.startsWith(tileRoot + path.sep))
+      throw Error(`Tile URL escapes generated tile directory: ${url}`);
+    files.add(target);
+  };
+  for (const scope of Object.values(manifest.scopes || {})) {
+    for (const layer of scope.layers || []) {
+      if (layer.archive) {
+        add(layer.url);
+        continue;
+      }
+      if (!Number.isInteger(layer.maxzoom) || !Array.isArray(layer.bounds))
+        throw Error('Tile template is missing zoom or bounds metadata.');
+      for (let z = 0; z <= layer.maxzoom; z++) {
+        const nw = tileXY(layer.bounds[0], layer.bounds[3], z);
+        const se = tileXY(layer.bounds[2], layer.bounds[1], z);
+        for (let x = nw[0]; x <= se[0]; x++)
+          for (let y = nw[1]; y <= se[1]; y++)
+            add(
+              layer.url
+                .replace('{z}', String(z))
+                .replace('{x}', String(x))
+                .replace('{y}', String(y)),
+            );
+      }
+    }
+  }
+  return files;
+}
+async function missingManifestTiles(manifest) {
+  const missing = [];
+  for (const target of manifestTileFiles(manifest)) {
+    try {
+      if (!(await fs.stat(target)).isFile()) missing.push(target);
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+      missing.push(target);
+    }
+  }
+  return missing;
+}
+async function pruneStaleTiles(manifest) {
+  const referenced = manifestTileFiles(manifest);
+  const missing = await missingManifestTiles(manifest);
+  if (missing.length)
+    throw Error(`Refusing to prune tiles: manifest references ${missing.length} missing files.`);
+  const removed = [];
+  async function visit(directory) {
+    const entries = await fs.readdir(directory, { withFileTypes: true }).catch((error) => {
+      if (error.code === 'ENOENT') return [];
+      throw error;
+    });
+    for (const entry of entries) {
+      const target = path.resolve(directory, entry.name);
+      if (entry.isDirectory()) {
+        await visit(target);
+        if ((await fs.readdir(target)).length === 0) await fs.rmdir(target);
+      } else if (entry.isFile()) {
+        if (entry.name.endsWith('.tmp') || !referenced.has(target)) {
+          await fs.rm(target);
+          removed.push(target);
+        }
+      } else {
+        throw Error(`Unexpected non-file entry in generated tile directory: ${target}`);
+      }
+    }
+  }
+  await visit(tileRoot);
+  return removed;
+}
 // Keep the registry as the only source of scope IDs. Transpile this dependency-free
 // configuration so the script also works on Node 22.12 without native TS loading.
 const registrySource = await fs.readFile(
@@ -113,8 +202,20 @@ hash.update(JSON.stringify(sourceNames));
 for (const name of sourceNames) hash.update(await fs.readFile(path.join(input, name)));
 const stamp = hash.digest('hex');
 if ((await fs.readFile(path.join(output, '.stamp'), 'utf8').catch(() => null)) === stamp) {
-  console.log('Web assets are current.');
-  process.exit(0);
+  const currentManifest = await fs
+    .readFile(path.join(output, 'map-manifest.json'), 'utf8')
+    .then(JSON.parse)
+    .catch(() => null);
+  if (currentManifest?.version === stamp) {
+    const missing = await missingManifestTiles(currentManifest);
+    if (!missing.length) {
+      const removed = await pruneStaleTiles(currentManifest);
+      if (removed.length) console.log(`Removed ${removed.length} unreferenced tile files.`);
+      console.log('Web assets are current.');
+      process.exit(0);
+    }
+    console.warn(`Rebuilding ${missing.length} tile files missing from the current manifest.`);
+  }
 }
 await fs.mkdir(output, { recursive: true });
 const catalog = JSON.parse(await fs.readFile(path.join(input, 'catalog.json'), 'utf8'));
@@ -200,19 +301,6 @@ const bbox = (geometry) => {
 };
 const merge = (a, b) =>
   a ? [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])] : b;
-function tileXY(lon, lat, z) {
-  const n = 2 ** z;
-  return [
-    Math.max(0, Math.min(n - 1, Math.floor(((lon + 180) / 360) * n))),
-    Math.max(
-      0,
-      Math.min(
-        n - 1,
-        Math.floor(((1 - Math.asinh(Math.tan((lat * Math.PI) / 180)) / Math.PI) / 2) * n),
-      ),
-    ),
-  ];
-}
 for (const scope of scopes) {
   const raw = JSON.parse(await fs.readFile(path.join(input, scope + '.geo.json'), 'utf8'));
   const display =
@@ -293,15 +381,6 @@ for (const scope of scopes) {
       simplifiedLevels[level] = filename;
     }
   }
-  if (scope === 'vietnam') {
-    // Remove stale offshore tiles from earlier generations, including tiles outside
-    // the new bounds. The fixed, resolved target is confined to generated VN tiles.
-    const vietnamTiles = path.resolve(output, 'tiles', 'vietnam');
-    if (vietnamTiles !== path.resolve(root, 'data/generated/web/tiles/vietnam')) {
-      throw Error('Unexpected Vietnam generated-tile target.');
-    }
-    await fs.rm(vietnamTiles, { recursive: true, force: true });
-  }
   const layers = [];
   for (const level of [...new Set(display.map((f) => f.level))]) {
     const selected = features.filter((f) => f.properties.level === level);
@@ -372,13 +451,6 @@ for (const scope of scopes) {
           ],
         },
       });
-      const obsolete = path.resolve(output, 'tiles/china', level);
-      if (
-        !['province', 'city', 'county', 'border'].includes(level) ||
-        path.dirname(obsolete) !== path.resolve(root, 'data/generated/web/tiles/china')
-      )
-        throw Error('Unexpected obsolete China tile directory');
-      await fs.rm(obsolete, { recursive: true, force: true });
       layers.push({
         level,
         maxzoom,
@@ -393,7 +465,8 @@ for (const scope of scopes) {
       const nw = tileXY(bounds[0], bounds[3], z),
         se = tileXY(bounds[2], bounds[1], z);
       for (let x = nw[0]; x <= se[0]; x++) {
-        const folder = path.join(output, 'tiles', scope, level, String(z), String(x));
+        const version = stamp.slice(0, 16);
+        const folder = path.join(output, 'tiles', scope, version, level, String(z), String(x));
         await fs.mkdir(folder, { recursive: true });
         for (let y = nw[1]; y <= se[1]; y++) {
           const tile = index.getTile(z, x, y);
@@ -407,7 +480,7 @@ for (const scope of scopes) {
       level,
       maxzoom,
       bounds,
-      url: 'tiles/' + scope + '/' + level + '/{z}/{x}/{y}.pbf',
+      url: `tiles/${scope}/${stamp.slice(0, 16)}/${level}/{z}/{x}/{y}.pbf`,
     });
     console.log(scope + '/' + level + ': ' + count + ' tiles');
   }
@@ -430,7 +503,12 @@ if (boundaryOptions)
     path.join(output, 'maps/china-boundary-options.json.gz'),
     gzipSync(boundaryOptions),
   );
+const missingTiles = await missingManifestTiles(manifest);
+if (missingTiles.length)
+  throw Error(`Refusing to publish manifest: ${missingTiles.length} tile files are missing.`);
 await fs.writeFile(path.join(output, 'map-manifest.json'), JSON.stringify(manifest));
+const removedTiles = await pruneStaleTiles(manifest);
+if (removedTiles.length) console.log(`Removed ${removedTiles.length} unreferenced tile files.`);
 // Older local builds copied a font whose redistribution license was not established.
 // Remove only this generated asset; personal configuration and source archives stay untouched.
 await fs.rm(path.join(output, 'fonts/fangyu-seal.woff2'), { force: true });
