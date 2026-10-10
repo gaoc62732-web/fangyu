@@ -533,7 +533,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
       </button>
       <footer class="region-caption">
         <span>{{ config.name }} · {{ regionCount }} / {{ regions.length }} 个地区已标记</span>
-        <div>
+        <div class="region-caption-tools">
           <span role="status">{{ store.saveStatus }}</span
           ><button
             aria-label="撤销最近操作"
@@ -1009,6 +1009,10 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   align-items: center;
   gap: 12px;
 }
+.region-caption-tools {
+  position: relative;
+  gap: 14px;
+}
 .region-caption button {
   padding: 0;
   border: 0;
@@ -1266,6 +1270,15 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   .region-caption {
     padding: 0 16px;
     font-size: 14px;
+  }
+  .region-caption-tools {
+    gap: 8px;
+  }
+  .region-caption-tools :deep(.basemap-control span) {
+    display: none;
+  }
+  .region-caption-tools :deep(.basemap-control select) {
+    width: 126px;
   }
   .region-caption div > span {
     display: none;

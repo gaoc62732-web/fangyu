@@ -1,28 +1,15 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { PALETTES, tonalColors } from '@fangyu/domain';
-import {
-  VISIT_LABELS,
-  type ArchiveDocument,
-  type PointLinkPolicy,
-  type PointCheckinPreferences,
-} from '@fangyu/contracts';
-import { DEFAULT_POINT_POLICIES } from '@fangyu/domain';
+import { ref } from 'vue';
+import type { ArchiveDocument } from '@fangyu/contracts';
 import { useAppStore } from '../app/store.js';
 import { appMode } from '../app/mode.js';
 import { exportJson } from '../features/exports/download.js';
-import BasemapSettings from '../components/BasemapSettings.vue';
 
 const store = useAppStore();
 const mode = appMode();
 const archiveName = ref('');
-const baseColor = ref('#438d6a');
 const message = ref('');
 const clearConfirmed = ref(false);
-const preferences = computed(() => {
-  void store.revision;
-  return store.session!.preferences;
-});
 
 async function operation(action: () => Promise<unknown>) {
   try {
@@ -31,43 +18,6 @@ async function operation(action: () => Promise<unknown>) {
   } catch (cause) {
     message.value = String(cause);
   }
-}
-
-function changePalette(event: Event) {
-  const palette = (event.target as HTMLSelectElement).value as keyof typeof PALETTES;
-  store.commit((session) => session.updatePreferences({ palette }));
-}
-function changePointPolicy(key: keyof PointCheckinPreferences, event: Event) {
-  const value = (event.target as HTMLSelectElement).value as PointLinkPolicy;
-  store.commit((session) =>
-    session.updatePreferences({
-      pointCheckin: {
-        ...DEFAULT_POINT_POLICIES,
-        ...session.preferences.pointCheckin,
-        [key]: value,
-      },
-    }),
-  );
-}
-
-function generatePalette() {
-  store.commit((session) =>
-    session.updatePreferences({ palette: 'custom', customColors: tonalColors(baseColor.value) }),
-  );
-}
-
-function editColor(state: string, event: Event) {
-  const value = (event.target as HTMLInputElement).value;
-  const baseColors =
-    preferences.value.palette === 'custom'
-      ? { ...PALETTES.jade.colors, ...preferences.value.customColors }
-      : PALETTES[preferences.value.palette].colors;
-  store.commit((session) =>
-    session.updatePreferences({
-      palette: 'custom',
-      customColors: { ...baseColors, [state]: value },
-    }),
-  );
 }
 
 async function saveArchive() {
@@ -146,96 +96,6 @@ async function clear() {
     </p>
   </section>
   <section class="card">
-    <h3>地图配色</h3>
-    <div class="toolbar">
-      <select
-        :value="preferences.palette"
-        aria-label="配色方案"
-        @change="changePalette"
-      >
-        <option
-          v-for="(palette, id) in PALETTES"
-          :key="id"
-          :value="id"
-        >
-          {{ palette.name }}
-        </option>
-        <option
-          v-if="preferences.palette === 'custom'"
-          value="custom"
-          disabled
-        >
-          自定义
-        </option>
-      </select>
-      <input
-        v-model="baseColor"
-        type="color"
-        aria-label="地图主色"
-      />
-      <button @click="generatePalette">按主色生成六级</button>
-      <label
-        ><input
-          :checked="store.dark"
-          type="checkbox"
-          @change="store.setDark(($event.target as HTMLInputElement).checked)"
-        />深色界面</label
-      >
-    </div>
-    <div class="toolbar">
-      <label
-        v-for="(label, state) in { ...VISIT_LABELS, unmapped: '无对应边界' }"
-        :key="state"
-      >
-        <input
-          type="color"
-          :value="store.colors[state]"
-          :aria-label="label"
-          @change="editColor(state, $event)"
-        />
-        {{ label }}
-      </label>
-    </div>
-  </section>
-  <section class="card">
-    <BasemapSettings />
-  </section>
-  <section class="card">
-    <h3>点位点卯 · 关联确认</h3>
-    <div class="point-policy-fields">
-      <label
-        v-for="setting in [
-          {
-            key: 'children',
-            label: '总项目与组成地点',
-            auto: '自动全部点亮',
-            never: '仅记录实际选择的子项',
-          },
-          {
-            key: 'identities',
-            label: '同一地点的其他类别',
-            auto: '自动关联点亮',
-            never: '不联动其他类别',
-          },
-          { key: 'regions', label: '所在行政区划', auto: '自动点亮', never: '不联动行政区' },
-        ] as const"
-        :key="setting.key"
-      >
-        <span>{{ setting.label }}</span>
-        <select
-          :aria-label="setting.label"
-          :value="preferences.pointCheckin?.[setting.key] || 'ask'"
-          @change="changePointPolicy(setting.key, $event)"
-        >
-          <option value="ask">每次询问</option>
-          <option value="auto">{{ setting.auto }}</option>
-          <option value="never">{{ setting.never }}</option>
-        </select>
-      </label>
-    </div>
-    <p class="note">跨区地点仍需选择实际到访的行政区；自动联动只适用于位置明确且唯一的地点。</p>
-  </section>
-  <section class="card">
     <h3>清空到访</h3>
     <p>清空政区和项目到访状态，保留个人项目、名称和备注。可撤销或从备份恢复。</p>
     <label
@@ -252,16 +112,3 @@ async function clear() {
     </button>
   </section>
 </template>
-<style scoped>
-.point-policy-fields {
-  display: grid;
-  gap: 12px;
-  max-width: 520px;
-}
-.point-policy-fields label {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: center;
-}
-</style>

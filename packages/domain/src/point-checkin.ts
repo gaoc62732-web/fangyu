@@ -4,7 +4,7 @@ import { heritageLocationIsReferenceOnly } from './heritage.js';
 
 export const DEFAULT_POINT_POLICIES: PointCheckinPreferences = {
   children: 'ask',
-  identities: 'ask',
+  identities: 'auto',
   regions: 'ask',
 };
 export interface PointChild {

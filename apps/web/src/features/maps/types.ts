@@ -18,7 +18,7 @@ export interface MapDataManifest {
   >;
 }
 export interface BasemapProvider {
-  kind: BasemapKind;
+  kind: 'vector' | 'satellite';
   id: string;
   name: string;
   attribution: string;
@@ -26,8 +26,8 @@ export interface BasemapProvider {
   labels: string[];
   style?: StyleSpecification;
 }
-export type BasemapKind = 'vector' | 'satellite';
-export function tianditu(key: string, kind: BasemapKind = 'vector'): BasemapProvider | null {
+export type BasemapKind = 'vector' | 'tianditu' | 'satellite';
+export function tianditu(key: string, kind: 'vector' | 'satellite' = 'vector'): BasemapProvider | null {
   if (!/^[a-zA-Z0-9_-]{10,}$/.test(key)) return null;
   const url = (layer: string) =>
     'https://t0.tianditu.gov.cn/DataServer?T=' +

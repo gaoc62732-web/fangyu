@@ -19,6 +19,7 @@ import {
   pointRegions,
   drawablePoint,
   applyPointCheckin,
+  DEFAULT_POINT_POLICIES,
   type PointChange,
   type PointGroup,
 } from '@fangyu/domain';
@@ -30,6 +31,10 @@ import { useAppStore } from '../app/store.js';
 const store = useAppStore();
 const route = useRoute();
 const session = computed(() => store.session!);
+const policies = computed(() => {
+  void store.revision;
+  return { ...DEFAULT_POINT_POLICIES, ...session.value.preferences.pointCheckin };
+});
 const inherited = store.regionalMap;
 const scope = ref<Scope>(inherited?.scope || 'china');
 const selectedRegion = ref(inherited?.selected || store.selectedRegionId);
@@ -533,7 +538,7 @@ onBeforeUnmount(() => {
               ? `${mappedCount.toLocaleString()} 处地图点位`
               : '本类别暂无可显示点位，可从地点目录记录到访')
           }}</span>
-          <div>
+          <div class="point-page-caption-tools">
             <span class="atlas-save-state">{{ store.saveStatus }}</span
             ><button
               :disabled="!store.canUndo || !!pending"
@@ -1129,6 +1134,10 @@ onBeforeUnmount(() => {
   gap: 12px;
   flex-shrink: 0;
 }
+.point-page-caption-tools {
+  position: relative;
+  gap: 14px;
+}
 .point-page-caption button {
   padding: 0;
   display: flex;
@@ -1616,6 +1625,15 @@ onBeforeUnmount(() => {
   .point-page-caption {
     padding: 0 14px;
     font-size: var(--point-meta-size);
+  }
+  .point-page-caption-tools {
+    gap: 8px;
+  }
+  .point-page-caption-tools :deep(.basemap-control span) {
+    display: none;
+  }
+  .point-page-caption-tools :deep(.basemap-control select) {
+    width: 126px;
   }
   .atlas-save-state {
     display: none;

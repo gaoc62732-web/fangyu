@@ -3,9 +3,11 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { useAppStore } from '../app/store.js';
 import PointIcon from './PointIcon.vue';
+import GlobalSettingsPanel from './GlobalSettingsPanel.vue';
 const store = useAppStore();
 const route = useRoute();
 const more = ref<HTMLDetailsElement>();
+const settingsOpen = ref(false);
 const regionDestination = computed(() => {
   const previous = store.regionalMap;
   return {
@@ -29,6 +31,15 @@ function close() {
 }
 function outside(event: PointerEvent) {
   if (event.target instanceof Node && !more.value?.contains(event.target)) close();
+}
+function closeSettings() {
+  settingsOpen.value = false;
+}
+function settingsKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && settingsOpen.value) {
+    closeSettings();
+    event.preventDefault();
+  }
 }
 function keydown(event: KeyboardEvent) {
   const menu = more.value;
@@ -54,8 +65,14 @@ function keydown(event: KeyboardEvent) {
           : (current - 1 + items.length) % items.length;
   items[next]?.focus();
 }
-onMounted(() => document.addEventListener('pointerdown', outside));
-onBeforeUnmount(() => document.removeEventListener('pointerdown', outside));
+onMounted(() => {
+  document.addEventListener('pointerdown', outside);
+  document.addEventListener('keydown', settingsKeydown);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', outside);
+  document.removeEventListener('keydown', settingsKeydown);
+});
 watch(() => route.fullPath, close);
 </script>
 <template>
@@ -111,14 +128,52 @@ watch(() => route.fullPath, close);
       </div>
     </details>
     <RouterLink
-      class="module-settings-link"
+      class="module-temporary-settings"
       to="/settings"
-      aria-label="设置"
-      title="设置"
+      >设置</RouterLink
     >
-      <PointIcon name="settings" />
-    </RouterLink>
+    <button
+      class="module-settings-trigger"
+      type="button"
+      aria-label="打开设置"
+      :aria-expanded="settingsOpen"
+      aria-controls="module-settings-dialog"
+      title="设置"
+      @click="settingsOpen = !settingsOpen"
+    >
+      <PointIcon
+        name="settings"
+        :size="22"
+      />
+    </button>
   </header>
+  <div
+    v-if="settingsOpen"
+    class="module-settings-layer"
+    @click.self="closeSettings"
+  >
+    <section
+      id="module-settings-dialog"
+      class="module-settings-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="module-settings-title"
+    >
+      <div class="module-settings-dialog-head">
+        <h2 id="module-settings-title">设置</h2>
+        <button
+          type="button"
+          aria-label="关闭设置"
+          title="关闭设置"
+          @click="closeSettings"
+        >
+          <PointIcon name="close" />
+        </button>
+      </div>
+      <GlobalSettingsPanel v-if="store.session" />
+      <p v-else class="module-settings-loading" role="status">正在载入设置…</p>
+    </section>
+  </div>
 </template>
 <style scoped>
 .module-header {
@@ -192,19 +247,99 @@ watch(() => route.fullPath, close);
   flex: none;
   font-size: 16px;
 }
-.module-settings-link {
+.module-settings-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
   flex: none;
   width: 36px;
   height: 36px;
+  padding: 0;
+  border: 0;
   border-radius: 10px;
   color: var(--atlas-ink);
+  background: transparent;
+  cursor: pointer;
 }
-.module-settings-link:hover,
-.module-settings-link.router-link-active {
+.module-settings-trigger:hover,
+.module-settings-trigger[aria-expanded='true'] {
   background: var(--atlas-soft);
+}
+.module-temporary-settings {
+  position: absolute;
+  right: 76px;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 4px;
+  color: var(--atlas-ink);
+  font-size: 14px;
+  font-weight: 300;
+  text-decoration: none;
+}
+.module-temporary-settings:hover {
+  color: var(--atlas-accent);
+}
+.module-settings-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  padding: 72px 24px 24px;
+  background: rgb(20 28 22 / 12%);
+  backdrop-filter: blur(2px);
+}
+.module-settings-dialog {
+  width: min(388px, calc(100vw - 32px));
+  max-height: calc(100dvh - 96px);
+  overflow-y: auto;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid var(--atlas-line);
+  border-radius: 12px;
+  background: var(--atlas-paper);
+  box-shadow: 0 18px 42px rgb(20 28 22 / 22%);
+}
+.module-settings-dialog-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 18px 14px;
+  border-bottom: 1px solid var(--atlas-line);
+  background: var(--atlas-paper);
+}
+.module-settings-dialog h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+}
+.module-settings-dialog-head button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  color: var(--atlas-ink);
+  background: transparent;
+  cursor: pointer;
+}
+.module-settings-dialog-head button:hover {
+  background: var(--atlas-soft);
+}
+.module-settings-dialog :deep(.global-settings-panel) {
+  padding: 2px 18px 18px;
+}
+.module-settings-loading {
+  margin: 0;
+  padding: 18px;
+  color: var(--atlas-ink);
+  font-size: 13px;
+  opacity: 0.7;
 }
 .module-more summary {
   display: flex;
@@ -276,6 +411,9 @@ watch(() => route.fullPath, close);
   .module-more summary {
     padding: 7px 2px;
   }
+  .module-temporary-settings {
+    right: 60px;
+  }
   .module-more-menu {
     right: 0;
   }
@@ -292,6 +430,10 @@ watch(() => route.fullPath, close);
   }
   .module-more summary {
     font-size: 14px;
+  }
+  .module-temporary-settings {
+    right: 52px;
+    font-size: 13px;
   }
   .module-brand span {
     display: none;

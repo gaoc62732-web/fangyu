@@ -208,7 +208,11 @@ export const useAppStore = defineStore('app', () => {
     const selected = preferences?.palette || 'jade';
     const colors =
       selected === 'custom'
-        ? { ...PALETTES.jade.colors, ...preferences?.customColors }
+        ? {
+            ...PALETTES.jade.colors,
+            ...preferences?.customColors,
+            unmapped: PALETTES.jade.colors.unmapped,
+          }
         : PALETTES[selected].colors;
     return dark.value ? darkColors(colors) : colors;
   });

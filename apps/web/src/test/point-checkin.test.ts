@@ -133,7 +133,7 @@ describe('independent point records', () => {
   it('accepts old snapshots and roundtrips each optional confirmation policy', () => {
     const session = projectSession();
     expect(snapshotSchema.parse(session.snapshot()).preferences.pointCheckin).toBeUndefined();
-    expect(DEFAULT_POINT_POLICIES).toEqual({ children: 'ask', identities: 'ask', regions: 'ask' });
+    expect(DEFAULT_POINT_POLICIES).toEqual({ children: 'ask', identities: 'auto', regions: 'ask' });
     session.transaction(() =>
       session.updatePreferences({
         pointCheckin: { children: 'auto', identities: 'never', regions: 'ask' },

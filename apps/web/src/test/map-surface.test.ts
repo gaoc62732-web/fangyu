@@ -487,12 +487,8 @@ describe('current map lifecycle', () => {
     previous.events['style.load']!();
     setBasemapEnabled(false);
     await flushPromises();
-    await vi.dynamicImportSettled();
-    await flushPromises();
-    const next = lib.maps[1]!;
-    next.events['style.load']!();
-    expect(previous.remove).toHaveBeenCalledOnce();
-    expect(next.jumpTo).toHaveBeenCalledWith({ center: [116.4, 39.9], zoom: 12 });
+    expect(previous.remove).not.toHaveBeenCalled();
+    expect(lib.maps).toHaveLength(1);
   });
 
   it('selects cluster members and focuses their coordinates on the active map', async () => {

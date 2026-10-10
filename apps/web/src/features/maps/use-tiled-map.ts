@@ -5,7 +5,11 @@ import { CanvasMapRenderer, clusterScreenMarkers } from '@fangyu/map-renderer';
 import { useAppStore } from '../../app/store.js';
 import { download } from '../exports/download.js';
 import { type Bounds, type MapDataManifest } from './types.js';
-import { basemapProvider } from './basemap-settings.js';
+import {
+  basemapConfiguredProvider,
+  basemapEnabled,
+  basemapKind,
+} from './basemap-settings.js';
 import { mapAttributions } from './data-attribution.js';
 import { boundaryFillOpacity, createMapStyle } from './style.js';
 import type { TiledMapProps } from './types.js';
@@ -32,9 +36,10 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
   const mapZoom = ref(0);
   const mapCenter = ref<[number, number] | null>(null);
   const base = import.meta.env.BASE_URL;
-  // Point mode keeps the basemap already in use when entering the page.
-  const existingBasemap = basemapProvider.value;
-  const provider = computed(() => (props.pointMode ? existingBasemap : basemapProvider.value));
+  // Keep the configured provider in the map style even while it is hidden so
+  // toggling the checkbox only changes layer visibility and never recreates the map.
+  const provider = computed(() => basemapConfiguredProvider.value);
+  const activeProvider = computed(() => (basemapEnabled.value ? provider.value : null));
   const regionAutoFocus = computed(() => {
     void store.revision;
     return store.session!.preferences.regionAutoFocus !== false;
@@ -472,7 +477,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
           setPaintProperty(
             chinaBoundaryLayerId(index, layer.level + '-fill'),
             'fill-opacity',
-            props.pointMode ? 0 : boundaryFillOpacity(providerFailed.value ? null : provider.value),
+            props.pointMode ? 0 : boundaryFillOpacity(providerFailed.value ? null : activeProvider.value),
           );
           if (props.pointMode) {
             const highlight = chinaBoundaryLayerId(index, layer.level + '-point-highlight');
@@ -531,7 +536,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         setPaintProperty(
           l.level + '-fill',
           'fill-opacity',
-          props.pointMode ? 0 : boundaryFillOpacity(providerFailed.value ? null : provider.value),
+          props.pointMode ? 0 : boundaryFillOpacity(providerFailed.value ? null : activeProvider.value),
         );
       if (props.pointMode) {
         if (l.level !== 'border') {
@@ -606,6 +611,16 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       (map.getSource('visited-markers') as GeoJSONSource).setData(nextVisitedPointData);
       visitedPointDataKey = nextVisitedPointDataKey;
     }
+  }
+
+  function toggleBasemapVisibility() {
+    if (!map || !ready) return;
+    const visible = basemapEnabled.value && !providerFailed.value;
+    for (const layer of map.getStyle().layers) {
+      if (layer.id === 'basemap' || layer.id === 'labels' || layer.id.startsWith('base-'))
+        setLayoutProperty(layer.id, 'visibility', visible ? 'visible' : 'none');
+    }
+    appearance();
   }
   function fitRegion(id = '', duration = 0) {
     if (canvas) {
@@ -842,6 +857,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         for (const kind of ['airport', 'world-heritage', 'project-reference'])
           addVisitedImage(current, 'visited-' + kind);
         appearance();
+        toggleBasemapVisibility();
         fitInitialView(camera);
         mapZoom.value = current.getZoom();
         mapCenter.value = current.getCenter().toArray();
@@ -924,7 +940,8 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     releaseBoundaryLease();
   });
   watch(() => props.scope, initialize);
-  watch(provider, changeProvider);
+  watch(basemapKind, changeProvider);
+  watch(basemapEnabled, toggleBasemapVisibility);
   watch(
     () => [
       store.revision,

@@ -2,22 +2,15 @@
 import { computed, ref } from 'vue';
 import {
   basemapCanEnable,
-  basemapEnabled,
   basemapKind,
   basemapProvider,
-  setBasemapEnabled,
   setBasemapKind,
 } from '../features/maps/basemap-settings.js';
 import type { BasemapKind } from '../features/maps/types.js';
 
+const props = withDefaults(defineProps<{ compact?: boolean }>(), { compact: false });
 const message = ref('');
 const tiandituAvailable = computed(() => basemapKind.value === 'satellite' && basemapCanEnable.value);
-
-function toggle(event: Event) {
-  const enabled = (event.target as HTMLInputElement).checked;
-  const saved = setBasemapEnabled(enabled);
-  message.value = saved ? (enabled ? '已启用底图。' : '已关闭底图。') : '底图设置未能保存。';
-}
 
 function changeKind(event: Event) {
   const kind = (event.target as HTMLSelectElement).value as BasemapKind;
@@ -27,32 +20,24 @@ function changeKind(event: Event) {
 </script>
 
 <template>
-  <section class="basemap-settings">
-    <h3>底图</h3>
-    <div class="toolbar">
-      <label>
-        <input
-          type="checkbox"
-          :checked="basemapEnabled"
-          :disabled="!basemapCanEnable"
-          @change="toggle"
-        />启用底图
-      </label>
-      <label>
-        类型
-        <select
-          :value="basemapKind"
-          aria-label="底图类型"
-          @change="changeKind"
-        >
-          <option value="vector">OSM Liberty（自定义）</option>
-          <option
-            value="satellite"
-            :disabled="basemapKind !== 'satellite' && !basemapCanEnable"
-          >天地图</option>
-        </select>
-      </label>
-    </div>
+  <section
+    class="basemap-settings"
+    :class="{ compact: props.compact }"
+  >
+    <label class="basemap-control">
+      <span>底图</span>
+      <select
+        :value="basemapKind"
+        aria-label="底图类型"
+        @change="changeKind"
+      >
+        <option value="vector">OSM Liberty（自定义）</option>
+        <option
+          value="satellite"
+          :disabled="basemapKind !== 'satellite' && !basemapCanEnable"
+        >天地图</option>
+      </select>
+    </label>
     <p
       v-if="basemapKind === 'satellite' && !tiandituAvailable"
       class="note"
@@ -67,14 +52,67 @@ function changeKind(event: Event) {
 
 <style scoped>
 .basemap-settings {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--atlas-line);
+  position: relative;
+  display: grid;
+  gap: 6px;
+  color: var(--atlas-ink);
+  font-size: 13px;
 }
-.basemap-settings h3 {
-  margin: 0 0 12px;
+.basemap-settings.compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  min-width: 0;
 }
-.basemap-settings .toolbar {
-  flex-wrap: wrap;
+.basemap-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.basemap-control span {
+  flex: none;
+  color: var(--atlas-ink);
+  opacity: 0.72;
+}
+.basemap-control select {
+  width: 154px;
+  min-width: 0;
+  height: 30px;
+  padding: 3px 8px;
+  font-size: 12px;
+}
+.basemap-settings:not(.compact) .basemap-control {
+  justify-content: space-between;
+}
+.basemap-settings:not(.compact) .basemap-control select {
+  width: 178px;
+  height: 32px;
+  font-size: 13px;
+}
+.basemap-settings p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--atlas-ink);
+  opacity: 0.7;
+}
+.basemap-settings.compact p {
+  position: absolute;
+  top: auto;
+  bottom: calc(100% + 4px);
+  right: 0;
+  width: max-content;
+  max-width: min(280px, calc(100vw - 32px));
+  margin-top: 4px;
+  padding: 5px 8px;
+  border: 1px solid var(--atlas-line);
+  border-radius: 6px;
+  background: var(--atlas-paper);
+  box-shadow: 0 6px 16px rgb(20 28 22 / 10%);
+}
+.basemap-settings.compact p + p {
+  bottom: calc(100% + 34px);
 }
 </style>

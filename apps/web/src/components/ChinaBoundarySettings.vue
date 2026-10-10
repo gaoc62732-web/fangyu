@@ -51,9 +51,9 @@ function toggle(key: keyof ChinaBoundarySettings, event: Event) {
 <style scoped>
 .china-boundary-settings {
   position: absolute;
-  top: 76px;
+  top: 24px;
   right: 24px;
-  z-index: 5;
+  z-index: 6;
 }
 summary {
   display: flex;

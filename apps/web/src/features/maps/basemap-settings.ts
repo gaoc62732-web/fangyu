@@ -12,7 +12,8 @@ function read(storageName: StorageName): Choice | undefined {
     if (!value) return;
     return {
       enabled: value.enabled !== false,
-      kind: value.kind === 'satellite' ? 'satellite' : 'vector',
+      kind:
+        value.kind === 'satellite' ? 'satellite' : value.kind === 'tianditu' ? 'tianditu' : 'vector',
     };
   } catch {
     return;
@@ -34,16 +35,20 @@ const choice = ref<Choice>(sessionChoice || localChoice || { enabled: true, kind
 const configuredProvider = computed(() =>
   choice.value.kind === 'vector'
     ? libertyBasemap()
-    : tianditu(import.meta.env.VITE_TIANDITU_KEY || '', choice.value.kind),
+    : tianditu(
+        import.meta.env.VITE_TIANDITU_KEY || '',
+        choice.value.kind === 'satellite' ? 'satellite' : 'vector',
+      ),
 );
 
+export const basemapConfiguredProvider = configuredProvider;
 export const basemapProvider = computed(() =>
   choice.value.enabled ? configuredProvider.value : null,
 );
 export const basemapMode = computed(() => (choice.value.enabled ? 'environment' : 'disabled'));
 export const basemapKind = computed(() => choice.value.kind);
 export const basemapCanEnable = computed(() => Boolean(configuredProvider.value));
-export const basemapEnabled = computed(() => Boolean(basemapProvider.value));
+export const basemapEnabled = computed(() => choice.value.enabled);
 
 function save(next: Choice) {
   const stored = write('localStorage', next) && write('sessionStorage', next);
@@ -57,5 +62,5 @@ export function setBasemapEnabled(enabled: boolean) {
 }
 
 export function setBasemapKind(kind: BasemapKind) {
-  return save({ ...choice.value, kind });
+  return save({ ...choice.value, kind, enabled: true });
 }

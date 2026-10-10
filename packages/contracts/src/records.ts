@@ -70,7 +70,7 @@ export type PointLinkPolicy = z.infer<typeof pointLinkPolicySchema>;
 export const pointCheckinPreferencesSchema = z
   .object({
     children: pointLinkPolicySchema.default('ask'),
-    identities: pointLinkPolicySchema.default('ask'),
+    identities: pointLinkPolicySchema.default('auto'),
     regions: pointLinkPolicySchema.default('ask'),
   })
   .strict();

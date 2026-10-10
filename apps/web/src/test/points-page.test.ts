@@ -281,8 +281,8 @@ describe('point page interactions', () => {
     const store = await open();
     wrapper!.unmount();
     wrapper = mount(SettingsPage);
-    await wrapper.find('[aria-label="总项目与组成地点"]').setValue('auto');
-    await wrapper.find('[aria-label="同一地点的其他类别"]').setValue('never');
+    await wrapper.find('[aria-label="组成地点"]').setValue('auto');
+    await wrapper.find('[aria-label="多个类别"]').setValue('never');
     await wrapper.find('[aria-label="所在行政区划"]').setValue('never');
     await store.flush();
     expect(store.session!.preferences.pointCheckin).toEqual({
