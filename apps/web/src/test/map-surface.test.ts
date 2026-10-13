@@ -155,7 +155,7 @@ describe('current map lifecycle', () => {
     );
     expect(map.jumpTo).not.toHaveBeenCalled();
   });
-  it('updates only changed feature state on the region matching its vector layer', async () => {
+  it('updates changed feature state on every vector face of the region', async () => {
     const current = await open();
     const map = lib.maps[0]!;
     map.events['style.load']!();
@@ -163,7 +163,7 @@ describe('current map lifecycle', () => {
     const store = useAppStore();
     store.commit((session) => session.upgradeRegion(dongcheng, 'transit'));
     await flushPromises();
-    expect(map.setFeatureState).toHaveBeenCalledTimes(3);
+    expect(map.setFeatureState).toHaveBeenCalledTimes(4);
     expect(map.setFeatureState).toHaveBeenCalledWith(
       { source: 'county', sourceLayer: 'regions', id: dongcheng },
       { fill: expect.any(String), recorded: true },
@@ -174,6 +174,10 @@ describe('current map lifecycle', () => {
     );
     expect(map.setFeatureState).toHaveBeenCalledWith(
       { source: 'province', sourceLayer: 'regions', id: beijing },
+      { fill: expect.any(String), recorded: true },
+    );
+    expect(map.setFeatureState).toHaveBeenCalledWith(
+      { source: 'city', sourceLayer: 'regions', id: beijing },
       { fill: expect.any(String), recorded: true },
     );
     expect(current.exists()).toBe(true);

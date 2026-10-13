@@ -1,4 +1,10 @@
-import type { Catalog, CatalogEntry, GeometryFeature, Region, Scope } from '@fangyu/contracts';
+import type {
+  Catalog,
+  CatalogEntry,
+  GeometryFeature,
+  Region,
+  Scope,
+} from '@fangyu/contracts';
 import {
   CHINA_BOUNDARY_OPTIONS,
   DEFAULT_CHINA_BOUNDARIES,

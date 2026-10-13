@@ -105,6 +105,11 @@ function pointPolicy(key: keyof PointCheckinPreferences) {
   return preferences.value.pointCheckin?.[key] ?? DEFAULT_POINT_POLICIES[key];
 }
 
+function changeRegionStatePolicy(event: Event) {
+  const value = (event.target as HTMLSelectElement).value as PointLinkPolicy;
+  store.commit((session) => session.updatePreferences({ regionStateLink: value }));
+}
+
 function changeBasemapKind(event: Event) {
   setBasemapKind((event.target as HTMLSelectElement).value as BasemapKind);
 }
@@ -241,11 +246,14 @@ function editColor(state: string, event: Event) {
         />
       </label>
       <label class="global-settings-field">
-        <span>底图设置</span>
-        <HelpTip text="天地图及天地图卫星图加载较慢，请谨慎选用" />
+        <span class="global-settings-field-label">
+          <span>底图设置</span>
+          <HelpTip text="天地图及天地图卫星图加载较慢，请谨慎选用" />
+        </span>
         <select
           :value="basemapKind"
           aria-label="底图设置"
+          :disabled="!basemapEnabled"
           @change="changeBasemapKind"
         >
           <option value="vector">OpenStreetMap</option>
@@ -283,6 +291,21 @@ function editColor(state: string, event: Event) {
             >
               {{ option.label }}
             </option>
+          </select>
+        </div>
+        <div class="global-settings-policy-field">
+          <div class="global-settings-policy-label">
+            <span>行政区状态</span>
+            <HelpTip text="上级行政区与下属地区状态不一致时，决定是否同步更新下属地区。" />
+          </div>
+          <select
+            aria-label="行政区状态"
+            :value="preferences.regionStateLink || 'ask'"
+            @change="changeRegionStatePolicy"
+          >
+            <option value="ask">每次询问是否同步下辖地区</option>
+            <option value="auto">自动同步下辖地区</option>
+            <option value="never">始终只更新当前行政区</option>
           </select>
         </div>
       </div>
@@ -340,6 +363,12 @@ function editColor(state: string, event: Event) {
   height: 16px;
   margin: 0;
   accent-color: var(--atlas-accent);
+}
+.global-settings-field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
 }
 .global-settings-colors {
   display: grid;

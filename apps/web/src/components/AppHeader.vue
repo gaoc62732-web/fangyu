@@ -127,11 +127,6 @@ watch(() => route.fullPath, close);
         </button>
       </div>
     </details>
-    <RouterLink
-      class="module-temporary-settings"
-      to="/settings"
-      >设置</RouterLink
-    >
     <button
       class="module-settings-trigger"
       type="button"
@@ -265,21 +260,6 @@ watch(() => route.fullPath, close);
 .module-settings-trigger[aria-expanded='true'] {
   background: var(--atlas-soft);
 }
-.module-temporary-settings {
-  position: absolute;
-  right: 76px;
-  display: flex;
-  align-items: center;
-  height: 36px;
-  padding: 0 4px;
-  color: var(--atlas-ink);
-  font-size: 14px;
-  font-weight: 300;
-  text-decoration: none;
-}
-.module-temporary-settings:hover {
-  color: var(--atlas-accent);
-}
 .module-settings-layer {
   position: fixed;
   inset: 0;
@@ -411,9 +391,6 @@ watch(() => route.fullPath, close);
   .module-more summary {
     padding: 7px 2px;
   }
-  .module-temporary-settings {
-    right: 60px;
-  }
   .module-more-menu {
     right: 0;
   }
@@ -430,10 +407,6 @@ watch(() => route.fullPath, close);
   }
   .module-more summary {
     font-size: 14px;
-  }
-  .module-temporary-settings {
-    right: 52px;
-    font-size: 13px;
   }
   .module-brand span {
     display: none;

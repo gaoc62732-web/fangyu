@@ -89,6 +89,7 @@ export const preferencesSchema = z
     chinaBoundaries: chinaBoundarySettingsSchema.optional(),
     mapLayers: mapLayersSchema.optional(),
     pointCheckin: pointCheckinPreferencesSchema.optional(),
+    regionStateLink: pointLinkPolicySchema.default('ask'),
   })
   .strict();
 
@@ -147,6 +148,6 @@ export function emptySnapshot(catalogVersion: string): RecordSnapshot {
     regions: {},
     entries: {},
     customEntries: [],
-    preferences: { palette: 'jade', mapLevel: 'county' },
+    preferences: { palette: 'jade', mapLevel: 'county', regionStateLink: 'ask' },
   };
 }

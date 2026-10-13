@@ -30,7 +30,6 @@ describe('module navigation', () => {
     expect(wrapper.findAll('.module-more-menu a').map((a) => a.text())).toEqual([
       '记录',
       '卯分',
-      '存档与外观',
       '使用说明',
     ]);
     await router.push('/regions/china');

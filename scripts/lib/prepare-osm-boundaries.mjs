@@ -36,6 +36,8 @@ const regions = catalog.regions.filter((r) => r.scope === 'china');
 const regionMap = new Map(regions.map((r) => [r.id, r]));
 const geometryFile = path.join(root, 'data/catalog/china.geo.json');
 const legacy = await read(geometryFile);
+const DATAV_BAIYUN_CODE = '150206';
+const DATAV_BAIYUN_FILE = path.join(root, 'data/boundaries/china-osm/raw/datav-150206.json');
 export function bounds(geometry) {
   const b = [Infinity, Infinity, -Infinity, -Infinity];
   function walk(c) {
@@ -87,6 +89,87 @@ function valid(feature) {
     )
   );
 }
+
+function signedRingArea(ring) {
+  let area = 0;
+  for (let i = 0; i < ring.length - 1; i++)
+    area += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1];
+  return area / 2;
+}
+
+function reverseRing(ring) {
+  const reversed = [...ring].reverse();
+  // Keep the closing coordinate identical to the first coordinate.
+  reversed[reversed.length - 1] = [...reversed[0]];
+  return reversed;
+}
+
+async function readDataVBaiyunGeometry() {
+  const source = await read(DATAV_BAIYUN_FILE).catch((error) => {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  });
+  if (!source) throw Error(`Missing processed DataV boundary: ${DATAV_BAIYUN_FILE}`);
+  const feature = source.type === 'Feature'
+    ? source
+    : source.features?.find((f) => String(f.properties?.adcode) === DATAV_BAIYUN_CODE);
+  if (!feature || !valid(feature)) throw Error('Processed DataV 150206 geometry is missing or invalid');
+  return feature.geometry;
+}
+
+function baiyunOuterRing(geometry) {
+  if (geometry.type === 'Polygon') return geometry.coordinates[0];
+  if (geometry.type === 'MultiPolygon' && geometry.coordinates.length === 1)
+    return geometry.coordinates[0][0];
+  throw Error('DataV 150206 must contain exactly one polygon for the Damao hole replacement');
+}
+
+function replaceDamaoHole(geometry, baiyunGeometry) {
+  const outer = baiyunOuterRing(baiyunGeometry);
+  const hole = signedRingArea(outer) > 0 ? reverseRing(outer) : outer.map((point) => [...point]);
+  if (geometry.type !== 'Polygon' || geometry.coordinates.length < 1)
+    throw Error('OSM 150223 geometry is not a polygon');
+  return {
+    ...geometry,
+    coordinates: [geometry.coordinates[0].map((point) => [...point]), hole],
+  };
+}
+
+async function applyDataVOverrides(items) {
+  if (job.kind !== 'province' || job.code !== '150000') return { items, overrides: [] };
+  const baiyun = regions.find((r) => r.code === DATAV_BAIYUN_CODE);
+  const damao = regions.find((r) => r.code === '150223');
+  if (!baiyun || !damao) throw Error('Catalog entries for 150206/150223 are missing');
+  const baiyunGeometry = await readDataVBaiyunGeometry();
+  const overrides = [
+    {
+      code: DATAV_BAIYUN_CODE,
+      name: baiyun.name,
+      source: 'DataV',
+      sourceFile: 'data/boundaries/china-osm/raw/datav-150206.json',
+      coordinateReferenceSystem: 'EPSG:4326',
+      transformation: 'DataV GCJ-02 coordinates were converted to WGS84 before archival',
+    },
+    {
+      code: '150223',
+      name: damao.name,
+      source: 'DataV hole replacement',
+      sourceFile: 'data/boundaries/china-osm/raw/datav-150206.json',
+      coordinateReferenceSystem: 'EPSG:4326',
+      transformation: 'The existing OSM Baiyun hole was replaced by the same processed DataV boundary',
+    },
+  ];
+  const replaced = items.map((item) => {
+    const code =
+      item.properties?.division_code ||
+      item.properties?.['ref:admin:CN'] ||
+      regionMap.get(item.regionId)?.code;
+    if (code === DATAV_BAIYUN_CODE) return { ...item, geometry: baiyunGeometry };
+    if (code === '150223') return { ...item, geometry: replaceDamaoHole(item.geometry, baiyunGeometry) };
+    return item;
+  });
+  return { items: replaced, overrides };
+}
 const names = (tags) =>
   new Set(
     ['name', 'name:zh', 'name:zh-Hans', 'official_name', 'alt_name', 'short_name']
@@ -119,6 +202,7 @@ const excludedPlaceholders = [...wanted].filter((id) => {
 excludedPlaceholders.forEach((id) => wanted.delete(id));
 const features = converted.features.filter((f) => wanted.has(f.id) && valid(f));
 const rejected = [...wanted].filter((id) => !features.some((f) => f.id === id));
+const sourceOverrideResult = await applyDataVOverrides(features);
 const report = {
   acquiredAt: new Date().toISOString(),
   license: 'ODbL-1.0',
@@ -128,6 +212,7 @@ const report = {
   downloaded: features.length,
   rejected,
   excludedPlaceholders,
+  sourceOverrides: sourceOverrideResult.overrides,
   applied: false,
 };
 // Incomplete relations must not silently publish just their surviving members.
@@ -135,7 +220,7 @@ if (rejected.length) {
   await write(job.output + '.report.json', report);
   throw Error(`Incomplete/missing polygons: ${rejected.join(', ')}`);
 }
-await write(job.output, { type: 'FeatureCollection', features });
+await write(job.output, { type: 'FeatureCollection', features: sourceOverrideResult.items });
 if (job.kind === 'province') {
   const province = regions.find((r) => r.level === 0 && r.code === job.code);
   if (!province) throw Error('Unknown catalog province code');
@@ -273,7 +358,9 @@ if (job.kind === 'province') {
         geometry: f.geometry,
       });
     }
-    const reviewedOutput = await retainReviewedChinaGeometry(output, regions);
+    const finalOverrideResult = await applyDataVOverrides(output);
+    report.sourceOverrides = finalOverrideResult.overrides;
+    const reviewedOutput = await retainReviewedChinaGeometry(finalOverrideResult.items, regions);
     report.geometrySha256 = await write(geometryFile, reviewedOutput);
     await recordReviewedChinaReimport(report.geometrySha256);
     report.applied = true;

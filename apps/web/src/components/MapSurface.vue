@@ -7,7 +7,6 @@ import { useTiledMap } from '../features/maps/use-tiled-map.js';
 import PointIcon from './PointIcon.vue';
 import ChinaBoundarySettings from './ChinaBoundarySettings.vue';
 import VisitedMapLayers from './VisitedMapLayers.vue';
-import { mapAttributions } from '../features/maps/data-attribution.js';
 const props = withDefaults(
   defineProps<{
     scope: Scope;
@@ -265,22 +264,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
         >
           <PointIcon name="download" />
         </button>
-        <details
-          v-if="fallback"
-          class="atlas-map-attribution"
-        >
-          <summary aria-label="地图来源">ⓘ</summary>
-          <div>
-            <a
-              v-for="credit in mapAttributions(scope)"
-              :key="credit.url"
-              :href="credit.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ credit.label }}</a
-            >
-          </div>
-        </details>
       </template>
       <div
         v-if="pointMode"
@@ -336,6 +319,18 @@ async function overview(group?: 'metropolitan' | 'overseas') {
         <small>{{ hoverInfo.detail }}</small>
         <span>{{ hoverInfo.state }}</span>
       </div>
+      <div
+        class="map-attribution-bar"
+        aria-label="地图贡献信息"
+      >
+        <a
+          href="https://www.openstreetmap.org/copyright"
+          target="_blank"
+          rel="noopener noreferrer"
+          >© OpenStreetMap contributors</a
+        ><span aria-hidden="true">|</span><span>天地图</span><span aria-hidden="true">|</span
+        ><span>Fangyu Developers</span>
+      </div>
     </div>
     <div
       v-if="fallback || providerFailed || (mapError && !missingBoundary)"
@@ -371,19 +366,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
         <i :style="{ background: store.colors[state] }"></i>{{ label }}
       </span>
     </div>
-    <p
-      v-if="!pointMode && !regionMode"
-      class="note map-data-attribution"
-    >
-      <a
-        v-for="credit in mapAttributions(scope, visitedLayers.visitedWorldHeritage)"
-        :key="credit.url"
-        :href="credit.url"
-        target="_blank"
-        rel="noopener noreferrer"
-        >{{ credit.label }}</a
-      >
-    </p>
   </section>
 </template>
 
@@ -507,8 +489,7 @@ async function overview(group?: 'metropolitan' | 'overseas') {
   font-size: var(--point-body-size, 16px);
   font-weight: 300;
 }
-.atlas-map-legend > summary::-webkit-details-marker,
-.atlas-map-attribution > summary::-webkit-details-marker {
+.atlas-map-legend > summary::-webkit-details-marker {
   display: none;
 }
 .atlas-map-legend > summary:hover,
@@ -564,36 +545,24 @@ async function overview(group?: 'metropolitan' | 'overseas') {
   border: 1px solid #30372e15;
   border-radius: 2px;
 }
-.atlas-map-attribution {
-  position: absolute;
-  right: 10px;
-  bottom: 40px;
-  z-index: 2;
-  background: #fffefaed;
-  border-radius: 12px;
-  color: var(--point-ink, #30372e);
-}
-.atlas-map-attribution summary {
-  list-style: none;
-  cursor: pointer;
-  padding: 0 6px;
-  font-size: 18px;
-}
-.atlas-map-attribution > div {
+.map-attribution-bar {
   position: absolute;
   right: 0;
-  bottom: 28px;
-  display: grid;
-  gap: 6px;
-  width: min(340px, calc(100vw - 48px));
-  padding: 12px 16px;
-  background: #fffefa;
-  border: 1px solid #e2e3dd;
-  border-radius: 12px;
-  font-size: 12px;
-  line-height: 1.65;
+  bottom: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: calc(100% - 16px);
+  padding: 2px 6px;
+  border-radius: 6px 0 0;
+  color: var(--point-ink, #30372e);
+  background: rgb(255 254 250 / 72%);
+  font-size: 11px;
+  line-height: 1.35;
+  white-space: nowrap;
 }
-.atlas-map-attribution a {
+.map-attribution-bar a {
   color: inherit;
 }
 .atlas-map .point-dot {
@@ -664,12 +633,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
   background: #ffffffe0;
   padding: 1px 5px;
   border-radius: 3px;
-}
-.map-data-attribution {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-  font-size: 11px;
 }
 .map-surface > .tile-map-host {
   position: absolute;

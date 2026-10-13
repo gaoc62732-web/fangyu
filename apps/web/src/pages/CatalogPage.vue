@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { VISIT_LABELS, SCOPE_CONFIGS, getScopeConfig, type Scope } from '@fangyu/contracts';
+import { SCOPE_CONFIGS, getScopeConfig, type Scope } from '@fangyu/contracts';
 import { useAppStore } from '../app/store.js';
 import MapSurface from '../components/MapSurface.vue';
 import VisitStateSelect from '../components/VisitStateSelect.vue';
 import TopicCoverage from '../components/TopicCoverage.vue';
 import PointIcon from '../components/PointIcon.vue';
 import PointSelect from '../components/PointSelect.vue';
+import HelpTip from '../components/HelpTip.vue';
 import { useCatalogNavigation } from '../features/catalog/use-catalog-navigation.js';
 import { useResizablePanel } from '../features/maps/use-resizable-panel.js';
 import { searchText } from '../features/search-text.js';
@@ -23,14 +24,10 @@ const {
   regions,
   selected,
   childRegions,
-  visibleChildren,
   regionGroups,
-  francePath,
   franceStatistics,
-  franceBack,
   level,
   changeLevel,
-  showAllChildren,
   select,
 } = useCatalogNavigation(scope);
 const workspace = ref<HTMLElement>();
@@ -41,12 +38,18 @@ const { width, maxWidth, resizing, down, move, up, key } = useResizablePanel(wor
 const panelOpen = ref(false);
 const explorerSearchOpen = ref(false);
 const scopeMenuOpen = ref(false);
-const query = ref('');
 const explorerQuery = ref('');
-const status = ref('');
 const draftRegionId = ref('');
 const searchTargetId = ref('');
 const suggestionsOpen = ref(false);
+const expandedDirectory = ref<Record<string, boolean>>({});
+const expandedRouteGroups = ref<Record<string, boolean>>({});
+const expandedPointGroups = ref<Record<string, boolean>>({});
+const regionBreadcrumbs = computed(() =>
+  selected.value
+    ? index.value.ancestors(selected.value.id).filter((region) => region.scope === scope.value)
+    : [],
+);
 const camera = computed(() =>
   store.regionalMap?.scope === props.scope ? store.regionalMap.camera : undefined,
 );
@@ -114,19 +117,6 @@ const chinaCounties = computed(() =>
       index.value.belongsTo(region.id, draftCity.value || draftProvince.value),
   ),
 );
-const matching = computed(() => {
-  void store.revision;
-  const text = searchText(query.value.trim());
-  return regions.value.filter(
-    (region) =>
-      (!text ||
-        searchText(
-          `${region.name} ${region.aliases.join(' ')} ${region.code} ${index.value.paths.get(region.id)}`,
-        ).includes(text)) &&
-      (!status.value ||
-        (session.value.visitState(region.id) !== 'unvisited') === (status.value === 'visited')),
-  );
-});
 const searchSuggestions = computed(() => {
   const text = searchText(explorerQuery.value.trim());
   if (!text) return [];
@@ -139,13 +129,104 @@ const searchSuggestions = computed(() => {
   };
   return matches.sort((a, b) => rank(a) - rank(b)).slice(0, 8);
 });
-const directory = computed(() =>
-  query.value || status.value
-    ? matching.value.slice(0, 160)
-    : selected.value
-      ? visibleChildren.value
-      : regionGroups.value.flatMap((group) => group.items),
+const directoryRoots = computed(() =>
+  selected.value ? childRegions.value : regionGroups.value.flatMap((group) => group.items),
 );
+const directoryTree = computed(() => {
+  const rows: { region: (typeof regions.value)[number]; depth: number; hasChildren: boolean }[] = [];
+  const visit = (items: (typeof regions.value)[number][], depth: number) => {
+    for (const region of items) {
+      const children = index.value.children.get(region.id) || [];
+      rows.push({ region, depth, hasChildren: children.length > 0 });
+      if (children.length && expandedDirectory.value[region.id]) visit(children, depth + 1);
+    }
+  };
+  visit(directoryRoots.value, 0);
+  return rows;
+});
+const selectedRegionTitles = computed(() => [
+  ...(selected.value?.cityTitles || []),
+  ...(selected.value?.inheritedCityTitles || []),
+]);
+function toggleDirectory(id: string) {
+  expandedDirectory.value[id] = !expandedDirectory.value[id];
+}
+function directoryKeydown(event: KeyboardEvent, id: string) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    toggleDirectory(id);
+  }
+}
+const relatedEntries = computed(() => {
+  void store.revision;
+  const region = selected.value;
+  if (!region) return [];
+  return session.value.allEntries().filter((entry) => {
+    if (entry.scope !== scope.value) return false;
+    return index.value.entryRegions(entry, scope.value).some(
+      (id) => id === region.id || index.value.belongsTo(id, region.id),
+    );
+  });
+});
+const pointGroups = computed(() => {
+  const groups = new Map<string, typeof relatedEntries.value>();
+  for (const entry of relatedEntries.value) {
+    if (entry.categoryId === 'railway-station' || entry.categoryId === 'urban-rail') continue;
+    const entries = groups.get(entry.categoryId) || [];
+    entries.push(entry);
+    groups.set(entry.categoryId, entries);
+  }
+  return [...groups].map(([categoryId, entries]) => ({
+    categoryId,
+    name: index.value.catalog.categories.find((item) => item.id === categoryId)?.name || categoryId,
+    entries,
+  }));
+});
+const directPointEntries = computed(() =>
+  relatedEntries.value
+    .filter((entry) => entry.categoryId !== 'railway-station' && entry.categoryId !== 'urban-rail')
+    .slice(0, 8)
+    .map((entry) => ({
+      entry,
+      category:
+        index.value.catalog.categories.find((item) => item.id === entry.categoryId)?.name ||
+        entry.categoryId,
+    })),
+);
+const directPointTotal = computed(
+  () =>
+    relatedEntries.value.filter(
+      (entry) => entry.categoryId !== 'railway-station' && entry.categoryId !== 'urban-rail',
+    ).length,
+);
+const routeGroups = computed(() =>
+  [
+    { key: 'railway', label: '铁路', categoryId: 'railway-station' },
+    { key: 'urban-rail', label: '轨道交通', categoryId: 'urban-rail' },
+  ]
+    .map((group) => ({
+      ...group,
+      entries: relatedEntries.value.filter((entry) => entry.categoryId === group.categoryId),
+    }))
+    .filter((group) => group.entries.length),
+);
+function routeItems(entries: typeof relatedEntries.value) {
+  const labels = new Set<string>();
+  for (const entry of entries) {
+    for (const label of [...(entry.lines || []), ...(entry.operators || [])]) {
+      if (label.trim()) labels.add(label.trim());
+    }
+  }
+  return labels.size ? [...labels] : [...new Set(entries.map((entry) => entry.name))];
+}
+function toggleRouteGroup(key: string) {
+  expandedRouteGroups.value[key] = !expandedRouteGroups.value[key];
+}
+function togglePointGroup(categoryId: string) {
+  expandedPointGroups.value[categoryId] = !expandedPointGroups.value[categoryId];
+}
+const regionOverview = computed(() => '');
+const specialNotice = computed(() => '');
 const regionCount = computed(() => {
   void store.revision;
   return regions.value.filter((r) => session.value.visitState(r.id) !== 'unvisited').length;
@@ -158,9 +239,7 @@ watch(
   { immediate: true },
 );
 watch(scope, () => {
-  query.value = '';
   explorerQuery.value = '';
-  status.value = '';
   draftRegionId.value = '';
   searchTargetId.value = '';
   suggestionsOpen.value = false;
@@ -208,10 +287,6 @@ function chooseDraft(id: string) {
 }
 function chooseSuggestion(id: string) {
   chooseDraft(id);
-}
-function chooseSearch(id: string) {
-  choose(id);
-  query.value = '';
 }
 function submitSearch() {
   const target = index.value.regions.get(searchTargetId.value);
@@ -573,16 +648,53 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
         @keydown="key"
       />
       <header class="region-panel-head">
-        <div class="region-panel-kicker">
-          <span>{{ config.boundaryLabel }}</span
-          ><button
-            aria-label="收起地区资料栏"
-            @click="panelOpen = false"
+        <nav
+          class="region-panel-breadcrumbs"
+          :aria-label="`${config.name}地区路径`"
+        >
+          <button
+            type="button"
+            :aria-current="selected ? undefined : 'location'"
+            @click="choose('')"
           >
-            <PointIcon name="close" />
+            {{ config.name }}
           </button>
+          <template v-if="selected">
+            <span aria-hidden="true">/</span>
+            <template
+              v-for="region in regionBreadcrumbs"
+              :key="region.id"
+            >
+              <button
+                type="button"
+                :aria-current="region.id === selected.id ? 'location' : undefined"
+                @click="choose(region.id)"
+              >
+                {{ region.name }}
+              </button>
+              <span
+                v-if="region.id !== selected.id"
+                aria-hidden="true"
+                >/</span
+              >
+            </template>
+          </template>
+        </nav>
+        <button
+          class="region-panel-close"
+          type="button"
+          aria-label="收起地区资料栏"
+          @click="panelOpen = false"
+        >
+          <PointIcon name="close" />
+        </button>
+        <div class="region-panel-title">
+          <h1>{{ selected?.name || config.name }}</h1>
+          <span
+            v-if="selected?.code"
+            class="region-code"
+          >{{ selected.code }}</span>
         </div>
-        <h1>{{ selected?.name || config.name }}</h1>
         <VisitStateSelect
           v-if="selected"
           :region-id="selected.id"
@@ -593,6 +705,17 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
           class="region-description"
           >选择地图中的地区，或在目录中查找。</span
         >
+        <div v-if="selectedRegionTitles.length" class="region-titles">
+          <div
+            v-for="title in selectedRegionTitles"
+            :key="`${title.id}-${title.inheritedFrom || selected?.id}`"
+            class="region-title"
+          >
+            <PointIcon name="compass" :size="14" />
+            <span>{{ title.name }}</span>
+            <HelpTip v-if="title.helpTip" :text="title.helpTip" />
+          </div>
+        </div>
       </header>
       <div class="region-panel-body">
         <RouterLink
@@ -601,54 +724,6 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
           class="region-backlink"
           >返回旅行成就</RouterLink
         >
-        <dl
-          v-if="selected"
-          class="region-facts"
-        >
-          <div>
-            <dt>地区路径</dt>
-            <dd>{{ index.paths.get(selected.id) }}</dd>
-          </div>
-          <div>
-            <dt>地区代码</dt>
-            <dd>{{ selected.code }}</dd>
-          </div>
-          <div v-if="selected.originalName">
-            <dt>原文名称</dt>
-            <dd>{{ selected.originalName }}</dd>
-          </div>
-        </dl>
-        <nav
-          v-if="selected && scope === 'france'"
-          class="region-breadcrumbs"
-          aria-label="法国地区路径"
-        >
-          <button @click="choose('')">法国全部大区</button
-          ><button
-            v-for="region in francePath"
-            :key="region.id"
-            :aria-current="region.id === selected.id ? 'location' : undefined"
-            @click="choose(region.id)"
-          >
-            {{ region.name }}</button
-          ><button @click="franceBack">返回上一级</button>
-        </nav>
-        <button
-          v-else-if="selected"
-          class="region-backlink"
-          @click="
-            choose(
-              selected.parentId && index.regions.get(selected.parentId)?.scope === scope
-                ? selected.parentId
-                : '',
-            )
-          "
-        >
-          <PointIcon
-            name="back"
-            :size="16"
-          />返回上一级
-        </button>
         <div
           v-if="scope === 'france'"
           class="region-statistics"
@@ -659,61 +734,179 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
             >{{ item.label }}：{{ item.count }} / {{ item.total }} 已到访</span
           >
         </div>
-        <label class="region-search"
-          ><PointIcon name="search" /><input
-            v-model="query"
-            type="search"
-            aria-label="搜索行政区"
-            placeholder="搜索地区、代码或别名"
-        /></label>
-        <select
-          v-model="status"
-          aria-label="区域到访筛选"
+        <section
+          v-if="selected && regionOverview"
+          class="region-section region-overview"
         >
-          <option value="">全部状态</option>
-          <option value="visited">已标记</option>
-          <option value="unvisited">未标记</option>
-        </select>
-        <div class="region-directory-heading">
-          <h2>{{ query || status ? '查找结果' : selected ? '下辖地区' : '地区目录' }}</h2>
-          <span>{{
-            query || status ? matching.length : selected ? childRegions.length : directory.length
-          }}</span>
+          <h2>区域概况</h2>
+          <p>{{ regionOverview }}</p>
+        </section>
+        <div
+          v-if="selected && specialNotice"
+          class="region-notice"
+        >
+          <PointIcon name="info" :size="16" />
+          <span>{{ specialNotice }}</span>
         </div>
-        <p
-          v-if="!directory.length"
-          class="region-description"
+        <section
+          v-if="selected"
+          class="region-section region-points"
         >
-          {{ selected && !query && !status ? '没有已收录的下辖地区。' : '没有符合条件的地区。' }}
-        </p>
-        <button
-          v-for="region in directory"
-          :key="region.id"
-          class="region-row"
-          @click="query ? chooseSearch(region.id) : choose(region.id)"
+          <div class="region-directory-heading">
+            <h2>关联点位</h2>
+            <span>{{ selected.level === 0 ? relatedEntries.length : directPointTotal }}</span>
+          </div>
+          <template v-if="selected.level > 0">
+            <p
+              v-if="!directPointEntries.length"
+              class="region-description"
+            >暂无已收录点位。</p>
+            <div class="region-direct-points">
+              <button
+                v-for="item in directPointEntries"
+                :key="item.entry.id"
+                class="region-direct-point"
+                type="button"
+              >
+                <span>{{ item.entry.name }}</span>
+                <small>{{ item.category }}</small>
+              </button>
+              <small v-if="directPointTotal > directPointEntries.length" class="region-point-more">
+                另有 {{ directPointTotal - directPointEntries.length }} 项
+              </small>
+            </div>
+          </template>
+          <p
+            v-else-if="!pointGroups.length"
+            class="region-description"
+          >暂无已收录点位。</p>
+          <template v-if="selected.level === 0">
+            <div
+              v-for="group in pointGroups"
+              :key="group.categoryId"
+              class="region-point-group"
+            >
+            <button
+              class="region-point-group-head"
+              type="button"
+              :aria-expanded="expandedPointGroups[group.categoryId] !== false"
+              @click="togglePointGroup(group.categoryId)"
+            >
+              <span>{{ group.name }}</span>
+              <small>{{ group.entries.length }}</small>
+              <PointIcon
+                name="chevron"
+                :size="14"
+                :class="{ 'is-open': expandedPointGroups[group.categoryId] !== false }"
+              />
+            </button>
+            <div
+              v-if="expandedPointGroups[group.categoryId] !== false"
+              class="region-point-items"
+            >
+              <span
+                v-for="entry in group.entries.slice(0, selected.level === 0 ? 6 : 4)"
+                :key="entry.id"
+                >{{ entry.name }}</span
+              >
+              <small v-if="group.entries.length > (selected.level === 0 ? 6 : 4)">
+                另有 {{ group.entries.length - (selected.level === 0 ? 6 : 4) }} 项
+              </small>
+            </div>
+            </div>
+          </template>
+        </section>
+        <section
+          v-if="selected"
+          class="region-section region-routes"
         >
-          <i :style="{ background: store.colors[session.visitState(region.id)] }" /><span>{{
-            region.name
-          }}</span
-          ><small>{{ VISIT_LABELS[session.visitState(region.id)] }}</small
-          ><PointIcon
-            name="chevron"
-            :size="14"
-          />
-        </button>
-        <p
-          v-if="(query || status) && matching.length > directory.length"
-          class="region-description"
-        >
-          显示前 {{ directory.length }} 项，请缩小查找范围。
-        </p>
-        <button
-          v-if="selected && !query && !status && scope !== 'france' && childRegions.length > 18"
-          class="region-show-all"
-          @click="showAllChildren = !showAllChildren"
-        >
-          {{ showAllChildren ? '收起下辖地区' : `显示全部 ${childRegions.length} 个地区` }}
-        </button>
+          <div class="region-directory-heading">
+            <h2>经过线路</h2>
+          </div>
+          <p
+            v-if="!routeGroups.length"
+            class="region-description"
+          >暂无线路资料。</p>
+          <div
+            v-for="group in routeGroups"
+            :key="group.key"
+            class="region-route-group"
+          >
+            <button
+              class="region-route-head"
+              type="button"
+              :aria-expanded="!!expandedRouteGroups[group.key]"
+              @click="toggleRouteGroup(group.key)"
+            >
+              <span>{{ group.label }}</span>
+              <small>{{ group.entries.length }} 项</small>
+              <PointIcon
+                name="chevron"
+                :size="14"
+                :class="{ 'is-open': expandedRouteGroups[group.key] }"
+              />
+            </button>
+            <div
+              v-if="expandedRouteGroups[group.key]"
+              class="region-route-items"
+            >
+              <span
+                v-for="item in routeItems(group.entries)"
+                :key="item"
+                >{{ item }}</span
+              >
+            </div>
+          </div>
+        </section>
+        <section class="region-section region-directory">
+          <div class="region-directory-heading">
+            <h2>{{ selected ? '下辖地区' : '地区目录' }}</h2>
+            <span>{{ directoryRoots.length }}</span>
+          </div>
+          <p
+            v-if="!directoryTree.length"
+            class="region-description"
+          >没有已收录的下辖地区。</p>
+          <div
+            v-for="row in directoryTree"
+            :key="row.region.id"
+            class="region-row"
+            :style="{ '--region-depth': row.depth }"
+          >
+            <button
+              class="region-row-main"
+              type="button"
+              @click="choose(row.region.id)"
+            >
+              <i :style="{ background: store.colors[session.visitState(row.region.id)] }" />
+              <span>{{ row.region.name }}</span>
+              <span
+                v-for="title in row.region.cityTitles || []"
+                :key="title.id"
+                class="region-row-title-icon"
+                :title="title.name"
+                :aria-label="title.name"
+              >
+                <PointIcon name="compass" :size="13" />
+              </span>
+            </button>
+            <button
+              v-if="row.hasChildren"
+              class="region-row-toggle"
+              type="button"
+              :aria-label="`${expandedDirectory[row.region.id] ? '收起' : '展开'}${row.region.name}`"
+              :aria-expanded="!!expandedDirectory[row.region.id]"
+              @click="toggleDirectory(row.region.id)"
+              @keydown="directoryKeydown($event, row.region.id)"
+            >
+              <PointIcon
+                name="chevron"
+                :size="14"
+                :class="{ 'is-open': expandedDirectory[row.region.id] }"
+              />
+            </button>
+          </div>
+        </section>
         <TopicCoverage :scope="scope" />
       </div>
     </aside>
@@ -1030,62 +1223,112 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   outline: none;
 }
 .region-panel-head {
+  position: relative;
   flex: none;
-  padding: 30px 30px 26px;
+  padding: 14px 44px 20px 24px;
   border-bottom: 1px solid var(--atlas-line);
 }
-.region-panel-kicker {
+.region-panel-breadcrumbs {
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
   align-items: center;
-  font-size: 14px;
-  margin-bottom: 18px;
+  gap: 6px;
+  min-width: 0;
+  margin: 0 0 13px;
+  overflow: hidden;
+  color: var(--atlas-ink);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
 }
-.region-panel-kicker button {
+.region-panel-breadcrumbs button {
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font-size: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.region-panel-breadcrumbs button[aria-current='location'] {
+  color: var(--atlas-ink);
+  font-weight: 500;
+}
+.region-panel-breadcrumbs span {
+  flex: none;
+  opacity: 0.45;
+}
+.region-panel-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
   display: flex;
   padding: 0;
   border: 0;
+  color: var(--atlas-ink);
   background: transparent;
+  cursor: pointer;
 }
-.region-panel-head h1 {
-  font: 300 32px/1.45 var(--atlas-title-font);
-  margin: 0 0 20px;
+.region-panel-title {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  min-width: 0;
+  padding-right: 18px;
+}
+.region-panel-title h1 {
+  min-width: 0;
+  flex: 1;
+  margin: 0 0 15px;
   overflow-wrap: anywhere;
+  font: 300 30px/1.35 var(--atlas-title-font);
+}
+.region-code {
+  position: absolute;
+  top: 0;
+  right: -24px;
+  max-height: 76px;
+  overflow: hidden;
+  color: var(--atlas-ink);
+  opacity: 0.38;
+  font: 11px/1.1 var(--atlas-font);
+  letter-spacing: 0.08em;
+  writing-mode: vertical-rl;
 }
 .region-panel-head :deep(.state-select) {
+  gap: 4px;
+  width: calc(100% + 20px);
+  font-size: 13px;
+}
+.region-titles {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+}
+.region-title {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 14px;
+  align-items: center;
+  gap: 6px;
+  color: #b4232c;
+  font-size: 13px;
+  line-height: 1.5;
 }
-.region-panel-head :deep(select) {
-  min-width: 160px;
-  font-size: 16px;
+.region-title > svg {
+  flex: none;
 }
-.region-panel-head :deep(small) {
-  font-size: 14px;
+.region-title > span {
+  overflow-wrap: anywhere;
+}
+.region-title :deep(.help-tip-button) {
+  color: #b4232c;
 }
 .region-panel-body {
   overflow: auto;
   min-height: 0;
   flex: 1;
-  padding: 24px 30px 32px;
-}
-.region-facts {
-  margin: 0 0 22px;
-  font-size: 14px;
-}
-.region-facts div {
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  gap: 16px;
-  margin-bottom: 12px;
-}
-.region-facts dd {
-  margin: 0;
-  overflow-wrap: anywhere;
+  padding: 22px 24px 32px;
 }
 .region-backlink {
   display: flex;
@@ -1103,23 +1346,38 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   font-size: 14px;
   line-height: 1.8;
 }
-.region-search {
+.region-section {
+  margin: 22px 0 0;
+}
+.region-section:first-of-type {
+  margin-top: 4px;
+}
+.region-section h2 {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+}
+.region-overview p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.region-notice {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
-  border-bottom: 1px solid var(--atlas-line);
-  margin: 18px 0 14px;
+  margin: 22px 0 0;
+  padding: 11px 12px;
+  border: 1px solid #c49a2a88;
+  border-radius: 8px;
+  background: #f7e4a155;
+  color: var(--atlas-ink);
+  font-size: 13px;
+  line-height: 1.6;
 }
-.region-search input {
-  width: 100%;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  padding: 12px 0;
-  min-width: 0;
-}
-.region-panel-body > select {
-  width: 100%;
+.region-notice svg {
+  flex: none;
+  color: #a27812;
 }
 .region-directory-heading {
   display: flex;
@@ -1137,13 +1395,152 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   display: flex;
   width: 100%;
   align-items: center;
-  gap: 9px;
-  text-align: left;
+  gap: 0;
+  min-height: 42px;
+  padding: 0;
   border: 0;
-  border-radius: 0;
   border-bottom: 1px solid var(--atlas-line);
   background: transparent;
-  padding: 15px 0;
+  text-align: left;
+}
+.region-row-main,
+.region-row-toggle {
+  min-height: 42px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.region-row-main {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 9px;
+  padding: 0 0 0 calc(var(--region-depth, 0) * 18px);
+  text-align: left;
+}
+.region-row-toggle {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  padding: 0;
+}
+.region-row-main:hover,
+.region-row-toggle:hover {
+  background: var(--atlas-soft);
+}
+.region-row-main i {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 2px;
+  border: 1px solid #56645630;
+}
+.region-row-main span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.region-row-main .region-row-title-icon {
+  display: inline-flex;
+  flex: none;
+  color: #b4232c;
+}
+.region-row-toggle svg,
+.region-point-group-head svg,
+.region-route-head svg {
+  transition: transform 160ms ease;
+  transform: rotate(-90deg);
+}
+.region-row-toggle svg.is-open,
+.region-point-group-head svg.is-open,
+.region-route-head svg.is-open {
+  transform: rotate(0deg);
+}
+.region-point-group,
+.region-route-group {
+  border-bottom: 1px solid var(--atlas-line);
+}
+.region-point-group-head,
+.region-route-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+.region-point-group-head span,
+.region-route-head span {
+  flex: 1;
+  min-width: 0;
+}
+.region-point-group-head small,
+.region-route-head small {
+  color: var(--atlas-ink);
+  opacity: 0.65;
+  font-size: 12px;
+}
+.region-point-items,
+.region-route-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  padding: 0 0 11px;
+}
+.region-point-items span,
+.region-route-items span {
+  max-width: 100%;
+  padding: 4px 7px;
+  border: 1px solid var(--atlas-line);
+  border-radius: 5px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.region-point-items small {
+  align-self: center;
+  font-size: 12px;
+  opacity: 0.7;
+}
+.region-direct-points {
+  display: grid;
+}
+.region-direct-point {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  min-height: 38px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--atlas-line);
+  background: transparent;
+  text-align: left;
+}
+.region-direct-point span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.region-direct-point small,
+.region-point-more {
+  flex: none;
+  color: var(--atlas-ink);
+  opacity: 0.65;
+  font-size: 12px;
+}
+.region-point-more {
+  padding: 8px 0 0;
+}
+.region-directory {
+  margin-top: 26px;
+}
+.region-directory .region-directory-heading {
+  margin-top: 0;
 }
 .region-row i {
   width: 9px;
@@ -1165,19 +1562,11 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   transform: rotate(-90deg);
 }
 .region-row:hover {
-  background: var(--atlas-soft);
+  background: transparent;
 }
 .region-show-all {
   width: 100%;
   margin-top: 14px;
-}
-.region-breadcrumbs {
-  gap: 8px;
-  margin-bottom: 20px;
-}
-.region-breadcrumbs button {
-  font-size: 14px;
-  padding: 5px 8px;
 }
 .region-statistics {
   display: grid;
@@ -1284,10 +1673,10 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
     display: none;
   }
   .region-panel-head {
-    padding: 24px;
+    padding: 14px 40px 18px 20px;
   }
   .region-panel-body {
-    padding: 20px 24px;
+    padding: 18px 20px 28px;
   }
 }
 </style>

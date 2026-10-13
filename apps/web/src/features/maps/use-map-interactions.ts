@@ -12,6 +12,7 @@ import { VISITED_MARKER_LAYER_IDS } from './style.js';
 import { regionInteractionPolicy } from './sea-region-interaction.js';
 import type { TiledMapProps } from './types.js';
 import type { useMapScene } from './use-map-scene.js';
+import { isChinaCountyMapRegion } from './china-map-levels.js';
 
 interface InteractionResources {
   map: () => LibreMap | undefined;
@@ -35,8 +36,7 @@ export function useMapInteractions(
       index.resolveRegion(id) === id &&
       (props.scope !== 'china' ||
         level.value !== 'county' ||
-        region.level === 2 ||
-        ['810000', '820000'].includes(region.code))
+        isChinaCountyMapRegion(region, index.regions))
     );
   }
   let visitedSelectionRequest = 0;
@@ -203,11 +203,9 @@ export function useMapInteractions(
         .getStyle()
         .layers.filter((item) => item.id.startsWith(`china-options-${level.value}-fill-`))
         .map((item) => item.id);
-      const layers = [
-        'points',
-        ...optionLayers,
-        level.value + '-fill',
-      ].filter((id) => current.getLayer(id));
+      const layers = ['points', ...optionLayers, level.value + '-fill'].filter((id) =>
+        current.getLayer(id),
+      );
       const f = current
         .queryRenderedFeatures(e.point, { layers })
         .find(

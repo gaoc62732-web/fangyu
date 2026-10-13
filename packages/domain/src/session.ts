@@ -177,7 +177,7 @@ export class HandbookSession {
     regionId = this.index.resolveRegion(regionId);
     for (const id of this.index.recordRegionIds(regionId)) this.state.regions[id] = state;
     if (propagate && this.arrived(regionId)) {
-      this.markAncestors(regionId);
+      this.markAncestors(regionId, state);
     }
   }
 
@@ -187,7 +187,7 @@ export class HandbookSession {
     }
   }
 
-  private markAncestors(regionId: string): void {
+  private markAncestors(regionId: string, state: VisitState): void {
     const origin = this.index.regions.get(regionId);
     const countyParent =
       origin?.scope === 'china' && origin.level === 2 && origin.parentId
@@ -203,7 +203,9 @@ export class HandbookSession {
         this.hasExplicitState(region.id)
       )
         continue;
-      if (!this.arrived(region.id)) this.state.regions[region.id] = 'arrived';
+      if (VISIT_RANK[this.visitState(region.id)] < VISIT_RANK[state]) {
+        this.state.regions[region.id] = state;
+      }
     }
   }
 

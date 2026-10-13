@@ -38,7 +38,6 @@ export const routes: RouteRecordRaw[] = [
   { path: '/maofen', component: () => import('../pages/MaofenPage.vue') },
   { path: '/achievements', component: () => import('../pages/AchievementsPage.vue') },
   { path: '/imports', component: () => import('../pages/ImportsPage.vue') },
-  { path: '/settings', component: () => import('../pages/SettingsPage.vue') },
   { path: '/help', component: () => import('../pages/HelpPage.vue') },
 ];
 

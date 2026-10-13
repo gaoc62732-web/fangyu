@@ -5,7 +5,7 @@ import { CatalogIndex } from '@fangyu/catalog';
 import { HandbookSession } from '@fangyu/domain';
 import { useAppStore } from '../app/store.js';
 import PointsPage from '../pages/PointsPage.vue';
-import SettingsPage from '../pages/SettingsPage.vue';
+import GlobalSettingsPanel from '../components/GlobalSettingsPanel.vue';
 import MapSurface from '../components/MapSurface.vue';
 import { airport, station, dongcheng, beijing, catalog } from './fixtures.js';
 import { navigationCatalog, franceEntry } from './navigation-fixtures.js';
@@ -45,7 +45,6 @@ async function open(fixture = catalog, path = '/') {
     history: createMemoryHistory(),
     routes: [
       { path: '/', component: PointsPage },
-      { path: '/settings', component: SettingsPage },
       { path: '/china', component: { template: '<div />' } },
     ],
   });
@@ -280,7 +279,7 @@ describe('point page interactions', () => {
   it('persists each independent policy through the settings page', async () => {
     const store = await open();
     wrapper!.unmount();
-    wrapper = mount(SettingsPage);
+    wrapper = mount(GlobalSettingsPanel);
     await wrapper.find('[aria-label="组成地点"]').setValue('auto');
     await wrapper.find('[aria-label="多个类别"]').setValue('never');
     await wrapper.find('[aria-label="所在行政区划"]').setValue('never');

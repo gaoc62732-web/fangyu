@@ -233,6 +233,52 @@ await fs.writeFile(
   JSON.stringify({ version: stamp, file: 'catalog.json.gz', encoding: 'gzip' }),
 );
 const regionMap = new Map(catalog.regions.map((r) => [r.id, r]));
+const chinaMunicipalCodes = new Set(['110000', '120000', '310000', '500000']);
+const chinaActiveChildren = new Map();
+for (const region of catalog.regions) {
+  if (region.historical) continue;
+  const children = chinaActiveChildren.get(region.parentId) || [];
+  children.push(region);
+  chinaActiveChildren.set(region.parentId, children);
+}
+function chinaMapDisplayRows(rows) {
+  const existing = new Set(rows.map((row) => `${row.regionId}/${row.level}`));
+  const additions = [];
+  for (const region of catalog.regions) {
+    if (region.scope !== 'china' || region.historical) continue;
+    const regionRows = rows.filter((row) => row.regionId === region.id);
+    if (
+      region.level === 1 &&
+      !(chinaActiveChildren.get(region.id) || []).length &&
+      !existing.has(`${region.id}/county`)
+    ) {
+      const city = regionRows.find((row) => row.level === 'city');
+      if (city)
+        additions.push({
+          ...city,
+          id: `map-county-${region.id}`,
+          level: 'county',
+        });
+    }
+    const parent = region.parentId ? regionMap.get(region.parentId) : undefined;
+    if (
+      region.level === 2 &&
+      parent?.level === 0 &&
+      !chinaMunicipalCodes.has(parent.code) &&
+      !['810000', '820000'].includes(parent.code) &&
+      !existing.has(`${region.id}/city`)
+    ) {
+      const county = regionRows.find((row) => row.level === 'county');
+      if (county)
+        additions.push({
+          ...county,
+          id: `map-city-${region.id}`,
+          level: 'city',
+        });
+    }
+  }
+  return additions.length ? [...rows, ...additions] : rows;
+}
 // The outer line comes from these exact district polygons, so it cannot jump
 // across islands when the lower-resolution world outline differs from them.
 const malayBorderScopes = new Set(['malaysia', 'singapore', 'brunei']);
@@ -304,11 +350,13 @@ const merge = (a, b) =>
 for (const scope of scopes) {
   const raw = JSON.parse(await fs.readFile(path.join(input, scope + '.geo.json'), 'utf8'));
   const display =
-    scope === 'vietnam'
-      ? vietnamDisplay
-      : malayBorderScopes.has(scope)
-        ? [...raw, countryBorder(raw, scope)]
-        : raw;
+    scope === 'china'
+      ? chinaMapDisplayRows(raw)
+      : scope === 'vietnam'
+        ? vietnamDisplay
+        : malayBorderScopes.has(scope)
+          ? [...raw, countryBorder(raw, scope)]
+          : raw;
   await fs.mkdir(path.join(output, 'geometry'), { recursive: true });
   await fs.copyFile(
     path.join(input, scope + '.geo.json'),

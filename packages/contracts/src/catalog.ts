@@ -4,6 +4,14 @@ import type { HeritageProject } from './heritage.js';
 export type { Scope } from './scopes.js';
 export type MapLevel = 'province' | 'city' | 'county' | 'country';
 
+export interface CityTitle {
+  id: string;
+  name: string;
+  time?: string;
+  helpTip?: string;
+  inheritedFrom?: string;
+}
+
 export interface Region {
   id: string;
   parentId: string | null;
@@ -25,6 +33,8 @@ export interface Region {
   sourceUrl?: string;
   boundaryAsOf?: string;
   constituentCountry?: string | null;
+  cityTitles?: CityTitle[];
+  inheritedCityTitles?: CityTitle[];
 }
 
 export interface Subitem {

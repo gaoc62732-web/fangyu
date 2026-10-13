@@ -12,6 +12,7 @@ import { regionInteractionPolicy } from './sea-region-interaction.js';
 import type { TiledMapProps } from './types.js';
 import airportAssociations from '../../../../../data/extensions/research/china-airport-map-associations.json';
 import { applyChinaBoundaries } from './china-boundaries.js';
+import { isChinaCountyMapRegion } from './china-map-levels.js';
 
 export function useMapScene(
   props: TiledMapProps,
@@ -184,7 +185,7 @@ export function useMapScene(
         .filter((f) => {
           if (props.scope !== 'china' || f.properties?.level !== 'county') return true;
           const region = store.session!.index.regions.get(String(f.properties?.regionId || f.id));
-          return region && (region.level === 2 || ['810000', '820000'].includes(region.code));
+          return region && isChinaCountyMapRegion(region, store.session!.index.regions);
         })
         .filter(
           (f) =>

@@ -5,11 +5,7 @@ import { CanvasMapRenderer, clusterScreenMarkers } from '@fangyu/map-renderer';
 import { useAppStore } from '../../app/store.js';
 import { download } from '../exports/download.js';
 import { type Bounds, type MapDataManifest } from './types.js';
-import {
-  basemapConfiguredProvider,
-  basemapEnabled,
-  basemapKind,
-} from './basemap-settings.js';
+import { basemapConfiguredProvider, basemapEnabled, basemapKind } from './basemap-settings.js';
 import { mapAttributions } from './data-attribution.js';
 import { boundaryFillOpacity, createMapStyle } from './style.js';
 import type { TiledMapProps } from './types.js';
@@ -24,6 +20,7 @@ import {
   chinaBoundaryLines,
   chinaBoundaryBounds,
 } from './china-boundaries.js';
+import { chinaRegionSourceLevels, isChinaCountyMapRegion } from './china-map-levels.js';
 export function useTiledMap(props: TiledMapProps, select: (id: string, point: boolean) => void) {
   const store = useAppStore();
   const host = ref<HTMLElement>(),
@@ -251,18 +248,27 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     if (Object.keys(changed).length) map.setFeatureState(target, changed);
     featureStateCache.set(key, state);
   }
-  function sourceLevelForRegion(
-    region: { level: number; code: string },
+  function sourceLevelsForRegion(
+    region: import('@fangyu/contracts').Region,
     scopeData: MapDataManifest['scopes'][Scope],
+    regions: ReadonlyMap<string, import('@fangyu/contracts').Region>,
   ) {
     const available = new Set(scopeData.layers.map((layer) => layer.level));
     if (available.has('city') || available.has('county')) {
-      if (region.level === 0) return 'province';
-      if (region.level === 1) return 'city';
-      if (region.level === 2 || ['810000', '820000'].includes(region.code)) return 'county';
-      return undefined;
+      const levels =
+        region.scope === 'china'
+          ? chinaRegionSourceLevels(region, regions)
+          : region.level === 0
+            ? ['province']
+            : region.level === 1
+              ? ['city']
+              : region.level === 2
+                ? ['county']
+                : [];
+      return levels.filter((level) => available.has(level));
     }
-    return scopeData.layers.find((layer) => layer.level !== 'border')?.level;
+    const level = scopeData.layers.find((layer) => layer.level !== 'border')?.level;
+    return level ? [level] : [];
   }
   async function acquireBoundaryLease() {
     if (boundaryLease) return;
@@ -361,8 +367,8 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     const scopeData = manifest.value?.scopes[props.scope];
     if (!map || !ready || !scopeData) return;
     const countyIds = store
-      .session!.index.catalog.regions.filter(
-        (r) => r.scope === 'china' && (r.level === 2 || ['810000', '820000'].includes(r.code)),
+      .session!.index.catalog.regions.filter((r) =>
+        isChinaCountyMapRegion(r, store.session!.index.regions),
       )
       .map((r) => r.id);
     const replacedIds =
@@ -477,7 +483,9 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
           setPaintProperty(
             chinaBoundaryLayerId(index, layer.level + '-fill'),
             'fill-opacity',
-            props.pointMode ? 0 : boundaryFillOpacity(providerFailed.value ? null : activeProvider.value),
+            props.pointMode
+              ? 0
+              : boundaryFillOpacity(providerFailed.value ? null : activeProvider.value),
           );
           if (props.pointMode) {
             const highlight = chinaBoundaryLayerId(index, layer.level + '-point-highlight');
@@ -536,7 +544,9 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         setPaintProperty(
           l.level + '-fill',
           'fill-opacity',
-          props.pointMode ? 0 : boundaryFillOpacity(providerFailed.value ? null : activeProvider.value),
+          props.pointMode
+            ? 0
+            : boundaryFillOpacity(providerFailed.value ? null : activeProvider.value),
         );
       if (props.pointMode) {
         if (l.level !== 'border') {
@@ -576,19 +586,21 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     }
     for (const r of store.session!.index.catalog.regions) {
       if (r.scope !== props.scope) continue;
-      const sourceLevel = sourceLevelForRegion(r, scopeData);
-      if (!sourceLevel || sourceLevel === 'border') continue;
-      setFeatureState(
-        { source: sourceLevel, sourceLayer: 'regions', id: r.id },
-        {
-          fill: fill(r.id),
-          selected: selected(r.id),
-          recorded:
-            !props.pointMode && props.category && props.scope === 'china'
-              ? categoryRegions.value.has(r.id)
-              : store.session!.visitState(r.id) !== 'unvisited',
-        },
-      );
+      const sourceLevels = sourceLevelsForRegion(r, scopeData, store.session!.index.regions);
+      for (const sourceLevel of sourceLevels) {
+        if (sourceLevel === 'border') continue;
+        setFeatureState(
+          { source: sourceLevel, sourceLayer: 'regions', id: r.id },
+          {
+            fill: fill(r.id),
+            selected: selected(r.id),
+            recorded:
+              !props.pointMode && props.category && props.scope === 'china'
+                ? categoryRegions.value.has(r.id)
+                : store.session!.visitState(r.id) !== 'unvisited',
+          },
+        );
+      }
     }
     setPaintProperty('background', 'background-color', store.dark ? '#17272e' : '#eef4f3');
     const nextPointData = pointData();
@@ -830,7 +842,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         ),
         bounds: scopeData.bounds,
         fitBoundsOptions: { padding: 45 },
-        attributionControl: { compact: true },
+        attributionControl: false,
         renderWorldCopies: false,
         maxZoom: 15,
         dragRotate: false,
