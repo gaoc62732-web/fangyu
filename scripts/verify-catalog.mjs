@@ -30,6 +30,9 @@ function requireRegions(ids, owner) {
 }
 
 for (const region of regions.values()) {
+  if (region.scope === 'china' && !/^CN\d{6}$/.test(region.id)) {
+    failures.push('中国地区 ID 不是 CN+6 位格式：' + region.name);
+  }
   if (region.parentId) requireRegions([region.parentId], region.name);
   const visited = new Set([region.id]);
   let parent = regions.get(region.parentId);

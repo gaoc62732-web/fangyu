@@ -52,6 +52,13 @@ export class HandbookSession {
 
   validate(input: unknown): RecordSnapshot {
     const snapshot = snapshotSchema.parse(input);
+    const regions = Object.fromEntries(
+      Object.entries(snapshot.regions).map(([id, state]) => [this.index.resolveRegion(id), state]),
+    );
+    snapshot.regions = regions;
+    for (const entry of snapshot.customEntries) {
+      entry.regionIds = entry.regionIds.map((id) => this.index.resolveRegion(id));
+    }
     if (!acceptsCatalogVersion(this.index.catalog, snapshot.catalogVersion)) {
       throw Error('存档与当前目录版本不同。开发版不支持旧格式迁移。');
     }
@@ -64,7 +71,7 @@ export class HandbookSession {
       if (!this.index.catalog.categories.some((category) => category.id === entry.categoryId)) {
         throw Error('自定义项目的类别不存在。');
       }
-      if (entry.regionIds.some((id) => !this.index.regions.has(id))) {
+      if (entry.regionIds.some((id) => !this.index.regions.has(this.index.resolveRegion(id)))) {
         throw Error('自定义项目的所属地区不存在。');
       }
       entries.set(entry.id, entry);
@@ -78,7 +85,7 @@ export class HandbookSession {
         .map((entry) => entry.recordId),
     );
     for (const id of Object.keys(snapshot.regions)) {
-      if (!this.index.regions.has(id)) throw Error('存档中存在未知地区：' + id);
+      if (!this.index.regions.has(this.index.resolveRegion(id))) throw Error('存档中存在未知地区：' + id);
     }
     for (const [id, record] of Object.entries(snapshot.entries)) {
       const entry = records.get(id);
@@ -328,12 +335,12 @@ export class HandbookSession {
       selectedRegionId && entry.regionIds.includes(selectedRegionId)
         ? selectedRegionId
         : entry.regionIds[0];
-    if (primaryRegion) this.markAncestors(primaryRegion);
+    if (primaryRegion) this.markAncestors(primaryRegion, this.visitState(primaryRegion));
     for (const linked of this.index.byRecord.get(entry.recordId) || []) {
       if (linked.id === entry.id) continue;
-      for (const regionId of linked.regionIds) this.markAncestors(regionId);
+      for (const regionId of linked.regionIds) this.markAncestors(regionId, this.visitState(regionId));
     }
-    if (entry.linkedRegionId) this.markAncestors(entry.linkedRegionId);
+    if (entry.linkedRegionId) this.markAncestors(entry.linkedRegionId, this.visitState(entry.linkedRegionId));
 
     for (const ids of Object.values(entry.topicRegions || {})) {
       const regionId =
@@ -342,7 +349,7 @@ export class HandbookSession {
           : ids.length === 1
             ? ids[0]
             : undefined;
-      if (regionId) this.markAncestors(regionId);
+      if (regionId) this.markAncestors(regionId, this.visitState(regionId));
     }
   }
 

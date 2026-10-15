@@ -8,6 +8,7 @@ import vtpbf from 'vt-pbf';
 import simplify from '@turf/simplify';
 import ts from 'typescript';
 import { PMTilesWriter } from './lib/pmtiles-writer.mjs';
+import { assembleCatalog } from './lib/assemble-manual-china.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const chinaPolicy = await fs
   .readFile(path.join(root, 'data/boundaries/china-policy/applied.json'), 'utf8')
@@ -129,14 +130,20 @@ const { SCOPE_IDS } = await import(
 );
 const availableFiles = new Set(await fs.readdir(input));
 const scopes = SCOPE_IDS.filter((scope) => availableFiles.has(scope + '.geo.json'));
-const sourceNames = ['catalog.json', ...scopes.map((s) => s + '.geo.json')];
-const boundaryOptions = availableFiles.has('china-boundary-options.json')
-  ? await fs.readFile(path.join(input, 'china-boundary-options.json'))
-  : null;
+const chinaManifest = await fs.readFile(path.join(root, 'data/manual/china/manifest.json'), 'utf8').then(JSON.parse);
+const sourceNames = [
+  'catalog/catalog.json',
+  ...scopes.map((s) => 'catalog/' + s + '.geo.json'),
+  'manual/china/manifest.json',
+  ...(chinaManifest.files || []).map((file) => 'manual/china/' + file.path),
+];
+const boundaryOptions = await fs.readFile(
+  path.join(root, 'data/manual/china/rules/boundary-assets.json'),
+);
 // The policy asset has five independently rendered rule groups. Keep this
 // count here to avoid parsing its large geometry bank during web preparation.
 const boundaryOptionGroups = boundaryOptions ? 5 : 0;
-if (boundaryOptions) sourceNames.push('china-boundary-options.json');
+if (boundaryOptions) sourceNames.push('manual/china/rules/boundary-assets.json');
 const vietnamMaskBytes = await fs.readFile(
   path.join(root, 'data/extensions/research/south-china-sea-interaction-mask.json'),
 );
@@ -199,7 +206,7 @@ hash.update(await fs.readFile(new URL('./lib/pmtiles-writer.mjs', import.meta.ur
 hash.update(vietnamMaskBytes);
 hash.update(registrySource);
 hash.update(JSON.stringify(sourceNames));
-for (const name of sourceNames) hash.update(await fs.readFile(path.join(input, name)));
+for (const name of sourceNames) hash.update(await fs.readFile(path.join(root, 'data', name)));
 const stamp = hash.digest('hex');
 if ((await fs.readFile(path.join(output, '.stamp'), 'utf8').catch(() => null)) === stamp) {
   const currentManifest = await fs
@@ -218,7 +225,7 @@ if ((await fs.readFile(path.join(output, '.stamp'), 'utf8').catch(() => null)) =
   }
 }
 await fs.mkdir(output, { recursive: true });
-const catalog = JSON.parse(await fs.readFile(path.join(input, 'catalog.json'), 'utf8'));
+const catalog = await assembleCatalog(root);
 await fs.writeFile(path.join(output, 'catalog.json.gz'), gzipSync(JSON.stringify(catalog)));
 await fs.writeFile(
   path.join(output, 'bootstrap.json'),

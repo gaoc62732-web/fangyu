@@ -1,11 +1,31 @@
-import {
-  ACHIEVEMENT_CHRONOLOGY,
-  type AchievementChronology,
-} from './achievement-chronology-data.js';
-export {
-  ACHIEVEMENT_CHRONOLOGY,
-  type AchievementChronology,
-} from './achievement-chronology-data.js';
+import chronologyData from '../../../data/manual/china/achievements/chronology.json';
+import sourceData from '../../../data/manual/china/sources.json';
+export interface AchievementChronology {
+  kind: 'dated' | 'legendary' | 'undated';
+  label: string;
+  startYear?: number;
+  endYear?: number;
+  basis: string;
+  sources: readonly { title: string; url: string }[];
+}
+const sources = new Map(sourceData.items.map((source) => [source.id, source]));
+export const ACHIEVEMENT_CHRONOLOGY: Readonly<Record<string, AchievementChronology>> =
+  Object.fromEntries(
+    chronologyData.items.map((row) => [
+      row.achievementId,
+      {
+        kind: row.kind,
+        label: row.label,
+        ...(row.startYear == null ? {} : { startYear: row.startYear }),
+        ...(row.endYear == null ? {} : { endYear: row.endYear }),
+        basis: row.basis,
+        sources: row.sourceRefs
+          .map((id) => sources.get(id))
+          .filter((source) => source?.url)
+          .map((source) => ({ title: source.name, url: source.url })),
+      },
+    ]),
+  );
 const unknown: AchievementChronology = {
   kind: 'undated',
   label: '年代待核',

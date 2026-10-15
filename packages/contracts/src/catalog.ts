@@ -33,6 +33,8 @@ export interface Region {
   sourceUrl?: string;
   boundaryAsOf?: string;
   constituentCountry?: string | null;
+  /** IDs used by catalogs before the CN region-id migration. */
+  legacyIds?: string[];
   cityTitles?: CityTitle[];
   inheritedCityTitles?: CityTitle[];
 }

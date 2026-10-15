@@ -21,6 +21,7 @@ export class CatalogIndex {
   private readonly sourceRegions: Region[];
   private activeRegions: Region[];
   private readonly regionAliases = new Map<string, string>();
+  private readonly legacyRegionAliases = new Map<string, string>();
   private boundaryConfiguration = '';
 
   constructor(private readonly sourceCatalog: Catalog) {
@@ -29,6 +30,9 @@ export class CatalogIndex {
     this.activeRegions = catalog.regions;
     this.regions = new Map(catalog.regions.map((region) => [region.id, region]));
     this.entries = new Map(catalog.entries.map((entry) => [entry.id, entry]));
+    for (const region of catalog.regions) {
+      for (const legacyId of region.legacyIds || []) this.legacyRegionAliases.set(legacyId, region.id);
+    }
 
     for (const region of catalog.regions) {
       const siblings = this.children.get(region.parentId) || [];
@@ -78,7 +82,7 @@ export class CatalogIndex {
   }
 
   resolveRegion(id: string): string {
-    return this.regionAliases.get(id) || id;
+    return this.regionAliases.get(id) || this.legacyRegionAliases.get(id) || id;
   }
 
   recordRegionIds(id: string): string[] {

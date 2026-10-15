@@ -7,7 +7,6 @@ import argparse
 import hashlib
 import itertools
 import shutil
-import uuid
 from datetime import datetime, timezone
 from lib.china_gis import *
 from shapely.geometry import MultiLineString, Point, Polygon
@@ -63,12 +62,22 @@ def put(rid, geometry):
     changed.add(rid)
 
 def management(name, parent_code):
-    rid = str(uuid.uuid5(uuid.NAMESPACE_URL, 'fangyu:china:management:' + name))
-    if rid not in regions:
-        r = dict(id=rid, parentId=codes[parent_code], scope='china', level=2, name=name,
-                 code='', historical=False, aliases=[], kind='management-area')
-        regions[rid] = r
-        catalog['regions'].append(r)
+    existing = next((r for r in regions.values() if r['name'] == name), None)
+    if existing:
+        return existing['id']
+    used = {
+        int(r['id'][2:])
+        for r in regions.values()
+        if r['id'].startswith('CN') and r['id'][2:].isdigit()
+    }
+    number = 900000
+    while number in used:
+        number += 1
+    rid = f'CN{number:06d}'
+    r = dict(id=rid, parentId=codes[parent_code], scope='china', level=2, name=name,
+             code='', historical=False, aliases=[], kind='management-area')
+    regions[rid] = r
+    catalog['regions'].append(r)
     return rid
 
 park = management('苏州工业园区', '320500')
@@ -139,9 +148,9 @@ for rid in affected_cities:
 city_parts=[g for rid,g in shapes.items() if regions[rid]['parentId']==codes['540000'] and regions[rid]['level']==1]
 put(codes['540000'], shapes[codes['540000']].difference(zone).union(unary_union(city_parts).intersection(zone)))
 
-hx = ['1a54e6b6-4807-533c-ab87-a2aafbc60fb1','2032ab7d-e59a-5117-a8c8-29774fa9778e']
-jg = '1f120ca5-1aa7-54f2-ac79-2a9b1e114305'
-sl = '6f431f37-f107-574a-ae3d-8b35f18f37cf'
+hx = ['CN900004','CN900003']
+jg = 'CN900001'
+sl = 'CN900002'
 for rid in hx+[jg,sl]: regions[rid]['kind'] = 'management-area'
 cross = unary_union([shapes[jg], shapes[sl]])
 put(codes['150723'], shapes[codes['150723']].difference(cross))
@@ -441,7 +450,7 @@ print(json.dumps(audit,ensure_ascii=False),flush=True)
 if args.apply:
     shutil.copyfile(base/'admin-options-draft.json',geometry_file)
     shutil.copyfile(base/'admin-options-draft-catalog.json',catalog_file)
-    shutil.copyfile(base/'admin-options-draft-options.json',ROOT/'data/catalog/china-boundary-options.json')
+    shutil.copyfile(base/'admin-options-draft-options.json',ROOT/'data/manual/china/rules/boundary-assets.json')
     published=read_json(base/'published-overrides.json')
     protected=changed|{r['regionId'] for r in published if r['regionId']}
     write_json(base/'published-overrides.json',[r for r in result if r['level']=='border' or r['regionId'] in protected])
@@ -453,6 +462,5 @@ if args.apply:
     manifest_file=ROOT/'data/catalog/manifest.json'
     manifest=read_json(manifest_file)
     manifest['regions']=len(catalog['regions'])
-    if 'china-boundary-options.json' not in manifest['files']: manifest['files'].append('china-boundary-options.json')
     write_json(manifest_file,manifest)
     print(f'Published administrative repairs and {audit["variants"]} local boundary variants.',flush=True)

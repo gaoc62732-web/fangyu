@@ -30,6 +30,7 @@ export const VISIT_LABELS: Record<VisitState, string> = {
 };
 
 const id = z.string().uuid();
+const regionId = z.union([id, z.string().regex(/^CN\d{6}$/)]);
 const text = z.string().max(20000);
 export const stadiumExperienceSchema = z.enum(['tour', 'match']);
 export type StadiumExperience = z.infer<typeof stadiumExperienceSchema>;
@@ -49,7 +50,7 @@ export const customEntrySchema = z
     id,
     recordId: id,
     scope: z.enum(SCOPE_IDS),
-    regionIds: z.array(id).min(1).max(100),
+    regionIds: z.array(regionId).min(1).max(100),
     categoryId: z.string().max(100),
     name: z.string().trim().min(1).max(1000),
     aliases: z.array(text).max(100),
@@ -100,7 +101,7 @@ export const snapshotSchema = z
     catalogVersion: z.string().max(100),
     revision: z.number().int().nonnegative(),
     updatedAt: z.string().datetime(),
-    regions: z.record(id, visitStateSchema),
+    regions: z.record(regionId, visitStateSchema),
     entries: z.record(id, entryRecordSchema),
     customEntries: z.array(customEntrySchema).max(10000),
     preferences: preferencesSchema,

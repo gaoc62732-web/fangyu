@@ -1,6 +1,9 @@
 import { sortHistoricalAchievements } from './achievement-chronology.js';
 import type { AchievementDefinition, Condition, Region } from '@fangyu/contracts';
 import type { HandbookSession } from './session.js';
+import quantityPolicy from '../../../data/manual/china/achievements/quantity-policy.json';
+import entryThresholds from '../../../data/manual/china/achievements/entry-count-thresholds.json';
+import maofenPolicy from '../../../data/manual/china/achievements/maofen-policy.json';
 
 export interface AchievementProgress extends AchievementDefinition {
   count: number;
@@ -72,20 +75,14 @@ export function achievementProgress(session: HandbookSession): AchievementProgre
 }
 
 function elementAchievements(session: HandbookSession): AchievementDefinition[] {
-  const definitions: [string, string, number[]][] = [
-    ['airport', '机场行旅', [1, 5, 10, 20, 30, 50, 75, 100, 150, 200, 300, 500]],
-    ['railway-station', '铁路行旅', [1, 10, 25, 50, 100, 150, 200, 300, 500, 750, 1000, 1500]],
-    ['first-class-museum', '一级博物馆', [1, 5, 10, 20, 30, 50, 75, 100, 150, 200, 300, 400]],
-    ['cultural-monument', '国保寻踪', [1, 10, 25, 50, 100, 200, 300, 500, 750, 1000, 1500, 2000]],
-  ];
-  return definitions.map(([categoryId, title, steps]) => {
+  return entryThresholds.items.map(({ categoryId, title, steps, groupBy }) => {
     const groups = new Map<string, AchievementDefinition['targets'][number]>();
     for (const entry of session.entries('china')) {
       if (entry.categoryId !== categoryId) continue;
       const region = session.index.regions.get(entry.regionIds[0] || '');
       if (!region || region.historical) continue;
       const provinceId = session.index.ancestors(region.id)[0]?.id || region.id;
-      const scope = categoryId === 'cultural-monument' ? 'national' : provinceId;
+      const scope = groupBy === 'nation-and-name-without-whitespace' ? 'national' : provinceId;
       const key = scope + ':' + entry.name.replace(/\s/g, '');
       const group = groups.get(key) || {
         label: entry.name,
@@ -114,9 +111,7 @@ export function quantityProgress(session: HandbookSession) {
   const count = session.index.catalog.achievements.quantityRegionIds.filter((id) =>
     reached.has(id),
   ).length;
-  const steps = [
-    10, 20, 50, 75, 100, 150, 200, 250, 300, 400, 500, 600, 750, 900, 1000, 1200, 1500, 2000, 2500,
-  ];
+  const steps = quantityPolicy.levels.map((level) => level.minimum);
   return {
     count,
     level: steps.filter((step) => step <= count).at(-1) || 0,
@@ -132,10 +127,12 @@ export function maofenProgress(session: HandbookSession) {
   const eligible = (region: Region) => {
     if (region.level === 0) return true;
     const root = session.index.ancestors(region.id)[0];
-    if (['710000', '810000', '820000'].includes(root?.code || '')) return false;
+    if (maofenPolicy.excludeLowerLevelRootCodes.includes(root?.code || '')) return false;
     return (
       region.level === 1 ||
-      (region.level === 2 && (/^\d{6}$/.test(region.code) || region.kind === 'management-area'))
+      (region.level === 2 &&
+        (new RegExp(maofenPolicy.countyEligibility.codePattern).test(region.code) ||
+          region.kind === maofenPolicy.countyEligibility.alsoIncludeKind))
     );
   };
   const groups = active
@@ -148,7 +145,8 @@ export function maofenProgress(session: HandbookSession) {
         totals[region.level] = (totals[region.level] || 0) + 1;
         if (reached.has(region.id)) counts[region.level] = (counts[region.level] || 0) + 1;
       }
-      return { province, counts, totals, score: counts[0]! + counts[1]! * 0.2 + counts[2]! * 0.05 };
+      const weights = maofenPolicy.weights;
+      return { province, counts, totals, score: counts[0]! * weights.province + counts[1]! * weights.city + counts[2]! * weights.county };
     });
   const counts = [0, 1, 2].map((level) =>
     groups.reduce((total, group) => total + group.counts[level]!, 0),
@@ -160,7 +158,7 @@ export function maofenProgress(session: HandbookSession) {
     groups,
     counts,
     totals,
-    score: counts[0]! + counts[1]! * 0.2 + counts[2]! * 0.05,
-    maximum: totals[0]! + totals[1]! * 0.2 + totals[2]! * 0.05,
+    score: counts[0]! * maofenPolicy.weights.province + counts[1]! * maofenPolicy.weights.city + counts[2]! * maofenPolicy.weights.county,
+    maximum: totals[0]! * maofenPolicy.weights.province + totals[1]! * maofenPolicy.weights.city + totals[2]! * maofenPolicy.weights.county,
   };
 }

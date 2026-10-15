@@ -3,14 +3,12 @@ import { VISIT_LABELS } from '@fangyu/contracts';
 import {
   visitedMapMarkers,
   drawablePoint,
-  type VerifiedVisitedMapAssociation,
 } from '@fangyu/domain';
 import type { MapScene, MapHover } from '@fangyu/map-renderer';
 import { useAppStore } from '../../app/store.js';
 import { validCoordinates } from './map-coordinates.js';
 import { regionInteractionPolicy } from './sea-region-interaction.js';
 import type { TiledMapProps } from './types.js';
-import airportAssociations from '../../../../../data/extensions/research/china-airport-map-associations.json';
 import { applyChinaBoundaries } from './china-boundaries.js';
 import { isChinaCountyMapRegion } from './china-map-levels.js';
 
@@ -43,7 +41,6 @@ export function useMapScene(
         props.pointMode || props.regionMode
           ? { visitedAirports: false, visitedWorldHeritage: false }
           : visitedLayers.value,
-      associations: airportAssociations.associations as VerifiedVisitedMapAssociation[],
     });
   });
   const visitedById = computed(
