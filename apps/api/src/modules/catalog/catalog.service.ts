@@ -20,6 +20,7 @@ function findProjectRoot(): string {
 @Injectable()
 export class CatalogService {
   private pending: Promise<CatalogIndex> | undefined;
+  private pendingRevision: number | undefined;
   private readonly root = findProjectRoot();
   private readonly configuredDirectory = process.env.CATALOG_DIRECTORY
     ? resolve(process.env.CATALOG_DIRECTORY)
@@ -28,13 +29,27 @@ export class CatalogService {
     ? this.configuredDirectory
     : resolve(this.root, 'data/catalog');
 
+  async revision(): Promise<number> {
+    const manifest = JSON.parse(
+      await readFile(resolve(this.root, 'data/manual/china/manifest.json'), 'utf8'),
+    ) as { adminRevision?: number };
+    return Number(manifest.adminRevision || 0);
+  }
+
   async index(): Promise<CatalogIndex> {
-    this.pending ??= assembleCatalog(this.root)
-      .then((catalog) => new CatalogIndex(catalog as Catalog))
-      .catch((error) => {
-        this.pending = undefined;
-        throw error;
-      });
+    const revision = await this.revision();
+    if (!this.pending || this.pendingRevision !== revision) {
+      this.pendingRevision = revision;
+      this.pending = assembleCatalog(this.root)
+        .then((catalog) => new CatalogIndex(catalog as Catalog))
+        .catch((error) => {
+          if (this.pendingRevision === revision) {
+            this.pending = undefined;
+            this.pendingRevision = undefined;
+          }
+          throw error;
+        });
+    }
     return this.pending;
   }
 

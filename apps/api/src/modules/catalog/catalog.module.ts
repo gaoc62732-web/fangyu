@@ -19,6 +19,11 @@ class CatalogController {
     return (await this.catalog.index()).catalog;
   }
 
+  @Get('revision')
+  async revision() {
+    return { revision: await this.catalog.revision() };
+  }
+
   @Get('geometry/:scope')
   async geometry(@Param('scope') scope: string) {
     if (!isScope(scope)) throw new BadRequestException('未知地图范围');

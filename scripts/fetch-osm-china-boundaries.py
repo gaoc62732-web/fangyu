@@ -120,6 +120,12 @@ class Overpass:
         CACHE.mkdir(parents=True, exist_ok=True)
         cache_file = CACHE / (cache_name + ".json")
         source = cache_file if cache_file.exists() else legacy
+        if source is not None and not source.exists():
+            source = None
+        if source is None and self.offline and cache_name.startswith("index-"):
+            code = cache_name.split('-', 2)[1]
+            candidates = sorted(CACHE.glob(f"index-{code}-*.json"))
+            source = candidates[-1] if candidates else None
         if source and source.exists() and not self.refresh:
             result = read_json(source)
             if result.get('remark') or not result.get('elements'):
@@ -277,9 +283,52 @@ def prepare_job(client: Overpass, job: dict) -> dict:
         return run_node_job(job)
 
 
+def catalog_regions():
+    manifest = read_json(ROOT / "data" / "manual" / "china" / "manifest.json")
+    regions = []
+    for entry in manifest.get("files", []):
+        filename = entry.get("path", "")
+        if not filename.startswith("regions/") or not filename.endswith(".json"):
+            continue
+        regions.extend(read_json(ROOT / "data" / "manual" / "china" / filename).get("items", []))
+    return [row for row in regions if row.get("scope") == "china"]
+
+
 def catalog_provinces():
-    catalog = read_json(ROOT / "data" / "catalog" / "catalog.json")
-    return [row for row in catalog["regions"] if row["scope"] == "china" and row["level"] == 0]
+    return [row for row in catalog_regions() if row.get("level") == "province"]
+
+
+def download_named_child_relations(client: Overpass, province: dict, area_id: int,
+                                   generation: str):
+    if province.get("code") not in {"810000", "820000"}:
+        return None
+    children = [row for row in catalog_regions()
+                if row.get("scope") == "china" and row.get("parentId") == province["id"]
+                and row.get("level") == "county"]
+    selectors = []
+    for child in children:
+        query = child.get("boundaryQuery") or {}
+        tags = {"boundary": "administrative", **query.get("requiredTags", {})}
+        tag_filter = ''.join(
+            f'[{json.dumps(key)}={json.dumps(value)}]' for key, value in tags.items())
+        names = set(query.get("queryNames", [])) | {child.get("name", "")} | set(child.get("aliases", []))
+        for name in filter(None, names):
+            for field in query.get("nameFields", ["name:zh", "name:zh-Hans", "name:zh-Hant"]):
+                escaped = name.replace("\\", "\\\\").replace('"', '\\"')
+                selectors.append(
+                    f'rel(area){tag_filter}["{field}"="{escaped}"];'
+                )
+    if not selectors:
+        return None
+    body = f'area({area_id});(' + ''.join(selectors) + ');out tags;'
+    safe_generation = generation.replace(':', '-')
+    key = f'named-{province["code"]}-{safe_generation}'
+    return client.query(
+        f'{province["name"]} named child relations',
+        '[out:json][timeout:120];' + body,
+        key,
+        old_query_file(body, generation),
+    )
 
 
 def download_province(client: Overpass, province: dict, apply: bool):
@@ -298,14 +347,24 @@ def download_province(client: Overpass, province: dict, apply: bool):
         raise RuntimeError(f"{province['name']} 省级关系不唯一：{[e.get('id') for e in relations]}")
     province_relation = relations[0]["id"]
     area_id = 3600000000 + province_relation
-    levels = '^[4-8]$' if code in special else '^[5-6]$'
-    body = f'area({area_id});(rel(area)[boundary=administrative][admin_level~"{levels}"];rel({province_relation}););out tags;'
     generation = index['osm3s']['timestamp_osm_base']
-    children = client.query(
-        f"{province['name']} child index",
-        '[out:json][timeout:90];' + body,
-        f"index-{code}-{generation.replace(':','-')}", old_query_file(body, generation),
-    )
+    named_key = f"named-{code}-{generation.replace(':','-')}"
+    if code in {'810000', '820000'} and (
+            not client.offline or (CACHE / (named_key + '.json')).exists()):
+        children = download_named_child_relations(client, province, area_id, generation)
+        child_file = CACHE / (named_key + '.json')
+    else:
+        # Offline imports may still consume the former complete area index.
+        # Online HK/MO imports need only the named catalogue districts, once.
+        levels = '^[4-8]$' if code in special else '^[5-6]$'
+        body = f'area({area_id});(rel(area)[boundary=administrative][admin_level~"{levels}"];rel({province_relation}););out tags;'
+        child_key = f"index-{code}-{generation.replace(':','-')}"
+        children = client.query(
+            f"{province['name']} child index",
+            '[out:json][timeout:90];' + body,
+            child_key, old_query_file(body, generation),
+        )
+        child_file = CACHE / (child_key + '.json')
     ids = sorted({int(e["id"]) for e in children["elements"] if e.get("type") == "relation"})
     relation_ids = sorted(set(ids + [province_relation]))
     reviewed = [row for row in read_json(OUTPUT / 'reviewed-relation-mappings.json')['mappings']
@@ -322,10 +381,11 @@ def download_province(client: Overpass, province: dict, apply: bool):
         "inputs": inputs,
         "output": str(OUTPUT / f"{code}.geojson"),
         "apply": apply,
+        "python": sys.executable,
         "provenance": {
             "responses": [dict(path=str(filename.relative_to(ROOT)), **client.provenance[str(filename)])
                 for filename in [CACHE / 'province-index.json',
-                    CACHE / f"index-{code}-{generation.replace(':','-')}.json",
+                    child_file,
                     *map(Path, inputs)]],
             "catalogVersion": read_json(ROOT / "data/catalog/catalog.json")["version"],
         },

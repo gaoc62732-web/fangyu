@@ -10,6 +10,8 @@ export const chinaBoundarySettingsSchema = z
     lianjiang: z.boolean().default(false),
     jinmen: z.boolean().default(false),
     tanggulaTibet: z.boolean().default(false),
+    hongKongDistricts: z.boolean().default(true),
+    macaoParishes: z.boolean().default(true),
   })
   .strict();
 export type ChinaBoundarySettings = z.infer<typeof chinaBoundarySettingsSchema>;
@@ -22,6 +24,8 @@ export const DEFAULT_CHINA_BOUNDARIES: ChinaBoundarySettings = {
   lianjiang: false,
   jinmen: false,
   tanggulaTibet: false,
+  hongKongDistricts: true,
+  macaoParishes: true,
 };
 export const CHINA_BOUNDARY_OPTIONS = [
   {
@@ -83,5 +87,28 @@ export const CHINA_BOUNDARY_OPTIONS = [
     off: '保留青海名义边界',
     ids: [],
     target: 'CN630000',
+  },
+  {
+    key: 'hongKongDistricts',
+    name: '香港各区',
+    on: '按区级行政区显示',
+    off: '仅显示香港特别行政区',
+    ids: [
+      'CN810001', 'CN810002', 'CN810003', 'CN810004', 'CN810005', 'CN810006',
+      'CN810007', 'CN810008', 'CN810009', 'CN810010', 'CN810011', 'CN810012',
+      'CN810013', 'CN810014', 'CN810015', 'CN810016', 'CN810017', 'CN810018',
+    ],
+    target: 'CN810000',
+  },
+  {
+    key: 'macaoParishes',
+    name: '澳门各堂区',
+    on: '按堂区级行政区显示',
+    off: '仅显示澳门特别行政区',
+    ids: [
+      'CN820001', 'CN820002', 'CN820003', 'CN820004', 'CN820005', 'CN820006',
+      'CN820007', 'CN820008',
+    ],
+    target: 'CN820000',
   },
 ] as const;

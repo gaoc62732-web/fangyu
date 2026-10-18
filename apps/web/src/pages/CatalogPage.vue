@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { SCOPE_CONFIGS, getScopeConfig, type Scope } from '@fangyu/contracts';
 import { useAppStore } from '../app/store.js';
@@ -11,11 +11,21 @@ import PointSelect from '../components/PointSelect.vue';
 import HelpTip from '../components/HelpTip.vue';
 import { useCatalogNavigation } from '../features/catalog/use-catalog-navigation.js';
 import { useResizablePanel } from '../features/maps/use-resizable-panel.js';
+import { useSharedMap } from '../features/maps/shared-map.js';
 import { searchText } from '../features/search-text.js';
 const props = defineProps<{ scope: Scope }>();
 const store = useAppStore();
 const route = useRoute();
 const router = useRouter();
+const sharedMap = useSharedMap();
+const fallbackMapProps = computed(() => ({
+  scope: scope.value,
+  selected: store.selectedRegionId,
+  level: level.value,
+  points: [],
+  initialCamera: camera.value,
+  regionMode: true,
+}));
 const session = computed(() => store.session!);
 const index = computed(() => session.value.index);
 const config = computed(() => getScopeConfig(props.scope));
@@ -53,6 +63,25 @@ const regionBreadcrumbs = computed(() =>
 const camera = computed(() =>
   store.regionalMap?.scope === props.scope ? store.regionalMap.camera : undefined,
 );
+watchEffect(() => {
+  Object.assign(sharedMap.view, {
+    mode: 'regions',
+    scope: scope.value,
+    selected: store.selectedRegionId,
+    level: level.value,
+    category: '',
+    points: [],
+    focus: null,
+    initialCamera: camera.value,
+    previewRegions: [],
+    rightInset: panelOpen.value ? `${width.value}px` : '0px',
+    onSelect: choose,
+    onPoint: () => {},
+    onLevel: changeLevel,
+    onOverview: () => choose(''),
+    onCluster: () => {},
+  });
+});
 const draftPath = computed(() =>
   draftRegionId.value
     ? index.value.ancestors(draftRegionId.value).filter((region) => region.scope === scope.value)
@@ -163,7 +192,11 @@ const relatedEntries = computed(() => {
   if (!region) return [];
   return session.value.allEntries().filter((entry) => {
     if (entry.scope !== scope.value) return false;
-    return index.value.entryRegions(entry, scope.value).some(
+    const linkedRegionIds = [
+      ...index.value.entryRegions(entry, scope.value),
+      ...entry.regionIds.map((id) => index.value.resolveRegion(id)),
+    ];
+    return [...new Set(linkedRegionIds)].some(
       (id) => id === region.id || index.value.belongsTo(id, region.id),
     );
   });
@@ -226,7 +259,7 @@ function togglePointGroup(categoryId: string) {
   expandedPointGroups.value[categoryId] = !expandedPointGroups.value[categoryId];
 }
 const regionOverview = computed(() => '');
-const specialNotice = computed(() => '');
+const specialNotice = computed(() => selected.value?.notices || []);
 const regionCount = computed(() => {
   void store.revision;
   return regions.value.filter((r) => session.value.visitState(r.id) !== 'unvisited').length;
@@ -318,12 +351,8 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   >
     <div class="region-map-main">
       <MapSurface
-        :scope="scope"
-        :selected="store.selectedRegionId"
-        :level="level"
-        :initial-camera="camera"
-        :points="[]"
-        region-mode
+        v-if="!sharedMap.provided"
+        v-bind="fallbackMapProps"
         @select="choose"
         @level="changeLevel"
         @overview="choose('')"
@@ -742,11 +771,18 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
           <p>{{ regionOverview }}</p>
         </section>
         <div
-          v-if="selected && specialNotice"
+          v-if="selected && specialNotice.length"
           class="region-notice"
         >
           <PointIcon name="info" :size="16" />
-          <span>{{ specialNotice }}</span>
+          <span>
+            <span
+              v-for="notice in specialNotice"
+              :key="notice"
+              class="region-notice-line"
+              >{{ notice }}</span
+            >
+          </span>
         </div>
         <section
           v-if="selected"
@@ -918,15 +954,20 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   min-height: 480px;
   display: flex;
   overflow: hidden;
-  background: var(--atlas-paper);
+  background: transparent;
   position: relative;
+  z-index: 1;
+  pointer-events: none;
 }
 .region-map-main {
-  position: relative;
-  flex: 1;
-  min-width: 0;
+  position: absolute;
+  inset: 0;
   padding-bottom: 40px;
+  pointer-events: none;
 }
+.region-explorer,
+.region-reopen,
+.region-caption { pointer-events: auto; }
 .region-explorer {
   position: absolute;
   top: 24px;
@@ -1212,15 +1253,19 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   background: transparent;
 }
 .region-panel {
-  position: relative;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
   width: var(--region-panel-width);
-  flex: none;
   display: flex;
   flex-direction: column;
   min-width: 0;
   border-left: 1px solid var(--atlas-line);
   background: var(--atlas-paper);
   outline: none;
+  pointer-events: auto;
 }
 .region-panel-head {
   position: relative;
@@ -1378,6 +1423,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
 .region-notice svg {
   flex: none;
   color: #a27812;
+}
+.region-notice-line {
+  display: block;
 }
 .region-directory-heading {
   display: flex;
@@ -1582,6 +1630,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   width: 10px;
   cursor: col-resize;
   touch-action: none;
+  pointer-events: auto;
 }
 .region-resize:focus-visible {
   outline: 2px solid var(--atlas-accent);

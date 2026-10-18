@@ -200,9 +200,26 @@ describe('current map lifecycle', () => {
         ],
       ],
     });
+    const arcs: Record<string, GeoJSON.LineString> = {};
+    const paths: NonNullable<ChinaBoundaryData['paths']> = {};
+    const addPath = (id: string, geometry: ReturnType<typeof polygon>) => {
+      const arcId = `${id}-outer`;
+      arcs[arcId] = { type: 'LineString', coordinates: geometry.coordinates[0]! };
+      paths[id] = {
+        type: 'PolygonPathSet',
+        geometryType: 'Polygon',
+        polygons: [{ rings: [{ role: 'outer', arcId, direction: 1 }] }],
+      };
+      return id;
+    };
+    const before = addPath('before', polygon(0));
+    const after = addPath('after', polygon(0.1));
+    const stable = addPath('stable', polygon(1));
     const boundaryData = {
-      geometries: { before: polygon(0), after: polygon(0.1), stable: polygon(1) },
-      groups: [
+      schemaVersion: 2,
+      arcs,
+      paths,
+      profiles: [
         {
           keys: ['shenshan'],
           regionIds: [dongcheng],
@@ -212,7 +229,7 @@ describe('current map lifecycle', () => {
                 regionId: dongcheng,
                 level: 'county',
                 name: '东城区',
-                geometry: 'before',
+                pathId: before,
                 bounds: [116, 39, 117, 40],
               },
             ],
@@ -221,7 +238,7 @@ describe('current map lifecycle', () => {
                 regionId: dongcheng,
                 level: 'county',
                 name: '东城区',
-                geometry: 'after',
+                pathId: after,
                 bounds: [116.1, 39, 117.1, 40],
               },
             ],
@@ -236,7 +253,7 @@ describe('current map lifecycle', () => {
                 regionId: beijing,
                 level: 'province',
                 name: '北京市',
-                geometry: 'stable',
+                pathId: stable,
                 bounds: [117, 39, 118, 40],
               },
             ],
@@ -245,14 +262,14 @@ describe('current map lifecycle', () => {
                 regionId: beijing,
                 level: 'province',
                 name: '北京市',
-                geometry: 'stable',
+                pathId: stable,
                 bounds: [117, 39, 118, 40],
               },
             ],
           },
         },
       ],
-      lineGroups: [],
+      fixedPaths: [],
     } satisfies ChinaBoundaryData;
     const store = useAppStore();
     store.chinaBoundaryData = boundaryData;
@@ -279,9 +296,7 @@ describe('current map lifecycle', () => {
       expect(map.sources.get('china-options-0')!.updateData).toHaveBeenCalledOnce();
       expect(map.sources.get('china-options-0')!.updateData.mock.calls[0]![0]).toEqual(
         expect.objectContaining({
-          update: [
-            expect.objectContaining({ id: dongcheng, newGeometry: boundaryData.geometries.before }),
-          ],
+          update: [expect.objectContaining({ id: dongcheng, newGeometry: polygon(0) })],
         }),
       );
       expect(map.source.setData).not.toHaveBeenCalled();
@@ -309,10 +324,9 @@ describe('current map lifecycle', () => {
     await flushPromises();
     const map = lib.maps[0]!;
     map.events['style.load']!();
-    const toggle = wrapper.find('[aria-label="选区自动缩放"]');
-    expect((toggle.element as HTMLInputElement).checked).toBe(true);
-    await toggle.setValue(false);
     const store = useAppStore();
+    expect(store.session!.preferences.regionAutoFocus).not.toBe(false);
+    store.commit((session) => session.updatePreferences({ regionAutoFocus: false }));
     await store.flush();
     const restored = new HandbookSession(
       store.session!.index,
@@ -330,13 +344,11 @@ describe('current map lifecycle', () => {
       expect.objectContaining({ selected: true }),
     );
     expect(store.regionalMap!.selected).toBe(beijing);
-    await wrapper
-      .findAll('.region-map-tools-body button')
-      .find((button) => button.text() === '定位当前地区')!
-      .trigger('click');
+    await wrapper.find('[aria-label="显示全图"]').trigger('click');
     expect(map.fitBounds).toHaveBeenCalledOnce();
     map.fitBounds.mockClear();
-    await toggle.setValue(true);
+    store.commit((session) => session.updatePreferences({ regionAutoFocus: true }));
+    await flushPromises();
     expect(map.fitBounds).not.toHaveBeenCalled();
     await wrapper.setProps({ selected: '' });
     expect(map.fitBounds).toHaveBeenCalledOnce();
@@ -389,7 +401,7 @@ describe('current map lifecycle', () => {
     expect(wrapper.emitted('select')).toEqual([[dongcheng]]);
   });
 
-  it('uses the existing boundary basemap and offers only point preferences and a separate legend in point mode', async () => {
+  it('uses the existing boundary basemap and exposes point-mode map controls', async () => {
     wrapper = mount(MapSurface, { props: { scope: 'china', pointMode: true, points: [] } });
     await vi.dynamicImportSettled();
     await flushPromises();
@@ -398,8 +410,10 @@ describe('current map lifecycle', () => {
     expect(wrapper.text()).not.toContain('选中范围');
     expect(wrapper.find('.atlas-map-sources').exists()).toBe(false);
     expect(wrapper.find('.atlas-map-legend').attributes('open')).toBeUndefined();
-    await wrapper.find('[aria-label="点位关联设置"]').trigger('click');
-    expect(wrapper.emitted('settings')).toHaveLength(1);
+    expect(wrapper.find('[aria-label="地图行政层级"]').exists()).toBe(true);
+    expect(wrapper.find('[aria-label="放大"]').exists()).toBe(true);
+    await wrapper.find('.atlas-map-legend > summary').trigger('click');
+    expect(wrapper.find('.atlas-map-legend').attributes('open')).toBeDefined();
     const current = lib.maps[0]!;
     setBasemapEnabled(false);
     await flushPromises();

@@ -1,16 +1,13 @@
 import { computed, ref, type Ref } from 'vue';
 import { VISIT_LABELS } from '@fangyu/contracts';
-import {
-  visitedMapMarkers,
-  drawablePoint,
-} from '@fangyu/domain';
+import { visitedMapMarkers, drawablePoint } from '@fangyu/domain';
 import type { MapScene, MapHover } from '@fangyu/map-renderer';
 import { useAppStore } from '../../app/store.js';
 import { validCoordinates } from './map-coordinates.js';
 import { regionInteractionPolicy } from './sea-region-interaction.js';
 import type { TiledMapProps } from './types.js';
 import { applyChinaBoundaries } from './china-boundaries.js';
-import { isChinaCountyMapRegion } from './china-map-levels.js';
+import { isChinaCountyMapVisible } from './china-map-levels.js';
 
 export function useMapScene(
   props: TiledMapProps,
@@ -73,7 +70,6 @@ export function useMapScene(
     return ids;
   });
   function fill(id: string) {
-    if (props.pointMode) return 'transparent';
     const region = store.session!.index.regions.get(id);
     return region
       ? store.colors[
@@ -182,7 +178,14 @@ export function useMapScene(
         .filter((f) => {
           if (props.scope !== 'china' || f.properties?.level !== 'county') return true;
           const region = store.session!.index.regions.get(String(f.properties?.regionId || f.id));
-          return region && isChinaCountyMapRegion(region, store.session!.index.regions);
+          return (
+            region &&
+            isChinaCountyMapVisible(
+              region,
+              store.session!.index.regions,
+              store.chinaBoundarySettings,
+            )
+          );
         })
         .filter(
           (f) =>

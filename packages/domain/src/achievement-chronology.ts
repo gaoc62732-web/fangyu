@@ -14,15 +14,15 @@ export const ACHIEVEMENT_CHRONOLOGY: Readonly<Record<string, AchievementChronolo
     chronologyData.items.map((row) => [
       row.achievementId,
       {
-        kind: row.kind,
+        kind: row.kind as AchievementChronology['kind'],
         label: row.label,
         ...(row.startYear == null ? {} : { startYear: row.startYear }),
         ...(row.endYear == null ? {} : { endYear: row.endYear }),
         basis: row.basis,
-        sources: row.sourceRefs
-          .map((id) => sources.get(id))
-          .filter((source) => source?.url)
-          .map((source) => ({ title: source.name, url: source.url })),
+        sources: row.sourceRefs.flatMap((id) => {
+          const source = sources.get(id);
+          return source?.url ? [{ title: source.name, url: source.url }] : [];
+        }),
       },
     ]),
   );

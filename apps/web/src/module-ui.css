@@ -43,6 +43,26 @@
   padding: 0;
   max-width: none;
   position: relative;
+  min-height: 0;
+}
+.atlas-shared-map {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.atlas-shared-map > .map-card {
+  height: 100%;
+  min-height: 0;
+}
+.atlas-map-content > :not(.atlas-shared-map) {
+  position: relative;
+  z-index: 1;
+}
+.atlas-admin-content {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  min-height: 100dvh;
 }
 .atlas-map-module {
   height: 100dvh;

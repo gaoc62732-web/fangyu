@@ -2,10 +2,13 @@ import manual from '../../../../../data/manual/china/achievements/presentation.j
 type AchievementSeries = readonly [string, string, string];
 export const QUANTITY_NAMES: string[] = manual.quantityNames;
 export const QUANTITY_STEPS: number[] = manual.quantitySteps;
-export const SERIES = manual.series as readonly AchievementSeries[];
-export const WORLD_SERIES = manual.worldSeries as readonly AchievementSeries[];
+export const SERIES = manual.series as unknown as readonly AchievementSeries[];
+export const WORLD_SERIES = manual.worldSeries as unknown as readonly AchievementSeries[];
 export const REGION_COLORS: Record<string, string> = manual.regionColors;
-export const REGION_STYLES: Record<string, { name: string; edge: string; ink: string; outline: string }> = manual.regionStyles;
+export const REGION_STYLES: Record<
+  string,
+  { name: string; edge: string; ink: string; outline: string }
+> = manual.regionStyles;
 export const REGION_SHORT: Record<string, string> = Object.fromEntries(
   manual.provinceShortNames.map(({ provinceId, name }) => [provinceId.slice(2, 4), name]),
 );

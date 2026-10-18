@@ -60,14 +60,20 @@ beforeEach(async () => {
 });
 
 describe('point exploration map', () => {
-  it('starts with neutral boundaries and does not preview the inherited regional selection', () => {
+  it('keeps regional visit colors without previewing the inherited selection', () => {
     const scene = drawing().scene();
     expect(scene.features).toHaveLength(1);
     expect(scene.features[0]).toMatchObject({
       interactive: false,
       selected: false,
-      fill: 'transparent',
+      fill: useAppStore().colors.unvisited,
     });
+  });
+  it('keeps a visited region lit in point mode', () => {
+    const store = useAppStore();
+    store.commit((session) => session.setRegionState(beijing, 'arrived'));
+    const scene = drawing().scene();
+    expect(scene.features[0]?.fill).toBe(store.colors.arrived);
   });
   it('previews exact county geometry at province level without replacing holes or exclaves', () => {
     const d = drawing([dongcheng]);
@@ -119,21 +125,51 @@ describe('point exploration map', () => {
       true,
     );
     const index = (id: string) => style.layers.findIndex((l) => l.id === id);
-    expect(index('labels')).toBeLessThan(index('point-basemap-mask'));
-    expect(index('point-basemap-mask')).toBeLessThan(index('province-line'));
+    expect(index('province-line')).toBeLessThan(index('point-basemap-mask'));
+    expect(index('point-basemap-mask')).toBeLessThan(index('labels'));
     expect(index('point-basemap-mask')).toBeLessThan(index('province-point-highlight'));
     expect(index('province-point-highlight')).toBeLessThan(index('points'));
+    expect(style.layers.find((l) => l.id === 'point-basemap-mask')).toMatchObject({
+      paint: {
+        'fill-opacity': 0.32,
+      },
+    });
     expect(style.layers.find((l) => l.id === 'province-fill')).toMatchObject({
-      paint: { 'fill-opacity': 0 },
+      paint: { 'fill-opacity': expect.any(Array) },
     });
     const line = style.layers.find((l) => l.id === 'province-line')!;
     if (line.type !== 'line') throw Error('Missing boundary line');
-    expect(line.paint?.['line-color']).not.toBeInstanceOf(Array);
-    expect(line.paint?.['line-width']).not.toBeInstanceOf(Array);
+    expect(line.paint?.['line-color']).toBeInstanceOf(Array);
+    expect(line.paint?.['line-width']).toBeInstanceOf(Array);
     const regional = createMapStyle(manifest, 'china', 'province', null, '/', 'http://localhost/');
-    expect(regional.layers.some((l) => l.id === 'point-basemap-mask')).toBe(false);
+    expect(regional.layers.find((l) => l.id === 'point-basemap-mask')).toMatchObject({
+      layout: { visibility: 'none' },
+    });
     expect(regional.layers.find((l) => l.id === 'province-fill')).toMatchObject({
       paint: { 'fill-opacity': 1 },
+    });
+    const regionalWithBasemap = createMapStyle(
+      manifest,
+      'china',
+      'province',
+      tianditu('public-key-example'),
+      '/',
+      'http://localhost/',
+      false,
+    );
+    expect(regionalWithBasemap.layers.find((l) => l.id === 'province-fill')).toMatchObject({
+      paint: { 'fill-opacity': expect.any(Array) },
+    });
+    const catalogWithBasemap = createMapStyle(
+      manifest,
+      'china',
+      'province',
+      tianditu('public-key-example'),
+      '/',
+      'http://localhost/',
+    );
+    expect(catalogWithBasemap.layers.find((l) => l.id === 'province-fill')).toMatchObject({
+      paint: { 'fill-opacity': expect.any(Array) },
     });
   });
 });

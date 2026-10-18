@@ -1,4 +1,5 @@
 import type { Catalog, CatalogEntry, Scope, PointCheckinPreferences } from '@fangyu/contracts';
+import type { CatalogIndex } from '@fangyu/catalog';
 import type { HandbookSession, EntryView } from './session.js';
 import { heritageLocationIsReferenceOnly } from './heritage.js';
 
@@ -12,22 +13,33 @@ export interface PointChild {
   name: string;
   entryId: string;
   subitemId?: string;
+  regionIds?: string[];
+  coordinates?: [number, number] | null;
+  description?: string;
+  attributes?: Record<string, unknown>;
 }
 export interface PointGroup {
   name: string;
   children: PointChild[];
   complete: boolean;
 }
-const groupIndexes = new WeakMap<Catalog, Map<string, PointGroup>>();
+const groupIndexes = new WeakMap<CatalogIndex, Map<string, PointGroup>>();
 function groupIndex(session: HandbookSession) {
-  const catalog = session.index.catalog;
-  let groups = groupIndexes.get(catalog);
+  const index = session.index;
+  let groups = groupIndexes.get(index);
   if (groups) return groups;
+  const catalog: Catalog = index.catalog;
   groups = new Map();
   const childrenFor = (ids: string[]) =>
     ids.flatMap((id) => {
       const entry = session.index.entries.get(id);
-      return entry ? [{ id, name: entry.name, entryId: id }] : [];
+      return entry
+        ? [{
+            id,
+            name: entry.name,
+            entryId: id,
+          }]
+        : [];
     });
   for (const project of catalog.heritageProjects || [])
     for (const id of project.legacyEntryIds)
@@ -51,7 +63,7 @@ function groupIndex(session: HandbookSession) {
           parent.componentsCoverage === 'complete-for-source' &&
           parent.componentEntryIds.every((id) => session.index.entries.has(id)),
       });
-  groupIndexes.set(catalog, groups);
+  groupIndexes.set(index, groups);
   return groups;
 }
 

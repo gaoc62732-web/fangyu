@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import { useVirtualizer } from '@tanstack/vue-virtual';
 import {
@@ -22,14 +22,27 @@ import {
   DEFAULT_POINT_POLICIES,
   type PointChange,
   type PointGroup,
+  type EntryView,
 } from '@fangyu/domain';
-import MapSurface from '../components/MapSurface.vue';
 import PointIcon from '../components/PointIcon.vue';
 import PointSelect from '../components/PointSelect.vue';
 import { useAppStore } from '../app/store.js';
+import { useSharedMap } from '../features/maps/shared-map.js';
+import MapSurface from '../components/MapSurface.vue';
 
 const store = useAppStore();
 const route = useRoute();
+const sharedMap = useSharedMap();
+const fallbackMapProps = computed(() => ({
+  scope: scope.value,
+  selected: selectedRegion.value,
+  level: level.value,
+  category: category.value,
+  points: mapEntries.value,
+  initialCamera: initialCamera.value,
+  previewRegions: previewRegions.value,
+  pointMode: true,
+}));
 const session = computed(() => store.session!);
 const policies = computed(() => {
   void store.revision;
@@ -76,6 +89,7 @@ onMounted(() => document.addEventListener('pointerdown', outsideExplorer));
 onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplorer));
 const scopeOptions = SCOPE_IDS.map((id) => ({ value: id, label: getScopeConfig(id).title }));
 const selectedId = ref('');
+const selectedSubitemId = ref('');
 const panel = ref<'detail' | 'list' | null>(null);
 const panelElement = ref<HTMLElement>();
 const panelBody = ref<HTMLElement>();
@@ -129,9 +143,17 @@ const pending = ref<{
   choices: string[];
   options: { id: string; name: string; disabled?: boolean }[];
 }>();
-const scopeEntries = computed(() =>
-  store.rows.filter((e) => session.value.index.entryRegions(e, scope.value).length),
-);
+const scopeEntries = computed(() => {
+  void store.revision;
+  return session.value
+    .allEntries()
+    .filter((entry) =>
+      session.value.index.entryRegions(entry, scope.value).length ||
+      entry.subitems.some((child) =>
+        (child.regionIds || []).some((id) => session.value.index.regions.get(id)?.scope === scope.value),
+      ),
+    );
+});
 const categories = computed(() => {
   const ids = new Set(scopeEntries.value.map((e) => e.categoryId));
   return session.value.index.catalog.categories.filter((c) => ids.has(c.id));
@@ -154,6 +176,37 @@ const entries = computed(() =>
     .filter((e) => e.categoryId === category.value)
     .map((e) => pointView(session.value, e)),
 );
+const mapPointData = computed(() => {
+  const points: EntryView[] = [];
+  const subitems = new Map<string, { parent: CatalogEntry; id: string }>();
+  for (const entry of entries.value) {
+    points.push(entry);
+    for (const child of entry.subitems) {
+      const coordinates = child.coordinates;
+      if (!coordinates || coordinates.length !== 2 || !coordinates.every(Number.isFinite)) continue;
+      const id = `${entry.id}__subitem__${child.id}`;
+      const regionIds = child.regionIds?.length ? child.regionIds : entry.regionIds;
+      points.push({
+        ...entry,
+        id,
+        name: child.name,
+        aliases: [],
+        regionIds,
+        path: regionIds.map((regionId) => session.value.index.paths.get(regionId) || '').filter(Boolean).join(' / '),
+        coordinates,
+        coordinateStatus: 'available',
+        coordinateReferenceOnly: false,
+        ordinaryPointEligible: true,
+        description: child.description || '',
+        attributes: child.attributes || {},
+        subitems: [],
+      });
+      subitems.set(id, { parent: entry, id: child.id });
+    }
+  }
+  return { points, subitems };
+});
+const mapEntries = computed(() => mapPointData.value.points);
 const mappedCount = computed(() => entries.value.filter(drawablePoint).length);
 const listing = computed(() =>
   entries.value.filter(
@@ -177,7 +230,7 @@ const listVirtualizer = useVirtualizer(
 watch(listing, () => listVirtualizer.value.scrollToOffset(0));
 const active = computed(() => {
   void store.revision;
-  const entry = store.rows.find((e) => e.id === selectedId.value);
+  const entry = selectedId.value ? session.value.entry(selectedId.value) : undefined;
   return entry ? pointView(session.value, entry) : undefined;
 });
 const group = computed(() => (active.value ? pointGroup(session.value, active.value) : undefined));
@@ -211,8 +264,63 @@ const previewRegions = computed(() =>
         )
       : [],
 );
+watchEffect(() => {
+  Object.assign(sharedMap.view, {
+    mode: 'points',
+    scope: scope.value,
+    selected: selectedRegion.value,
+    level: level.value,
+    category: category.value,
+    points: mapEntries.value,
+    focus: null,
+    initialCamera: initialCamera.value,
+    previewRegions: previewRegions.value,
+    rightInset: panel.value ? `${panelWidth.value}px` : '0px',
+    onSelect: () => {},
+    onPoint: choosePoint,
+    onLevel: (value: Exclude<MapLevel, 'country'>) => (level.value = value),
+    onOverview: () => {},
+    onCluster: openList,
+  });
+});
 const categoryName = (id: string) =>
   session.value.index.catalog.categories.find((c) => c.id === id)?.name || id;
+function filledCategoryFields(categoryId: string, attributes?: Record<string, unknown>) {
+  const fields = session.value.index.catalog.categories.find((category) => category.id === categoryId)?.fields || [];
+  return fields.flatMap((field) => {
+    const value = attributes?.[field.key];
+    if (value === undefined || value === null || String(value).trim() === '') return [];
+    return [{ key: field.key, label: field.label, value: String(value) }];
+  });
+}
+const activeCategoryFields = computed(() =>
+  active.value ? filledCategoryFields(active.value.categoryId, active.value.attributes) : [],
+);
+const activeCategoryFieldKeys = computed(() => new Set(activeCategoryFields.value.map((field) => field.key)));
+function childCategoryFields(child: PointGroup['children'][number]) {
+  const entry = session.value.entry(child.entryId);
+  const configured = filledCategoryFields(entry.categoryId, child.subitemId ? child.attributes : entry.attributes);
+  if (child.subitemId) return configured;
+  const configuredKeys = new Set(configured.map((field) => field.key));
+  const legacy = [
+    { key: 'designation', label: '认定类别', value: entry.designation },
+    { key: 'code', label: '编号', value: entry.code },
+    { key: 'year', label: '认定年份', value: entry.year },
+    { key: 'heritageType', label: '遗产类型', value: entry.heritageType },
+  ].filter((field) => field.value && !configuredKeys.has(field.key));
+  return [...configured, ...legacy.map((field) => ({ ...field, value: String(field.value) }))];
+}
+function childDescription(child: PointGroup['children'][number]) {
+  const entry = session.value.entry(child.entryId);
+  return child.description || entry.description || '';
+}
+function childRegionPaths(child: PointGroup['children'][number]) {
+  const entry = session.value.entry(child.entryId);
+  return (child.regionIds?.length ? child.regionIds : entry.regionIds)
+    .map((id) => session.value.index.paths.get(id))
+    .filter(Boolean)
+    .join(' / ');
+}
 const stateLabel = computed(() =>
   active.value?.checked ? '已点亮' : active.value?.partial ? '部分到访' : '未点亮',
 );
@@ -228,22 +336,37 @@ function openEntry(entry: CatalogEntry) {
   if (pending.value) finish();
   category.value = entry.categoryId;
   selectedId.value = entry.id;
+  selectedSubitemId.value = '';
   panel.value = 'detail';
   clusterIds.value = [];
   message.value = '';
   void focusPanel();
 }
 function choosePoint(id: string) {
-  const entry = store.rows.find((e) => e.id === id);
-  if (entry) openEntry(entry);
+  const subitem = mapPointData.value.subitems.get(id);
+  if (subitem) {
+    openEntry(subitem.parent);
+    selectedSubitemId.value = subitem.id;
+    void nextTick(() => document.getElementById('point-child-' + subitem.id)?.scrollIntoView({ block: 'center' }));
+    return;
+  }
+  try {
+    openEntry(session.value.entry(id));
+  } catch {
+    // A point can disappear after a catalog refresh while its marker is mounted.
+  }
 }
 // Existing record-list location links now open the point module directly.
 watch(
   () => [route.query.entry, route.query.scope],
   ([id, requestedScope]) => {
     if (typeof id !== 'string') return;
-    const entry = store.rows.find((e) => e.id === id);
-    if (!entry) return;
+    let entry: CatalogEntry;
+    try {
+      entry = session.value.entry(id);
+    } catch {
+      return;
+    }
     const targetScope =
       typeof requestedScope === 'string' &&
       isScope(requestedScope) &&
@@ -261,7 +384,7 @@ watch(
 );
 function openList(ids: string[] = []) {
   if (pending.value) finish();
-  clusterIds.value = ids;
+  clusterIds.value = [...new Set(ids.map((id) => mapPointData.value.subitems.get(id)?.parent.id || id))];
   query.value = '';
   panel.value = 'list';
   void focusPanel();
@@ -269,6 +392,14 @@ function openList(ids: string[] = []) {
 function closePanel() {
   if (pending.value) finish();
   panel.value = null;
+}
+function openChild(child: PointGroup['children'][number]) {
+  if (!child.subitemId) {
+    choosePoint(child.entryId);
+    return;
+  }
+  selectedSubitemId.value = child.subitemId;
+  void nextTick(() => document.getElementById('point-child-' + child.subitemId)?.scrollIntoView({ block: 'center' }));
 }
 function switchScope() {
   if (pending.value) finish();
@@ -449,14 +580,8 @@ onBeforeUnmount(() => {
     >
       <div class="point-map">
         <MapSurface
-          :scope="scope"
-          :selected="selectedRegion"
-          :level="level"
-          :category="category"
-          :points="entries"
-          :initial-camera="initialCamera"
-          :preview-regions="previewRegions"
-          point-mode
+          v-if="!sharedMap.provided"
+          v-bind="fallbackMapProps"
           @point="choosePoint"
           @cluster="openList"
           @level="level = $event"
@@ -768,19 +893,23 @@ onBeforeUnmount(() => {
                   <dt>所在行政区</dt>
                   <dd>{{ active.path || '暂未收录' }}</dd>
                 </div>
-                <div v-if="active.designation">
+                <div v-if="active.designation && !activeCategoryFieldKeys.has('designation')">
                   <dt>认定类别</dt>
                   <dd>{{ active.designation }}</dd>
                 </div>
-                <div v-if="active.code">
+                <div v-if="active.code && !activeCategoryFieldKeys.has('code')">
                   <dt>编号</dt>
                   <dd>{{ active.code }}</dd>
                 </div>
-                <div v-if="active.year">
+                <div v-for="field in activeCategoryFields" :key="field.key">
+                  <dt>{{ field.label }}</dt>
+                  <dd>{{ field.value }}</dd>
+                </div>
+                <div v-if="active.year && !activeCategoryFieldKeys.has('year')">
                   <dt>认定年份</dt>
                   <dd>{{ active.year }}</dd>
                 </div>
-                <div v-if="active.heritageType">
+                <div v-if="active.heritageType && !activeCategoryFieldKeys.has('heritageType')">
                   <dt>遗产类型</dt>
                   <dd>{{ active.heritageType }}</dd>
                 </div>
@@ -796,18 +925,33 @@ onBeforeUnmount(() => {
                 <p class="atlas-quiet-note">
                   {{ group.complete ? '组成地点已完整收录' : '清单尚不完整，仅显示已收录地点进度' }}
                 </p>
-                <button
+                <article
                   v-for="child in group.children"
                   :key="child.id"
-                  class="point-related-row"
-                  :disabled="!!child.subitemId"
-                  @click="choosePoint(child.entryId)"
+                  class="point-child-record"
                 >
-                  <span>{{ child.name }}</span
-                  ><small :class="{ lit: childVisited(session, child) }">{{
-                    childVisited(session, child) ? '已点亮' : '未点亮'
-                  }}</small>
-                </button>
+                  <button
+                    class="point-related-row"
+                    :id="child.subitemId ? 'point-child-' + child.subitemId : undefined"
+                    :class="{ 'point-child-selected': selectedSubitemId === child.subitemId }"
+                    @click="openChild(child)"
+                  >
+                    <span>{{ child.name }}</span
+                    ><small :class="{ lit: childVisited(session, child) }">{{
+                      childVisited(session, child) ? '已点亮' : '未点亮'
+                    }}</small>
+                  </button>
+                  <p v-if="childRegionPaths(child)" class="point-child-meta">{{ childRegionPaths(child) }}</p>
+                  <p v-if="child.coordinates" class="point-child-meta">
+                    {{ child.coordinates[1].toFixed(4) }}, {{ child.coordinates[0].toFixed(4) }}
+                  </p>
+                  <dl v-if="childCategoryFields(child).length" class="point-child-fields">
+                    <div v-for="field in childCategoryFields(child)" :key="field.key">
+                      <dt>{{ field.label }}</dt><dd>{{ field.value }}</dd>
+                    </div>
+                  </dl>
+                  <p v-if="childDescription(child)" class="atlas-description point-child-description">{{ childDescription(child) }}</p>
+                </article>
                 <p
                   v-if="!group.children.length"
                   class="atlas-quiet-note"
@@ -934,8 +1078,11 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--point-paper);
+  background: transparent;
   color: var(--point-ink);
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
   font:
     400 16px/1.6 'Segoe UI',
     'PingFang SC',
@@ -1023,16 +1170,14 @@ onBeforeUnmount(() => {
 .atlas-header-actions a {
 }
 .point-workspace {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 .point-map {
-  min-width: 0;
-  flex: 1;
-  position: relative;
-  background: #edf1e9;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 .point-map :deep(.map-card) {
   height: 100%;
@@ -1062,6 +1207,7 @@ onBeforeUnmount(() => {
   width: max-content;
   max-width: calc(100% - 100px);
   gap: 8px;
+  pointer-events: auto;
 }
 .point-page .atlas-explorer-trigger,
 .point-page .atlas-directory-trigger {
@@ -1102,6 +1248,7 @@ onBeforeUnmount(() => {
   z-index: 3;
   top: 80px;
   left: 24px;
+  pointer-events: auto;
 }
 .atlas-directory-trigger > span {
   display: none;
@@ -1127,6 +1274,7 @@ onBeforeUnmount(() => {
   background: #fffefadf;
   backdrop-filter: blur(12px);
   border-top: 1px solid #e6e6dc;
+  pointer-events: auto;
 }
 .point-page-caption > div {
   display: flex;
@@ -1146,8 +1294,8 @@ onBeforeUnmount(() => {
   font-size: var(--point-meta-size);
 }
 .point-panel {
-  position: relative;
-  flex: 0 0 var(--point-panel-width, 390px);
+  position: absolute;
+  inset: 0 0 0 auto;
   width: var(--point-panel-width, 390px);
   display: flex;
   flex-direction: column;
@@ -1156,6 +1304,7 @@ onBeforeUnmount(() => {
   background: var(--point-paper);
   outline: none;
   z-index: 5;
+  pointer-events: auto;
 }
 .point-panel-resize {
   position: absolute;
@@ -1385,8 +1534,53 @@ onBeforeUnmount(() => {
 .point-list-state.lit {
   color: var(--point-gold);
 }
+.point-child-record {
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--point-line);
+}
+.point-child-record + .point-child-record {
+  margin-top: 5px;
+}
+.point-child-record .point-related-row {
+  border-bottom: 0 !important;
+}
+.point-child-meta {
+  margin: -4px 0 5px;
+  color: var(--point-ink);
+  font-size: var(--point-meta-size);
+  line-height: 1.7;
+}
+.point-child-fields {
+  display: grid;
+  gap: 5px;
+  margin: 6px 0 10px;
+  padding-left: 12px;
+  border-left: 1px solid var(--point-line);
+  font-size: var(--point-meta-size);
+}
+.point-child-fields > div {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 10px;
+}
+.point-child-fields dt {
+  color: var(--point-ink);
+}
+.point-child-fields dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.point-child-description {
+  margin: 4px 0 14px;
+  font-size: var(--point-meta-size);
+}
 .point-page .point-related-row:disabled {
   opacity: 1;
+}
+.point-child-selected {
+  color: var(--point-accent) !important;
+  background: color-mix(in srgb, var(--point-accent) 7%, transparent) !important;
 }
 .atlas-panel-lead {
   font-size: var(--point-meta-size);
@@ -1550,6 +1744,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 4px 18px #424b3110 !important;
   font-size: var(--point-body-size) !important;
   color: var(--point-ink) !important;
+  pointer-events: auto;
 }
 @media (max-width: 1050px) {
   .point-panel-head {

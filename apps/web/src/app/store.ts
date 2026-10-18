@@ -1,6 +1,6 @@
 import { computed, markRaw, ref, shallowRef } from 'vue';
 import { defineStore } from 'pinia';
-import { loadWebCatalog } from './catalog-loader.js';
+import { loadWebCatalogSnapshot, webCatalogRevision } from './catalog-loader.js';
 import { CatalogIndex } from '@fangyu/catalog';
 import { HandbookSession, PALETTES, darkColors, type MapColors } from '@fangyu/domain';
 import {
@@ -19,6 +19,7 @@ export const useAppStore = defineStore('app', () => {
   const revision = ref(0);
   const loading = ref(true);
   const loadError = ref('');
+  const manualCatalogRevision = ref<number | null>(null);
   const error = ref('');
   const saveStatus = ref('');
   const selectedRegionId = ref('');
@@ -81,11 +82,13 @@ export const useAppStore = defineStore('app', () => {
   let savedRevision = 0;
   let saveQueue = Promise.resolve();
   let saveFailure: unknown;
+  let catalogRefreshPromise: Promise<void> | undefined;
   async function load() {
     loading.value = true;
     loadError.value = '';
     try {
-      const catalog = await loadWebCatalog(baseUrl);
+      const loaded = await loadWebCatalogSnapshot(baseUrl);
+      const catalog = loaded.catalog;
       storage = createAppDataAccess();
       const index = new CatalogIndex(catalog);
       let saved = await storage.read();
@@ -99,6 +102,7 @@ export const useAppStore = defineStore('app', () => {
         }
       }
       session.value = markRaw(new HandbookSession(index, saved));
+      manualCatalogRevision.value = loaded.revision;
       savedRevision = saved?.revision || 0;
       saveFailure = undefined;
       revision.value++;
@@ -109,6 +113,42 @@ export const useAppStore = defineStore('app', () => {
     } finally {
       loading.value = false;
     }
+  }
+
+  async function refreshCatalog() {
+    if (loading.value || !session.value) return;
+    if (catalogRefreshPromise) return catalogRefreshPromise;
+    catalogRefreshPromise = (async () => {
+      const nextRevision = await webCatalogRevision();
+      if (nextRevision === null || nextRevision === manualCatalogRevision.value) return;
+      try {
+        const { catalog, revision: loadedRevision } = await loadWebCatalogSnapshot(baseUrl);
+        const snapshot = session.value!.snapshot();
+        const available = new Map<string, Set<string>>();
+        for (const entry of [...catalog.entries, ...snapshot.customEntries]) {
+          const ids = available.get(entry.recordId) || new Set<string>();
+          for (const child of entry.subitems) ids.add(child.id);
+          available.set(entry.recordId, ids);
+        }
+        for (const [recordId, record] of Object.entries(snapshot.entries)) {
+          const children = available.get(recordId);
+          if (!children) {
+            delete snapshot.entries[recordId];
+            continue;
+          }
+          record.subitemIds = record.subitemIds.filter((id) => children.has(id));
+        }
+        const index = new CatalogIndex(catalog);
+        session.value = markRaw(new HandbookSession(index, snapshot));
+        manualCatalogRevision.value = loadedRevision ?? nextRevision;
+        revision.value++;
+      } catch (cause) {
+        error.value = String(cause);
+      }
+    })().finally(() => {
+      catalogRefreshPromise = undefined;
+    });
+    return catalogRefreshPromise;
   }
 
   function persist() {
@@ -230,6 +270,8 @@ export const useAppStore = defineStore('app', () => {
     archives,
     dark,
     load,
+    refreshCatalog,
+    manualCatalogRevision,
     commit,
     undo,
     flush,

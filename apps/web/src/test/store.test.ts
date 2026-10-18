@@ -1,13 +1,22 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAppStore } from '../app/store.js';
+import { loadWebCatalogSnapshot, webCatalogRevision } from '../app/catalog-loader.js';
 import { storage } from './setup.js';
-import { airport, dongcheng, station } from './fixtures.js';
+import { airport, catalog, dongcheng, station } from './fixtures.js';
+
+beforeEach(() => {
+  vi.mocked(loadWebCatalogSnapshot).mockReset().mockResolvedValue({ catalog, revision: null });
+  vi.mocked(webCatalogRevision).mockReset().mockResolvedValue(null);
+});
 
 describe('record persistence', () => {
   it('releases shared China boundary data after its final consumer leaves', async () => {
     const store = useAppStore();
     const fetchMock = vi.fn(
-      async () => new Response(JSON.stringify({ geometries: {}, groups: [] }), { status: 200 }),
+      async () =>
+        new Response(JSON.stringify({ schemaVersion: 2, arcs: {}, profiles: [], fixedPaths: [] }), {
+          status: 200,
+        }),
     );
     vi.stubGlobal('fetch', fetchMock);
     const first = await store.acquireChinaBoundaries();
@@ -31,6 +40,31 @@ describe('record persistence', () => {
     await store.flush();
     expect(store.revision).toBe(revision);
     expect(storage.write).not.toHaveBeenCalled();
+  });
+
+  it('refreshes an edited local catalogue once when concurrent checks see a new revision', async () => {
+    const store = useAppStore();
+    await store.load();
+    vi.mocked(loadWebCatalogSnapshot).mockClear();
+    const previousRevision = store.revision;
+    const addedEntry = {
+      ...catalog.entries[0]!,
+      id: 'new-local-point',
+      recordId: 'new-local-point',
+      name: '新点位',
+    };
+    const updatedCatalog = { ...catalog, entries: [...catalog.entries, addedEntry] };
+    vi.mocked(webCatalogRevision).mockResolvedValue(1);
+    vi.mocked(loadWebCatalogSnapshot).mockResolvedValue({ catalog: updatedCatalog, revision: 1 });
+
+    await Promise.all([store.refreshCatalog(), store.refreshCatalog()]);
+
+    expect(loadWebCatalogSnapshot).toHaveBeenCalledOnce();
+    expect(store.session!.index.catalog.entries.some((entry) => entry.id === addedEntry.id)).toBe(
+      true,
+    );
+    expect(store.manualCatalogRevision).toBe(1);
+    expect(store.revision).toBe(previousRevision + 1);
   });
 
   it('saves independent snapshots in order with the previous saved revision', async () => {

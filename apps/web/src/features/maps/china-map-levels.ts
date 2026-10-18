@@ -1,7 +1,14 @@
-import type { Region } from '@fangyu/contracts';
+import type { ChinaBoundarySettings, Region } from '@fangyu/contracts';
 
 /** Provinces whose county map is made up of their districts, not a terminal city face. */
 export const CHINA_MUNICIPAL_CODES = new Set(['110000', '120000', '310000', '500000']);
+
+function chinaHkMoOption(region: Region, regions: ReadonlyMap<string, Region>) {
+  const parent = region.parentId ? regions.get(region.parentId) : undefined;
+  if (parent?.code === '810000') return 'hongKongDistricts' as const;
+  if (parent?.code === '820000') return 'macaoParishes' as const;
+  return undefined;
+}
 
 function activeChildren(region: Region, regions: ReadonlyMap<string, Region>): Region[] {
   return [...regions.values()].filter(
@@ -21,6 +28,21 @@ export function isChinaCountyMapRegion(
   if (region.scope !== 'china' || region.historical) return false;
   if (region.level === 2 || ['810000', '820000'].includes(region.code)) return true;
   return region.level === 1 && activeChildren(region, regions).length === 0;
+}
+
+/** Whether a China region should contribute a face to the county map. */
+export function isChinaCountyMapVisible(
+  region: Region,
+  regions: ReadonlyMap<string, Region>,
+  settings?: ChinaBoundarySettings,
+): boolean {
+  const option = chinaHkMoOption(region, regions);
+  if (option) return settings ? settings[option] : true;
+  if (['810000', '820000'].includes(region.code) && settings) {
+    const optionKey = region.code === '810000' ? 'hongKongDistricts' : 'macaoParishes';
+    return !settings[optionKey];
+  }
+  return isChinaCountyMapRegion(region, regions);
 }
 
 /** A provincial direct county unit must also be visible in the city source. */

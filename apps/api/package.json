@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "node --env-file=.env --import tsx --watch src/main.ts",
+    "dev:admin": "node --import tsx --watch src/admin-main.ts",
     "build": "node scripts/build.mjs",
+    "build:admin": "node scripts/build.mjs src/admin-main.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "migrate": "node --env-file=.env --import tsx scripts/migrate.ts",
     "create-user": "node --env-file=.env --import tsx scripts/create-user.ts",
-    "start": "node --env-file=.env dist/main.js"
+    "start": "node --env-file=.env dist/main.js",
+    "start:admin": "node dist/admin-main.js"
   },
   "dependencies": {
     "@fangyu/contracts": "workspace:*",

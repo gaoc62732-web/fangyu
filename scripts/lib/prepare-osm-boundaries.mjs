@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { setTimeout as pause } from 'node:timers/promises';
 import osmtogeojson from 'osmtogeojson';
 import { Converter } from 'opencc-js';
@@ -32,7 +33,16 @@ async function write(filename, value) {
 }
 const job = await read(process.argv[2]);
 const catalog = await read(path.join(root, 'data/catalog/catalog.json'));
-const regions = catalog.regions.filter((r) => r.scope === 'china');
+const manualManifest = await read(path.join(root, 'data/manual/china/manifest.json'));
+const manualRegionFiles = await Promise.all(
+  manualManifest.files
+    .filter((file) => file.path.startsWith('regions/') && file.path.endsWith('.json'))
+    .map((file) => read(path.join(root, 'data/manual/china', file.path))),
+);
+const manualRegions = manualRegionFiles.flatMap((file) => file.items || []);
+const regions = manualRegions.length
+  ? manualRegions.map((region) => ({ ...region, level: { province: 0, city: 1, county: 2 }[region.level] ?? region.level }))
+  : catalog.regions.filter((r) => r.scope === 'china');
 const regionMap = new Map(regions.map((r) => [r.id, r]));
 const geometryFile = path.join(root, 'data/catalog/china.geo.json');
 const legacy = await read(geometryFile);
@@ -172,7 +182,7 @@ async function applyDataVOverrides(items) {
 }
 const names = (tags) =>
   new Set(
-    ['name', 'name:zh', 'name:zh-Hans', 'official_name', 'alt_name', 'short_name']
+    ['name', 'name:zh', 'name:zh-Hans', 'name:zh-Hant', 'official_name', 'alt_name', 'short_name']
       .flatMap((key) => (tags[key] || '').split(';'))
       // Bilingual Mongolian/Tibetan names sometimes omit a separate name:zh tag.
       .flatMap((name) => [name.trim(), name.match(/^[\p{Script=Han}]+/u)?.[0]])
@@ -230,10 +240,14 @@ if (job.kind === 'province') {
   const codeOf = (f) => f.properties['ref:admin:CN'] || f.properties.division_code;
   for (const r of regions.filter((r) => !r.historical && provinceOf(r) === province.id)) {
     const previous = legacy.filter((g) => g.regionId === r.id && g.level !== 'border');
-    const candidateNames = new Set([r.name, ...r.aliases].map(toSimplified));
+    const candidateNames = new Set([r.name, ...r.aliases, ...(r.boundaryQuery?.queryNames || [])].map(toSimplified));
     const parent = regionMap.get(r.parentId);
     const parents = parent
-      ? features.filter((p) => names(p.properties).has(toSimplified(parent.name)))
+      ? features.filter((p) =>
+          parent.id === province.id
+            ? p.id === `relation/${job.provinceRelation}`
+            : names(p.properties).has(toSimplified(parent.name)),
+        )
       : [];
     const containedByParent = (f) =>
       parents.length === 1 && overlap(bounds(parents[0].geometry), bounds(f.geometry)) > 0.95;
@@ -259,6 +273,8 @@ if (job.kind === 'province') {
       // Some adjacent OSM relations contain a duplicated division_code. A code
       // alone must not override a contradictory Chinese administrative name.
       if (!nameMatches) return false;
+      if (Object.entries(r.boundaryQuery?.requiredTags || {}).some(([key, value]) => f.properties[key] !== value))
+        return false;
       if (
         !['710000', '810000', '820000'].includes(province.code) &&
         Number(f.properties.admin_level) !== (r.level === 1 ? 5 : 6)
@@ -321,26 +337,27 @@ if (job.kind === 'province') {
   }
   Object.assign(report, { province: job.code, name: province.name, mapped, unmatched });
   if (job.apply) {
-    const preserved = ['810000', '820000'].includes(province.code)
-      ? await read(path.join(root, 'data/boundaries/china-osm/retained-hkmo-counties.json'))
-      : [];
-    const preservedById = new Map(preserved.map((g) => [g.id, g]));
-    const replacedRows = legacy.map((r) =>
-      replacements.has(r.regionId) &&
-      r.level !== 'border' &&
-      // HK/MO county rows represent separate subareas tied to the aggregate
-      // province ID. Never replace all of those with the entire province.
-      !(
-        r.regionId === province.id &&
-        r.level === 'county' &&
-        ['810000', '820000'].includes(province.code)
+    if (['810000', '820000'].includes(province.code) && unmatched.length) {
+      await write(job.output + '.report.json', report);
+      throw Error('港澳区划尚未全部唯一匹配，保留当前发布数据。');
+    }
+    const replacedRows = legacy
+      .filter(
+        (r) =>
+          !(
+            ['810000', '820000'].includes(province.code) &&
+            r.regionId === province.id &&
+            r.level === 'county'
+          ),
       )
-        ? { ...r, geometry: replacements.get(r.regionId).geometry }
-        : preservedById.get(r.id) || r,
-    );
+      .map((r) =>
+        replacements.has(r.regionId) && r.level !== 'border'
+          ? { ...r, geometry: replacements.get(r.regionId).geometry }
+          : r,
+      );
     const seen = new Set();
     const output = removeHistoricalGeometry(replacedRows, regions).filter((r) => {
-      if (!replacements.has(r.regionId) || r.level === 'border' || preservedById.has(r.id))
+      if (!replacements.has(r.regionId) || r.level === 'border')
         return true;
       const key = r.regionId + '/' + r.level;
       if (seen.has(key)) return false;
@@ -358,9 +375,40 @@ if (job.kind === 'province') {
         geometry: f.geometry,
       });
     }
+    if (['810000', '820000'].includes(province.code)) {
+      const countyId = `CN${province.code}`;
+      if (!output.some((r) => r.regionId === countyId && r.level === 'county'))
+        output.push({
+          id: `osm-${countyId}-county`,
+          regionId: countyId,
+          level: 'county',
+          geometry: replacements.get(province.id).geometry,
+        });
+    }
     const finalOverrideResult = await applyDataVOverrides(output);
     report.sourceOverrides = finalOverrideResult.overrides;
-    const reviewedOutput = await retainReviewedChinaGeometry(finalOverrideResult.items, regions);
+    let reviewedOutput = await retainReviewedChinaGeometry(finalOverrideResult.items, regions);
+    const provinceRows = reviewedOutput.filter((row) => regionMap.has(row.regionId) && provinceOf(regionMap.get(row.regionId)) === province.id);
+    const overrides = spawnSync(job.python || process.env.FANGYU_PYTHON || path.join(root, '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python'),
+      [path.join(root, 'scripts/lib/apply-boundary-overrides.py')],
+      { input: JSON.stringify(provinceRows), encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+    if (overrides.error) throw overrides.error;
+    if (overrides.status !== 0) throw Error(overrides.stderr || '本地边界覆盖应用失败。');
+    const overrideResult = JSON.parse(overrides.stdout);
+    const overriddenRows = new Map(overrideResult.rows.map((row) => [row.id, row]));
+    reviewedOutput = reviewedOutput.map((row) => overriddenRows.get(row.id) || row);
+    report.boundaryOverrides = overrideResult.provenance;
+    if (['810000', '820000'].includes(province.code)) {
+      const clipped = spawnSync(job.python || process.env.FANGYU_PYTHON || path.join(root, '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python'),
+        [path.join(root, 'scripts/lib/clip-china-land.py')],
+        { input: JSON.stringify(reviewedOutput.filter((row) => regionMap.has(row.regionId) && provinceOf(regionMap.get(row.regionId)) === province.id)), encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+      if (clipped.error) throw clipped.error;
+      if (clipped.status !== 0) throw Error(clipped.stderr || '港澳边界裁海失败。');
+      const result = JSON.parse(clipped.stdout);
+      const clippedRows = new Map(result.rows.map((row) => [row.id, row]));
+      reviewedOutput = reviewedOutput.map((row) => clippedRows.get(row.id) || row);
+      report.landClip = result.provenance;
+    }
     report.geometrySha256 = await write(geometryFile, reviewedOutput);
     await recordReviewedChinaReimport(report.geometrySha256);
     report.applied = true;

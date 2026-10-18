@@ -137,13 +137,53 @@ const sourceNames = [
   'manual/china/manifest.json',
   ...(chinaManifest.files || []).map((file) => 'manual/china/' + file.path),
 ];
-const boundaryOptions = await fs.readFile(
-  path.join(root, 'data/manual/china/rules/boundary-assets.json'),
+const sharedBoundaryArcs = JSON.parse(
+  await fs.readFile(path.join(root, 'data/manual/china/boundaries/boundary-arcs.json'), 'utf8'),
 );
-// The policy asset has five independently rendered rule groups. Keep this
-// count here to avoid parsing its large geometry bank during web preparation.
-const boundaryOptionGroups = boundaryOptions ? 5 : 0;
-if (boundaryOptions) sourceNames.push('manual/china/rules/boundary-assets.json');
+const sharedBoundaryPaths = JSON.parse(
+  await fs.readFile(path.join(root, 'data/manual/china/boundaries/boundary-paths.json'), 'utf8'),
+);
+const sharedBoundaryOptions = JSON.parse(
+  await fs.readFile(
+    path.join(root, 'data/manual/china/boundaries/profiles/boundary-profiles.json'),
+    'utf8',
+  ),
+);
+const boundaryOptions = Buffer.from(
+  JSON.stringify({
+    schemaVersion: 2,
+    arcs: Object.fromEntries(
+      (sharedBoundaryArcs.arcs || []).map((arc) => [arc.id, arc.geometry]),
+    ),
+    profiles: (sharedBoundaryPaths.profiles || []).map((group) => ({
+      keys: group.keys,
+      regionIds: group.regionIds,
+      variants: Object.fromEntries(
+        Object.entries(group.variants || {}).map(([key, rows]) => [
+          key,
+          rows.map((row) => ({
+            regionId: row.regionId,
+            level: row.level,
+            name: row.name,
+            bounds: row.bounds,
+            geometryPath: row.geometryPath,
+          })),
+        ]),
+      ),
+    })),
+    fixedPaths: (sharedBoundaryPaths.fixedPaths || []).map((path) => ({
+      ...path,
+      settingKeys: path.id === 'china-tanggula-nominal-line' ? ['tanggulaTibet'] : [],
+    })),
+    profile: sharedBoundaryOptions.profiles?.[0] || null,
+  }),
+);
+const boundaryOptionGroups = sharedBoundaryPaths.profiles?.length || 0;
+sourceNames.push(
+  'manual/china/boundaries/boundary-arcs.json',
+  'manual/china/boundaries/boundary-paths.json',
+  'manual/china/boundaries/profiles/boundary-profiles.json',
+);
 const vietnamMaskBytes = await fs.readFile(
   path.join(root, 'data/extensions/research/south-china-sea-interaction-mask.json'),
 );
@@ -203,6 +243,7 @@ if (
 }
 const hash = createHash('sha256').update(await fs.readFile(fileURLToPath(import.meta.url)));
 hash.update(await fs.readFile(new URL('./lib/pmtiles-writer.mjs', import.meta.url)));
+hash.update(await fs.readFile(new URL('./lib/assemble-manual-china.mjs', import.meta.url)));
 hash.update(vietnamMaskBytes);
 hash.update(registrySource);
 hash.update(JSON.stringify(sourceNames));
@@ -457,13 +498,16 @@ for (const scope of scopes) {
                     : level === 'city'
                       ? 6
                       : 5;
+    // Keep the published zoom ceiling, but generate one extra internal level
+    // so the highest shipped China zoom still receives light simplification.
+    const indexMaxZoom = scope === 'china' ? maxzoom + 1 : maxzoom;
     const bounds = selected.reduce((b, f) => merge(b, bbox(f.geometry)), null);
     const index = geojsonvt(
       { type: 'FeatureCollection', features: selected },
       {
-        maxZoom: maxzoom,
-        indexMaxZoom: Math.min(5, maxzoom),
-        tolerance: scope === 'china' ? 1 : 2,
+        maxZoom: indexMaxZoom,
+        indexMaxZoom: Math.min(5, indexMaxZoom),
+        tolerance: scope === 'china' ? 4 : 2,
         extent: scope === 'china' ? 8192 : 4096,
         buffer: 64,
         promoteId: 'regionId',
@@ -483,7 +527,12 @@ for (const scope of scopes) {
         const tile = index.getTile(z, x, y);
         if (!tile?.numPoints) return;
         if (tile.features.length)
-          archive.add(z, x, y, vtpbf.fromGeojsonVt({ regions: tile }, { extent: 8192 }));
+          archive.add(
+            z,
+            x,
+            y,
+            vtpbf.fromGeojsonVt({ regions: tile }, { extent: 8192, version: 2 }),
+          );
         if (z < maxzoom)
           for (let dx = 0; dx < 2; dx++)
             for (let dy = 0; dy < 2; dy++) visit(z + 1, x * 2 + dx, y * 2 + dy);
@@ -499,6 +548,7 @@ for (const scope of scopes) {
           vector_layers: [
             {
               id: 'regions',
+              version: 2,
               fields: { regionId: 'String', level: 'String', name: 'String' },
               minzoom: 0,
               maxzoom,
@@ -525,7 +575,10 @@ for (const scope of scopes) {
         await fs.mkdir(folder, { recursive: true });
         for (let y = nw[1]; y <= se[1]; y++) {
           const tile = index.getTile(z, x, y);
-          const bytes = vtpbf.fromGeojsonVt({ regions: tile || { features: [] } });
+          const bytes = vtpbf.fromGeojsonVt(
+            { regions: tile || { features: [] } },
+            { version: 2 },
+          );
           await fs.writeFile(path.join(folder, y + '.pbf'), bytes);
           count++;
         }

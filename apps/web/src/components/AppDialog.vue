@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, useId } from 'vue';
-defineProps<{ title: string }>();
+defineProps<{ title: string; panelClass?: string }>();
 const emit = defineEmits<{ close: [] }>();
 const titleId = useId();
 const panel = ref<HTMLDialogElement>();
@@ -16,6 +16,7 @@ onUnmounted(() => previous?.focus());
     ><dialog
       ref="panel"
       class="app-dialog achievement-ui"
+      :class="panelClass"
       :aria-labelledby="titleId"
       @cancel.prevent="emit('close')"
       @click="

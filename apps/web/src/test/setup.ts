@@ -17,6 +17,8 @@ vi.mock('../app/data-access.js', () => ({ createAppDataAccess: () => storageMock
 vi.mock('../app/catalog-loader.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../app/catalog-loader.js')>()),
   loadWebCatalog: async () => catalog,
+  loadWebCatalogSnapshot: vi.fn(async () => ({ catalog, revision: null })),
+  webCatalogRevision: vi.fn(async () => null),
 }));
 
 beforeEach(() => {

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { fileURLToPath } from 'node:url';
 import { createReadStream, existsSync, readFileSync } from 'node:fs';
@@ -28,44 +28,54 @@ const buildInfo = {
 
 const localRecords = fileURLToPath(new URL('../../.local-records/record.json', import.meta.url));
 
-export default defineConfig({
-  define: { __FANGYU_BUILD__: JSON.stringify(buildInfo) },
-  plugins: [
-    {
-      name: 'fangyu-build-identity',
-      generateBundle() {
-        this.emitFile({
-          type: 'asset',
-          fileName: 'build-info.json',
-          source: JSON.stringify(buildInfo),
-        });
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, fileURLToPath(new URL('.', import.meta.url)), '');
+  const apiTarget = env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:3000';
+  const adminApiTarget = env.VITE_ADMIN_API_PROXY_TARGET || 'http://127.0.0.1:3001';
+  return {
+    define: { __FANGYU_BUILD__: JSON.stringify(buildInfo) },
+    plugins: [
+      {
+        name: 'fangyu-build-identity',
+        generateBundle() {
+          this.emitFile({
+            type: 'asset',
+            fileName: 'build-info.json',
+            source: JSON.stringify(buildInfo),
+          });
+        },
+      },
+      vue(),
+      {
+        name: 'local-records-bootstrap',
+        apply: 'serve',
+        configureServer(server) {
+          server.middlewares.use('/local-records.json', (request, response, next) => {
+            if (
+              !['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(request.socket.localAddress || '')
+            ) {
+              return next();
+            }
+            if (!existsSync(localRecords)) {
+              response.statusCode = 404;
+              response.end();
+              return;
+            }
+            response.setHeader('Content-Type', 'application/json; charset=utf-8');
+            response.setHeader('Cache-Control', 'no-store');
+            createReadStream(localRecords).pipe(response);
+          });
+        },
+      },
+    ],
+    publicDir: fileURLToPath(new URL('../../data/generated/web', import.meta.url)),
+    base: env.VITE_PAGES_BASE || '/',
+    server: {
+      proxy: {
+        '/api/v1/admin': adminApiTarget,
+        '/api': apiTarget,
       },
     },
-    vue(),
-    {
-      name: 'local-records-bootstrap',
-      apply: 'serve',
-      configureServer(server) {
-        server.middlewares.use('/local-records.json', (request, response, next) => {
-          if (
-            !['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(request.socket.localAddress || '')
-          ) {
-            return next();
-          }
-          if (!existsSync(localRecords)) {
-            response.statusCode = 404;
-            response.end();
-            return;
-          }
-          response.setHeader('Content-Type', 'application/json; charset=utf-8');
-          response.setHeader('Cache-Control', 'no-store');
-          createReadStream(localRecords).pipe(response);
-        });
-      },
-    },
-  ],
-  publicDir: fileURLToPath(new URL('../../data/generated/web', import.meta.url)),
-  base: process.env.VITE_PAGES_BASE || '/',
-  server: { proxy: { '/api': 'http://127.0.0.1:3000' } },
-  build: { sourcemap: false, manifest: true },
+    build: { sourcemap: false, manifest: true },
+  };
 });

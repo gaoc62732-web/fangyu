@@ -3,12 +3,14 @@ import path from 'node:path';
 
 const json = async (file) => JSON.parse(await readFile(file, 'utf8'));
 const levelNumber = { province: 0, city: 1, county: 2 };
+const displayableLocationNote = (value) =>
+  typeof value === 'string' && value.trim() === '管理页清除了位置。' ? '' : value;
 
 export async function assembleCatalog(root) {
   const catalogPath = path.join(root, 'data/catalog/catalog.json');
   const manual = path.join(root, 'data/manual/china');
   const base = await json(catalogPath);
-  await json(path.join(manual, 'manifest.json'));
+  const manualManifest = await json(path.join(manual, 'manifest.json'));
   const regionIndex = await json(path.join(manual, 'regions.json'));
   const regionFiles = await Promise.all(
     regionIndex.files.map((file) => json(path.join(manual, file))),
@@ -39,7 +41,20 @@ export async function assembleCatalog(root) {
     const subitems = (item.componentIds || [])
       .map((id) => components.get(id))
       .filter(Boolean)
-      .map((component) => ({ id: component.id, name: component.name }));
+      .map((component) => {
+        const place = component.placeId ? places.get(component.placeId) : undefined;
+        const position = place?.location?.position;
+        return {
+          id: component.id,
+          name: component.name,
+          regionIds: component.regionIds || [],
+          coordinates: position && Number.isFinite(position.longitude) && Number.isFinite(position.latitude)
+            ? [position.longitude, position.latitude]
+            : null,
+          description: component.details?.description || '',
+          attributes: component.attributes || {},
+        };
+      });
     const coordinates = attributes.coordinates || place?.location?.position
       ? attributes.coordinates || [place.location.position.longitude, place.location.position.latitude]
       : null;
@@ -49,6 +64,7 @@ export async function assembleCatalog(root) {
       : undefined;
     return {
       ...attributes,
+      attributes,
       id: item.id,
       recordId: item.recordId || item.id,
       scope: 'china',
@@ -68,7 +84,9 @@ export async function assembleCatalog(root) {
             coordinateLicense: attributes.coordinateLicense || coordinateSource?.license,
             coordinateLicenseUrl: attributes.coordinateLicenseUrl || coordinateSource?.licenseUrl,
             coordinateAttribution: attributes.coordinateAttribution || coordinateSource?.attribution,
-            coordinatePrecisionNote: attributes.coordinatePrecisionNote || place.location.note,
+            coordinatePrecisionNote: displayableLocationNote(
+              attributes.coordinatePrecisionNote || place.location.note,
+            ),
             visitorEntranceVerified:
               attributes.visitorEntranceVerified ?? place.location.visitorEntranceVerified,
           }
@@ -119,11 +137,18 @@ export async function assembleCatalog(root) {
   return {
     ...base,
     version: `${base.version}+manual-china`,
+    // Splitting the source files did not change personal record identities.
+    compatibleCatalogVersions: [...new Set([
+      ...(base.compatibleCatalogVersions || []),
+      base.version,
+      manualManifest.sourceCatalogVersion,
+      `${manualManifest.sourceCatalogVersion}+manual-china`,
+    ].filter(Boolean))],
     regions: [...base.regions.filter((region) => !regionIds.has(region.id) && region.scope !== 'china'), ...regions],
     entries: [...baseEntries, ...entries],
     categories: [...new Map([
       ...base.categories.filter((category) => usedBaseCategories.has(category.id)),
-      ...categoryData.items.map(({ id, name }) => ({ id, name })),
+      ...categoryData.items.map(({ id, name, fields }) => ({ id, name, ...(fields ? { fields } : {}) })),
     ].map((category) => [category.id, category])).values()],
     sources: allSources,
     achievements: {

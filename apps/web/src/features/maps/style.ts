@@ -80,16 +80,6 @@ export function createMapStyle(
     };
     labels.push({ id: 'labels', source: 'labels', type: 'raster' });
   }
-  if (pointMode) {
-    layers.push(...labels, {
-      id: 'point-basemap-mask',
-      type: 'background',
-      paint: {
-        'background-color': POINT_MAP_APPEARANCE.maskColor,
-        'background-opacity': POINT_MAP_APPEARANCE.maskOpacity,
-      },
-    });
-  }
   for (const layer of manifest.scopes[scope].layers) {
     sources[layer.level] = {
       type: 'vector',
@@ -117,7 +107,7 @@ export function createMapStyle(
         layout: { visibility },
         paint: {
           'fill-color': ['coalesce', ['feature-state', 'fill'], '#f5f8f3'],
-          'fill-opacity': pointMode ? 0 : boundaryFillOpacity(provider),
+          'fill-opacity': boundaryFillOpacity(provider),
         },
       });
     layers.push({
@@ -134,61 +124,33 @@ export function createMapStyle(
                 ? [
                     'all',
                     ['==', ['geometry-type'], 'LineString'],
-                    ['in', ['get', 'boundaryKind'], ['literal', ['land', 'maritime-dash']]],
+                    ['==', ['get', 'boundaryKind'], 'land'],
                   ]
                 : ['==', ['geometry-type'], 'LineString'],
           }
         : {}),
       layout: { visibility, 'line-join': 'round', 'line-cap': 'round' },
       paint: {
-        'line-color': pointMode
-          ? layer.level === 'border'
-            ? POINT_MAP_APPEARANCE.borderColor
-            : POINT_MAP_APPEARANCE.boundaryColor
-          : [
-              'case',
-              ['boolean', ['feature-state', 'selected'], false],
-              '#cf762b',
-              ['boolean', ['feature-state', 'hover'], false],
-              '#548774',
-              layer.level === 'border' ? '#263f45' : '#8ca49d',
-            ],
-        'line-opacity': pointMode ? POINT_MAP_APPEARANCE.boundaryOpacity : 1,
-        'line-width': pointMode
-          ? layer.level === 'border'
-            ? 1.4
-            : layer.level === 'county'
-              ? 0.5
-              : 1
-          : [
-              'case',
-              ['boolean', ['feature-state', 'selected'], false],
-              2,
-              ['boolean', ['feature-state', 'hover'], false],
-              1.5,
-              layer.level === 'border' ? 2.6 : layer.level === 'county' ? 0.5 : 1,
-            ],
+        'line-color': [
+          'case',
+          ['boolean', ['feature-state', 'selected'], false],
+          '#cf762b',
+          ['boolean', ['feature-state', 'hover'], false],
+          '#548774',
+          layer.level === 'border' ? '#263f45' : '#8ca49d',
+        ],
+        'line-opacity': 1,
+        'line-width': [
+          'case',
+          ['boolean', ['feature-state', 'selected'], false],
+          2,
+          ['boolean', ['feature-state', 'hover'], false],
+          1.5,
+          layer.level === 'border' ? 2.6 : layer.level === 'county' ? 0.5 : 1,
+        ],
       },
     });
   }
-  if (pointMode) {
-    // Separate from the boundary level: county associations stay county-sized
-    // even while the user is viewing province outlines.
-    for (const layer of manifest.scopes[scope].layers.filter((l) => l.level !== 'border'))
-      layers.push({
-        id: layer.level + '-point-highlight',
-        type: 'fill',
-        source: layer.level,
-        'source-layer': 'regions',
-        filter: ['in', ['get', 'regionId'], ['literal', []]],
-        layout: { visibility: 'none' },
-        paint: {
-          'fill-color': POINT_MAP_APPEARANCE.highlightColor,
-          'fill-opacity': POINT_MAP_APPEARANCE.highlightOpacity,
-          'fill-antialias': false,
-        },
-      });
-  } else layers.push(...labels);
   if (scope === 'china' && manifest.scopes.china.boundaryOptions) {
     const administrativeLayers = layers.filter(
       (layer) => 'source' in layer && ['province', 'city', 'county'].includes(String(layer.source)),
@@ -226,13 +188,91 @@ export function createMapStyle(
       filter: ['==', ['get', 'boundaryKind'], 'tanggula-nominal'],
       layout: { visibility: 'visible', 'line-join': 'round', 'line-cap': 'round' },
       paint: {
-        'line-color': pointMode ? POINT_MAP_APPEARANCE.boundaryColor : '#8ca49d',
-        'line-opacity': pointMode ? POINT_MAP_APPEARANCE.boundaryOpacity : 1,
+        'line-color': '#8ca49d',
+        'line-opacity': 1,
         'line-width': 1,
         'line-dasharray': [8, 5],
       },
     });
+    layers.push({
+      id: 'china-options-maritime-dash-line',
+      type: 'line',
+      source: 'china-options-lines',
+      filter: ['==', ['get', 'boundaryKind'], 'maritime-dash'],
+      layout: { visibility: 'visible', 'line-join': 'round', 'line-cap': 'round' },
+      paint: {
+        'line-color': '#263f45',
+        'line-opacity': 1,
+        'line-width': 2.2,
+        'line-dasharray': [1, 2],
+      },
+    });
   }
+  // Keep the veil above administrative fills and boundaries, but below labels.
+  sources['point-basemap-mask'] = {
+    type: 'geojson',
+    data: {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [-180, -85],
+            [180, -85],
+            [180, 85],
+            [-180, 85],
+            [-180, -85],
+          ],
+        ],
+      },
+    },
+  };
+  layers.push({
+    id: 'point-basemap-mask',
+    type: 'fill',
+    source: 'point-basemap-mask',
+    layout: { visibility: pointMode ? 'visible' : 'none' },
+    paint: {
+      'fill-color': POINT_MAP_APPEARANCE.maskColor,
+      'fill-opacity': POINT_MAP_APPEARANCE.maskOpacity,
+    },
+  });
+  // Both modes' layers stay in one style so route changes never call setStyle.
+  layers.push(...labels);
+  for (const layer of manifest.scopes[scope].layers.filter((l) => l.level !== 'border'))
+    layers.push({
+      id: layer.level + '-point-highlight',
+      type: 'fill',
+      source: layer.level,
+      'source-layer': 'regions',
+      filter: ['in', ['get', 'regionId'], ['literal', []]],
+      layout: { visibility: 'none' },
+      paint: {
+        'fill-color': POINT_MAP_APPEARANCE.highlightColor,
+        'fill-opacity': POINT_MAP_APPEARANCE.highlightOpacity,
+        'fill-antialias': false,
+      },
+    });
+  if (scope === 'china' && manifest.scopes.china.boundaryOptions)
+    for (let index = 0; index < (manifest.scopes.china.boundaryOptionGroups || 0); index++)
+      for (const layer of manifest.scopes[scope].layers.filter((l) => l.level !== 'border'))
+        layers.push({
+          id: chinaBoundaryLayerId(index, layer.level + '-point-highlight'),
+          type: 'fill',
+          source: chinaBoundarySourceId(index),
+          filter: [
+            'all',
+            ['==', ['get', 'level'], layer.level],
+            ['in', ['get', 'regionId'], ['literal', []]],
+          ],
+          layout: { visibility: 'none' },
+          paint: {
+            'fill-color': POINT_MAP_APPEARANCE.highlightColor,
+            'fill-opacity': POINT_MAP_APPEARANCE.highlightOpacity,
+            'fill-antialias': false,
+          },
+        });
   sources.points = { type: 'geojson', data: { type: 'FeatureCollection', features: [] } };
   layers.push({
     id: 'points',

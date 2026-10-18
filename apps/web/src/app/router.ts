@@ -39,6 +39,7 @@ export const routes: RouteRecordRaw[] = [
   { path: '/achievements', component: () => import('../pages/AchievementsPage.vue') },
   { path: '/imports', component: () => import('../pages/ImportsPage.vue') },
   { path: '/help', component: () => import('../pages/HelpPage.vue') },
+  { path: '/admin/china/points', component: () => import('../pages/AdminPointsPage.vue') },
 ];
 
 export const router = createRouter({ history: createWebHashHistory(), routes });

@@ -37,11 +37,16 @@ export interface Region {
   legacyIds?: string[];
   cityTitles?: CityTitle[];
   inheritedCityTitles?: CityTitle[];
+  notices?: string[];
 }
 
 export interface Subitem {
   id: string;
   name: string;
+  regionIds?: string[];
+  coordinates?: [number, number] | null;
+  description?: string;
+  attributes?: Record<string, unknown>;
 }
 
 export interface CoordinateMatchEvidence {
@@ -139,6 +144,7 @@ export interface CatalogEntry extends CoordinateProvenance {
   scopeEvidence?: unknown;
   scopeNotes?: string | string[];
   heritageMembershipStatus?: 'inscribed' | 'excluded' | 'superseded';
+  attributes?: Record<string, unknown>;
 }
 
 export interface GeometryFeature {
@@ -341,7 +347,11 @@ export interface Catalog {
     toEntryId: string;
     kind: 'same-place' | 'contains' | 'overlaps';
   }[];
-  categories: { id: string; name: string }[];
+  categories: {
+    id: string;
+    name: string;
+    fields?: { key: string; label: string }[];
+  }[];
   regions: Region[];
   entries: CatalogEntry[];
   achievements: {

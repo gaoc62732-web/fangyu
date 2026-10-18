@@ -12,7 +12,7 @@ import { VISITED_MARKER_LAYER_IDS } from './style.js';
 import { regionInteractionPolicy } from './sea-region-interaction.js';
 import type { TiledMapProps } from './types.js';
 import type { useMapScene } from './use-map-scene.js';
-import { isChinaCountyMapRegion } from './china-map-levels.js';
+import { isChinaCountyMapVisible } from './china-map-levels.js';
 
 interface InteractionResources {
   map: () => LibreMap | undefined;
@@ -36,7 +36,7 @@ export function useMapInteractions(
       index.resolveRegion(id) === id &&
       (props.scope !== 'china' ||
         level.value !== 'county' ||
-        isChinaCountyMapRegion(region, index.regions))
+        isChinaCountyMapVisible(region, index.regions, store.chinaBoundarySettings))
     );
   }
   let visitedSelectionRequest = 0;
