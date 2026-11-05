@@ -16,6 +16,13 @@ dist/
 coverage/
 apps/*/generated/
 data
+# Keep the small public snapshot manifest in Git so a fresh clone can restore ignored data.
+!data/
+data/*
+!data/snapshots/
+data/snapshots/*
+!data/snapshots/current.json
+!data/snapshots/groups.json
 .local-records/
 *.local
 .env

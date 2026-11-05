@@ -20,6 +20,14 @@ const paths: Record<string, string> = {
   search: 'm16 16 5 5M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14',
   download: 'M12 3v12m0 0 5-5m-5 5-5-5M5 21h14',
   info: 'M12 10v6m0-10h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z',
+  'world-heritage': 'M9.4 20a8.5 8.5 0 1 1 5.2 0M12 5.1l4.7 5.1-3.2 3.3v6.4M12 5.1l-4.7 5.1 3.2 3.3v6.4',
+  heritage: 'm3 9 9-5 9 5M4 10h16M6 10v9m6-9v9m6-9v9M3 20h18',
+  airport: 'm21 3-7 18-3-8-8-3L21 3Zm0 0L11 13',
+  metro: 'M8 20h8m-9 1 2-3m8 3-2-3M7 3h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm-2 9h14M9 6h6M8 15h.01M16 15h.01',
+  railway: 'M8 3h8a3 3 0 0 1 3 3v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a3 3 0 0 1 3-3Zm-3 8h14M12 3v8M8 15h.01M16 15h.01M9 18l-3 3m9-3 3 3M8 21h8',
+  stadium: 'M21 9c0-3-4-5-9-5S3 6 3 9v6c0 3 4 5 9 5s9-2 9-5V9ZM3 9c0 3 4 5 9 5s9-2 9-5M7 13v6m10-6v6M9 8h6v3H9z',
+  city: 'M3 21h18M5 21V10h6v11m0-15h8v15M4 10l4-5 4 5M14 9h2m-2 4h2m-2 4h2M7 13h1m-1 4h1',
+  mountain: 'm2 20 7-14 4 8 3-5 6 11H2Zm4-8 3 2 2-2',
 };
 </script>
 <template>

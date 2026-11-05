@@ -6,10 +6,13 @@ export interface SharedMapView {
   mode: 'regions' | 'points';
   scope: Scope;
   selected: string;
+  selectionMuted: boolean;
   level: MapLevel;
   category: string;
   points: EntryView[];
+  highlightedPointIds?: string[];
   focus: [number, number] | null;
+  focusPoints?: [number, number][] | null;
   initialCamera?: { center: [number, number]; zoom: number } | undefined;
   previewRegions?: string[] | undefined;
   rightInset: string;
@@ -35,6 +38,7 @@ export function useSharedMap(): SharedMapContext {
         mode: 'regions',
         scope: 'china',
         selected: '',
+        selectionMuted: false,
         level: 'county',
         category: '',
         points: [],

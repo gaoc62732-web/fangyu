@@ -45,6 +45,7 @@ export interface Subitem {
   name: string;
   regionIds?: string[];
   coordinates?: [number, number] | null;
+  locationNote?: string;
   description?: string;
   attributes?: Record<string, unknown>;
 }
@@ -88,6 +89,7 @@ export interface CoordinateProvenance {
 }
 
 export interface CatalogEntry extends CoordinateProvenance {
+  locationNote?: string;
   nameZh?: string;
   nameEn?: string;
   nameTranslationNote?: string;

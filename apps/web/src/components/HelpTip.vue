@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, useId, watch } from 'vue';
 
-defineProps<{ text: string }>();
+defineProps<{ text: string; label?: string }>();
 const id = useId();
 const button = ref<HTMLButtonElement>();
 const tooltip = ref<HTMLElement>();
@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
       ref="button"
       type="button"
       class="help-tip-button"
-      aria-label="帮助说明"
+      :aria-label="label || '帮助说明'"
       :aria-describedby="open ? id : undefined"
       @click="toggle"
     >
@@ -150,6 +150,7 @@ onBeforeUnmount(() => {
   font-size: 12px;
   font-weight: 400;
   line-height: 1.6;
+  white-space: pre-line;
   pointer-events: none;
 }
 </style>

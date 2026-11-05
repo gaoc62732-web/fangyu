@@ -1,7 +1,7 @@
 import { computed, ref, type Ref } from 'vue';
 import { VISIT_LABELS } from '@fangyu/contracts';
 import { visitedMapMarkers, drawablePoint } from '@fangyu/domain';
-import type { MapScene, MapHover } from '@fangyu/map-renderer';
+import { pointVisitColors, type MapScene, type MapHover } from '@fangyu/map-renderer';
 import { useAppStore } from '../../app/store.js';
 import { validCoordinates } from './map-coordinates.js';
 import { regionInteractionPolicy } from './sea-region-interaction.js';
@@ -103,7 +103,7 @@ export function useMapScene(
     props.pointMode
       ? previewTargets.value.includes(id)
       : Boolean(
-          (props.previewRegions !== undefined ? props.previewRegions : [props.selected]).some(
+          (props.previewRegions?.length ? props.previewRegions : [props.selected]).some(
             (target) =>
               target &&
               (store.session!.index.belongsTo(id, target) ||
@@ -170,6 +170,7 @@ export function useMapScene(
         : simple.value;
     return {
       pointExploration: Boolean(props.pointMode),
+      selectionMuted: Boolean(props.selectionMuted),
       world: props.scope === 'world',
       dark: store.dark,
       allowsRegionHit: regionInteractionPolicy(props.scope),
@@ -222,12 +223,14 @@ export function useMapScene(
             dashed: f.properties?.boundaryKind === 'tanggula-nominal',
           };
         }),
+      pointColors: pointVisitColors(store.colors),
       points: [
         ...(props.pointMode && !includePointOverlay ? [] : visiblePoints.value).map((e) => ({
           id: e.id,
           name: e.name,
           coords: e.coordinates!,
-          marked: e.visited,
+          marked: e.checked,
+          partial: e.partial,
         })),
         ...visitedResult.value.markers.map((marker) => ({
           id: marker.id,
@@ -246,7 +249,7 @@ export function useMapScene(
         type: 'Feature',
         id: e.id,
         geometry: { type: 'Point', coordinates: e.coordinates! },
-        properties: { id: e.id, name: e.name, marked: e.visited },
+        properties: { id: e.id, name: e.name, marked: e.checked, partial: e.partial },
       })),
     };
   }

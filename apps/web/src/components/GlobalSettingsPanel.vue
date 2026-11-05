@@ -43,15 +43,6 @@ type PointSetting = {
 
 const pointSettings: PointSetting[] = [
   {
-    key: 'children',
-    label: '组成地点',
-    help: '项目包含多个可单独记录的组成地点时，决定是否同步点亮。比如，世界文化遗产大运河包含八十多个子项目，则选择自动点亮时会将所有子项目点亮。',
-    options: [
-      { value: 'ask', label: '每次选择要点亮的组成地点' },
-      { value: 'auto', label: '自动点亮全部组成地点' },
-    ],
-  },
-  {
     key: 'identities',
     label: '多个类别',
     help: '同一项目属于多个类别时，决定是否同步点亮其他类别中的该项目。比如，良渚古城遗址同属“世界文化遗产”和“全国重点文物保护单位”类别，则可手动选择仅点亮其中一个类别或者自动点亮所有类别。',

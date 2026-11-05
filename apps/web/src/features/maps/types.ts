@@ -52,10 +52,13 @@ export function mapAssetUrl(base: string, resource: string, origin: string) {
 export interface TiledMapProps {
   scope: Scope;
   selected: string;
+  selectionMuted?: boolean;
   level: MapLevel;
   category: string;
   points?: EntryView[] | undefined;
+  highlightedPointIds?: string[] | undefined;
   focus?: [number, number] | null | undefined;
+  focusPoints?: [number, number][] | null | undefined;
   pointMode?: boolean;
   regionMode?: boolean;
   initialCamera?: { center: [number, number]; zoom: number } | undefined;

@@ -375,7 +375,7 @@ export class CanvasMapRenderer {
       this.scene.pointExploration ? 512 / 360 : this.fullScale * 0.75,
       Math.min(
         this.scene.pointExploration
-          ? (512 * Math.pow(2, 15)) / 360
+          ? (512 * Math.pow(2, 20)) / 360
           : this.fullScale * (this.scene.world ? 20 : 36),
         this.scale * factor,
       ),
@@ -403,6 +403,23 @@ export class CanvasMapRenderer {
     const [x, y] = this.project(camera.center);
     this.x = this.width / 2 - x * this.scale;
     this.y = this.height / 2 - y * this.scale;
+    this.draw();
+  }
+  fitCoordinates(coordinates: [number, number][], maxZoom = 17, padding = 64) {
+    if (!coordinates.length) return;
+    this.stop();
+    const bounds = coordinates.map((point) => this.project(point)).reduce<Bounds>(
+      (box, point) => [Math.min(box[0], point[0]), Math.min(box[1], point[1]),
+        Math.max(box[2], point[0]), Math.max(box[3], point[1])],
+      [Infinity, Infinity, -Infinity, -Infinity],
+    );
+    this.scale = Math.min(
+      (512 * Math.pow(2, maxZoom)) / 360,
+      Math.max(1, this.width - padding * 2) / (bounds[2] - bounds[0] || 1e-6),
+      Math.max(1, this.height - padding * 2) / (bounds[3] - bounds[1] || 1e-6),
+    );
+    this.x = this.width / 2 - (bounds[0] + bounds[2]) / 2 * this.scale;
+    this.y = this.height / 2 - (bounds[1] + bounds[3]) / 2 * this.scale;
     this.draw();
   }
   focusPoints(ids: readonly string[], maxRelativeZoom = 24) {
@@ -533,7 +550,11 @@ export class CanvasMapRenderer {
         ctx.fillStyle = f.fill;
         ctx.fill(this.pathFor(f), 'evenodd');
       }
-      const countryOutline = ['LineString', 'MultiLineString'].includes(f.geometry.type);
+      // The Tangula nominal line is a reference administrative boundary. It
+      // is dashed, but must retain the ordinary thin boundary weight rather
+      // than being promoted to the national-outline width.
+      const countryOutline =
+        ['LineString', 'MultiLineString'].includes(f.geometry.type) && !f.dashed;
       ctx.setLineDash(f.dashed ? [10 / this.scale, 6 / this.scale] : []);
       if (this.scene.pointExploration) {
         ctx.strokeStyle = countryOutline
@@ -549,11 +570,23 @@ export class CanvasMapRenderer {
         ? this.scene.dark
           ? '#e2d7ad'
           : '#263f45'
-        : f.selected
-          ? '#cf762b'
-          : boundaryColor;
-      ctx.lineWidth = (countryOutline ? 2.6 : f.selected ? 2 : boundaryWidth) / this.scale;
+        : boundaryColor;
+      ctx.lineWidth = (countryOutline ? 2.6 : boundaryWidth) / this.scale;
       ctx.stroke(this.pathFor(f));
+    }
+    if (!this.scene.pointExploration) {
+      // Paint selected outlines last so an adjacent polygon cannot leave its
+      // thinner shared edge on top of the highlight.
+      ctx.save();
+      ctx.setLineDash([]);
+      ctx.strokeStyle = this.scene.selectionMuted ? '#c18a5d' : '#cf762b';
+      ctx.globalAlpha = this.scene.selectionMuted ? 0.8 : 1;
+      ctx.lineWidth = (this.scene.selectionMuted ? 1.75 : 2) / this.scale;
+      for (const f of this.visibleShapes)
+        if (f.selected && f.boundary !== false && f.geometry.type.includes('Polygon'))
+          ctx.stroke(this.pathFor(f));
+      ctx.globalAlpha = 1;
+      ctx.restore();
     }
     ctx.setLineDash([]);
     for (const { point, x, y } of this.projectedPoints) {
@@ -568,7 +601,9 @@ export class CanvasMapRenderer {
       ) {
         ctx.beginPath();
         ctx.arc(x, y, 3.5 / this.scale, 0, Math.PI * 2);
-        ctx.fillStyle = point.marked ? '#d16932' : '#427a9d';
+        const pointColors = this.scene.pointColors || POINT_MAP_APPEARANCE;
+        ctx.fillStyle = point.marked ? pointColors.visitedColor
+          : point.partial ? pointColors.partialColor : pointColors.unvisitedColor;
         ctx.fill();
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 0.7 / this.scale;

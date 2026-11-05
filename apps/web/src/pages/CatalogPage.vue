@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { SCOPE_CONFIGS, getScopeConfig, type Scope } from '@fangyu/contracts';
+import { SCOPE_CONFIGS, getScopeConfig, type CatalogEntry, type Scope } from '@fangyu/contracts';
+import { childVisited, pointView } from '@fangyu/domain';
 import { useAppStore } from '../app/store.js';
 import MapSurface from '../components/MapSurface.vue';
 import VisitStateSelect from '../components/VisitStateSelect.vue';
@@ -21,6 +22,7 @@ const sharedMap = useSharedMap();
 const fallbackMapProps = computed(() => ({
   scope: scope.value,
   selected: store.selectedRegionId,
+  selectionMuted: !panelOpen.value && Boolean(selected.value),
   level: level.value,
   points: [],
   initialCamera: camera.value,
@@ -41,7 +43,6 @@ const {
   select,
 } = useCatalogNavigation(scope);
 const workspace = ref<HTMLElement>();
-const panelElement = ref<HTMLElement>();
 const explorerElement = ref<HTMLElement>();
 const explorerInput = ref<HTMLInputElement>();
 const { width, maxWidth, resizing, down, move, up, key } = useResizablePanel(workspace);
@@ -54,7 +55,14 @@ const searchTargetId = ref('');
 const suggestionsOpen = ref(false);
 const expandedDirectory = ref<Record<string, boolean>>({});
 const expandedRouteGroups = ref<Record<string, boolean>>({});
-const expandedPointGroups = ref<Record<string, boolean>>({});
+const expandedPointGroup = ref('');
+const panelBody = ref<HTMLElement>();
+let collapsingPointGroup = '';
+let pointCollapseAnchor = '';
+let pointCollapseFrame = 0;
+let pointCollapseTimer = 0;
+let pointCollapsePinned = false;
+let pointCollapseElement: Element | undefined;
 const regionBreadcrumbs = computed(() =>
   selected.value
     ? index.value.ancestors(selected.value.id).filter((region) => region.scope === scope.value)
@@ -68,10 +76,13 @@ watchEffect(() => {
     mode: 'regions',
     scope: scope.value,
     selected: store.selectedRegionId,
+    selectionMuted: !panelOpen.value && Boolean(selected.value),
     level: level.value,
     category: '',
     points: [],
     focus: null,
+    highlightedPointIds: [],
+    focusPoints: null,
     initialCamera: camera.value,
     previewRegions: [],
     rightInset: panelOpen.value ? `${width.value}px` : '0px',
@@ -186,17 +197,55 @@ function directoryKeydown(event: KeyboardEvent, id: string) {
     toggleDirectory(id);
   }
 }
+function linkedRegionIds(entry: CatalogEntry) {
+  return [
+    ...new Set([
+      ...index.value.entryRegions(entry, scope.value),
+      ...entry.regionIds.map((id) => index.value.resolveRegion(id)),
+    ]),
+  ];
+}
+function pointItemsForRegion(entries: CatalogEntry[], regionId: string) {
+  return entries.flatMap((entry) => {
+    const children = entry.subitems.flatMap((child) => {
+      const childRegionIds = (child.regionIds?.length ? child.regionIds : entry.regionIds).map(
+        (id) => index.value.resolveRegion(id),
+      );
+      if (!childRegionIds.some((id) => id === regionId || index.value.belongsTo(id, regionId))) return [];
+      return [{
+        id: `${entry.id}__subitem__${child.id}`,
+        name: child.name,
+        entry,
+        subitemId: child.id,
+        checked: childVisited(session.value, { ...child, entryId: entry.id, subitemId: child.id }),
+      }];
+    });
+    return [{
+      id: entry.id,
+      name: entry.name,
+      entry,
+      checked: pointView(session.value, entry).checked,
+      children,
+    }];
+  });
+}
+function pointItemCount(items: ReturnType<typeof pointItemsForRegion>) {
+  return items.reduce((count, item) => count + 1 + item.children.length, 0);
+}
+function pointCheckedCount(items: ReturnType<typeof pointItemsForRegion>) {
+  return items.reduce(
+    (count, item) => count + Number(item.checked) + item.children.filter((child) => child.checked).length,
+    0,
+  );
+}
+const excludedPointCategories = new Set(['historic-city', 'railway-station', 'urban-rail']);
 const relatedEntries = computed(() => {
   void store.revision;
   const region = selected.value;
   if (!region) return [];
   return session.value.allEntries().filter((entry) => {
     if (entry.scope !== scope.value) return false;
-    const linkedRegionIds = [
-      ...index.value.entryRegions(entry, scope.value),
-      ...entry.regionIds.map((id) => index.value.resolveRegion(id)),
-    ];
-    return [...new Set(linkedRegionIds)].some(
+    return linkedRegionIds(entry).some(
       (id) => id === region.id || index.value.belongsTo(id, region.id),
     );
   });
@@ -204,38 +253,51 @@ const relatedEntries = computed(() => {
 const pointGroups = computed(() => {
   const groups = new Map<string, typeof relatedEntries.value>();
   for (const entry of relatedEntries.value) {
-    if (entry.categoryId === 'railway-station' || entry.categoryId === 'urban-rail') continue;
+    if (excludedPointCategories.has(entry.categoryId)) continue;
     const entries = groups.get(entry.categoryId) || [];
     entries.push(entry);
     groups.set(entry.categoryId, entries);
   }
-  return [...groups].map(([categoryId, entries]) => ({
-    categoryId,
-    name: index.value.catalog.categories.find((item) => item.id === categoryId)?.name || categoryId,
-    entries,
-  }));
+  return [...groups].map(([categoryId, entries]) => {
+    const items = pointItemsForRegion(entries, selected.value!.id);
+    return {
+      categoryId,
+      name: index.value.catalog.categories.find((item) => item.id === categoryId)?.name || categoryId,
+      entries,
+      items,
+      itemCount: pointItemCount(items),
+      checked: pointCheckedCount(items),
+      subregions: childRegions.value.flatMap((region) => {
+        const regionEntries = entries.filter((entry) =>
+          linkedRegionIds(entry).some(
+            (id) => id === region.id || index.value.belongsTo(id, region.id),
+          ) || pointItemsForRegion([entry], region.id).some((item) => item.children.length),
+        );
+        const regionItems = pointItemsForRegion(regionEntries, region.id);
+        return regionItems.length
+          ? [{
+              id: region.id,
+              name: region.name,
+              entries: regionEntries,
+              items: regionItems,
+              itemCount: pointItemCount(regionItems),
+              checked: pointCheckedCount(regionItems),
+            }]
+          : [];
+      }),
+    };
+  }).filter((group) => group.items.length);
 });
-const directPointEntries = computed(() =>
-  relatedEntries.value
-    .filter((entry) => entry.categoryId !== 'railway-station' && entry.categoryId !== 'urban-rail')
-    .slice(0, 8)
-    .map((entry) => ({
-      entry,
-      category:
-        index.value.catalog.categories.find((item) => item.id === entry.categoryId)?.name ||
-        entry.categoryId,
-    })),
-);
-const directPointTotal = computed(
-  () =>
-    relatedEntries.value.filter(
-      (entry) => entry.categoryId !== 'railway-station' && entry.categoryId !== 'urban-rail',
-    ).length,
-);
+function openPoint(entry: CatalogEntry, subitemId?: string) {
+  void router.push({
+    path: '/points',
+    query: { entry: entry.id, subitem: subitemId, scope: scope.value },
+  });
+}
 const routeGroups = computed(() =>
   [
-    { key: 'railway', label: '铁路', categoryId: 'railway-station' },
-    { key: 'urban-rail', label: '轨道交通', categoryId: 'urban-rail' },
+    { key: 'railway', label: '铁路站点', categoryId: 'railway-station' },
+    { key: 'urban-rail', label: '轨道交通线路', categoryId: 'urban-rail' },
   ]
     .map((group) => ({
       ...group,
@@ -256,18 +318,75 @@ function toggleRouteGroup(key: string) {
   expandedRouteGroups.value[key] = !expandedRouteGroups.value[key];
 }
 function togglePointGroup(categoryId: string) {
-  expandedPointGroups.value[categoryId] = !expandedPointGroups.value[categoryId];
+  const previous = expandedPointGroup.value;
+  const next = expandedPointGroup.value === categoryId ? '' : categoryId;
+  stopPointCollapse();
+  expandedPointGroup.value = next;
+  collapsingPointGroup = previous && next ? previous : '';
+  pointCollapseAnchor = collapsingPointGroup ? next : '';
 }
-const regionOverview = computed(() => '');
+function stopPointCollapse() {
+  cancelAnimationFrame(pointCollapseFrame);
+  window.clearTimeout(pointCollapseTimer);
+  pointCollapseFrame = 0;
+  pointCollapseTimer = 0;
+  collapsingPointGroup = '';
+  pointCollapseAnchor = '';
+  pointCollapsePinned = false;
+  pointCollapseElement = undefined;
+}
+function startPointCollapse(element: Element) {
+  const categoryId = element.closest<HTMLElement>('.region-point-group')?.dataset.pointCategory;
+  const container = panelBody.value;
+  if (!container || categoryId !== collapsingPointGroup || !pointCollapseAnchor) return;
+  const anchor = [...container.querySelectorAll<HTMLElement>('.region-point-group')].find(
+    (item) => item.dataset.pointCategory === pointCollapseAnchor,
+  );
+  if (!anchor) return;
+  pointCollapseElement = element;
+  pointCollapsePinned = false;
+  pointCollapseTimer = window.setTimeout(() => finishPointCollapse(element), 280);
+  const boundary = container.getBoundingClientRect().top;
+  const keepContentInPlace = () => {
+    if (pointCollapseElement !== element) return;
+    if (!element.isConnected || !container.isConnected || !anchor.isConnected) {
+      stopPointCollapse();
+      return;
+    }
+    const delta = anchor.getBoundingClientRect().top - boundary;
+    if (pointCollapsePinned || delta < 0) {
+      pointCollapsePinned = true;
+      container.scrollTop += delta;
+    }
+    pointCollapseFrame = requestAnimationFrame(keepContentInPlace);
+  };
+  pointCollapseFrame = requestAnimationFrame(keepContentInPlace);
+}
+function finishPointCollapse(element: Element) {
+  if (element !== pointCollapseElement) return;
+  const container = panelBody.value;
+  const anchor = [...(container?.querySelectorAll<HTMLElement>('.region-point-group') || [])].find(
+    (item) => item.dataset.pointCategory === pointCollapseAnchor,
+  );
+  if (container && anchor && pointCollapsePinned) {
+    const delta = anchor.getBoundingClientRect().top - container.getBoundingClientRect().top;
+    container.scrollTop += delta;
+  }
+  stopPointCollapse();
+}
 const specialNotice = computed(() => selected.value?.notices || []);
 const regionCount = computed(() => {
   void store.revision;
   return regions.value.filter((r) => session.value.visitState(r.id) !== 'unvisited').length;
 });
 watch(
-  () => selected.value?.id,
-  (id) => {
-    if (id) panelOpen.value = true;
+  [() => selected.value?.id, () => JSON.stringify(store.chinaBoundarySettings)] as const,
+  ([id, settingsKey], previous) => {
+    const affiliationChanged = previous && settingsKey !== previous[1];
+    if (affiliationChanged && id === previous[0]) return;
+    expandedPointGroup.value = '';
+    stopPointCollapse();
+    if (id && !affiliationChanged) panelOpen.value = true;
   },
   { immediate: true },
 );
@@ -305,7 +424,7 @@ async function openExplorerSearch() {
 }
 function choose(id: string) {
   select(id);
-  panelOpen.value = true;
+  panelOpen.value = Boolean(id) || scope.value !== 'china';
 }
 function updateSearchQuery(event: Event) {
   explorerQuery.value = (event.target as HTMLInputElement).value;
@@ -334,13 +453,11 @@ function switchScope(value: string) {
   scopeMenuOpen.value = false;
   void router.push('/regions/' + value);
 }
-async function openPanel() {
-  panelOpen.value = true;
-  await nextTick();
-  panelElement.value?.focus({ preventScroll: true });
-}
 onMounted(() => document.addEventListener('pointerdown', outsideExplorer));
-onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplorer));
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', outsideExplorer);
+  stopPointCollapse();
+});
 </script>
 <template>
   <section
@@ -624,17 +741,6 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
           </div>
         </div>
       </div>
-      <button
-        v-if="selected && !panelOpen"
-        class="region-reopen"
-        @click="openPanel"
-      >
-        {{ selected.name
-        }}<PointIcon
-          name="arrow"
-          :size="16"
-        />
-      </button>
       <footer class="region-caption">
         <span>{{ config.name }} · {{ regionCount }} / {{ regions.length }} 个地区已标记</span>
         <div class="region-caption-tools">
@@ -653,7 +759,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
       </footer>
     </div>
     <aside
-      v-if="panelOpen"
+      v-if="panelOpen && (selected || scope !== 'china')"
       ref="panelElement"
       class="region-panel"
       aria-label="地区资料"
@@ -681,32 +787,32 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
           class="region-panel-breadcrumbs"
           :aria-label="`${config.name}地区路径`"
         >
-          <button
-            type="button"
-            :aria-current="selected ? undefined : 'location'"
-            @click="choose('')"
-          >
-            {{ config.name }}
-          </button>
-          <template v-if="selected">
-            <span aria-hidden="true">/</span>
-            <template
-              v-for="region in regionBreadcrumbs"
-              :key="region.id"
+          <template v-if="scope !== 'china'">
+            <button
+              type="button"
+              :aria-current="selected ? undefined : 'location'"
+              @click="choose('')"
             >
-              <button
-                type="button"
-                :aria-current="region.id === selected.id ? 'location' : undefined"
-                @click="choose(region.id)"
-              >
-                {{ region.name }}
-              </button>
-              <span
-                v-if="region.id !== selected.id"
-                aria-hidden="true"
-                >/</span
-              >
-            </template>
+              {{ config.name }}
+            </button>
+            <span v-if="selected" aria-hidden="true">/</span>
+          </template>
+          <template
+            v-for="region in regionBreadcrumbs"
+            :key="region.id"
+          >
+            <button
+              type="button"
+              :aria-current="selected && region.id === selected.id ? 'location' : undefined"
+              @click="choose(region.id)"
+            >
+              {{ region.name }}
+            </button>
+            <span
+              v-if="selected && region.id !== selected.id"
+              aria-hidden="true"
+              >/</span
+            >
           </template>
         </nav>
         <button
@@ -746,7 +852,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
           </div>
         </div>
       </header>
-      <div class="region-panel-body">
+      <div ref="panelBody" class="region-panel-body">
         <RouterLink
           v-if="route.query.from === 'achievements'"
           to="/achievements"
@@ -763,13 +869,6 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
             >{{ item.label }}：{{ item.count }} / {{ item.total }} 已到访</span
           >
         </div>
-        <section
-          v-if="selected && regionOverview"
-          class="region-section region-overview"
-        >
-          <h2>区域概况</h2>
-          <p>{{ regionOverview }}</p>
-        </section>
         <div
           v-if="selected && specialNotice.length"
           class="region-notice"
@@ -790,79 +889,135 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
         >
           <div class="region-directory-heading">
             <h2>关联点位</h2>
-            <span>{{ selected.level === 0 ? relatedEntries.length : directPointTotal }}</span>
           </div>
-          <template v-if="selected.level > 0">
-            <p
-              v-if="!directPointEntries.length"
-              class="region-description"
-            >暂无已收录点位。</p>
-            <div class="region-direct-points">
-              <button
-                v-for="item in directPointEntries"
-                :key="item.entry.id"
-                class="region-direct-point"
-                type="button"
-              >
-                <span>{{ item.entry.name }}</span>
-                <small>{{ item.category }}</small>
-              </button>
-              <small v-if="directPointTotal > directPointEntries.length" class="region-point-more">
-                另有 {{ directPointTotal - directPointEntries.length }} 项
-              </small>
-            </div>
-          </template>
           <p
-            v-else-if="!pointGroups.length"
+            v-if="!pointGroups.length"
             class="region-description"
           >暂无已收录点位。</p>
-          <template v-if="selected.level === 0">
-            <div
-              v-for="group in pointGroups"
-              :key="group.categoryId"
-              class="region-point-group"
-            >
+          <div
+            v-for="group in pointGroups"
+            :key="group.categoryId"
+            class="region-point-group"
+            :class="{
+              'is-expandable': childRegions.length,
+            }"
+            :data-point-category="group.categoryId"
+          >
             <button
+              v-if="childRegions.length"
               class="region-point-group-head"
               type="button"
-              :aria-expanded="expandedPointGroups[group.categoryId] !== false"
+              :aria-expanded="expandedPointGroup === group.categoryId"
               @click="togglePointGroup(group.categoryId)"
             >
               <span>{{ group.name }}</span>
-              <small>{{ group.entries.length }}</small>
+              <small>{{ group.checked }} / {{ group.itemCount }}</small>
               <PointIcon
                 name="chevron"
                 :size="14"
-                :class="{ 'is-open': expandedPointGroups[group.categoryId] !== false }"
+                :class="{ 'is-open': expandedPointGroup === group.categoryId }"
               />
             </button>
+            <div v-else class="region-point-group-head is-static">
+              <span>{{ group.name }}</span>
+              <small>{{ group.checked }} / {{ group.itemCount }}</small>
+            </div>
             <div
-              v-if="expandedPointGroups[group.categoryId] !== false"
-              class="region-point-items"
+              class="region-point-progress region-point-main-progress"
+              :class="{ 'is-collapsed': expandedPointGroup === group.categoryId }"
+              role="progressbar"
+              :aria-hidden="expandedPointGroup === group.categoryId"
+              :aria-label="group.name + '点亮进度'"
+              :aria-valuemin="0"
+              :aria-valuemax="group.itemCount"
+              :aria-valuenow="group.checked"
             >
-              <span
-                v-for="entry in group.entries.slice(0, selected.level === 0 ? 6 : 4)"
-                :key="entry.id"
-                >{{ entry.name }}</span
+              <span :style="{ width: (group.checked / group.itemCount) * 100 + '%' }" />
+            </div>
+            <Transition
+              name="region-point-expand"
+              @before-leave="startPointCollapse"
+              @after-leave="finishPointCollapse"
+            >
+              <div
+                v-if="!childRegions.length || expandedPointGroup === group.categoryId"
+                class="region-point-expand-shell"
               >
-              <small v-if="group.entries.length > (selected.level === 0 ? 6 : 4)">
-                另有 {{ group.entries.length - (selected.level === 0 ? 6 : 4) }} 项
-              </small>
-            </div>
-            </div>
-          </template>
+                <div class="region-point-content">
+                  <template v-if="group.itemCount > 20 && group.subregions.length">
+                    <p class="region-point-overflow-hint">
+                      <span class="region-point-hint-icon"><PointIcon name="info" :size="14" /></span>
+                      <span>该类别点位较多，请点击下辖地区查看具体点位。</span>
+                    </p>
+                    <button
+                      v-for="region in group.subregions"
+                      :key="region.id"
+                      class="region-point-subregion"
+                      type="button"
+                      :aria-label="`查看${region.name}，已点亮 ${region.checked} / ${region.itemCount}`"
+                      @click="choose(region.id)"
+                    >
+                      <span class="region-point-subregion-name">{{ region.name }}</span>
+                      <small>{{ region.checked }} / {{ region.itemCount }}</small>
+                      <span
+                        class="region-point-progress"
+                        role="progressbar"
+                        :aria-label="region.name + group.name + '点亮进度'"
+                        :aria-valuemin="0"
+                        :aria-valuemax="region.itemCount"
+                        :aria-valuenow="region.checked"
+                      >
+                        <span :style="{ width: (region.checked / region.itemCount) * 100 + '%' }" />
+                      </span>
+                      <PointIcon name="arrow" :size="14" />
+                    </button>
+                  </template>
+                  <div v-else class="region-point-items">
+                    <div
+                      v-for="item in group.items"
+                      :key="item.id"
+                      class="region-point-item-group"
+                    >
+                      <button
+                        class="region-point-item"
+                        type="button"
+                        :title="item.name"
+                        :aria-label="`打开点位点卯：${item.name}`"
+                        @click="openPoint(item.entry)"
+                      >
+                        <i :class="{ 'is-checked': item.checked }" />
+                        <span class="region-point-item-name">{{ item.name }}</span>
+                        <PointIcon name="arrow" :size="14" />
+                      </button>
+                      <div v-if="item.children.length" class="region-point-subitems">
+                        <button
+                          v-for="child in item.children"
+                          :key="child.id"
+                          class="region-point-item"
+                          type="button"
+                          :title="child.name"
+                          :aria-label="`打开点位点卯：${child.name}`"
+                          @click="openPoint(item.entry, child.subitemId)"
+                        >
+                          <i :class="{ 'is-checked': child.checked }" />
+                          <span class="region-point-item-name">{{ child.name }}</span>
+                          <PointIcon name="arrow" :size="14" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+          </div>
         </section>
         <section
-          v-if="selected"
+          v-if="routeGroups.length"
           class="region-section region-routes"
         >
           <div class="region-directory-heading">
-            <h2>经过线路</h2>
+            <h2>关联线路</h2>
           </div>
-          <p
-            v-if="!routeGroups.length"
-            class="region-description"
-          >暂无线路资料。</p>
           <div
             v-for="group in routeGroups"
             :key="group.key"
@@ -894,15 +1049,11 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
             </div>
           </div>
         </section>
-        <section class="region-section region-directory">
+        <section v-if="!selected || directoryTree.length" class="region-section region-directory">
           <div class="region-directory-heading">
             <h2>{{ selected ? '下辖地区' : '地区目录' }}</h2>
             <span>{{ directoryRoots.length }}</span>
           </div>
-          <p
-            v-if="!directoryTree.length"
-            class="region-description"
-          >没有已收录的下辖地区。</p>
           <div
             v-for="row in directoryTree"
             :key="row.region.id"
@@ -966,7 +1117,6 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   pointer-events: none;
 }
 .region-explorer,
-.region-reopen,
 .region-caption { pointer-events: auto; }
 .region-explorer {
   position: absolute;
@@ -1212,17 +1362,6 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
 .region-explorer-levels select:disabled {
   opacity: 0.5;
 }
-.region-reopen {
-  position: absolute;
-  right: 80px;
-  top: 24px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--atlas-paper);
-  padding: 10px 14px;
-}
 .region-caption {
   position: absolute;
   bottom: 0;
@@ -1270,7 +1409,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
 .region-panel-head {
   position: relative;
   flex: none;
-  padding: 14px 44px 20px 24px;
+  padding: 14px 44px 10px 24px;
   border-bottom: 1px solid var(--atlas-line);
 }
 .region-panel-breadcrumbs {
@@ -1373,7 +1512,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   overflow: auto;
   min-height: 0;
   flex: 1;
-  padding: 22px 24px 32px;
+  padding: 12px 24px 32px;
 }
 .region-backlink {
   display: flex;
@@ -1396,6 +1535,12 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
 }
 .region-section:first-of-type {
   margin-top: 4px;
+}
+.region-points:first-of-type {
+  margin-top: 0;
+}
+.region-points {
+  margin-top: 0;
 }
 .region-section h2 {
   font-size: 16px;
@@ -1438,6 +1583,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   font-size: 16px;
   font-weight: 400;
   margin: 0;
+}
+.region-points > .region-directory-heading {
+  margin-top: 0;
 }
 .region-row {
   display: flex;
@@ -1508,6 +1656,10 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
 .region-route-group {
   border-bottom: 1px solid var(--atlas-line);
 }
+.region-point-group.is-expandable {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
 .region-point-group-head,
 .region-route-head {
   display: flex;
@@ -1520,6 +1672,19 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   background: transparent;
   text-align: left;
 }
+.region-point-group-head:not(.is-static):hover,
+.region-point-item:hover,
+.region-point-subregion:hover {
+  background: var(--atlas-soft);
+}
+.region-point-group.is-expandable > .region-point-group-head {
+  grid-row: 1;
+}
+.region-point-group.is-expandable > .region-point-main-progress,
+.region-point-group.is-expandable > .region-point-expand-shell {
+  grid-row: 2;
+  grid-column: 1;
+}
 .region-point-group-head span,
 .region-route-head span {
   flex: 1;
@@ -1531,58 +1696,191 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', outsideExplore
   opacity: 0.65;
   font-size: 12px;
 }
-.region-point-items,
-.region-route-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 8px;
-  padding: 0 0 11px;
+.region-point-group-head.is-static {
+  cursor: default;
 }
-.region-point-items span,
-.region-route-items span {
-  max-width: 100%;
-  padding: 4px 7px;
-  border: 1px solid var(--atlas-line);
-  border-radius: 5px;
-  font-size: 12px;
-  line-height: 1.35;
+.region-point-progress {
+  display: block;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--atlas-line);
 }
-.region-point-items small {
-  align-self: center;
-  font-size: 12px;
-  opacity: 0.7;
+.region-point-progress > span {
+  display: block;
+  height: 100%;
+  background: #57877a;
+  transition: width 180ms ease;
 }
-.region-direct-points {
+.region-point-content {
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 8px;
+}
+.region-point-expand-shell {
+  position: relative;
+  z-index: 1;
   display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  background: var(--atlas-paper);
 }
-.region-direct-point {
+.region-point-expand-enter-active,
+.region-point-expand-leave-active {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  opacity: 1;
+  transition:
+    grid-template-rows 220ms ease,
+    opacity 160ms ease;
+}
+.region-point-expand-enter-from,
+.region-point-expand-leave-to {
+  grid-template-rows: minmax(0, 0fr);
+  opacity: 0;
+}
+.region-point-main-progress {
+  height: 4px;
+  margin-bottom: 8px;
+  opacity: 1;
+  transition: opacity 150ms ease;
+}
+.region-point-main-progress.is-collapsed {
+  opacity: 0;
+  pointer-events: none;
+}
+.region-point-overflow-hint {
   display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 8px 0;
+  color: var(--atlas-ink);
+  opacity: 0.62;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.region-point-overflow-hint svg {
+  width: 14px;
+  height: 14px;
+}
+.region-point-hint-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.region-point-subregion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(48px, 82px) 16px;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  min-width: 0;
-  min-height: 38px;
-  padding: 0;
+  gap: 8px;
+  width: 100%;
+  min-height: 36px;
+  padding: 4px 0;
   border: 0;
   border-bottom: 1px solid var(--atlas-line);
+  border-radius: 0;
   background: transparent;
   text-align: left;
 }
-.region-direct-point span {
+.region-point-subregion-name {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+.region-point-subregion small {
+  color: var(--atlas-ink);
+  opacity: 0.68;
+  font-size: 11px;
   white-space: nowrap;
 }
-.region-direct-point small,
-.region-point-more {
-  flex: none;
-  color: var(--atlas-ink);
+.region-point-subregion > svg {
   opacity: 0.65;
-  font-size: 12px;
 }
-.region-point-more {
-  padding: 8px 0 0;
+.region-point-subregion .region-point-progress {
+  width: 100%;
+  margin: 0;
+}
+.region-point-items {
+  display: grid;
+}
+.region-point-item-group {
+  border-bottom: 1px solid var(--atlas-line);
+}
+.region-point-item-group:last-child {
+  border-bottom: 0;
+}
+.region-point-item-group > .region-point-item {
+  border-bottom: 0;
+}
+.region-point-subitems {
+  display: grid;
+  margin: 0 0 8px 8px;
+  padding-left: 12px;
+  border-left: 1px solid var(--atlas-line);
+}
+.region-point-subitems .region-point-item {
+  min-height: 36px;
+  padding: 5px 0;
+}
+.region-route-items {
+  display: grid;
+  padding: 0 0 8px;
+}
+.region-route-items span {
+  max-width: 100%;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--atlas-line);
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.region-route-items span:last-child {
+  border-bottom: 0;
+}
+.region-point-item {
+  display: grid;
+  grid-template-columns: 9px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 42px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--atlas-line);
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+}
+.region-point-item > i {
+  width: 8px;
+  height: 8px;
+  border: 1px solid #82948b;
+  border-radius: 2px;
+}
+.region-point-item > i.is-checked {
+  border-color: #57877a;
+  background: #57877a;
+}
+.region-point-item-name {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.region-point-item > svg {
+  opacity: 0.6;
+}
+.region-point-items .region-point-item:last-child,
+.region-point-content > .region-point-subregion:last-child {
+  border-bottom: 0;
 }
 .region-directory {
   margin-top: 26px;

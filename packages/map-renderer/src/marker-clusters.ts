@@ -15,6 +15,7 @@ export interface ScreenMarkerCluster<T> {
 export function clusterScreenMarkers<T>(
   points: readonly ScreenMarker<T>[],
   radius = 40,
+  mergeRadius = 0,
 ): ScreenMarkerCluster<T>[] {
   if (!(radius > 0) || !Number.isFinite(radius)) throw Error('Invalid marker cluster radius');
   type Group = ScreenMarkerCluster<T> & {
@@ -66,5 +67,22 @@ export function clusterScreenMarkers<T>(
       buckets.set(key, bucket);
     }
   }
-  return groups.map(({ x, y, members }) => ({ x, y, members }));
+  let clusters = groups.map(({ x, y, members }) => ({ x, y, members }));
+  if (mergeRadius > 0) {
+    while (clusters.length > 1) {
+      const merged = clusterScreenMarkers(clusters.map((group, index) => ({
+        id: String(index).padStart(10, '0'), x: group.x, y: group.y, value: group,
+      })), mergeRadius);
+      if (merged.length === clusters.length) break;
+      clusters = merged.map((group) => {
+        const members = group.members.flatMap((item) => item.members);
+        return {
+          x: group.members.reduce((sum, item) => sum + item.x * item.members.length, 0) / members.length,
+          y: group.members.reduce((sum, item) => sum + item.y * item.members.length, 0) / members.length,
+          members,
+        };
+      });
+    }
+  }
+  return clusters;
 }

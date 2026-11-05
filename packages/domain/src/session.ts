@@ -12,6 +12,7 @@ import {
 } from '@fangyu/contracts';
 import { CatalogIndex } from '@fangyu/catalog';
 import { acceptsCatalogVersion } from './heritage.js';
+import { pointGroup } from './point-checkin.js';
 
 export interface EntryView extends CatalogEntry {
   checked: boolean;
@@ -229,15 +230,13 @@ export class HandbookSession {
 
   view(entry: CatalogEntry): EntryView {
     const record = this.state.entries[entry.recordId];
-    const subitems = record?.subitemIds || [];
+    const status = this.pointState(entry);
     return {
       ...entry,
       subitems: this.entry(entry.recordId).subitems,
       name: record?.name ?? entry.name,
       note: record?.note || '',
-      checked: record?.visited || false,
-      partial: !record?.visited && subitems.length > 0,
-      visited: Boolean(record?.visited || subitems.length),
+      ...status,
       path: entry.regionIds.map((id) => this.index.paths.get(id) || '').join(' / '),
     };
   }
@@ -251,6 +250,31 @@ export class HandbookSession {
   subitemVisited(entryId: string, subitemId: string): boolean {
     const entry = this.entry(entryId);
     return Boolean(this.state.entries[entry.recordId]?.subitemIds.includes(subitemId));
+  }
+
+  pointSelfVisited(entryId: string): boolean {
+    return Boolean(this.state.entries[this.entry(entryId).recordId]?.visited);
+  }
+
+  private pointState(entry: CatalogEntry, ancestors = new Set<string>()): {
+    checked: boolean; partial: boolean; visited: boolean;
+  } {
+    const record = this.state.entries[entry.recordId];
+    const group = ancestors.has(entry.recordId) ? undefined : pointGroup(this, entry);
+    if (!group) {
+      const checked = record?.visited || false;
+      const visited = checked || Boolean(record?.subitemIds.length);
+      return { checked, partial: visited && !checked, visited };
+    }
+    const next = new Set(ancestors).add(entry.recordId);
+    const statuses = group.children.map((child) => {
+      if (!child.self && !child.subitemId) return this.pointState(this.entry(child.entryId), next);
+      const checked = child.self ? this.pointSelfVisited(child.entryId) : this.subitemVisited(child.entryId, child.subitemId!);
+      return { checked, visited: checked };
+    });
+    const checked = statuses.length > 0 && statuses.every((status) => status.checked);
+    const visited = statuses.some((status) => status.visited);
+    return { checked, partial: visited && !checked, visited };
   }
 
   private record(entry: CatalogEntry) {
@@ -278,13 +302,22 @@ export class HandbookSession {
     if (!visited) record.subitemIds = [];
   }
 
-  setPointSubitems(entryId: string, ids: string[]): void {
+  setPointSelfVisited(entryId: string, visited: boolean): void {
+    const entry = this.entry(entryId);
+    if (new Set((this.index.byRecord.get(entry.recordId) || [entry]).map((item) => item.categoryId)).size > 1)
+      throw Error('该地点的旧跨类别共用记录尚未拆分，暂不能在点位页修改。');
+    this.record(entry).visited = visited;
+  }
+
+  setPointSubitems(entryId: string, ids: string[], selfVisited?: boolean): void {
     const entry = this.entry(entryId);
     const canonical = this.entry(entry.recordId);
     if (ids.some((id) => !canonical.subitems.some((item) => item.id === id)))
       throw Error('组成项目不存在。');
+    const ownVisit = selfVisited ?? this.pointSelfVisited(entryId);
     this.markPointEntry(entryId, false);
     this.record(entry).subitemIds = [...new Set(ids)];
+    this.record(entry).visited = Boolean(pointGroup(this, entry)?.children.some((child) => child.self) && ownVisit);
   }
 
   private stadiumEntry(entryId: string, type: StadiumExperience): CatalogEntry {

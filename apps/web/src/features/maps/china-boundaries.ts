@@ -82,15 +82,9 @@ export function chinaBoundaryGroups(data: ChinaBoundaryData) {
   );
 }
 
-export function chinaBoundaryReplacedRegionIds(
-  data: ChinaBoundaryData,
-  _settings: ChinaBoundarySettings,
-): string[] {
-  // Keep the base vector layers suppressed for every region owned by an
-  // option group. The selected variant may omit a temporary region (for
-  // example when it is merged into its neighbour), but letting that region
-  // back into the ordinary source during a toggle causes the adjacent
-  // overlay features to disappear while the source is being updated.
+export function chinaBoundaryManagedRegionIds(data: ChinaBoundaryData): string[] {
+  // Keep profile-owned regions out of the base tiles for every setting state.
+  // A variant may omit a region when it is merged into a neighbour.
   // Older in-memory fixtures used by the simplified-map tests still expose
   // the pre-profile `groups` shape. Accept it while published data uses the
   // schema-v2 profiles above.
@@ -295,7 +289,7 @@ export function applyChinaBoundaries(
   settings: ChinaBoundarySettings,
   level?: string,
 ): GeoJSON.FeatureCollection {
-  const replaced = new Set(chinaBoundaryReplacedRegionIds(data, settings));
+  const replaced = new Set(chinaBoundaryManagedRegionIds(data));
   const lines = chinaBoundaryLines(data, settings, level);
   const replacedLineKinds = new Set(
     (data.fixedPaths || []).filter((path) => path.arcIds?.length).map(lineBoundaryKind),

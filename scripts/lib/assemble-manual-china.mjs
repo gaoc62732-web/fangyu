@@ -52,6 +52,7 @@ export async function assembleCatalog(root) {
             ? [position.longitude, position.latitude]
             : null,
           description: component.details?.description || '',
+          locationNote: displayableLocationNote(place?.location?.note ?? component.attributes?.coordinatePrecisionNote) || '',
           attributes: component.attributes || {},
         };
       });
@@ -75,6 +76,7 @@ export async function assembleCatalog(root) {
       subitems,
       coordinates,
       source,
+      locationNote: displayableLocationNote(place?.location?.note ?? attributes.coordinatePrecisionNote) || '',
       description: item.details?.description || attributes.description || '',
       ...(place
         ? {
@@ -85,7 +87,7 @@ export async function assembleCatalog(root) {
             coordinateLicenseUrl: attributes.coordinateLicenseUrl || coordinateSource?.licenseUrl,
             coordinateAttribution: attributes.coordinateAttribution || coordinateSource?.attribution,
             coordinatePrecisionNote: displayableLocationNote(
-              attributes.coordinatePrecisionNote || place.location.note,
+              place.location.note ?? attributes.coordinatePrecisionNote,
             ),
             visitorEntranceVerified:
               attributes.visitorEntranceVerified ?? place.location.visitorEntranceVerified,

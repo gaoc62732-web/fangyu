@@ -4,7 +4,6 @@ import type { HandbookSession, EntryView } from './session.js';
 import { heritageLocationIsReferenceOnly } from './heritage.js';
 
 export const DEFAULT_POINT_POLICIES: PointCheckinPreferences = {
-  children: 'ask',
   identities: 'auto',
   regions: 'ask',
 };
@@ -13,8 +12,10 @@ export interface PointChild {
   name: string;
   entryId: string;
   subitemId?: string;
+  self?: boolean;
   regionIds?: string[];
   coordinates?: [number, number] | null;
+  locationNote?: string;
   description?: string;
   attributes?: Record<string, unknown>;
 }
@@ -38,6 +39,9 @@ function groupIndex(session: HandbookSession) {
             id,
             name: entry.name,
             entryId: id,
+            coordinates: entry.coordinates,
+            regionIds: entry.regionIds,
+            locationNote: entry.locationNote ?? entry.coordinatePrecisionNote,
           }]
         : [];
     });
@@ -69,28 +73,34 @@ function groupIndex(session: HandbookSession) {
 
 export function pointGroup(session: HandbookSession, entry: CatalogEntry): PointGroup | undefined {
   const known = groupIndex(session).get(entry.id) || groupIndex(session).get(entry.recordId);
-  if (known) return known;
   const children = session.entry(entry.recordId).subitems;
-  if (children.length)
-    return {
+  const group = known || (children.length
+    ? {
       name: entry.name,
       children: children.map((child) => ({ ...child, entryId: entry.id, subitemId: child.id })),
-      // Legacy subitem lists do not carry an official completeness assertion.
       complete: false,
-    };
+    }
+    : undefined);
+  if (!group) return;
+  const members = group.children.filter((child) => child.subitemId || child.entryId !== entry.id);
+  return {
+    ...group,
+    children: drawablePoint(entry)
+      ? [{ id: entry.id, entryId: entry.id, name: entry.name, self: true,
+          coordinates: entry.coordinates, regionIds: entry.regionIds,
+          locationNote: entry.locationNote ?? entry.coordinatePrecisionNote }, ...members]
+      : members,
+  };
 }
 export function childVisited(session: HandbookSession, child: PointChild): boolean {
-  return child.subitemId
+  return child.self
+    ? session.pointSelfVisited(child.entryId)
+    : child.subitemId
     ? session.subitemVisited(child.entryId, child.subitemId)
     : session.view(session.entry(child.entryId)).checked;
 }
 export function pointView(session: HandbookSession, entry: CatalogEntry): EntryView {
-  const view = session.view(entry);
-  const group = pointGroup(session, entry);
-  if (!group) return view;
-  const count = group.children.filter((child) => childVisited(session, child)).length;
-  const checked = group.complete && group.children.length > 0 && count === group.children.length;
-  return { ...view, checked, partial: count > 0 && !checked, visited: count > 0 };
+  return session.view(entry);
 }
 export function pointRecordIsShared(session: HandbookSession, entry: CatalogEntry): boolean {
   return (
@@ -134,6 +144,7 @@ export interface PointChange {
   entryId: string;
   visited: boolean;
   subitemIds?: string[];
+  selfVisited?: boolean;
 }
 export function applyPointCheckin(
   session: HandbookSession,
@@ -142,10 +153,16 @@ export function applyPointCheckin(
 ) {
   for (const change of changes) {
     const group = pointGroup(session, session.entry(change.entryId));
-    if (group && (change.subitemIds === undefined || !group.children.some((c) => c.subitemId)))
-      throw Error('总项目状态须由组成地点计算。');
-    if (change.subitemIds) session.setPointSubitems(change.entryId, change.subitemIds);
-    else session.markPointEntry(change.entryId, change.visited);
+    if (change.subitemIds !== undefined) {
+      if (group && !group.children.some((child) => child.subitemId))
+        throw Error('总项目状态须由组成地点计算。');
+      session.setPointSubitems(change.entryId, change.subitemIds, change.selfVisited);
+    } else if (change.selfVisited !== undefined && group?.children.some((child) => child.self)) {
+      session.setPointSelfVisited(change.entryId, change.selfVisited);
+    } else {
+      if (group) throw Error('总项目状态须由组成地点计算。');
+      session.markPointEntry(change.entryId, change.visited);
+    }
   }
   for (const id of new Set(regions)) session.upgradeRegion(id, 'arrived');
 }

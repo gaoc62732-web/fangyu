@@ -703,14 +703,16 @@ export class AdminPointsService {
     const itemFile = state.itemFiles.get(entry.categoryId)!;
     files.set(itemFile.path, itemFile);
     let place = state.placesById.get(item.placeId);
-    if (input.coordinates !== undefined) {
-      const coordinates = input.coordinates === null ? null : input.coordinates;
+    if (input.coordinates !== undefined || input.note !== undefined) {
+      const coordinates = input.coordinates === undefined
+        ? positionOf(item, place)
+        : input.coordinates === null ? null : input.coordinates;
       if (coordinates !== null && !validPosition(coordinates))
         throw new BadRequestException('经纬度格式无效');
       if (!item.attributes || typeof item.attributes !== 'object') item.attributes = {};
       if (coordinates) item.attributes.coordinates = coordinates;
       else delete item.attributes.coordinates;
-      if (coordinates && !place) {
+      if (!place && (coordinates || text(input.note))) {
         const placeId = `place-${id}`;
         place = {
           id: placeId,
@@ -720,9 +722,9 @@ export class AdminPointsService {
           identifiers: item.identifiers || [],
           sourceRefs: item.sourceRefs || [],
           location: {
-            status: 'available',
+            status: coordinates ? 'available' : 'missing',
             kind: 'site-point',
-            position: { longitude: coordinates[0], latitude: coordinates[1] },
+            position: coordinates ? { longitude: coordinates[0], latitude: coordinates[1] } : undefined,
             method: text(input.method) || 'manual-map',
             note: text(input.note),
             visitorEntranceVerified: input.visitorEntranceVerified === true,
@@ -740,7 +742,7 @@ export class AdminPointsService {
               status: 'available',
               position: { longitude: coordinates[0], latitude: coordinates[1] },
               method: text(input.method) || place.location?.method || 'manual-map',
-              note: text(input.note) || place.location?.note || '',
+              note: input.note === undefined ? displayableNote(place.location?.note) : text(input.note),
               visitorEntranceVerified:
                 input.visitorEntranceVerified ?? place.location?.visitorEntranceVerified ?? false,
             }
@@ -749,7 +751,7 @@ export class AdminPointsService {
               status: 'missing',
               position: undefined,
               method: text(input.method) || place.location?.method || 'manual-map',
-              note: text(input.note) || displayableNote(place.location?.note),
+              note: input.note === undefined ? displayableNote(place.location?.note) : text(input.note),
             };
       }
       const pendingLocations = state.pending.get('pending/locations.json');
@@ -1004,7 +1006,7 @@ export class AdminPointsService {
     if (input.attributes !== undefined)
       component.attributes = { ...(component.attributes || {}), ...input.attributes };
     let place = currentPlace;
-    if (coordinates && !place) {
+    if (!place && (coordinates || text(input.note))) {
       const placeId = `component-place-${id}`;
       place = {
         id: placeId,
@@ -1014,9 +1016,9 @@ export class AdminPointsService {
         identifiers: [],
         sourceRefs: component.sourceRefs || [],
         location: {
-          status: 'available',
+          status: coordinates ? 'available' : 'missing',
           kind: 'site-point',
-          position: { longitude: coordinates[0], latitude: coordinates[1] },
+          position: coordinates ? { longitude: coordinates[0], latitude: coordinates[1] } : undefined,
           method: 'admin-map',
           note: text(input.note),
         },
@@ -1036,14 +1038,14 @@ export class AdminPointsService {
             status: 'available',
             position: { longitude: coordinates[0], latitude: coordinates[1] },
             method: 'admin-map',
-            note: text(input.note),
+            note: input.note === undefined ? displayableNote(place.location?.note) : text(input.note),
           }
         : {
             ...(place.location || {}),
             status: 'missing',
             position: undefined,
             method: 'admin-map',
-            note: text(input.note),
+            note: input.note === undefined ? displayableNote(place.location?.note) : text(input.note),
           };
     }
     const parentPlace = state.placesById.get(parent.item.placeId);
@@ -1173,7 +1175,7 @@ export class AdminPointsService {
     if (coordinates) entry.item.attributes.coordinates = coordinates;
     else delete entry.item.attributes.coordinates;
     let place = state.placesById.get(entry.item.placeId);
-    if (coordinates && !place) {
+    if (!place && (coordinates || text(input.note))) {
       const placeId = `place-${id}`;
       place = {
         id: placeId,
@@ -1183,9 +1185,9 @@ export class AdminPointsService {
         identifiers: entry.item.identifiers || [],
         sourceRefs: entry.item.sourceRefs || [],
         location: {
-          status: 'available',
+          status: coordinates ? 'available' : 'missing',
           kind: 'site-point',
-          position: { longitude: coordinates[0], latitude: coordinates[1] },
+          position: coordinates ? { longitude: coordinates[0], latitude: coordinates[1] } : undefined,
           method: input.method || 'manual-map',
           note: text(input.note),
           visitorEntranceVerified: input.visitorEntranceVerified === true,
@@ -1203,7 +1205,7 @@ export class AdminPointsService {
             status: 'available',
             position: { longitude: coordinates[0], latitude: coordinates[1] },
             method: text(input.method) || place.location?.method || 'manual-map',
-            note: text(input.note) || place.location?.note || '',
+            note: input.note === undefined ? displayableNote(place.location?.note) : text(input.note),
             visitorEntranceVerified:
               input.visitorEntranceVerified ?? place.location?.visitorEntranceVerified ?? false,
           }
@@ -1212,7 +1214,7 @@ export class AdminPointsService {
             status: 'missing',
             position: undefined,
             method: text(input.method) || place.location?.method || 'manual-map',
-            note: text(input.note) || displayableNote(place.location?.note),
+            note: input.note === undefined ? displayableNote(place.location?.note) : text(input.note),
           };
     }
     files.set(itemFile.path, itemFile);

@@ -1,22 +1,25 @@
 import { computed, shallowRef, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { Map as LibreMap, GeoJSONSource } from 'maplibre-gl';
 import { VISIT_LABELS, getScopeConfig, type Scope } from '@fangyu/contracts';
-import { CanvasMapRenderer, clusterScreenMarkers } from '@fangyu/map-renderer';
+import { CanvasMapRenderer, geographicClusters, pointVisitColors } from '@fangyu/map-renderer';
 import { useAppStore } from '../../app/store.js';
 import { download } from '../exports/download.js';
 import { type Bounds, type MapDataManifest } from './types.js';
 import { basemapConfiguredProvider, basemapEnabled, basemapKind } from './basemap-settings.js';
 import { mapAttributions } from './data-attribution.js';
-import { boundaryFillOpacity, createMapStyle } from './style.js';
+import {
+  boundaryFillOpacity,
+  boundaryOverlayFillOpacity,
+  createMapStyle,
+} from './style.js';
 import type { TiledMapProps } from './types.js';
 import { validCoordinates } from './map-coordinates.js';
 import { useMapScene } from './use-map-scene.js';
 import { useMapInteractions } from './use-map-interactions.js';
 import {
-  chinaBoundaryFeatureDiff,
   chinaBoundaryFeatureGroup,
   chinaBoundaryGroups,
-  chinaBoundaryReplacedRegionIds,
+  chinaBoundaryManagedRegionIds,
   chinaBoundaryLayerId,
   chinaBoundarySourceId,
   chinaBoundaryLines,
@@ -38,6 +41,13 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
   // Keep the configured provider in the map style even while it is hidden so
   // toggling the checkbox only changes layer visibility and never recreates the map.
   const provider = computed(() => basemapConfiguredProvider.value);
+  function mapDebugRequested() {
+    const routeQuery = location.hash.includes('?') ? location.hash.slice(location.hash.indexOf('?') + 1) : '';
+    return (
+      new URLSearchParams(location.search).has('mapDebug') ||
+      new URLSearchParams(routeQuery).has('mapDebug')
+    );
+  }
   const regionAutoFocus = computed(() => {
     void store.revision;
     return store.session!.preferences.regionAutoFocus !== false;
@@ -96,19 +106,39 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     }
     return canvas?.projectPoint?.(coordinates);
   }
+  const pointClusterTrees = computed(() => {
+    const highlighted = new Set(props.highlightedPointIds || []);
+    type Marker = { id: string; coordinates: [number, number]; value: (typeof visiblePoints.value)[number] };
+    const ordinary: Marker[] = [];
+    const focused: Marker[] = [];
+    for (const entry of visiblePoints.value) {
+      const marker = { id: entry.id, coordinates: entry.coordinates!, value: entry };
+      (highlighted.has(entry.id) ? focused : ordinary).push(marker);
+    }
+    return [
+      { tree: geographicClusters(ordinary, 64, 48), highlighted: false },
+      { tree: geographicClusters(focused, 28, 44), highlighted: true },
+    ];
+  });
   const pointGroups = computed(() => {
     void viewportRevision.value;
     if (!props.pointMode) return [];
     const width = mapHost.value?.clientWidth || 0,
       height = mapHost.value?.clientHeight || 0;
-    return clusterScreenMarkers(
-      visiblePoints.value.flatMap((entry) => {
-        const p = projectPoint(entry.coordinates!);
+    const bounds = map && ready ? map.getBounds() : undefined;
+    const west = bounds?.getWest() ?? -Infinity;
+    const east = bounds?.getEast() ?? Infinity;
+    const south = bounds?.getSouth() ?? -Infinity;
+    const north = bounds?.getNorth() ?? Infinity;
+    return pointClusterTrees.value.flatMap(({ tree, highlighted }) =>
+      tree.atZoom(mapZoom.value).flatMap((group) => {
+        const [longitude, latitude] = group.coordinates;
+        if (latitude < south || latitude > north || longitude < west || longitude > east) return [];
+        const p = projectPoint(group.coordinates);
         return p && p[0] >= -24 && p[0] <= width + 24 && p[1] >= -24 && p[1] <= height + 24
-          ? [{ id: entry.id, x: p[0], y: p[1], value: entry }]
+          ? [{ ...group, x: p[0], y: p[1], highlighted }]
           : [];
       }),
-      32,
     );
   });
   function revealInitialPoints() {
@@ -141,16 +171,16 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       });
     else if (canvas) canvas.setCamera({ center: target.coordinates!, zoom: 8 });
   }
-  function expandCluster(ids: string[]) {
+  function expandCluster(ids: string[], expansionZoom?: number) {
     const members = visiblePoints.value.filter((e) => ids.includes(e.id));
     if (!members.length) return;
     const center: [number, number] = [
       members.reduce((sum, e) => sum + e.coordinates![0], 0) / members.length,
       members.reduce((sum, e) => sum + e.coordinates![1], 0) / members.length,
     ];
-    if (map && ready)
-      map.easeTo({ center, zoom: Math.min(15, map.getZoom() + 1.5), duration: 250 });
-    else if (canvas) canvas.setCamera({ center, zoom: Math.min(15, mapZoom.value + 1.5) });
+    const zoom = Math.min(20, Math.max(mapZoom.value + .5, expansionZoom === undefined ? mapZoom.value + 1.5 : expansionZoom + .05));
+    if (map && ready) map.easeTo({ center, zoom, duration: 450 });
+    else if (canvas) canvas.setCamera({ center, zoom });
   }
   const level = computed(() =>
     props.scope === 'china' || props.scope === 'france'
@@ -181,12 +211,14 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     pointData,
     visitedPointData,
   } = drawing;
+  const boundaryGroupPendingKeys: string[] = [];
   const {
     selectedVisitedMarkers,
     selectVisitedMarker,
     closeVisitedSelection,
     selectCanvasMarkers,
     addVisitedImage,
+    addSelectedRegionHatch,
     bindInteractions,
   } = useMapInteractions(
     props,
@@ -195,7 +227,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     {
       map: () => map,
       canvas: () => canvas,
-      ready: () => ready,
+      ready: () => ready && !boundaryGroupPendingKeys.some(Boolean),
     },
     select,
   );
@@ -203,7 +235,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
   let boundaryLeaseRequest: Promise<void> | undefined;
   const boundaryFeatureGroups: (GeoJSON.FeatureCollection | undefined)[] = [];
   const boundaryGroupKeys: string[] = [];
-  const boundaryGroupReady: Promise<void>[] = [];
+  const boundaryGroupUpdates: Promise<void>[] = [];
   const featureStateCache = new Map<string, Record<string, string | boolean>>();
   const selectedFeatureStates = new Set<string>();
   const styleValueCache = new Map<string, string>();
@@ -288,6 +320,63 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       return categoryRegions.value.has(id);
     return store.session!.visitState(id) !== 'unvisited';
   }
+  function setBoundaryFeatureStates(
+    index: number,
+    features: GeoJSON.Feature[],
+    afterUpdate = false,
+  ) {
+    if (!afterUpdate && boundaryGroupPendingKeys[index]) return;
+    const source = chinaBoundarySourceId(index);
+    for (const feature of features) {
+      const id = String(feature.id);
+      setFeatureState(
+        { source, id },
+        {
+          fill: fill(id),
+          selected: selected(id),
+          recorded: regionRecorded(id),
+        },
+      );
+    }
+  }
+  function queueBoundaryGroupUpdate(
+    index: number,
+    source: GeoJSONSource,
+    key: string,
+    next: GeoJSON.FeatureCollection,
+    previous: GeoJSON.FeatureCollection | undefined,
+  ) {
+    const sourceId = chinaBoundarySourceId(index);
+    const token = generation;
+    const isCurrent = () => token === generation && map?.getSource(sourceId) === source;
+    boundaryGroupPendingKeys[index] = key;
+    hovered.value = undefined;
+    if (map) map.getCanvas().style.cursor = '';
+    boundaryGroupUpdates[index] = (boundaryGroupUpdates[index] || Promise.resolve())
+      .then(() => (isCurrent() ? source.setData(next) : undefined))
+      .then(() => {
+        if (!isCurrent() || boundaryGroupKeys[index] !== key) return;
+        const nextIds = new Set(next.features.map((feature) => String(feature.id)));
+        for (const feature of previous?.features || []) {
+          const id = String(feature.id);
+          if (nextIds.has(id)) continue;
+          map!.removeFeatureState({ source: sourceId, id });
+          featureStateCache.delete([sourceId, '', id].join('\0'));
+          selectedFeatureStates.delete([sourceId, '', id].join('\0'));
+        }
+        for (const feature of next.features)
+          featureStateCache.delete([sourceId, '', String(feature.id)].join('\0'));
+        boundaryGroupPendingKeys[index] = '';
+        setBoundaryFeatureStates(index, next.features, true);
+        if (mapError.value === '地区归属边界更新失败，地图仍可继续使用。') mapError.value = '';
+      })
+      .catch(() => {
+        if (!isCurrent() || boundaryGroupKeys[index] !== key) return;
+        boundaryGroupPendingKeys[index] = '';
+        boundaryGroupKeys[index] = '';
+        mapError.value = '地区归属边界更新失败，地图仍可继续使用。';
+      });
+  }
   async function acquireBoundaryLease() {
     if (boundaryLease) return;
     boundaryLeaseRequest ||= store
@@ -304,7 +393,8 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     boundaryLease = undefined;
     boundaryFeatureGroups.length = 0;
     boundaryGroupKeys.length = 0;
-    boundaryGroupReady.length = 0;
+    boundaryGroupUpdates.length = 0;
+    boundaryGroupPendingKeys.length = 0;
     boundaryLineKey = '';
     boundaryOrdinaryFilterKey = '';
   }
@@ -330,51 +420,14 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
   async function useFallback(token = generation) {
     if (token !== generation || fallingBack || canvas || missingBoundary.value) return;
     fallingBack = true;
-    const camera =
-      props.pointMode || props.regionMode
-        ? map && ready
-          ? { center: map.getCenter().toArray(), zoom: map.getZoom() }
-          : pendingProviderCamera || props.initialCamera
-        : undefined;
     clearTimeout(timer);
-    clearDebugMap(map);
-    map?.remove();
-    map = undefined;
-    ready = false;
-    loading.value = true;
-    try {
-      const geometry = await loadSimple(
-        props.scope,
-        props.scope === 'china' ? props.level : undefined,
-      );
-      if (token !== generation || !mapHost.value) return;
-      simple.value = geometry;
-      fallback.value = true;
-      canvas = new CanvasMapRenderer(
-        mapHost.value,
-        (id, point, markerIds) => {
-          if (token === generation && (!props.pointMode || point))
-            markerIds ? selectCanvasMarkers(markerIds) : select(id, point);
-        },
-        (hit) => {
-          if (token === generation)
-            hovered.value = props.pointMode && !hit?.point ? undefined : hit;
-        },
-        captureView,
-      );
-      canvas.setScene(scene(), true);
-      fitInitialView(camera);
-      captureView();
-      revealInitialPoints();
-      mapError.value = '';
-    } catch {
-      if (token === generation)
-        mapError.value = '地图暂时无法载入，请检查连接后重试。列表与已有记录仍可使用。';
-    } finally {
-      if (token === generation) {
-        loading.value = false;
-        fallingBack = false;
-      }
+    providerFailed.value = true;
+    fallback.value = false;
+    if (map && ready) toggleBasemapVisibility();
+    else if (!map) mapError.value = '地图暂时无法载入，请重试。';
+    if (token === generation) {
+      loading.value = false;
+      fallingBack = false;
     }
   }
   function updateModeLayers() {
@@ -392,7 +445,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     if (!map) return;
     const replacedIds =
       props.scope === 'china' && store.chinaBoundaryData
-        ? chinaBoundaryReplacedRegionIds(store.chinaBoundaryData, store.chinaBoundarySettings)
+        ? chinaBoundaryManagedRegionIds(store.chinaBoundaryData)
         : [];
     for (const layer of scopeData.layers.filter((layer) => layer.level !== 'border')) {
       const ids = previewIds(layer.level);
@@ -436,16 +489,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     }
     if (props.scope === 'china' && scopeData.boundaryOptions)
       for (let index = 0; index < boundaryFeatureGroups.length; index++)
-        for (const feature of boundaryFeatureGroups[index]?.features || []) {
-          const id = String(feature.id);
-          setFeatureState(
-            { source: chinaBoundarySourceId(index), id },
-            {
-              fill: fill(id),
-              recorded: regionRecorded(id),
-            },
-          );
-        }
+        setBoundaryFeatureStates(index, boundaryFeatureGroups[index]?.features || []);
   }
   function updateModePaint(scopeData: MapDataManifest['scopes'][Scope]) {
     if (!map) return;
@@ -459,8 +503,6 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       setPaintProperty(layer.level + '-line', 'line-opacity', 1);
       setPaintProperty(layer.level + '-line', 'line-width', [
         'case',
-        ['boolean', ['feature-state', 'selected'], false],
-        2,
         ['boolean', ['feature-state', 'hover'], false],
         1.5,
         layer.level === 'border' ? 2.6 : layer.level === 'county' ? 0.5 : 1,
@@ -471,13 +513,11 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
           setPaintProperty(
             chinaBoundaryLayerId(index, suffix + '-fill'),
             'fill-opacity',
-            boundaryFillOpacity(provider.value),
+            boundaryOverlayFillOpacity(provider.value),
           );
           setPaintProperty(chinaBoundaryLayerId(index, suffix + '-line'), 'line-opacity', 1);
           setPaintProperty(chinaBoundaryLayerId(index, suffix + '-line'), 'line-width', [
             'case',
-            ['boolean', ['feature-state', 'selected'], false],
-            2,
             ['boolean', ['feature-state', 'hover'], false],
             1.5,
             layer.level === 'county' ? 0.5 : 1,
@@ -495,6 +535,57 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
             'none',
           );
       }
+  }
+  function updateSelectedOutlineFilters(scopeData: MapDataManifest['scopes'][Scope]) {
+    if (!map) return;
+    const regionsById = store.session!.index.regions;
+    const replacedIds =
+      props.scope === 'china' && store.chinaBoundaryData
+        ? chinaBoundaryManagedRegionIds(store.chinaBoundaryData)
+        : [];
+    for (const layer of scopeData.layers.filter((item) => item.level !== 'border')) {
+      const muted = Boolean(props.regionMode && props.selectionMuted);
+      const ids = store
+        .session!.index.catalog.regions.filter(
+          (region) =>
+            region.scope === props.scope &&
+            selected(region.id) &&
+            (layer.level !== 'county' ||
+              props.scope !== 'china' ||
+              isChinaCountyMapVisible(region, regionsById, store.chinaBoundarySettings)) &&
+            sourceLevelsForRegion(region, scopeData, store.session!.index.regions).includes(
+              layer.level as 'province' | 'city' | 'county',
+            ),
+        )
+        .map((region) => region.id);
+      const selectedFilter: import('maplibre-gl').FilterSpecification = [
+        'in',
+        ['get', 'regionId'],
+        ['literal', ids],
+      ];
+      setFilter(
+        layer.level + '-selected-outline',
+        ids.length
+          ? ['all', ['!', ['in', ['get', 'regionId'], ['literal', replacedIds]]], selectedFilter]
+          : selectedFilter,
+      );
+      setPaintProperty(
+        layer.level + '-selected-outline',
+        'fill-outline-color',
+        muted ? '#c18a5d' : '#cf762b',
+      );
+      setLayoutProperty(
+        layer.level + '-selected-outline',
+        'visibility',
+        layer.level === level.value ? 'visible' : 'none',
+      );
+      if (props.scope === 'china' && scopeData.boundaryOptions)
+        for (let index = 0; index < (scopeData.boundaryOptionGroups || 0); index++) {
+          const outline = chinaBoundaryLayerId(index, layer.level + '-selected-outline');
+          setFilter(outline, ['all', ['==', ['get', 'level'], layer.level], selectedFilter]);
+          setPaintProperty(outline, 'fill-outline-color', muted ? '#c18a5d' : '#cf762b');
+        }
+    }
   }
   function updateModeSelection(scopeData: MapDataManifest['scopes'][Scope]) {
     // Point previews use the same feature-state bit as regional selection.
@@ -517,6 +608,9 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
           if (source !== 'border')
             setFeatureState({ source, sourceLayer: 'regions', id }, { selected: true });
       }
+      for (let index = 0; index < boundaryFeatureGroups.length; index++)
+        setBoundaryFeatureStates(index, boundaryFeatureGroups[index]?.features || []);
+      updateSelectedOutlineFilters(scopeData);
       return;
     }
     for (const region of store.session!.index.catalog.regions) {
@@ -525,6 +619,9 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         if (source !== 'border')
           setFeatureState({ source, sourceLayer: 'regions', id: region.id }, { selected: true });
     }
+    for (let index = 0; index < boundaryFeatureGroups.length; index++)
+      setBoundaryFeatureStates(index, boundaryFeatureGroups[index]?.features || []);
+    updateSelectedOutlineFilters(scopeData);
   }
   function appearance() {
     if (canvas) {
@@ -534,6 +631,9 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     const scopeData = manifest.value?.scopes[props.scope];
     if (!map || !ready || !scopeData) return;
     const modeChanged = lastPointMode !== undefined && lastPointMode !== props.pointMode;
+    const pointColors = pointVisitColors(store.colors);
+    setPaintProperty('points', 'circle-color', ['case', ['boolean', ['get', 'marked'], false], pointColors.visitedColor,
+      ['boolean', ['get', 'partial'], false], pointColors.partialColor, pointColors.unvisitedColor]);
     const categoryColorMode =
       !props.pointMode && Boolean(props.category) && props.scope === 'china';
     const categoryColorModeChanged =
@@ -556,7 +656,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       .map((r) => r.id);
     const replacedIds =
       props.scope === 'china' && store.chinaBoundaryData
-        ? chinaBoundaryReplacedRegionIds(store.chinaBoundaryData, store.chinaBoundarySettings)
+        ? chinaBoundaryManagedRegionIds(store.chinaBoundaryData)
         : [];
     const ordinaryFilterKey =
       props.scope + ':' + JSON.stringify(replacedIds) + ':' + JSON.stringify(countyIds);
@@ -588,68 +688,14 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         if (groupKey !== boundaryGroupKeys[index]) {
           const nextGroup = chinaBoundaryFeatureGroup(data, settings, index);
           const previousGroup = boundaryFeatureGroups[index];
-          const diff = previousGroup
-            ? chinaBoundaryFeatureDiff(previousGroup, nextGroup)
-            : undefined;
-          const changedIds = diff
-            ? new Set([
-                ...diff.add.map((feature) => String(feature.id)),
-                ...diff.update.map((feature) => feature.id),
-              ])
-            : new Set(nextGroup.features.map((feature) => String(feature.id)));
-          if (diff) {
-            for (const id of diff.remove) {
-              map.removeFeatureState({ source: sourceId, id });
-              featureStateCache.delete([sourceId, '', id].join('\0'));
-            }
-            for (const id of changedIds) featureStateCache.delete([sourceId, '', id].join('\0'));
-          }
-          const update = () => {
-            if (!diff) return source.setData(nextGroup);
-            if (!diff.remove.length && !diff.add.length && !diff.update.length)
-              return Promise.resolve();
-            return source.updateData(diff);
-          };
-          const refreshChangedState = () => {
-            for (const feature of nextGroup.features) {
-              const id = String(feature.id);
-              if (!changedIds.has(id)) continue;
-              featureStateCache.delete([sourceId, '', id].join('\0'));
-              setFeatureState(
-                { source: sourceId, id },
-                {
-                  fill: fill(id),
-                  selected: selected(id),
-                  recorded: regionRecorded(id),
-                },
-              );
-            }
-          };
-          boundaryGroupReady[index] = (boundaryGroupReady[index] || Promise.resolve())
-            .then(update)
-            .catch(() => source.setData(nextGroup))
-            .then(refreshChangedState)
-            .then(
-              () => undefined,
-              () => undefined,
-            );
           boundaryFeatureGroups[index] = nextGroup;
           boundaryGroupKeys[index] = groupKey;
+          queueBoundaryGroupUpdate(index, source, groupKey, nextGroup, previousGroup);
         }
         const features = boundaryFeatureGroups[index]?.features || [];
-        for (const f of features) {
-          const id = String(f.id);
-          setFeatureState(
-            { source: sourceId, id },
-            {
-              fill: fill(id),
-              selected: selected(id),
-              recorded: regionRecorded(id),
-            },
-          );
-        }
+        setBoundaryFeatureStates(index, features);
         for (const layer of scopeData.layers.filter((layer) => layer.level !== 'border')) {
-          for (const suffix of ['fill', 'line']) {
+          for (const suffix of ['fill', 'line', 'selected-outline']) {
             const overlay = chinaBoundaryLayerId(index, layer.level + '-' + suffix);
             if (map.getLayer(overlay))
               setLayoutProperty(
@@ -663,7 +709,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
             'fill-opacity',
             // Fill translucency is part of the map palette, not basemap
             // visibility. Keep it stable when the basemap is hidden or fails.
-            boundaryFillOpacity(provider.value),
+            boundaryOverlayFillOpacity(provider.value),
           );
           const highlight = chinaBoundaryLayerId(index, layer.level + '-point-highlight');
           const ids = previewIds(layer.level);
@@ -696,7 +742,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
           if (map.getLayer(id))
             setLayoutProperty(id, 'visibility', lines.features.length ? 'visible' : 'none');
       if (lines) boundaryLineKey = lineKey;
-      const replaced = chinaBoundaryReplacedRegionIds(data, settings);
+      const replaced = chinaBoundaryManagedRegionIds(data);
       for (const l of scopeData.layers.filter((l) => l.level !== 'border')) {
         const filter = [
           '!',
@@ -728,8 +774,6 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         setPaintProperty(l.level + '-fill', 'fill-opacity', boundaryFillOpacity(provider.value));
       const lineColor: import('maplibre-gl').ExpressionSpecification = [
         'case',
-        ['boolean', ['feature-state', 'selected'], false],
-        '#cf762b',
         ['boolean', ['feature-state', 'hover'], false],
         '#548774',
         l.level === 'border'
@@ -744,8 +788,6 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       setPaintProperty(l.level + '-line', 'line-opacity', 1);
       setPaintProperty(l.level + '-line', 'line-width', [
         'case',
-        ['boolean', ['feature-state', 'selected'], false],
-        2,
         ['boolean', ['feature-state', 'hover'], false],
         1.5,
         l.level === 'border' ? 2.6 : l.level === 'county' ? 0.5 : 1,
@@ -770,8 +812,6 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
           setPaintProperty(chinaBoundaryLayerId(index, l.level + '-line'), 'line-opacity', 1);
           setPaintProperty(chinaBoundaryLayerId(index, l.level + '-line'), 'line-width', [
             'case',
-            ['boolean', ['feature-state', 'selected'], false],
-            2,
             ['boolean', ['feature-state', 'hover'], false],
             1.5,
             l.level === 'county' ? 0.5 : 1,
@@ -794,6 +834,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       }
     }
     setPaintProperty('background', 'background-color', store.dark ? '#17272e' : '#eef4f3');
+    updateSelectedOutlineFilters(scopeData);
     const nextPointData = pointData();
     const nextPointDataKey = JSON.stringify(
       nextPointData.features.map((feature) => [feature.id, feature.geometry, feature.properties]),
@@ -875,8 +916,39 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       map.jumpTo({ center: props.focus, zoom: 14 });
     }
   }
+  function fitPointFocus(duration = 0) {
+    const points = (props.focusPoints || []).filter(validCoordinates);
+    if (!points.length && !validCoordinates(props.focus)) return false;
+    if (map && ready) map.resize();
+    if (points.length > 1) {
+      const bounds = points.reduce<Bounds>((box, point) => [
+        Math.min(box[0], point[0]), Math.min(box[1], point[1]),
+        Math.max(box[2], point[0]), Math.max(box[3], point[1]),
+      ], [Infinity, Infinity, -Infinity, -Infinity]);
+      if (map && ready) {
+        const width = mapHost.value?.clientWidth || 640;
+        const height = mapHost.value?.clientHeight || 480;
+        const margin = Math.min(72, width * .12, height * .15);
+        map.fitBounds(bounds, {
+          padding: { top: margin, left: margin, right: Math.min(240, width * .35), bottom: Math.min(128, height * .24) },
+          retainPadding: false,
+          maxZoom: 16,
+          duration,
+        });
+      } else canvas?.fitCoordinates(points, 16, 96);
+    } else {
+      const center = points[0] || props.focus!;
+      const target = { center, zoom: 15 };
+      if (map && ready) map.easeTo({ ...target, duration });
+      else canvas?.setCamera(target);
+    }
+    captureView();
+    return true;
+  }
   function fitInitialView(camera?: Camera) {
-    if (camera) {
+    if (props.pointMode && fitPointFocus()) {
+      return;
+    } else if (camera) {
       if (map && ready) map.jumpTo(camera);
       else canvas?.setCamera(camera);
     } else if (props.regionMode && !regionAutoFocus.value) {
@@ -988,7 +1060,8 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
     boundaryOrdinaryFilterKey = '';
     boundaryFeatureGroups.length = 0;
     boundaryGroupKeys.length = 0;
-    boundaryGroupReady.length = 0;
+    boundaryGroupUpdates.length = 0;
+    boundaryGroupPendingKeys.length = 0;
     pointModeStateInitialized = false;
     lastPointMode = undefined;
     lastCategoryColorMode = undefined;
@@ -1013,11 +1086,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       if (token !== generation || !mapHost.value) return;
       manifest.value = nextManifest;
       const scopeData = manifest.value.scopes[props.scope];
-      // Boundary option geometry is a sizeable optional overlay. Let a point
-      // map paint its vector boundaries and visit state before loading it.
-      if (props.scope === 'china' && scopeData?.boundaryOptions) {
-        if (!props.pointMode) await acquireBoundaryLease();
-      } else releaseBoundaryLease();
+      if (props.scope !== 'china' || !scopeData?.boundaryOptions) releaseBoundaryLease();
       if (!scopeData) {
         missingBoundary.value = true;
         loading.value = false;
@@ -1042,18 +1111,20 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         fitBoundsOptions: { padding: 45 },
         attributionControl: false,
         renderWorldCopies: false,
-        maxZoom: 15,
+        maxZoom: 20,
         dragRotate: false,
         touchPitch: false,
       });
       const current = map;
-      if (import.meta.env.DEV && new URLSearchParams(location.search).has('mapDebug'))
+      if (import.meta.env.DEV && mapDebugRequested())
         (globalThis as typeof globalThis & { __fangyuMap?: LibreMap }).__fangyuMap = current;
       // MapLibre 6 resolves image dependencies before emitting styleimagemissing.
       // Supply dynamic count images in its awaited resolver so the same worker
       // request receives them; adding them in that later event misses this tile.
       current.setMissingStyleImageResolver((id) => {
-        if (token === generation && current === map) addVisitedImage(current, id);
+        if (token !== generation || current !== map) return;
+        addSelectedRegionHatch(current);
+        addVisitedImage(current, id);
       });
       timer = setTimeout(() => {
         if (token !== generation || !loading.value) return;
@@ -1064,6 +1135,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       current.on('style.load', () => {
         if (token !== generation || current !== map) return;
         ready = true;
+        addSelectedRegionHatch(current);
         for (const kind of ['airport', 'world-heritage', 'project-reference'])
           addVisitedImage(current, 'visited-' + kind);
         appearance();
@@ -1074,10 +1146,8 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
         captureView();
         revealInitialPoints();
         if (
-          props.pointMode &&
           props.scope === 'china' &&
-          scopeData.boundaryOptions &&
-          !store.chinaBoundaryData
+          scopeData.boundaryOptions
         ) {
           void acquireBoundaryLease()
             .then(() => {
@@ -1128,7 +1198,7 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
             if (failed.archive) runtime.renewArchive(base, failed.url, location.href);
           void useFallback(token);
         } else if (ready) {
-          mapError.value = '地图资源暂时无法完整加载，可切换简化地图。';
+          mapError.value = '地图资源暂时无法完整加载，政区列表与已有记录仍可使用。';
           loading.value = false;
           clearTimeout(timer);
         } else void useFallback(token);
@@ -1140,7 +1210,8 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       current.getCanvas().addEventListener('mouseleave', () => (hovered.value = undefined), {
         signal: controller.signal,
       });
-    } catch {
+    } catch (error) {
+      void error;
       if (token === generation) await useFallback(token);
     }
   }
@@ -1181,13 +1252,21 @@ export function useTiledMap(props: TiledMapProps, select: (id: string, point: bo
       props.previewRegions,
       props.pointMode,
       props.regionMode,
+      props.selectionMuted,
     ],
     appearance,
   );
   watch(
-    () => [props.selected, props.level, props.focus],
-    () => {
-      if (props.pointMode) return;
+    () => [props.selected, props.level, props.focus, props.focusPoints, JSON.stringify(store.chinaBoundarySettings)],
+    ([selectedId, , , , settingsKey], [previousSelectedId, , , , previousSettingsKey]) => {
+      if (selectedId !== previousSelectedId && settingsKey !== previousSettingsKey) {
+        captureView();
+        return;
+      }
+      if (props.pointMode) {
+        fitPointFocus(650);
+        return;
+      }
       if (!props.regionMode || regionAutoFocus.value) {
         // Fit against the available map space after the details panel opens.
         if (props.regionMode) map?.resize();

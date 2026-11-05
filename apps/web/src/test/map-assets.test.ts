@@ -44,11 +44,28 @@ describe('current map resources', () => {
         type: 'geojson',
         promoteId: 'regionId',
       });
-      expect(style.layers.some((layer) => layer.id === `china-options-province-fill-${index}`)).toBe(
-        true,
-      );
+      expect(
+        style.layers.some((layer) => layer.id === `china-options-province-fill-${index}`),
+      ).toBe(true);
     }
     expect(style.sources['china-options']).toBeUndefined();
+  });
+
+  it('uses segmented fill outlines for selected administrative regions', () => {
+    const style = createMapStyle(manifest, 'china', 'province', null, '/', 'http://localhost/');
+    const outline = style.layers.find((layer) => layer.id === 'province-selected-outline');
+    expect(outline).toMatchObject({
+      type: 'fill',
+      paint: {
+        'fill-color': 'rgba(0, 0, 0, 0)',
+        'fill-pattern': 'selected-region-hatch',
+        'fill-outline-color': '#b84f16',
+        'fill-opacity': 1,
+      },
+    });
+    expect(style.layers.find((layer) => layer.id === 'province-line')).toMatchObject({
+      layout: { 'line-join': 'bevel', 'line-cap': 'butt' },
+    });
   });
 
   it('decodes catalogs whether the HTTP layer already decompressed them or not', async () => {

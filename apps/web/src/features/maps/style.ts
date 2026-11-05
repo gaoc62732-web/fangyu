@@ -19,6 +19,31 @@ export function boundaryFillOpacity(
   ];
 }
 
+export function boundaryOverlayFillColor(
+  provider: BasemapProvider | null,
+): string | ExpressionSpecification {
+  const color: ExpressionSpecification = ['coalesce', ['feature-state', 'fill'], '#f5f8f3'];
+  if (!provider) return color;
+  return [
+    'case',
+    ['boolean', ['feature-state', 'recorded'], false],
+    color,
+    'rgba(0, 0, 0, 0)',
+  ];
+}
+
+export function boundaryOverlayFillOpacity(
+  provider: BasemapProvider | null,
+): number | ExpressionSpecification {
+  if (!provider) return 1;
+  return [
+    'case',
+    ['boolean', ['feature-state', 'recorded'], false],
+    provider.kind === 'satellite' ? 0.65 : 0.32,
+    1,
+  ];
+}
+
 // Keep the collaborator's MVT/feature-state architecture behind the existing map controls.
 export function createMapStyle(
   manifest: MapDataManifest,
@@ -108,6 +133,12 @@ export function createMapStyle(
         paint: {
           'fill-color': ['coalesce', ['feature-state', 'fill'], '#f5f8f3'],
           'fill-opacity': boundaryFillOpacity(provider),
+          'fill-outline-color': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            '#548774',
+            layer.level === 'county' ? '#8ca49d' : '#57726b',
+          ],
         },
       });
     layers.push({
@@ -128,13 +159,16 @@ export function createMapStyle(
                   ]
                 : ['==', ['geometry-type'], 'LineString'],
           }
-        : {}),
-      layout: { visibility, 'line-join': 'round', 'line-cap': 'round' },
+        : { filter: ['==', ['geometry-type'], 'LineString'] }),
+      // A province coastline can contain thousands of vertices in one tile.
+      // Round joins expand each vertex into several GPU vertices; on a long
+      // ring that can exceed WebGL's 16-bit segment limit and wrap indices,
+      // producing missing sections and stray diagonal lines. Bevel joins keep
+      // the expansion bounded while preserving the boundary shape.
+      layout: { visibility, 'line-join': 'bevel', 'line-cap': 'butt' },
       paint: {
         'line-color': [
           'case',
-          ['boolean', ['feature-state', 'selected'], false],
-          '#cf762b',
           ['boolean', ['feature-state', 'hover'], false],
           '#548774',
           layer.level === 'border' ? '#263f45' : '#8ca49d',
@@ -142,8 +176,6 @@ export function createMapStyle(
         'line-opacity': 1,
         'line-width': [
           'case',
-          ['boolean', ['feature-state', 'selected'], false],
-          2,
           ['boolean', ['feature-state', 'hover'], false],
           1.5,
           layer.level === 'border' ? 2.6 : layer.level === 'county' ? 0.5 : 1,
@@ -153,7 +185,10 @@ export function createMapStyle(
   }
   if (scope === 'china' && manifest.scopes.china.boundaryOptions) {
     const administrativeLayers = layers.filter(
-      (layer) => 'source' in layer && ['province', 'city', 'county'].includes(String(layer.source)),
+      (layer) =>
+        layer.type === 'fill' &&
+        'source' in layer &&
+        ['province', 'city', 'county'].includes(String(layer.source)),
     );
     for (let index = 0; index < (manifest.scopes.china.boundaryOptionGroups || 0); index++) {
       const sourceId = chinaBoundarySourceId(index);
@@ -170,8 +205,12 @@ export function createMapStyle(
         clone.id = chinaBoundaryLayerId(index, original.id);
         if ('source' in clone) clone.source = sourceId;
         if ('source-layer' in clone) delete clone['source-layer'];
-        if (clone.type === 'fill' || clone.type === 'line')
-          clone.filter = ['==', ['get', 'level'], level];
+        clone.filter = ['==', ['get', 'level'], level];
+        clone.paint = {
+          ...clone.paint,
+          'fill-color': boundaryOverlayFillColor(provider),
+          'fill-opacity': boundaryOverlayFillOpacity(provider),
+        };
         layers.splice(layers.findIndex((layer) => layer.id === original.id) + 1, 0, clone);
       }
     }
@@ -208,6 +247,42 @@ export function createMapStyle(
       },
     });
   }
+  // A selected feature's own line style can be covered by a neighbouring
+  // polygon's shared edge. Redraw selected outlines after every ordinary and
+  // configured boundary layer, while keeping them below the point-mode veil.
+  const selectedOutlinePaint = {
+    // FillBucket segments long polygon outlines to stay within WebGL's 16-bit
+    // index limit; LineBucket expands every vertex and can overflow first.
+    'fill-color': 'rgba(0, 0, 0, 0)',
+    'fill-pattern': 'selected-region-hatch',
+    'fill-outline-color': '#b84f16',
+    'fill-opacity': 1,
+  } as const;
+  for (const layer of manifest.scopes[scope].layers.filter((item) => item.level !== 'border'))
+    layers.push({
+      id: layer.level + '-selected-outline',
+      type: 'fill',
+      source: layer.level,
+      'source-layer': 'regions',
+      filter: ['in', ['get', 'regionId'], ['literal', []]],
+      layout: { visibility: layer.level === level ? 'visible' : 'none' },
+      paint: selectedOutlinePaint,
+    });
+  if (scope === 'china' && manifest.scopes.china.boundaryOptions)
+    for (let index = 0; index < (manifest.scopes.china.boundaryOptionGroups || 0); index++)
+      for (const layer of manifest.scopes.china.layers.filter((item) => item.level !== 'border'))
+        layers.push({
+          id: chinaBoundaryLayerId(index, layer.level + '-selected-outline'),
+          type: 'fill',
+          source: chinaBoundarySourceId(index),
+          filter: [
+            'all',
+            ['==', ['get', 'level'], layer.level],
+            ['in', ['get', 'regionId'], ['literal', []]],
+          ],
+          layout: { visibility: layer.level === level ? 'visible' : 'none' },
+          paint: selectedOutlinePaint,
+        });
   // Keep the veil above administrative fills and boundaries, but below labels.
   sources['point-basemap-mask'] = {
     type: 'geojson',
@@ -280,7 +355,8 @@ export function createMapStyle(
     source: 'points',
     paint: {
       'circle-radius': 4,
-      'circle-color': ['case', ['boolean', ['get', 'marked'], false], '#26775b', '#438fae'],
+      'circle-color': ['case', ['boolean', ['get', 'marked'], false], POINT_MAP_APPEARANCE.visitedColor,
+        ['boolean', ['get', 'partial'], false], POINT_MAP_APPEARANCE.partialColor, POINT_MAP_APPEARANCE.unvisitedColor],
       'circle-stroke-width': 1,
       'circle-stroke-color': '#fff',
     },

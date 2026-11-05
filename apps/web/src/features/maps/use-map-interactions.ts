@@ -96,6 +96,34 @@ export function useMapInteractions(
     else drawVisitedMarker(context, kind, size / 2, size / 2);
     current.addImage(id, context.getImageData(0, 0, image.width, image.height), { pixelRatio: 2 });
   }
+  function addSelectedRegionHatch(current: LibreMap) {
+    if (current.hasImage('selected-region-hatch')) return;
+    // Draw a complete family of parallel diagonals. The spacing divides the
+    // tile size, so translating the pattern by one tile preserves every line
+    // at the edge instead of leaving gaps at tile seams.
+    const size = 30;
+    const pixelRatio = 2;
+    const spacing = 6;
+    const image = document.createElement('canvas');
+    image.width = image.height = size * pixelRatio;
+    const context = image.getContext('2d');
+    if (!context) return;
+    context.scale(pixelRatio, pixelRatio);
+    context.strokeStyle = 'rgba(201, 91, 43, 0.35)';
+    context.lineWidth = 0.7;
+    context.lineCap = 'butt';
+    for (let offset = 0; offset <= size * 2; offset += spacing) {
+      context.beginPath();
+      context.moveTo(-size, offset + size);
+      context.lineTo(size * 2, offset - size * 2);
+      context.stroke();
+    }
+    current.addImage(
+      'selected-region-hatch',
+      context.getImageData(0, 0, image.width, image.height),
+      { pixelRatio },
+    );
+  }
   async function selectTileMarker(current: LibreMap, feature: MapGeoJSONFeature) {
     if (!feature.properties.cluster) {
       selectVisitedMarker(String(feature.properties.id));
@@ -239,6 +267,7 @@ export function useMapInteractions(
     closeVisitedSelection,
     selectCanvasMarkers,
     addVisitedImage,
+    addSelectedRegionHatch,
     bindInteractions,
   };
 }

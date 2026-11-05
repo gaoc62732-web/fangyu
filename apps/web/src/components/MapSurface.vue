@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { nextTick } from 'vue';
+import { computed, nextTick } from 'vue';
 import { VISIT_LABELS, type MapLevel, type Scope } from '@fangyu/contracts';
 import type { EntryView } from '@fangyu/domain';
-import { POINT_MAP_APPEARANCE } from '@fangyu/map-renderer';
+import { POINT_MAP_APPEARANCE, pointVisitColors } from '@fangyu/map-renderer';
 import { useTiledMap } from '../features/maps/use-tiled-map.js';
 import PointIcon from './PointIcon.vue';
 import ChinaBoundarySettings from './ChinaBoundarySettings.vue';
@@ -11,16 +11,19 @@ const props = withDefaults(
   defineProps<{
     scope: Scope;
     selected?: string;
+    selectionMuted?: boolean;
     level?: MapLevel;
     category?: string;
     points?: EntryView[];
+    highlightedPointIds?: string[];
     focus?: [number, number] | null;
+    focusPoints?: [number, number][] | null;
     pointMode?: boolean;
     regionMode?: boolean;
     initialCamera?: { center: [number, number]; zoom: number } | undefined;
     previewRegions?: string[] | undefined;
   }>(),
-  { selected: '', level: 'county', category: '', focus: null },
+  { selected: '', selectionMuted: false, level: 'county', category: '', focus: null },
 );
 const emit = defineEmits<{
   select: [id: string];
@@ -52,13 +55,13 @@ const {
   selectVisitedMarker,
   closeVisitedSelection,
   initialize,
-  useFallback,
   zoom,
   fitRegion,
   fitSelection,
   fitFranceView,
   exportPng,
 } = useTiledMap(props, (id, point) => (point ? emit('point', id) : emit('select', id)));
+const pointColors = computed(() => ({ ...POINT_MAP_APPEARANCE, ...pointVisitColors(store.colors) }));
 async function overview(group?: 'metropolitan' | 'overseas') {
   if (props.scope === 'france') {
     emit('overview');
@@ -192,15 +195,16 @@ async function overview(group?: 'metropolitan' | 'overseas') {
                 <span
                   ><i
                     class="atlas-legend-dot"
-                    style="background: #617267"
+                    :style="{ background: pointColors.unvisitedColor }"
                   />未点亮</span
                 >
                 <span
                   ><i
                     class="atlas-legend-dot"
-                    style="background: #a07c3b"
+                    :style="{ background: pointColors.visitedColor }"
                   />已点亮</span
                 >
+                <span><i class="atlas-legend-dot" :style="{ background: pointColors.partialColor }" />部分到访</span>
                 <span
                   ><i
                     :style="{
@@ -254,43 +258,33 @@ async function overview(group?: 'metropolitan' | 'overseas') {
           </div>
         </div>
         <ChinaBoundarySettings v-if="scope === 'china' && regionMode" />
-        <button
-          v-if="regionMode"
-          class="atlas-map-export"
-          type="button"
-          aria-label="导出地图图片"
-          title="导出地图图片"
-          @click="exportPng"
-        >
-          <PointIcon name="download" />
-        </button>
       </template>
       <div
         v-if="pointMode"
         class="point-overlay"
+        :class="{ 'has-focused-points': highlightedPointIds?.length }"
+        :style="{ '--point-visited': pointColors.visitedColor, '--point-unvisited': pointColors.unvisitedColor, '--point-partial': pointColors.partialColor, '--point-visited-ink': pointColors.visitedTextColor, '--point-unvisited-ink': pointColors.unvisitedTextColor, '--point-partial-ink': pointColors.partialTextColor }"
         aria-label="地图点位"
       >
         <button
           v-for="group in pointGroups"
-          :key="group.members.map((e) => e.id).join(',')"
+          :key="group.id"
           class="point-dot"
           :class="{
             clustered: group.members.length > 1,
-            marked: group.members.every((e) => e.visited),
+            marked: group.members.every((e) => e.checked),
+            partial: !group.members.every((e) => e.checked) && group.members.some((e) => e.checked || e.partial),
+            'is-focused': group.highlighted,
           }"
           :style="{ left: group.x + 'px', top: group.y + 'px' }"
           :aria-label="
             group.members.length > 1
-              ? group.members.length + ' 个点位，展开查看'
+              ? group.members.length + ' 个点位，点击放大'
               : group.members[0]!.name
           "
           @click.stop="
             group.members.length > 1
-              ? (emit(
-                  'cluster',
-                  group.members.map((e) => e.id),
-                ),
-                expandCluster(group.members.map((e) => e.id)))
+              ? expandCluster(group.members.map((e) => e.id), group.expansionZoom)
               : emit('point', group.members[0]!.id)
           "
         >
@@ -333,25 +327,17 @@ async function overview(group?: 'metropolitan' | 'overseas') {
       </div>
     </div>
     <div
-      v-if="fallback || providerFailed || (mapError && !missingBoundary)"
+      v-if="providerFailed"
       class="tile-map-note"
       role="status"
     >
-      <span v-if="fallback">{{ focus ? '简化地图暂不支持精确定位。' : '已切换为简化地图。' }}</span>
-      <span v-else-if="providerFailed">在线底图暂不可用。</span>
+      <span v-if="providerFailed">底图加载错误，当前仅显示政区边界。请检查网络连接。</span>
       <button
-        v-if="fallback || providerFailed || mapError"
+        v-if="providerFailed"
         :disabled="loading"
         @click="initialize"
       >
         重试地图
-      </button>
-      <button
-        v-if="mapError && !fallback && !missingBoundary"
-        :disabled="loading"
-        @click="useFallback"
-      >
-        使用简化地图
       </button>
     </div>
     <slot name="content-controls" />
@@ -496,22 +482,6 @@ async function overview(group?: 'metropolitan' | 'overseas') {
 .atlas-map-legend[open] > summary {
   background: #f2f2e9;
 }
-.atlas-map-export {
-  position: absolute;
-  right: 80px;
-  bottom: 16px;
-  z-index: 3;
-  width: 42px;
-  height: 42px;
-  background: #fffefa;
-  border: 1px solid #e2e3dd;
-  border-radius: 12px;
-  color: var(--point-ink, #30372e);
-  box-shadow: none;
-}
-.atlas-map-export:hover {
-  background: #f2f2e9;
-}
 .atlas-legend-content {
   position: absolute;
   right: 0;
@@ -567,19 +537,20 @@ async function overview(group?: 'metropolitan' | 'overseas') {
 }
 .atlas-map .point-dot {
   display: block;
-  background: #617267;
+  background: var(--point-unvisited);
   border: 2px solid #fffefa;
   border-radius: 50%;
   box-shadow: 0 2px 7px #27292135;
 }
 .atlas-map .point-dot.marked {
-  background: #a07c3b;
+  background: var(--point-visited);
 }
+.atlas-map .point-dot.partial { background: var(--point-partial); }
 .atlas-map .point-dot.clustered {
   font-size: var(--point-meta-size, 14px);
   font-weight: 400;
-  background: #fdfcf7;
-  color: #454f43;
+  background: var(--point-unvisited);
+  color: var(--point-unvisited-ink);
   border: 1px solid #b8c3b6;
   width: 36px;
   height: 36px;
@@ -589,12 +560,13 @@ async function overview(group?: 'metropolitan' | 'overseas') {
   color: #394236;
   background: #fffefaed;
   padding: 3px 7px;
-  top: -15px;
+  top: 50%;
   box-shadow: 0 2px 4px #2729210a;
 }
 .point-overlay {
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
   overflow: hidden;
 }
@@ -607,12 +579,13 @@ async function overview(group?: 'metropolitan' | 'overseas') {
   padding: 0;
   border: 2px solid white;
   border-radius: 50%;
-  background: #438fae;
+  background: var(--point-unvisited);
   box-shadow: 0 1px 4px #23433955;
 }
 .point-dot.marked {
-  background: #26775b;
+  background: var(--point-visited);
 }
+.point-dot.partial { background: var(--point-partial); }
 .point-dot.clustered {
   width: 32px;
   height: 32px;
@@ -622,18 +595,33 @@ async function overview(group?: 'metropolitan' | 'overseas') {
 }
 .point-dot-name {
   position: absolute;
-  left: 15px;
-  top: -9px;
+  left: calc(100% + 8px);
+  right: auto;
+  top: 50%;
+  transform: translateY(-50%);
   color: #243a37;
-  white-space: nowrap;
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  width: max-content;
+  white-space: normal;
+  max-width: min(520px, calc(100vw - 72px));
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  text-align: left;
+  line-height: 1.45;
   font-size: 12px;
   background: #ffffffe0;
   padding: 1px 5px;
   border-radius: 3px;
+  pointer-events: auto;
+  cursor: pointer;
 }
+.point-dot-name::before { content: ''; position: absolute; top: 0; bottom: 0; right: 100%; width: 10px; }
+.point-overlay.has-focused-points .point-dot:not(.is-focused) { opacity: .2; z-index: 0; }
+.point-overlay .point-dot.is-focused { z-index: 20; width: 15px; height: 15px; outline: 1px solid var(--atlas-ink); outline-offset: 3px; box-shadow: 0 0 0 3px var(--atlas-paper), 0 3px 9px #243a3730; }
+.point-overlay .point-dot.is-focused.clustered { width: 36px; height: 36px; }
+.atlas-map .point-dot.clustered.marked { background: var(--point-visited); color: var(--point-visited-ink); border-color: var(--point-visited); }
+.atlas-map .point-dot.clustered.partial { background: var(--point-partial); color: var(--point-partial-ink); border-color: var(--point-partial); }
+.point-overlay .point-dot.is-focused .point-dot-name { padding: 4px 8px; border: 1px solid var(--atlas-line); background: var(--atlas-paper); font-size: var(--point-meta-size, 14px); font-weight: 500; box-shadow: 0 2px 8px #243a3718; }
 .map-surface > .tile-map-host {
   position: absolute;
   inset: 0;

@@ -70,11 +70,15 @@ export const pointLinkPolicySchema = z.enum(['ask', 'auto', 'never']);
 export type PointLinkPolicy = z.infer<typeof pointLinkPolicySchema>;
 export const pointCheckinPreferencesSchema = z
   .object({
-    children: pointLinkPolicySchema.default('ask'),
+    children: pointLinkPolicySchema.optional(),
     identities: pointLinkPolicySchema.default('auto'),
     regions: pointLinkPolicySchema.default('ask'),
   })
-  .strict();
+  .strict()
+  .transform((settings) => {
+    delete settings.children;
+    return settings;
+  });
 export type PointCheckinPreferences = z.infer<typeof pointCheckinPreferencesSchema>;
 
 import { chinaBoundarySettingsSchema } from './china-boundaries.js';

@@ -14,7 +14,11 @@ function toggle(key: keyof ChinaBoundarySettings, event: Event) {
 </script>
 
 <template>
-  <details class="china-boundary-settings">
+  <details
+    class="china-boundary-settings"
+    @pointerdown.stop
+    @click.stop
+  >
     <summary
       aria-label="地区归属设置"
       title="地区归属设置"

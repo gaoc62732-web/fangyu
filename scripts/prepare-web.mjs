@@ -136,7 +136,15 @@ const sourceNames = [
   ...scopes.map((s) => 'catalog/' + s + '.geo.json'),
   'manual/china/manifest.json',
   ...(chinaManifest.files || []).map((file) => 'manual/china/' + file.path),
+  'boundaries/china-osm/710000.geojson',
+  'boundaries/china-osm/applied.json',
 ];
+const taiwanOsm = JSON.parse(
+  await fs.readFile(path.join(root, 'data/boundaries/china-osm/710000.geojson'), 'utf8'),
+);
+const osmApplied = JSON.parse(
+  await fs.readFile(path.join(root, 'data/boundaries/china-osm/applied.json'), 'utf8'),
+);
 const sharedBoundaryArcs = JSON.parse(
   await fs.readFile(path.join(root, 'data/manual/china/boundaries/boundary-arcs.json'), 'utf8'),
 );
@@ -291,7 +299,32 @@ for (const region of catalog.regions) {
 }
 function chinaMapDisplayRows(rows) {
   const existing = new Set(rows.map((row) => `${row.regionId}/${row.level}`));
+  const existingRegions = new Set(rows.map((row) => row.regionId));
   const additions = [];
+  // Some terminal Taiwan city faces are available in the reviewed OSM import
+  // even when the legacy active geometry omitted the city row. Publish both
+  // source levels so the city boundary is also present on the county map.
+  for (const mapping of osmApplied.provinces?.['710000']?.mapped || []) {
+    const region = regionMap.get(mapping.regionId);
+    if (!region || existingRegions.has(region.id)) continue;
+    const feature = taiwanOsm.features.find((item) => item.id === mapping.relation);
+    if (!feature || !['Polygon', 'MultiPolygon'].includes(feature.geometry?.type)) continue;
+    const level = ['province', 'city', 'county'][region.level];
+    additions.push({
+      id: `map-osm-${region.id}-${level}`,
+      regionId: region.id,
+      level,
+      geometry: feature.geometry,
+    });
+    if (region.level === 1 && !(chinaActiveChildren.get(region.id) || []).length)
+      additions.push({
+        id: `map-osm-${region.id}-county`,
+        regionId: region.id,
+        level: 'county',
+        geometry: feature.geometry,
+      });
+    existingRegions.add(region.id);
+  }
   for (const region of catalog.regions) {
     if (region.scope !== 'china' || region.historical) continue;
     const regionRows = rows.filter((row) => row.regionId === region.id);

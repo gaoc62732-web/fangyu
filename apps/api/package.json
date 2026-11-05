@@ -4,14 +4,14 @@
   "version": "0.7.2",
   "type": "module",
   "scripts": {
-    "dev": "node --env-file=.env --import tsx --watch src/main.ts",
+    "dev": "node --env-file-if-exists=.env --import tsx --watch src/main.ts",
     "dev:admin": "node --import tsx --watch src/admin-main.ts",
     "build": "node scripts/build.mjs",
     "build:admin": "node scripts/build.mjs src/admin-main.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "migrate": "node --env-file=.env --import tsx scripts/migrate.ts",
-    "create-user": "node --env-file=.env --import tsx scripts/create-user.ts",
-    "start": "node --env-file=.env dist/main.js",
+    "migrate": "node --env-file-if-exists=.env --import tsx scripts/migrate.ts",
+    "create-user": "node --env-file-if-exists=.env --import tsx scripts/create-user.ts",
+    "start": "node --env-file-if-exists=.env dist/main.js",
     "start:admin": "node dist/admin-main.js"
   },
   "dependencies": {
